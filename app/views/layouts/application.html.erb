@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sdf2</title>
+    <title>SDF2</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -9,6 +9,23 @@
   </head>
 
   <body>
-    <%= yield %>
+
+    <%= render partial: 'shared/nav' %>
+    <div class="container">
+
+      <div class="row"> <!-- FLASH NOTICE -->
+        <%= render partial: 'shared/flash' %>
+      </div>
+
+      <div class="row" id="main-wrapper">
+        <%= yield %>
+      </div>
+
+      <footer id="footer">
+      </footer>
+
+    </div>
+
   </body>
+
 </html>

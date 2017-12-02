@@ -5,6 +5,10 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+## MOVE dotenv TO TOP AND REQUIRE:
+gem 'dotenv-rails', require: 'dotenv/rails-now'
+gem 'dotenv-rails', groups: [:development, :test]
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.4'
@@ -52,3 +56,41 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+
+
+## Adam's Gems ##
+gem 'pry'
+# gem 'bcrypt'
+# gem 'faker'
+# gem 'rspec', '~>3.0'
+# Use hirb for rails c table view.  Then in rails c:
+gem 'hirb'
+# require 'hirb'
+# Hirb.enable
+
+# Use jquery as the JavaScript library
+gem 'jquery-rails', '~> 4.3', '>= 4.3.1'
+gem 'bootstrap', '~> 4.0.0.beta2'
+# gem 'bootstrap-sass', '~> 3.2.0'
+gem 'autoprefixer-rails'
+gem 'font-awesome-sass', '~> 4.7.0'
+gem 'underscore-rails'
+
+gem 'autoprefixer-rails'
+
+
+
+# gem 'pg_search'
+# gem 'stripe'
+# gem 'ransack', github: 'activerecord-hackery/ransack'
+# gem 'gmaps4rails'
+# gem 'geocoder'
+# gem 'aws-sdk', '~> 1.6'
+# gem 'paperclip', '~> 4.3', '>= 4.3.6'
+
+# gem 'will_paginate', require: 'will_paginate'
+# gem 'will_paginate-bootstrap', :require => 'will_paginate-bootstrap'
+# gem 'google_places', '~> 0.32.0'
+# gem 'google-api-client', '~> 0.7.1'
+# gem 'geokit', '~> 1.11'
