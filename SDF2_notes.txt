@@ -1,31 +1,9 @@
-account = Account.new(name: "sample_account_2", url: "sample_url")
-account.save
 
-account = Account.create(name: 'sample_account_3', contacts_attributes: [first_name: 'Foo'] )
-
-== THIS WORKS BELOW FOR ACCOUNT-CONTACTS
-account = Account.create(name: 'sample_account_5', contacts_attributes: [first_name: 'Foo_5'] )
-
-== THIS WORKS BELOW FOR ACCOUNT-WEBS
-account = Account.create(name: 'sample_account_8', webs_attributes: [source: 'source_8', status: 'status_8', url: 'url_8', staff_page: 'staff_page_8', locations_page: 'locations_page_8'] )
-
-== THIS WORKS BELOW FOR ACCOUNT-Addresses
-account = Account.create(name: 'sample_account_9', addresses_attributes: [source: 'source_9', status: 'status_9', street: 'street_9', unit: 'unit_9', city: 'city_9', state: 'state_9', zip: 'zip_9', address_pin: 'address_pin_9'] )
-
-== THIS WORKS BELOW FOR ACCOUNT-Phones ?????
-account = Account.create(name: 'sample_account_10', phones_attributes: [ source: 'source_10', status: 'status_10', phone: 'phone_10'] )
+account = Account.create(source: 'source_1', status: 'status_1', crm_acct_num: 'crm_acct_num_1', name: 'sample_account_1', contacts_attributes: [source: 'source_1', status: 'status_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'], webs_attributes: [source: 'source_1', status: 'status_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'], addresses_attributes: [source: 'source_1', status: 'status_1', street: 'street_1', unit: 'unit_1', city: 'city_1', state: 'state_1', zip: 'zip_1', address_pin: 'address_pin_1', latitude: 'latitude_1', longitude: 'longitude_1'] )
 
 ======================
 
-account = Account.create(source: 'source_1', status: 'status_1', crm_acct_num: 'crm_acct_num_1', name: 'sample_account_1', contacts_attributes: [source: 'source_1', status: 'status_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1', phone: 'phone_1'], webs_attributes: [source: 'source_1', status: 'status_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'], addresses_attributes: [source: 'source_1', status: 'status_1', street: 'street_1', unit: 'unit_1', city: 'city_1', state: 'state_1', zip: 'zip_1', address_pin: 'address_pin_1', latitude: 'latitude_1', longitude: 'longitude_1'] )
+contact = Contact.create(source: 'source_7', status: 'status_7', crm_cont_num: 'crm_cont_num_7', first_name: 'first_name_7', last_name: 'last_name_7', email: 'email_7', titles_attributes: [job_title: 'job_title_1'], descriptions_attributes: [job_description: 'job_description_1'], phones_attributes: [source: 'source_1', status: 'status_1', phone: 'phone_1'])
 
-======================
-
-contact = Contact.create(source: 'source_7', status: 'status_7', crm_cont_num: 'crm_cont_num_7', first_name: 'first_name_7', last_name: 'last_name_7', email: 'email_7', accounts_attributes: [source: 'source_7', status: 'status_7', crm_acct_num: 'crm_acct_num_7', name: 'name_7' ])
-
-
-titles_attributes: [job_title: 'job_title_1'], descriptions_attributes: [job_description: 'job_description_1'], phones_attributes: [source: 'source_1', status: 'status_1', phone: 'phone_1'])
-
-=======
-
-contact = Contact.create(first_name: 'first_name_4', last_name: 'last_name_4')
+account = Account.find_or_create_by(crm_acct_num: 'crm_acct_num_7')
+account.contacts << contact

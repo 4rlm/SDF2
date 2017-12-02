@@ -1,0 +1,175 @@
+Account
+Contact
+Address
+Phone
+Web
+
+Title
+Description
+
+Phoning
+AccountWeb
+AccountAddress
+ContactTitle
+ContactDescription
+========================
+
+$ rails new sdf2 --database=postgresql
+$ cd sdf2
+$ bundle update
+$ bundle install
+$ rails generate controller home index
+$ rm public/index.html
+> config/routes.rb, root :to => "home#index"
+
+========================
+
+==Account==
+$ rails g scaffold Account source status crm_acct_num name
+
+t.index :name, unique: true
+t.index :act_num, unique: true
+
+==Contact==
+$ rails g scaffold Contact source status account_id:integer crm_cont_num first_name last_name email account:references
+
+t.index :email, unique: true
+
+==Address==
+$ rails g scaffold Address source status street unit city state zip address_pin latitude:float longitude:float
+
+==Phone==
+$ rails g scaffold Phone source status phone
+
+t.index :phone, unique: true
+
+==Web==
+$ rails g scaffold Web source status url staff_page locations_page
+
+t.index :url, unique: true t.index :staff_page, unique: true t.index :locations_page, unique: true
+
+===========
+$ rails g model Phoning phonable_type phone_id:integer phonable_id:integer
+
+$ rails g model AccountWeb account_id:integer web_id:integer
+
+$ rails g model AccountAddress account_id:integer address_id:integer
+
+$ rails g model ContactTitle contact_id:integer title_id:integer
+
+$ rails g model ContactDescription contact_id:integer description_id:integer
+
+$ rails g model Title job_title
+
+$ rails g model Description job_description
+
+====================
+
+
+MODEL
+
+== Account ==
+  validates_uniqueness_of :act_num, allow_blank: true, allow_nil: true
+
+  has_many :contacts
+
+  has_many :phonings, as: :phonable
+  has_many :phones, through: :phonings
+
+  has_many :account_addresses, dependent: :destroy
+  has_many :addresses, through: :account_addresses
+
+  has_many :account_webs, dependent: :destroy
+  has_many :webs, through: :account_webs
+
+== Contact ==
+  belongs_to :account
+  validates_uniqueness_of :cont_num, allow_blank: true, allow_nil: true
+
+  has_many :phonings, as: :phonable
+  has_many :phones, through: :phonings
+
+  has_many :contact_descriptions, dependent: :destroy
+  has_many :descriptions, through: :contact_descriptions
+
+  has_many :contact_titles, dependent: :destroy
+  has_many :titles, through: :contact_titles
+
+
+
+== Address ==
+  has_many :account_addresses, dependent: :destroy
+  has_many :accounts, through: :account_addresses
+
+  def full_address
+    [street, city, state, zip].compact.join(',')
+  end
+
+== Phone ==
+  validates :phone, uniqueness: true
+  has_many :phonings
+  has_many :accounts, through: :phonings, source: :phonable, source_type: :Account
+  has_many :contacts, through: :phonings, source: :phonable, source_type: :Contact
+
+== Phoning ==
+  belongs_to :phonable, polymorphic: true
+  belongs_to :phone
+
+  validates :phone_id, :uniqueness => { :scope => [:phonable_type, :phonable_id] } #=> ALSO IN MIGRATION!
+
+== Web ==
+  has_many :account_webs, dependent: :destroy
+  has_many :accounts, through: :account_webs
+
+  validates_uniqueness_of :url, allow_blank: true, allow_nil: true
+
+== Description ==
+  has_many :contact_descriptions, dependent: :destroy
+  has_many :contacts, through: :contact_descriptions
+
+  validates_uniqueness_of :job_description, allow_blank: true, allow_nil: true
+
+
+== Title ==
+  has_many :contact_titles, dependent: :destroy
+  has_many :contacts, through: :contact_titles
+
+  validates_uniqueness_of :job_title, allow_blank: true, allow_nil: true
+
+
+== AccountWeb ==
+  belongs_to :account
+  belongs_to :website
+
+  validates_uniqueness_of :account, scope: :website_id
+
+
+== AccountAddress ==
+  belongs_to :account
+  belongs_to :address
+
+  validates_uniqueness_of :account, scope: :address_id
+
+
+== ContactDescription ==
+  belongs_to :contact
+  belongs_to :description
+
+  validates_uniqueness_of :contact, scope: :description_id
+
+
+== ContactTitle ==
+  belongs_to :contact
+  belongs_to :title
+
+  validates_uniqueness_of :contact, scope: :title_id
+
+===========================
+
+
+$ rake db:create
+$ rake db:migrate
+
+* SAMPLE THE SITE:
+  $ rails s
+  $ rails c

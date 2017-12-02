@@ -14,5 +14,12 @@ module Sdf2
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    config.autoload_paths << File.join(config.root, "lib")
+    config.autoload_paths += %W(#{config.root}/controllers/concerns)
+    # config.autoload_paths += %W(#{config.root}/lib/servicers)
+    config.autoload_paths << Rails.root.join('lib/servicers')
+    config.autoload_paths += Dir["#{config.root}/lib/servicers"]
+
   end
 end
