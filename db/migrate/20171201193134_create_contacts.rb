@@ -4,10 +4,11 @@ class CreateContacts < ActiveRecord::Migration[5.1]
       t.string :source, index: true
       t.string :status, index: true
       t.integer :account_id, index: true
-      t.string :crm_cont_num, index: true, unique: true
+      t.string :crm_acct_num, index: true
+      t.string :crm_cont_num, index: true, unique: true, allow_nil: true
       t.string :first_name, index: true
       t.string :last_name, index: true
-      t.string :email, index: true, unique: true
+      t.string :email, index: true, unique: true, allow_nil: true
 
       t.timestamps
     end

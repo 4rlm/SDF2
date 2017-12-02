@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 20171201193259) do
     t.string "source"
     t.string "status"
     t.integer "account_id"
+    t.string "crm_acct_num"
     t.string "crm_cont_num"
     t.string "first_name"
     t.string "last_name"
@@ -100,6 +101,7 @@ ActiveRecord::Schema.define(version: 20171201193259) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_contacts_on_account_id"
+    t.index ["crm_acct_num"], name: "index_contacts_on_crm_acct_num"
     t.index ["crm_cont_num"], name: "index_contacts_on_crm_cont_num"
     t.index ["email"], name: "index_contacts_on_email"
     t.index ["first_name"], name: "index_contacts_on_first_name"

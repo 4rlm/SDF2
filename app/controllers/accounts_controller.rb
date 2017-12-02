@@ -74,18 +74,29 @@ class AccountsController < ApplicationController
       # params.require(:account).permit(:source, :status, :crm_acct_num, :name)
 
       # WORKING NESTED ATTRIBUTE - Contact
-      # params.require(:account).permit(:source, :status, :crm_acct_num, :name, contacts_attributes: [ :id, :first_name ])
-
+      # params.require(:account).permit(:source, :status, :crm_acct_num, :name, contacts_attributes: [ :id, :first_name ] )
 
       # # WORKING NESTED ATTRIBUTE - Webs
-      # params.require(:account).permit(:source, :status, :crm_acct_num, :name, web_attributes: [:source, :status, :url, :staff_page, :locations_page, :created_at, :updated_at  ])
+      # params.require(:account).permit(:source, :status, :crm_acct_num, :name, web_attributes: [:source, :status, :url, :staff_page, :locations_page, :created_at, :updated_at ])
 
       # # WORKING NESTED ATTRIBUTE - Addresses
       # params.require(:account).permit(:source, :status, :crm_acct_num, :name, address_attributes: [:source, :status, :street, :unit, :city, :state, :zip, :address_pin, :latitude, :longitude, :created_at, :updated_at ])
 
+      #######################################
 
-      # WORKING NESTED ATTRIBUTE - Phones ?????
-      params.require(:account).permit(:source, :status, :crm_acct_num, :name, phone_attributes: [:source, :status, :phone, :created_at, :updated_at ])
+      # # WORKING NESTED ATTRIBUTE - Webs && Addresses ???
+      params.require(:account).permit(:id, :source, :status, :crm_acct_num, :name, :created_at, :updated_at,
+          web_attributes: [:id, :source, :status, :url, :staff_page, :locations_page, :created_at, :updated_at ],
+          address_attributes: [:id, :source, :status, :street, :unit, :city, :state, :zip, :address_pin, :latitude, :longitude, :created_at, :updated_at ],
+          phone_attributes: [:id, :source, :status, :phone, :created_at, :updated_at ])
+
+
+
+
+      #######################################
+
+      # WORKING NESTED ATTRIBUTE - Phones
+      # params.require(:account).permit(:source, :status, :crm_acct_num, :name, phone_attributes: [:source, :status, :phone, :created_at, :updated_at ])
 
 
     end
