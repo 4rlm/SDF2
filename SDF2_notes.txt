@@ -7,3 +7,9 @@ contact = Contact.create(source: 'source_7', status: 'status_7', crm_cont_num: '
 
 account = Account.find_or_create_by(crm_acct_num: 'crm_acct_num_7')
 account.contacts << contact
+
+
+========================
+
+
+address = Address.find_or_create_by(street: 'street_2')
