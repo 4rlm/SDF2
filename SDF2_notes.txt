@@ -1,0 +1,17 @@
+account = Account.new(name: "sample_account_2", url: "sample_url")
+account.save
+
+account = Account.create(name: 'sample_account_3', contacts_attributes: [first_name: 'Foo'] )
+
+== THIS WORKS BELOW FOR ACCOUNT-CONTACTS
+account = Account.create(name: 'sample_account_5', contacts_attributes: [first_name: 'Foo_5'] )
+
+== THIS WORKS BELOW FOR ACCOUNT-WEBS
+account = Account.create(name: 'sample_account_8', webs_attributes: [source: 'source_8', status: 'status_8', url: 'url_8', staff_page: 'staff_page_8', locations_page: 'locations_page_8'] )
+
+== THIS WORKS BELOW FOR ACCOUNT-Addresses
+account = Account.create(name: 'sample_account_9', addresses_attributes: [source: 'source_9', status: 'status_9', street: 'street_9', unit: 'unit_9', city: 'city_9', state: 'state_9', zip: 'zip_9', address_pin: 'address_pin_9'] )
+
+
+== THIS WORKS BELOW FOR ACCOUNT-Phones ?????
+account = Account.create(name: 'sample_account_10', phones_attributes: [ source: 'source_10', status: 'status_10', phone: 'phone_10'] )
