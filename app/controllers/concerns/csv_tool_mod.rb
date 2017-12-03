@@ -112,42 +112,46 @@ module CsvToolMod
     #   end
     # end
 
+    ### ORIGNAL IMPORT_CSV ABOVE ###
 
 
-    ### ORIGNAL IMPORT_CSV ABOVE / TESTING IMPORT_CSV BELOW ###
+    #########################################
 
 
+
+    ### TESTING IMPORT_CSV BELOW ###
 
 
     def import_csv
       # CsvTool.new(Account).import_csv
 
-      CSV.foreach(@file_path, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true) do |row|
-        valid_hash = validate_hash(@model.column_names, row.to_h)
-        row_array = (row.to_a) - (valid_hash.to_a)
+      clean_csv_hashes = iterate_csv_w_error_report
+      clean_csv_hashes.each do |clean_csv_hash|
+        clean_csv_hash = clean_csv_hash.stringify_keys
+        clean_csv_array = (clean_csv_hash.to_a)
+
+        valid_hash = validate_hash(@model.column_names, clean_csv_hash)
+        remaining_clean_csv_array = clean_csv_array - valid_hash.to_a
 
         begin
           if @model = Account
-            # if account = @model.find_by(crm_acct_num: valid_hash["crm_acct_num"]) || account = @model.find_by(id: valid_hash["id"])
-            #   account.update_attributes(valid_hash)
-            # else
-            #   account = @model.record_timestamps = true
-            #   account = @model.create!(valid_hash)
-            # end
+            crm_acct_num = valid_hash['crm_acct_num']
+            acct_id = valid_hash['id']
 
-            if valid_hash["crm_acct_num"].present?
-              account = Account.find_or_create_by(crm_acct_num: valid_hash["crm_acct_num"])
+            if acct_id.present?
+              binding.pry
+              account = Account.find_or_create_by(id: acct_id)
               account.update_attributes(valid_hash)
-            elsif valid_hash["id"].present?
-              account = Account.find_or_create_by(id: valid_hash["id"])
+            elsif crm_acct_num.present?
+              account = Account.find_or_create_by(crm_acct_num: crm_acct_num)
               account.update_attributes(valid_hash)
             else
               account = Account.create(valid_hash)
             end
 
-            web_hash = validate_hash(Web.column_names, row_array.to_h)
-            address_hash = validate_hash(Address.column_names, row_array.to_h)
-            phone_hash = validate_hash(Phone.column_names, row_array.to_h)
+            web_hash = validate_hash(Web.column_names, remaining_clean_csv_array.to_h)
+            address_hash = validate_hash(Address.column_names, remaining_clean_csv_array.to_h)
+            phone_hash = validate_hash(Phone.column_names, remaining_clean_csv_array.to_h)
 
             url = web_hash['url']
             phone = phone_hash['phone']
@@ -180,19 +184,16 @@ module CsvToolMod
           puts "\n\nDuplicate Data Error\n\n"
         end
 
-      end
+      end ## end of CSV for each
     end
 
     ### TESTING IMPORT ABOVE
 
     def validate_hash(cols, hash)
+      # cols.map!(&:to_sym)
       keys = hash.keys
-      keys.each do |key|
-        if !cols.include?(key)
-          hash.delete(key)
-        end
-      end
-      hash
+      keys.each { |key| hash.delete(key) if !cols.include?(key) }
+      return hash
     end
 
 
@@ -200,14 +201,14 @@ module CsvToolMod
     def iterate_csv_w_error_report
       puts "\n\nImporting CSV.  This might take a few minutes ..."
 
-      @csv_hashes = []
+      clean_csv_hashes = []
       counter = 0
       error_row_numbers = []
       @headers = []
       File.open(@file_path).each do |line|
         begin
           CSV.parse(line) do |row|
-            counter > 0 ? @csv_hashes << row_to_hash(row) : @headers = row
+            counter > 0 ? clean_csv_hashes << row_to_hash(row) : @headers = row
             counter += 1
           end
         rescue => er
@@ -217,9 +218,10 @@ module CsvToolMod
         end
 
       end
+
       error_report(error_row_numbers)
-      binding.pry
-      @csv_hashes
+      return clean_csv_hashes
+
     end
 
     # call: CsvToolParser.new.import_urls
@@ -233,6 +235,9 @@ module CsvToolMod
       h = Hash[@headers.zip(row)]
       h.symbolize_keys
     end
+
+
+
 
 
 
