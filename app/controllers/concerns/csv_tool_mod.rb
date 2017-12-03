@@ -41,15 +41,41 @@ module CsvToolMod
       clean_csv_hashes = iterate_csv_w_error_report
 
       accounts = []
+      webs = []
+      phones = []
+      addresses = []
+
       clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
+        clean_csv_array = clean_csv_hash.to_a
+
         account_hash = validate_hash(Account.column_names, clean_csv_hash)
+        remaining_clean_csv_array = clean_csv_array - account_hash.to_a
+
+        web_hash = validate_hash(Web.column_names, remaining_clean_csv_array.to_h)
+        phone_hash = validate_hash(Phone.column_names, remaining_clean_csv_array.to_h)
+        address_hash = validate_hash(Address.column_names, remaining_clean_csv_array.to_h)
+
         accounts << Account.new(account_hash)
+        webs << Web.new(web_hash)
+        phones << Phone.new(phone_hash)
+        addresses << Address.new(address_hash)
       end
 
       binding.pry
+
       Account.import(accounts)
       binding.pry
+
+      Web.import(webs)
+      binding.pry
+
+      Phone.import(phones)
+      binding.pry
+
+      Address.import(addresses)
+      binding.pry
+
 
 
       ### ABOVE - TRIAL OF ACTIVE RECORD IMPORT GEM ABOVE ###
