@@ -77,7 +77,7 @@ gem 'autoprefixer-rails'
 gem 'font-awesome-sass', '~> 4.7.0'
 gem 'underscore-rails'
 
-gem 'autoprefixer-rails'
+gem 'activerecord-import', '~> 0.15.0'
 
 
 
