@@ -35,26 +35,155 @@ module CsvToolMod
 
   module Import
 
-    def import_csv
 
-      # CSV.foreach(@file_path, headers: true, skip_blanks: true) do |row|
+    ### ORIGNAL IMPORT_CSV BELOW ###
+
+    # def import_csv
+    #   # CsvTool.new(Account).import_csv
+    #
+    #   CSV.foreach(@file_path, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true) do |row|
+    #     valid_hash = validate_hash(@model.column_names, row.to_h)
+    #     row_array = (row.to_a) - (valid_hash.to_a)
+    #
+    #     begin
+    #       if @model = Account
+    #         # if account = @model.find_by(crm_acct_num: valid_hash["crm_acct_num"]) || account = @model.find_by(id: valid_hash["id"])
+    #         #   account.update_attributes(valid_hash)
+    #         # else
+    #         #   account = @model.record_timestamps = true
+    #         #   account = @model.create!(valid_hash)
+    #         # end
+    #
+    #         if valid_hash["crm_acct_num"].present?
+    #           account = Account.find_or_create_by(crm_acct_num: valid_hash["crm_acct_num"])
+    #           account.update_attributes(valid_hash)
+    #         elsif valid_hash["id"].present?
+    #           account = Account.find_or_create_by(id: valid_hash["id"])
+    #           account.update_attributes(valid_hash)
+    #         else
+    #           account = Account.create(valid_hash)
+    #         end
+    #
+    #         web_hash = validate_hash(Web.column_names, row_array.to_h)
+    #         address_hash = validate_hash(Address.column_names, row_array.to_h)
+    #         phone_hash = validate_hash(Phone.column_names, row_array.to_h)
+    #
+    #         url = web_hash['url']
+    #         phone = phone_hash['phone']
+    #
+    #         if url.present?
+    #           web_obj = Web.find_or_create_by(url: url)
+    #           web_obj.update_attributes(web_hash)
+    #           account.webs << web_obj if !account.webs.include?(web_obj)
+    #         end
+    #
+    #         if phone.present?
+    #           phone_obj = Phone.find_or_create_by(phone: phone)
+    #           phone_obj.update_attributes(phone_hash)
+    #           account.phones << phone_obj if !account.phones.include?(phone_obj)
+    #         end
+    #
+    #         address_obj = Address.find_or_create_by(address_hash)
+    #         account.addresses << address_obj if !account.addresses.include?(address_obj)
+    #
+    #       elsif @model = Contact
+    #         if obj = @model.find_by(crm_cont_num: valid_hash["crm_cont_num"]) || obj = @model.find_by(id: valid_hash["id"])
+    #           obj.update_attributes(valid_hash)
+    #         else
+    #           @model.record_timestamps = true
+    #           @model.create!(valid_hash)
+    #         end
+    #         # grab account num, account_id, phone, url, etc.
+    #       end
+    #
+    #     # begin
+    #     #   if obj = @model.find_by(id: valid_hash["id"])
+    #     #     @model.record_timestamps = false
+    #     #     obj.update_attributes(valid_hash)
+    #     #   else
+    #     #     @model.record_timestamps = true
+    #     #     @model.create!(valid_hash)
+    #     #   end
+    #
+    #     rescue
+    #       puts "\n\nDuplicate Data Error\n\n"
+    #     end
+    #
+    #   end
+    # end
+
+
+
+    ### ORIGNAL IMPORT_CSV ABOVE / TESTING IMPORT_CSV BELOW ###
+
+
+
+
+    def import_csv
+      # CsvTool.new(Account).import_csv
+
       CSV.foreach(@file_path, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true) do |row|
-        valid_hash = validate_hash(@model.column_names, row.to_hash)
+        valid_hash = validate_hash(@model.column_names, row.to_h)
+        row_array = (row.to_a) - (valid_hash.to_a)
 
         begin
-          if obj = @model.find_by(id: valid_hash["id"])
-            @model.record_timestamps = false
-            obj.update_attributes(valid_hash)
-          else
-            @model.record_timestamps = true
-            @model.create!(valid_hash)
+          if @model = Account
+            # if account = @model.find_by(crm_acct_num: valid_hash["crm_acct_num"]) || account = @model.find_by(id: valid_hash["id"])
+            #   account.update_attributes(valid_hash)
+            # else
+            #   account = @model.record_timestamps = true
+            #   account = @model.create!(valid_hash)
+            # end
+
+            if valid_hash["crm_acct_num"].present?
+              account = Account.find_or_create_by(crm_acct_num: valid_hash["crm_acct_num"])
+              account.update_attributes(valid_hash)
+            elsif valid_hash["id"].present?
+              account = Account.find_or_create_by(id: valid_hash["id"])
+              account.update_attributes(valid_hash)
+            else
+              account = Account.create(valid_hash)
+            end
+
+            web_hash = validate_hash(Web.column_names, row_array.to_h)
+            address_hash = validate_hash(Address.column_names, row_array.to_h)
+            phone_hash = validate_hash(Phone.column_names, row_array.to_h)
+
+            url = web_hash['url']
+            phone = phone_hash['phone']
+
+            if url.present?
+              web_obj = Web.find_or_create_by(url: url)
+              web_obj.update_attributes(web_hash)
+              account.webs << web_obj if !account.webs.include?(web_obj)
+            end
+
+            if phone.present?
+              phone_obj = Phone.find_or_create_by(phone: phone)
+              phone_obj.update_attributes(phone_hash)
+              account.phones << phone_obj if !account.phones.include?(phone_obj)
+            end
+
+            address_obj = Address.find_or_create_by(address_hash)
+            account.addresses << address_obj if !account.addresses.include?(address_obj)
+
+          elsif @model = Contact
+            if obj = @model.find_by(crm_cont_num: valid_hash["crm_cont_num"]) || obj = @model.find_by(id: valid_hash["id"])
+              obj.update_attributes(valid_hash)
+            else
+              @model.record_timestamps = true
+              @model.create!(valid_hash)
+            end
           end
+
         rescue
           puts "\n\nDuplicate Data Error\n\n"
         end
 
       end
     end
+
+    ### TESTING IMPORT ABOVE
 
     def validate_hash(cols, hash)
       keys = hash.keys
@@ -66,32 +195,8 @@ module CsvToolMod
       hash
     end
 
-    # options = {
-    #   headers: true,
-    #   skip_blanks: true,
-    #   col_sep: true,
-    #   skip_lines: /å/
-    # }
 
-    # CSV.foreach(@file_path, options) do |row|
-    #   puts counter
-    #   counter+=1
-    #   @csv_hashes << row.to_hash.symbolize_keys
-    # end
-
-    # call: CsvToolParser.new.import_urls
-    def iterate_csv
-      puts "\n\nImporting CSV.  This might take a few minutes ..."
-      @csv_hashes = []
-      # CSV.foreach(@file_path, headers: true, skip_blanks: true) do |row|
-      # CSV.foreach(@file_path, encoding: "UTF-32BE:UTF-8", headers: true, skip_blanks: true) do |row|
-      CSV.foreach(@file_path, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true) do |row|
-        @csv_hashes << row.to_hash.symbolize_keys
-      end
-
-      @csv_hashes
-    end
-
+  ## Call: CsvTool.new(Account).iterate_csv_w_error_report
     def iterate_csv_w_error_report
       puts "\n\nImporting CSV.  This might take a few minutes ..."
 
@@ -113,6 +218,7 @@ module CsvToolMod
 
       end
       error_report(error_row_numbers)
+      binding.pry
       @csv_hashes
     end
 
@@ -127,6 +233,24 @@ module CsvToolMod
       h = Hash[@headers.zip(row)]
       h.symbolize_keys
     end
+
+
+
+    # call: CsvToolParser.new.import_urls
+    ## Call: CsvTool.new(Account).iterate_csv
+    def iterate_csv
+      puts "\n\nImporting CSV.  This might take a few minutes ..."
+      binding.pry
+      @csv_hashes = []
+      # CSV.foreach(@file_path, headers: true, skip_blanks: true) do |row|
+      # CSV.foreach(@file_path, encoding: "UTF-32BE:UTF-8", headers: true, skip_blanks: true) do |row|
+      CSV.foreach(@file_path, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true) do |row|
+        @csv_hashes << row.to_hash.symbolize_keys
+      end
+
+      @csv_hashes
+    end
+
 
 
 
