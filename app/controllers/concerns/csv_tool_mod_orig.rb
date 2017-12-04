@@ -121,9 +121,13 @@ module CsvToolMod
 
     ### TESTING IMPORT_CSV BELOW ###
 
-
     def import_csv
       # CsvTool.new(Account).import_csv
+
+      @accounts = []
+      @addresses = []
+      @webs = []
+      @phones = []
 
       clean_csv_hashes = iterate_csv_w_error_report
       clean_csv_hashes.each do |clean_csv_hash|
@@ -140,14 +144,16 @@ module CsvToolMod
 
             if acct_id.present?
               binding.pry
-              account = Account.find_or_create_by(id: acct_id)
+              account = Account.find_or_initialize_by(id: acct_id)
               account.update_attributes(valid_hash)
             elsif crm_acct_num.present?
-              account = Account.find_or_create_by(crm_acct_num: crm_acct_num)
+              account = Account.find_or_initialize_by(crm_acct_num: crm_acct_num)
               account.update_attributes(valid_hash)
             else
-              account = Account.create(valid_hash)
+              account = Account.new(valid_hash)
             end
+
+            @accounts << account
 
             web_hash = validate_hash(Web.column_names, remaining_clean_csv_array.to_h)
             address_hash = validate_hash(Address.column_names, remaining_clean_csv_array.to_h)
@@ -157,19 +163,22 @@ module CsvToolMod
             phone = phone_hash['phone']
 
             if url.present?
-              web_obj = Web.find_or_create_by(url: url)
+              web_obj = Web.find_or_initialize_by(url: url)
               web_obj.update_attributes(web_hash)
               account.webs << web_obj if !account.webs.include?(web_obj)
+              @webs << web_obj
             end
 
             if phone.present?
-              phone_obj = Phone.find_or_create_by(phone: phone)
+              phone_obj = Phone.find_or_initialize_by(phone: phone)
               phone_obj.update_attributes(phone_hash)
               account.phones << phone_obj if !account.phones.include?(phone_obj)
+              @phones << phone_obj
             end
 
-            address_obj = Address.find_or_create_by(address_hash)
+            address_obj = Address.find_or_initialize_by(address_hash)
             account.addresses << address_obj if !account.addresses.include?(address_obj)
+            @addresses << address_obj
 
           elsif @model = Contact
             if obj = @model.find_by(crm_cont_num: valid_hash["crm_cont_num"]) || obj = @model.find_by(id: valid_hash["id"])
@@ -185,6 +194,13 @@ module CsvToolMod
         end
 
       end ## end of CSV for each
+
+      binding.pry
+      @accounts.save
+      @addresses.save
+      @webs.save
+      @phones.save
+
     end
 
     ### TESTING IMPORT ABOVE
