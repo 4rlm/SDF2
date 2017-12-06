@@ -4,6 +4,9 @@ class CreateAccountWebs < ActiveRecord::Migration[5.1]
       t.integer :account_id, index: true
       t.integer :web_id, index: true
 
+      # t.integer :account_id
+      # t.integer :web_id
+
       t.timestamps
     end
   end

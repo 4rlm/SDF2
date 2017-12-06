@@ -13,3 +13,51 @@ account.contacts << contact
 
 
 address = Address.find_or_create_by(street: 'street_2')
+
+
+================
+
+account = Account.create(
+  source: 'source_1', status: 'status_1', crm_acct_num: 'crm_acct_num_1', name: 'sample_account_1',
+  contacts_attributes: [source: 'source_1', status: 'status_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'],
+  webs_attributes: [source: 'source_1', status: 'status_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'],
+  addresses_attributes: [] )
+
+  account.assign_attributes(addresses_attributes: [])
+
+
+  ==============================
+
+
+rails g model StarAccount
+
+  Accounts
+    t.string "account_source"
+    t.string "account_status"
+    t.string "crm_acct_num"
+    t.string "name"
+
+  Addresses
+    t.string "address_source"
+    t.string "address_status"
+    t.string "street"
+    t.string "unit"
+    t.string "city"
+    t.string "state"
+    t.string "zip"
+    t.string "full_address"
+    t.string "address_pin"
+    t.float "latitude"
+    t.float "longitude"
+
+  Phones
+    t.string "phone_source"
+    t.string "phone_status"
+    t.string "phone"
+
+  Webs
+    t.string "web_source"
+    t.string "web_status"
+    t.string "url"
+    t.string "staff_page"
+    t.string "locations_page"

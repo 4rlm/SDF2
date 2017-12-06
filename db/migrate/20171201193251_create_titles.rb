@@ -3,6 +3,8 @@ class CreateTitles < ActiveRecord::Migration[5.1]
     create_table :titles do |t|
       t.string :job_title, index: true, unique: true
 
+      # t.string :job_title
+
       t.timestamps
     end
   end

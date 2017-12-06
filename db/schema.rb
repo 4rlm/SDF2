@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171201193259) do
+ActiveRecord::Schema.define(version: 20171205145724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,38 +34,40 @@ ActiveRecord::Schema.define(version: 20171201193259) do
   end
 
   create_table "accounts", force: :cascade do |t|
-    t.string "source"
-    t.string "status"
+    t.string "account_source"
+    t.string "account_status"
     t.string "crm_acct_num"
-    t.string "name"
+    t.string "account_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["account_name"], name: "index_accounts_on_account_name"
+    t.index ["account_source"], name: "index_accounts_on_account_source"
+    t.index ["account_status"], name: "index_accounts_on_account_status"
     t.index ["crm_acct_num"], name: "index_accounts_on_crm_acct_num"
-    t.index ["name"], name: "index_accounts_on_name"
-    t.index ["source"], name: "index_accounts_on_source"
-    t.index ["status"], name: "index_accounts_on_status"
   end
 
   create_table "addresses", force: :cascade do |t|
-    t.string "source"
-    t.string "status"
+    t.string "address_source"
+    t.string "address_status"
     t.string "street"
     t.string "unit"
     t.string "city"
     t.string "state"
     t.string "zip"
+    t.string "full_address"
     t.string "address_pin"
     t.float "latitude"
     t.float "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address_pin"], name: "index_addresses_on_address_pin"
+    t.index ["address_source"], name: "index_addresses_on_address_source"
+    t.index ["address_status"], name: "index_addresses_on_address_status"
     t.index ["city"], name: "index_addresses_on_city"
+    t.index ["full_address"], name: "index_addresses_on_full_address"
     t.index ["latitude"], name: "index_addresses_on_latitude"
     t.index ["longitude"], name: "index_addresses_on_longitude"
-    t.index ["source"], name: "index_addresses_on_source"
     t.index ["state"], name: "index_addresses_on_state"
-    t.index ["status"], name: "index_addresses_on_status"
     t.index ["street"], name: "index_addresses_on_street"
     t.index ["unit"], name: "index_addresses_on_unit"
     t.index ["zip"], name: "index_addresses_on_zip"
@@ -90,8 +92,8 @@ ActiveRecord::Schema.define(version: 20171201193259) do
   end
 
   create_table "contacts", force: :cascade do |t|
-    t.string "source"
-    t.string "status"
+    t.string "contact_source"
+    t.string "contact_status"
     t.integer "account_id"
     t.string "crm_acct_num"
     t.string "crm_cont_num"
@@ -101,13 +103,13 @@ ActiveRecord::Schema.define(version: 20171201193259) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_contacts_on_account_id"
+    t.index ["contact_source"], name: "index_contacts_on_contact_source"
+    t.index ["contact_status"], name: "index_contacts_on_contact_status"
     t.index ["crm_acct_num"], name: "index_contacts_on_crm_acct_num"
     t.index ["crm_cont_num"], name: "index_contacts_on_crm_cont_num"
     t.index ["email"], name: "index_contacts_on_email"
     t.index ["first_name"], name: "index_contacts_on_first_name"
     t.index ["last_name"], name: "index_contacts_on_last_name"
-    t.index ["source"], name: "index_contacts_on_source"
-    t.index ["status"], name: "index_contacts_on_status"
   end
 
   create_table "descriptions", force: :cascade do |t|
@@ -118,14 +120,14 @@ ActiveRecord::Schema.define(version: 20171201193259) do
   end
 
   create_table "phones", force: :cascade do |t|
-    t.string "source"
-    t.string "status"
+    t.string "phone_source"
+    t.string "phone_status"
     t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["phone"], name: "index_phones_on_phone"
-    t.index ["source"], name: "index_phones_on_source"
-    t.index ["status"], name: "index_phones_on_status"
+    t.index ["phone_source"], name: "index_phones_on_phone_source"
+    t.index ["phone_status"], name: "index_phones_on_phone_status"
   end
 
   create_table "phonings", force: :cascade do |t|
@@ -146,19 +148,56 @@ ActiveRecord::Schema.define(version: 20171201193259) do
     t.index ["job_title"], name: "index_titles_on_job_title"
   end
 
+  create_table "uni_accounts", force: :cascade do |t|
+    t.integer "account_id"
+    t.string "account_source"
+    t.string "account_status"
+    t.string "crm_acct_num"
+    t.string "account_name"
+    t.integer "address_id"
+    t.string "address_source"
+    t.string "address_status"
+    t.string "street"
+    t.string "unit"
+    t.string "city"
+    t.string "state"
+    t.string "zip"
+    t.string "full_address"
+    t.string "address_pin"
+    t.float "latitude"
+    t.float "longitude"
+    t.integer "phone_id"
+    t.string "phone_source"
+    t.string "phone_status"
+    t.string "phone"
+    t.integer "web_id"
+    t.string "web_source"
+    t.string "web_status"
+    t.string "url"
+    t.string "staff_page"
+    t.string "locations_page"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "uni_contacts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "webs", force: :cascade do |t|
-    t.string "source"
-    t.string "status"
+    t.string "web_source"
+    t.string "web_status"
     t.string "url"
     t.string "staff_page"
     t.string "locations_page"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["locations_page"], name: "index_webs_on_locations_page"
-    t.index ["source"], name: "index_webs_on_source"
     t.index ["staff_page"], name: "index_webs_on_staff_page"
-    t.index ["status"], name: "index_webs_on_status"
     t.index ["url"], name: "index_webs_on_url"
+    t.index ["web_source"], name: "index_webs_on_web_source"
+    t.index ["web_status"], name: "index_webs_on_web_status"
   end
 
 end

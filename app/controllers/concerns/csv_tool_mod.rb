@@ -29,180 +29,103 @@ module CsvToolMod
         @model.all.each { |r| csv << r.attributes.values }
       end
     end
-
   end
 
 
   module Import
+    ### Migrates uni_account table (csv imported accounts) to their proper join tables, then deletes itself.
+    def uni_account_migrator
+      # CsvTool.new(Account).import_star_accounts
+      # CsvTool.new(Account).uni_account_migrator
+      UniAccount.all.each do |uni_account|
+        uni_account_hash = uni_account.attributes
+        uni_account_hash.delete('id')
+        uni_account_hash['id'] = uni_account_hash.delete('account_id')
+        uni_account_hash.delete_if { |key, value| value.blank? }
+        uni_account_array = (uni_account_hash.to_a)
 
-
-    ### ORIGNAL IMPORT_CSV BELOW ###
-
-    # def import_csv
-    #   # CsvTool.new(Account).import_csv
-    #
-    #   CSV.foreach(@file_path, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true) do |row|
-    #     valid_hash = validate_hash(@model.column_names, row.to_h)
-    #     row_array = (row.to_a) - (valid_hash.to_a)
-    #
-    #     begin
-    #       if @model = Account
-    #         # if account = @model.find_by(crm_acct_num: valid_hash["crm_acct_num"]) || account = @model.find_by(id: valid_hash["id"])
-    #         #   account.update_attributes(valid_hash)
-    #         # else
-    #         #   account = @model.record_timestamps = true
-    #         #   account = @model.create!(valid_hash)
-    #         # end
-    #
-    #         if valid_hash["crm_acct_num"].present?
-    #           account = Account.find_or_create_by(crm_acct_num: valid_hash["crm_acct_num"])
-    #           account.update_attributes(valid_hash)
-    #         elsif valid_hash["id"].present?
-    #           account = Account.find_or_create_by(id: valid_hash["id"])
-    #           account.update_attributes(valid_hash)
-    #         else
-    #           account = Account.create(valid_hash)
-    #         end
-    #
-    #         web_hash = validate_hash(Web.column_names, row_array.to_h)
-    #         address_hash = validate_hash(Address.column_names, row_array.to_h)
-    #         phone_hash = validate_hash(Phone.column_names, row_array.to_h)
-    #
-    #         url = web_hash['url']
-    #         phone = phone_hash['phone']
-    #
-    #         if url.present?
-    #           web_obj = Web.find_or_create_by(url: url)
-    #           web_obj.update_attributes(web_hash)
-    #           account.webs << web_obj if !account.webs.include?(web_obj)
-    #         end
-    #
-    #         if phone.present?
-    #           phone_obj = Phone.find_or_create_by(phone: phone)
-    #           phone_obj.update_attributes(phone_hash)
-    #           account.phones << phone_obj if !account.phones.include?(phone_obj)
-    #         end
-    #
-    #         address_obj = Address.find_or_create_by(address_hash)
-    #         account.addresses << address_obj if !account.addresses.include?(address_obj)
-    #
-    #       elsif @model = Contact
-    #         if obj = @model.find_by(crm_cont_num: valid_hash["crm_cont_num"]) || obj = @model.find_by(id: valid_hash["id"])
-    #           obj.update_attributes(valid_hash)
-    #         else
-    #           @model.record_timestamps = true
-    #           @model.create!(valid_hash)
-    #         end
-    #         # grab account num, account_id, phone, url, etc.
-    #       end
-    #
-    #     # begin
-    #     #   if obj = @model.find_by(id: valid_hash["id"])
-    #     #     @model.record_timestamps = false
-    #     #     obj.update_attributes(valid_hash)
-    #     #   else
-    #     #     @model.record_timestamps = true
-    #     #     @model.create!(valid_hash)
-    #     #   end
-    #
-    #     rescue
-    #       puts "\n\nDuplicate Data Error\n\n"
-    #     end
-    #
-    #   end
-    # end
-
-    ### ORIGNAL IMPORT_CSV ABOVE ###
-
-
-    #########################################
-
-
-
-    ### TESTING IMPORT_CSV BELOW ###
-
-    def import_accounts
-      # CsvTool.new(Account).import_accounts
-
-      clean_csv_hashes = iterate_csv_w_error_report
-
-      clean_csv_hashes.each do |clean_csv_hash|
-      # clean_csv_hashes.in_batches(of: 1000).each do |batch_of_hashes|
-        # binding.pry
-
-        clean_csv_hash = clean_csv_hash.stringify_keys
-        clean_csv_array = (clean_csv_hash.to_a)
-
-        valid_hash = validate_hash(Account.column_names, clean_csv_hash)
-        remaining_clean_csv_array = clean_csv_array - valid_hash.to_a
+        account_hash = validate_hash(Account.column_names, uni_account_hash)
+        non_account_attributes_array = uni_account_array - account_hash.to_a
 
         begin
-          # if @model = Account
-            crm_acct_num = valid_hash['crm_acct_num']
-            acct_id = valid_hash['id']
+          crm_acct_num = account_hash['crm_acct_num']
+          acct_id = account_hash['id']
 
-            if acct_id.present?
-              account = Account.find_or_initialize_by(id: acct_id)
-              account.assign_attributes(valid_hash)
-            elsif crm_acct_num.present?
-              account = Account.find_or_initialize_by(crm_acct_num: crm_acct_num)
-              account.assign_attributes(valid_hash)
-            else
-              account = Account.new(valid_hash)
-            end
+          if acct_id.present?
+            account = Account.find(acct_id)
+          elsif crm_acct_num.present?
+            account = Account.find_by(crm_acct_num: crm_acct_num)
+          end
+          account.present? ? update_obj_if_changed(account_hash, account) : account = Account.create(account_hash)
 
-            web_hash = validate_hash(Web.column_names, remaining_clean_csv_array.to_h)
-            address_hash = validate_hash(Address.column_names, remaining_clean_csv_array.to_h)
-            phone_hash = validate_hash(Phone.column_names, remaining_clean_csv_array.to_h)
+          web_hash = validate_hash(Web.column_names, non_account_attributes_array.to_h)
+          phone_hash = validate_hash(Phone.column_names, non_account_attributes_array.to_h)
+          address_hash = validate_hash(Address.column_names, non_account_attributes_array.to_h)
+          # web_hash = {'url' => 'www.testing14.com'}  ## FOR TESTING
+          # phone_hash = {'phone' => '555-123-0514'}  ## FOR TESTING
 
-            url = web_hash['url']
-            phone = phone_hash['phone']
+          url = web_hash['url']
+          phone = phone_hash['phone']
+          address_concat = address_hash.values.compact.join(',')
 
-            if url.present?
-              web_obj = Web.find_or_initialize_by(url: url)
-              web_obj.assign_attributes(web_hash)
-              account.webs << web_obj if !account.webs.include?(web_obj)
+          if url.present?
+            web_obj = Web.find_by(url: url)
 
-              # account.webs.build if !account.webs.include?(web_obj)
-              # @webs << web_obj
-            end
+            web_obj.present? ? update_obj_if_changed(web_hash, web_obj) : web_obj = Web.create(web_hash)
+            account.webs << web_obj if !account.webs.include?(web_obj)
+          end
 
-            if phone.present?
-              phone_obj = Phone.find_or_initialize_by(phone: phone)
-              phone_obj.assign_attributes(phone_hash)
-              account.phones << phone_obj if !account.phones.include?(phone_obj)
+          if phone.present?
+            phone_obj = Phone.find_by(phone: phone)
 
-              # account.phones.build if !account.phones.include?(phone_obj)
-              # @phones << phone_obj
-            end
+            phone_obj.present? ? update_obj_if_changed(phone_hash, phone_obj) : phone_obj = Phone.create(phone_hash)
+            account.phones << phone_obj if !account.phones.include?(phone_obj)
+          end
 
-            address_obj = Address.find_or_initialize_by(address_hash)
+          if address_concat.present?
+            full_address = address_hash.except('address_pin').values.compact.join(', ')
+            address_obj = Address.find_by(full_address: full_address)
+            address_hash['full_address'] = full_address
+
+            address_obj.present? ? update_obj_if_changed(address_hash, address_obj) : address_obj = Address.create(address_hash)
             account.addresses << address_obj if !account.addresses.include?(address_obj)
-
-            # account.addresses.build if !account.addresses.include?(address_obj)
-            # @addresses << address_obj
-            account.save
-
+          end
         rescue
-          puts "\n\nDuplicate Data Error\n\n"
+          puts "\n\nRESCUE ERROR!!\n\n"
+          binding.pry
         end
+      end ## end of iteration.
 
-      end ## end of CSV for each
-
-
-      # binding.pry
-      # ActiveRecord::Base.transaction { @accounts.each(&:save) }
-      # binding.pry
-
-      # @accounts.save
-      # @addresses.save
-      # @webs.save
-      # @phones.save
-
-
+      puts "Accounts: #{Account.all.count}"
+      puts "Webs: #{Web.all.count}"
+      puts "Phones: #{Phone.all.count}"
+      puts "Addresses: #{Address.all.count}"
+      puts "AccountWebs: #{AccountWeb.all.count}"
+      puts "AccountAddresses: #{AccountAddress.all.count}"
+      puts "Phonings: #{Phoning.all.count}"
     end
 
-    ### TESTING IMPORT ABOVE
+    def update_obj_if_changed(hash, obj)
+      if hash['updated_at']
+        hash.delete('updated_at')
+      end
+      updated_attributes = (hash.values) - (obj.attributes.values)
+      obj.update_attributes(hash) if !updated_attributes.empty?
+    end
+
+    def import_star_accounts
+      # CsvTool.new(Account).import_star_accounts
+      clean_csv_hashes = iterate_csv_w_error_report
+      accounts = []
+
+      clean_csv_hashes.each do |clean_csv_hash|
+        clean_csv_hash = clean_csv_hash.stringify_keys
+        account_hash = validate_hash(UniAccount.column_names, clean_csv_hash)
+        account = UniAccount.new(account_hash)
+        accounts << account
+      end
+      UniAccount.import(accounts)
+    end
 
     def validate_hash(cols, hash)
       # cols.map!(&:to_sym)
@@ -210,7 +133,6 @@ module CsvToolMod
       keys.each { |key| hash.delete(key) if !cols.include?(key) }
       return hash
     end
-
 
   ## Call: CsvTool.new(Account).iterate_csv_w_error_report
     def iterate_csv_w_error_report
@@ -231,18 +153,15 @@ module CsvToolMod
           counter += 1
           next
         end
-
       end
 
       error_report(error_row_numbers)
       return clean_csv_hashes
-
     end
 
     # call: CsvToolParser.new.import_urls
     def error_report(error_row_numbers)
       puts "\nCSV data successfully imported.\nBut #{error_row_numbers.length} rows were skipped due to the following errors on the lines listed below:\n\n"
-
       error_row_numbers.each_with_index { |hash, i| puts "#{i+1}) Row #{hash.keys[0]}: #{hash.values[0]}." }
     end
 
@@ -251,67 +170,17 @@ module CsvToolMod
       h.symbolize_keys
     end
 
-
-
-
-
-
     # call: CsvToolParser.new.import_urls
     ## Call: CsvTool.new(Account).iterate_csv
     def iterate_csv
       puts "\n\nImporting CSV.  This might take a few minutes ..."
       binding.pry
       @csv_hashes = []
-      # CSV.foreach(@file_path, headers: true, skip_blanks: true) do |row|
-      # CSV.foreach(@file_path, encoding: "UTF-32BE:UTF-8", headers: true, skip_blanks: true) do |row|
       CSV.foreach(@file_path, encoding: 'windows-1252:utf-8', headers: true, skip_blanks: true) do |row|
         @csv_hashes << row.to_hash.symbolize_keys
       end
-
       @csv_hashes
     end
-
-
-
-
-
-    ###### ORIGINAL BELOW ########
-    # def import_csv
-    #   upload_csv
-    #   @csv_hashes.each do |valid_hash|
-    #     begin
-    #       if obj = @model.find_by(id: valid_hash["id"])
-    #         @model.record_timestamps = false
-    #         obj.update_attributes(valid_hash)
-    #       else
-    #         @model.record_timestamps = true
-    #         @model.create!(valid_hash)
-    #       end
-    #     rescue
-    #       puts "\n\nDuplicate Data Error\n\n"
-    #     end
-    #
-    #   end
-    # end
-    #
-    # def iterate_csv
-    #   upload_csv
-    #   return @csv_hashes
-    # end
-    #
-    #
-    # def upload_csv
-    #   @csv_hashes = []
-    #
-    #   CSV.foreach(@file_path, headers: true, skip_blanks: true) do |row|
-    #     valid_hash = validate_hash(@model.column_names, row.to_hash)
-    #     @csv_hashes << valid_hash
-    #   end
-    #
-    #   @csv_hashes
-    # end
-
-######################
 
   end
 

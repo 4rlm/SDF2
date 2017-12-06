@@ -1,0 +1,2 @@
+class UniContact < ApplicationRecord
+end
