@@ -35,7 +35,7 @@ module CsvToolMod
   module Import
     ### Migrates uni_account table (csv imported accounts) to their proper join tables, then deletes itself.
     def uni_account_migrator
-      # CsvTool.new(Account).import_star_accounts
+      # CsvTool.new(Account).import_uni_accounts
       # CsvTool.new(Account).uni_account_migrator
       UniAccount.all.each do |uni_account|
         uni_account_hash = uni_account.attributes
@@ -97,12 +97,15 @@ module CsvToolMod
       end ## end of iteration.
 
       puts "Accounts: #{Account.all.count}"
+      
       puts "Webs: #{Web.all.count}"
+      puts "Webings: #{Webing.all.count}"
+
       puts "Phones: #{Phone.all.count}"
-      puts "Addresses: #{Address.all.count}"
-      puts "AccountWebs: #{AccountWeb.all.count}"
-      puts "AccountAddresses: #{AccountAddress.all.count}"
       puts "Phonings: #{Phoning.all.count}"
+
+      puts "Addresses: #{Address.all.count}"
+      puts "AccountAddresses: #{AccountAddress.all.count}"
     end
 
     def update_obj_if_changed(hash, obj)
@@ -113,8 +116,8 @@ module CsvToolMod
       obj.update_attributes(hash) if !updated_attributes.empty?
     end
 
-    def import_star_accounts
-      # CsvTool.new(Account).import_star_accounts
+    def import_uni_accounts
+      # CsvTool.new(Account).import_uni_accounts
       clean_csv_hashes = iterate_csv_w_error_report
       accounts = []
 
@@ -125,6 +128,21 @@ module CsvToolMod
         accounts << account
       end
       UniAccount.import(accounts)
+    end
+
+    def import_uni_contacts
+      # CsvTool.new(Contact).import_uni_contacts
+      binding.pry
+      clean_csv_hashes = iterate_csv_w_error_report
+      contacts = []
+
+      clean_csv_hashes.each do |clean_csv_hash|
+        clean_csv_hash = clean_csv_hash.stringify_keys
+        contact_hash = validate_hash(UniContact.column_names, clean_csv_hash)
+        contact = UniContact.new(contact_hash)
+        contacts << contact
+      end
+      UniContact.import(contacts)
     end
 
     def validate_hash(cols, hash)

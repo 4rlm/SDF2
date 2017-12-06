@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171205145724) do
+ActiveRecord::Schema.define(version: 20171206170706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -181,8 +181,39 @@ ActiveRecord::Schema.define(version: 20171205145724) do
   end
 
   create_table "uni_contacts", force: :cascade do |t|
+    t.string "contact_source"
+    t.string "contact_status"
+    t.integer "account_id"
+    t.string "crm_acct_num"
+    t.string "crm_cont_num"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "job_description"
+    t.string "job_title"
+    t.integer "phone_id"
+    t.string "phone_source"
+    t.string "phone_status"
+    t.string "phone"
+    t.integer "web_id"
+    t.string "web_source"
+    t.string "web_status"
+    t.string "url"
+    t.string "staff_page"
+    t.string "locations_page"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "webings", force: :cascade do |t|
+    t.string "webable_type"
+    t.integer "web_id"
+    t.integer "webable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["web_id"], name: "index_webings_on_web_id"
+    t.index ["webable_id"], name: "index_webings_on_webable_id"
+    t.index ["webable_type"], name: "index_webings_on_webable_type"
   end
 
   create_table "webs", force: :cascade do |t|

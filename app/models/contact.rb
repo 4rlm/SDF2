@@ -17,6 +17,10 @@ class Contact < ApplicationRecord
   has_many :phones, through: :phonings
   accepts_nested_attributes_for :phonings, :phones
 
+  has_many :webings, as: :webable
+  has_many :webs, through: :webings
+  accepts_nested_attributes_for :webings, :webs
+
   validates_uniqueness_of :crm_cont_num, allow_blank: true, allow_nil: true
 
 end
