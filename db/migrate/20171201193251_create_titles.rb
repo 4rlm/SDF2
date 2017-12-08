@@ -5,7 +5,6 @@ class CreateTitles < ActiveRecord::Migration[5.1]
 
       # t.string :job_title
 
-      t.timestamps
     end
   end
 end

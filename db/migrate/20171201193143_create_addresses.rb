@@ -1,7 +1,6 @@
 class CreateAddresses < ActiveRecord::Migration[5.1]
   def change
     create_table :addresses do |t|
-      t.string :address_source, index: true
       t.string :address_status, index: true
       t.string :street, index: true
       t.string :unit, index: true
@@ -24,7 +23,6 @@ class CreateAddresses < ActiveRecord::Migration[5.1]
       # t.float :latitude
       # t.float :longitude
 
-      t.timestamps
     end
   end
 end

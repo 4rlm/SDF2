@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(version: 20171206170706) do
   end
 
   create_table "addresses", force: :cascade do |t|
-    t.string "address_source"
     t.string "address_status"
     t.string "street"
     t.string "unit"
@@ -58,10 +57,7 @@ ActiveRecord::Schema.define(version: 20171206170706) do
     t.string "address_pin"
     t.float "latitude"
     t.float "longitude"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["address_pin"], name: "index_addresses_on_address_pin"
-    t.index ["address_source"], name: "index_addresses_on_address_source"
     t.index ["address_status"], name: "index_addresses_on_address_status"
     t.index ["city"], name: "index_addresses_on_city"
     t.index ["full_address"], name: "index_addresses_on_full_address"
@@ -95,7 +91,6 @@ ActiveRecord::Schema.define(version: 20171206170706) do
     t.string "contact_source"
     t.string "contact_status"
     t.integer "account_id"
-    t.string "crm_acct_num"
     t.string "crm_cont_num"
     t.string "first_name"
     t.string "last_name"
@@ -105,7 +100,6 @@ ActiveRecord::Schema.define(version: 20171206170706) do
     t.index ["account_id"], name: "index_contacts_on_account_id"
     t.index ["contact_source"], name: "index_contacts_on_contact_source"
     t.index ["contact_status"], name: "index_contacts_on_contact_status"
-    t.index ["crm_acct_num"], name: "index_contacts_on_crm_acct_num"
     t.index ["crm_cont_num"], name: "index_contacts_on_crm_cont_num"
     t.index ["email"], name: "index_contacts_on_email"
     t.index ["first_name"], name: "index_contacts_on_first_name"
@@ -114,20 +108,12 @@ ActiveRecord::Schema.define(version: 20171206170706) do
 
   create_table "descriptions", force: :cascade do |t|
     t.string "job_description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["job_description"], name: "index_descriptions_on_job_description"
   end
 
   create_table "phones", force: :cascade do |t|
-    t.string "phone_source"
-    t.string "phone_status"
     t.string "phone"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["phone"], name: "index_phones_on_phone"
-    t.index ["phone_source"], name: "index_phones_on_phone_source"
-    t.index ["phone_status"], name: "index_phones_on_phone_status"
   end
 
   create_table "phonings", force: :cascade do |t|
@@ -143,19 +129,16 @@ ActiveRecord::Schema.define(version: 20171206170706) do
 
   create_table "titles", force: :cascade do |t|
     t.string "job_title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["job_title"], name: "index_titles_on_job_title"
   end
 
   create_table "uni_accounts", force: :cascade do |t|
     t.integer "account_id"
+    t.string "crm_acct_num"
     t.string "account_source"
     t.string "account_status"
-    t.string "crm_acct_num"
     t.string "account_name"
     t.integer "address_id"
-    t.string "address_source"
     t.string "address_status"
     t.string "street"
     t.string "unit"
@@ -167,11 +150,8 @@ ActiveRecord::Schema.define(version: 20171206170706) do
     t.float "latitude"
     t.float "longitude"
     t.integer "phone_id"
-    t.string "phone_source"
-    t.string "phone_status"
     t.string "phone"
     t.integer "web_id"
-    t.string "web_source"
     t.string "web_status"
     t.string "url"
     t.string "staff_page"
@@ -181,22 +161,20 @@ ActiveRecord::Schema.define(version: 20171206170706) do
   end
 
   create_table "uni_contacts", force: :cascade do |t|
-    t.string "contact_source"
-    t.string "contact_status"
     t.integer "account_id"
+    t.integer "contact_id"
     t.string "crm_acct_num"
     t.string "crm_cont_num"
+    t.string "contact_source"
+    t.string "contact_status"
     t.string "first_name"
     t.string "last_name"
     t.string "email"
     t.string "job_description"
     t.string "job_title"
     t.integer "phone_id"
-    t.string "phone_source"
-    t.string "phone_status"
     t.string "phone"
     t.integer "web_id"
-    t.string "web_source"
     t.string "web_status"
     t.string "url"
     t.string "staff_page"
@@ -217,17 +195,13 @@ ActiveRecord::Schema.define(version: 20171206170706) do
   end
 
   create_table "webs", force: :cascade do |t|
-    t.string "web_source"
     t.string "web_status"
     t.string "url"
     t.string "staff_page"
     t.string "locations_page"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["locations_page"], name: "index_webs_on_locations_page"
     t.index ["staff_page"], name: "index_webs_on_staff_page"
     t.index ["url"], name: "index_webs_on_url"
-    t.index ["web_source"], name: "index_webs_on_web_source"
     t.index ["web_status"], name: "index_webs_on_web_status"
   end
 
