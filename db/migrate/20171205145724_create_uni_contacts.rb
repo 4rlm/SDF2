@@ -30,7 +30,6 @@ class CreateUniContacts < ActiveRecord::Migration[5.1]
       t.string :staff_page
       t.string :locations_page
 
-
       t.timestamps
     end
   end

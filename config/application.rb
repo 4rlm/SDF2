@@ -21,5 +21,11 @@ module Sdf2
     config.autoload_paths << Rails.root.join('lib/servicers')
     config.autoload_paths += Dir["#{config.root}/lib/servicers"]
 
+    config.autoload_paths << Rails.root.join('lib/csv')
+    config.autoload_paths += Dir["#{config.root}/lib/csv"]
+
+    config.autoload_paths << Rails.root.join('lib/migrators')
+    config.autoload_paths += Dir["#{config.root}/lib/migrators"]
+
   end
 end

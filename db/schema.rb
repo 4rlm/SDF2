@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171206170706) do
+ActiveRecord::Schema.define(version: 20171211215254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,23 @@ ActiveRecord::Schema.define(version: 20171206170706) do
     t.index ["street"], name: "index_addresses_on_street"
     t.index ["unit"], name: "index_addresses_on_unit"
     t.index ["zip"], name: "index_addresses_on_zip"
+  end
+
+  create_table "brandings", force: :cascade do |t|
+    t.string "brandable_type"
+    t.integer "brand_id"
+    t.integer "brandable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brand_id"], name: "index_brandings_on_brand_id"
+    t.index ["brandable_id"], name: "index_brandings_on_brandable_id"
+    t.index ["brandable_type"], name: "index_brandings_on_brandable_type"
+  end
+
+  create_table "brands", force: :cascade do |t|
+    t.string "brand_term"
+    t.string "brand_name"
+    t.string "dealer_type"
   end
 
   create_table "contact_descriptions", force: :cascade do |t|
@@ -127,6 +144,30 @@ ActiveRecord::Schema.define(version: 20171206170706) do
     t.index ["phone_id"], name: "index_phonings_on_phone_id"
   end
 
+  create_table "templates", force: :cascade do |t|
+    t.string "template_name"
+    t.index ["template_name"], name: "index_templates_on_template_name"
+  end
+
+  create_table "templatings", force: :cascade do |t|
+    t.string "templatable_type"
+    t.integer "template_id"
+    t.integer "templatable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["templatable_id"], name: "index_templatings_on_templatable_id"
+    t.index ["templatable_type"], name: "index_templatings_on_templatable_type"
+    t.index ["template_id"], name: "index_templatings_on_template_id"
+  end
+
+  create_table "terms", force: :cascade do |t|
+    t.string "category"
+    t.string "sub_category"
+    t.string "criteria_term"
+    t.string "response_term"
+    t.string "mth_name"
+  end
+
   create_table "titles", force: :cascade do |t|
     t.string "job_title"
     t.index ["job_title"], name: "index_titles_on_job_title"
@@ -149,13 +190,19 @@ ActiveRecord::Schema.define(version: 20171206170706) do
     t.string "address_pin"
     t.float "latitude"
     t.float "longitude"
-    t.integer "phone_id"
     t.string "phone"
-    t.integer "web_id"
+    t.string "template_name"
+    t.string "archived"
     t.string "web_status"
     t.string "url"
+    t.string "url_redirect_id"
     t.string "staff_page"
     t.string "locations_page"
+    t.string "ip"
+    t.string "server1"
+    t.string "server2"
+    t.string "registrant_name"
+    t.string "registrant_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -195,14 +242,28 @@ ActiveRecord::Schema.define(version: 20171206170706) do
   end
 
   create_table "webs", force: :cascade do |t|
+    t.boolean "archived"
     t.string "web_status"
     t.string "url"
+    t.string "url_redirect_id"
     t.string "staff_page"
     t.string "locations_page"
+    t.index ["archived"], name: "index_webs_on_archived"
     t.index ["locations_page"], name: "index_webs_on_locations_page"
     t.index ["staff_page"], name: "index_webs_on_staff_page"
     t.index ["url"], name: "index_webs_on_url"
+    t.index ["url_redirect_id"], name: "index_webs_on_url_redirect_id"
     t.index ["web_status"], name: "index_webs_on_web_status"
+  end
+
+  create_table "whos", force: :cascade do |t|
+    t.string "ip"
+    t.string "server1"
+    t.string "server2"
+    t.string "registrant_name"
+    t.string "registrant_email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

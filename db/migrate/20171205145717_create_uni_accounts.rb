@@ -23,15 +23,25 @@ class CreateUniAccounts < ActiveRecord::Migration[5.1]
       t.float :longitude
 
     # Phones
-      t.integer :phone_id
       t.string :phone
 
+    # Dealer Templates
+      t.string :template_name
+
     # Webs
-      t.integer :web_id
+      t.string :archived
       t.string :web_status
       t.string :url
+      t.string :url_redirect_id
       t.string :staff_page
       t.string :locations_page
+
+    # Who
+      t.string :ip
+      t.string :server1
+      t.string :server2
+      t.string :registrant_name
+      t.string :registrant_email
 
       t.timestamps
     end

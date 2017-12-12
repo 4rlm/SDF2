@@ -18,9 +18,18 @@ class CsvTool
   include CsvToolMod::Import
   attr_reader :file_name, :file_path
 
-  def initialize(model)
+  # def initialize(model)
+  #   @model = model
+  #   @file_name = "#{@model.to_s.pluralize.downcase}.csv"
+  #   @dir_path = "./db/backups"
+  #   FileUtils.mkdir_p(@dir_path)
+  #   @file_path = "#{@dir_path}/#{@file_name}"
+  # end
+
+  def initialize(model, file_name)
     @model = model
-    @file_name = "#{@model.to_s.pluralize.downcase}.csv"
+    @file_name = "#{file_name}.csv"
+    # @file_name = "#{@model.to_s.pluralize.downcase}.csv"
     @dir_path = "./db/backups"
     FileUtils.mkdir_p(@dir_path)
     @file_path = "#{@dir_path}/#{@file_name}"

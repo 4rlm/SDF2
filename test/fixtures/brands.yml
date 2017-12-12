@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  term: MyString
+  consolidated_termcategory: MyString
+  brand_count: MyString
+  cat_count: MyString
+
+two:
+  term: MyString
+  consolidated_termcategory: MyString
+  brand_count: MyString
+  cat_count: MyString

@@ -15,9 +15,14 @@ class Account < ApplicationRecord
   has_many :webs, through: :webings
   accepts_nested_attributes_for :webings, :webs
 
-  # has_many :account_webs, dependent: :destroy
-  # has_many :webs, through: :account_webs
-  # accepts_nested_attributes_for :account_webs, :webs
+  has_many :templatings, as: :templatable
+  has_many :templates, through: :templatings
+  accepts_nested_attributes_for :templatings, :templates
+
+  has_many :brandings, as: :brandable
+  has_many :brands, through: :brandings
+  accepts_nested_attributes_for :brandings, :brands
+
 
   validates_uniqueness_of :crm_acct_num, allow_blank: true, allow_nil: true
 
