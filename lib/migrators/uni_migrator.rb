@@ -180,7 +180,7 @@ class UniMigrator
         end
       end ## end of iteration.
     end
-  
+
     UniContact.destroy_all
   end
 
