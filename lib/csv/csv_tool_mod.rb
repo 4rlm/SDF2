@@ -10,8 +10,11 @@
 ## Call: CsvTool.new(Term, 'terms').download_csv
 
 
-# IMPORT:
+# IMPORT SEEDS:
 #CALL: CsvToolMod::Import.import_entire_seeds
+
+# IMPORT BACKUPS:
+#CALL: CsvToolMod::Import.restore_all_backups
 
 
 ###############
@@ -25,15 +28,28 @@ require 'pry'
 module CsvToolMod
   extend ActiveSupport::Concern
 
+  def self.get_db_table_list
+    Rails.application.eager_load!
+    db_table_list = ActiveRecord::Base.descendants.map(&:name)
+    removables = ['ApplicationRecord', 'UniContact', 'UniAccount']
+    removables.each { |table| db_table_list.delete(table) }
+    db_table_list.reverse!
+
+    return db_table_list
+  end
+
   module Export
 
     def self.backup_entire_db
       #CALL: CsvToolMod::Export.backup_entire_db
-      Rails.application.eager_load!
-      db_table_list = ActiveRecord::Base.descendants.map(&:name)
-      removables = ['ApplicationRecord', 'UniContact', 'UniAccount']
-      removables.each { |table| db_table_list.delete(table) }
-      db_table_list.reverse!
+
+      # Rails.application.eager_load!
+      # db_table_list = ActiveRecord::Base.descendants.map(&:name)
+      # removables = ['ApplicationRecord', 'UniContact', 'UniAccount']
+      # removables.each { |table| db_table_list.delete(table) }
+      # db_table_list.reverse!
+
+      db_table_list = CsvToolMod.get_db_table_list
 
       db_table_list.each do |table_name|
         model = table_name.constantize
@@ -67,6 +83,50 @@ module CsvToolMod
 
   module Import
 
+    def self.restore_all_backups
+      #CALL: CsvToolMod::Import.restore_all_backups
+
+      db_table_list = CsvToolMod.get_db_table_list
+      db_table_list.each do |table_name|
+        model = table_name.constantize
+        file_name = "#{table_name.pluralize}.csv"
+        CsvTool.new.restore_backup(model, file_name)
+      end
+
+    end
+
+
+    def restore_backup(model, file_name)
+      # CsvTool.new.restore_backup(Term, 'Terms.csv')
+      model.destroy_all
+
+      @file_path = "#{@backups_dir_path}/#{file_name}"
+      clean_csv_hashes = iterate_csv_w_error_report
+
+      new_objects = []
+      clean_csv_hashes.each do |clean_csv_hash|
+
+        new_obj = model.new(clean_csv_hash)
+        new_objects << new_obj
+
+        # clean_csv_hash = clean_csv_hash.stringify_keys
+        # clean_csv_hash.delete_if { |k, v| v.nil? }
+        #
+        # attr_hash = validate_hash(model.column_names, clean_csv_hash)
+        # new_obj = model.new(attr_hash)
+        # new_objects << new_obj if new_obj
+      end
+
+      model.import(new_objects)
+      completion_msg(model, file_name)
+
+    end
+
+    #########################################
+
+
+
+
     def self.import_entire_seeds
       #CALL: CsvToolMod::Import.import_entire_seeds
 
@@ -83,7 +143,7 @@ module CsvToolMod
 
       CsvTool.new.import_seed_webs('1_clean_urls.csv')
       binding.pry
-      
+
       CsvTool.new.import_seed_webs('2_redirects.csv')
       binding.pry
 
@@ -110,6 +170,9 @@ module CsvToolMod
     end
 
 
+    ########################################
+
+
     def import_seed_brands(file_name)
       # CsvTool.new.import_seed_brands('8_brands.csv')
       @file_path = "#{@seeds_dir_path}/#{file_name}"
@@ -119,9 +182,12 @@ module CsvToolMod
       clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         brand_hash = validate_hash(Brand.column_names, clean_csv_hash)
-        brand = Brand.new(brand_hash)
-        brands << brand
+
+        brand_obj_exists = Brand.exists?(brand_hash)
+        new_brand_obj = Brand.new(brand_hash) if !brand_obj_exists
+        brands << new_brand_obj if new_brand_obj
       end
+
       Brand.import(brands)
       completion_msg(Brand, file_name)
     end
@@ -133,18 +199,17 @@ module CsvToolMod
       # CsvTool.new.import_seed_uni_accounts('4_locations.csv')
       # CsvTool.new.import_seed_uni_accounts('5_whos.csv')
       # CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
-
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-
       clean_csv_hashes = iterate_csv_w_error_report
-      accounts = []
 
+      accounts = []
       clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         account_hash = validate_hash(UniAccount.column_names, clean_csv_hash)
         account = UniAccount.new(account_hash)
         accounts << account
       end
+
       UniAccount.import(accounts)
       UniMigrator.new.uni_account_migrator
       completion_msg(UniAccount, file_name)
@@ -175,40 +240,33 @@ module CsvToolMod
     end
 
 
-
     def import_seed_terms(file_name)
       # CsvTool.new.import_seed_terms('7_terms.csv') # indexer_terms
-
-      binding.pry
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-      binding.pry
-
       clean_csv_hashes = iterate_csv_w_error_report
-      terms = []
 
+      terms = []
       clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         term_hash = validate_hash(Term.column_names, clean_csv_hash)
-        term = Term.new(term_hash)
-        terms << term
+
+        term_obj_exists = Term.exists?(term_hash)
+        new_term_obj = Term.new(term_hash) if !term_obj_exists
+        terms << new_term_obj if new_term_obj
       end
+
       Term.import(terms)
       completion_msg(Term, file_name)
     end
 
 
-
     def import_seed_webs(file_name)
       # CsvTool.new.import_seed_webs('1_clean_urls.csv')
       # CsvTool.new.import_seed_webs('2_redirects.csv')
-
-      binding.pry
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-      binding.pry
-
       clean_csv_hashes = iterate_csv_w_error_report
-      webs = []
 
+      webs = []
       clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         web_hash = validate_hash(Web.column_names, clean_csv_hash)
@@ -220,24 +278,15 @@ module CsvToolMod
         url_obj = Web.find_by(url: url)
 
         if url_obj
-          update_obj_if_changed(web_hash, url_obj)
+          UniMigrator.new.update_obj_if_changed(web_hash, url_obj)
         else
           url_obj = Web.new(web_hash)
           webs << url_obj
         end
 
       end
-      Web.import(webs)
+      Web.import(webs) if !webs.empty?
       completion_msg(Web, file_name)
-    end
-
-
-    def update_obj_if_changed(hash, obj)
-      if hash['updated_at']
-        hash.delete('updated_at')
-      end
-      updated_attributes = (hash.values) - (obj.attributes.values)
-      obj.update_attributes(hash) if !updated_attributes.empty?
     end
 
 

@@ -228,9 +228,14 @@ class UniMigrator
 
 
   def update_obj_if_changed(hash, obj)
+    hash.delete_if { |k, v| v.nil? }
+
     if hash['updated_at']
+      binding.pry
       hash.delete('updated_at')
+      obj.record_timestamps = false
     end
+
     updated_attributes = (hash.values) - (obj.attributes.values)
     obj.update_attributes(hash) if !updated_attributes.empty?
   end
