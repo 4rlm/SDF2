@@ -13,6 +13,12 @@
 # IMPORT:
 #CALL: CsvToolMod::Import.import_entire_seeds
 
+
+###############
+# @seeds_file_path = "#{@seeds_dir_path}/#{file_name}"
+# @backups_file_path = "#{@backups_dir_path}/#{file_name}"
+
+
 require 'csv'
 require 'pry'
 
@@ -31,20 +37,23 @@ module CsvToolMod
 
       db_table_list.each do |table_name|
         model = table_name.constantize
-        file_name = "BU_#{table_name.pluralize}"
-        CsvTool.new(model, file_name).backup_csv
-        #Ex. CsvTool.new(Term, 'terms').backup_csv
+        file_name = "#{table_name.pluralize}.csv"
+        CsvTool.new.backup_csv(model, file_name)
       end
 
     end
 
 
-    def backup_csv
-      # CsvTool.new(Term, 'terms').backup_csv
-      CSV.open(@file_path, "wb") do |csv|
-        csv << @model.attribute_names
-        @model.all.each { |r| csv << r.attributes.values }
+    def backup_csv(model, file_name)
+      # CsvTool.new.backup_csv(Term, 'X_terms.csv') # new
+      # CsvTool.new(Term, 'terms').backup_csv # old
+      backups_file_path = "#{@backups_dir_path}/#{file_name}"
+
+      CSV.open(backups_file_path, "wb") do |csv|
+        csv << model.attribute_names
+        model.all.each { |r| csv << r.attributes.values }
       end
+
     end
 
     def download_csv
@@ -53,6 +62,7 @@ module CsvToolMod
         @model.all.each { |r| csv << r.attributes.values }
       end
     end
+
   end
 
 
@@ -66,15 +76,15 @@ module CsvToolMod
       # Copy and paste each of below into rails c terminal to import.
       # Will skip rows containing invalid non-utf-8 characters, but will provide error report first.
 
-      terms_csv = '7_terms' # indexer_terms
-      brands_csv = '8_brands' # in_host_pos
-      clean_urls_csv = '1_clean_urls'
-      redirects_csv = '2_redirects'
-      indexers_csv = '3_indexers'
-      locations_csv = '4_locations'
-      whos_csv = '5_whos'
-      core_accounts_csv = '6_core_accounts'
-      contacts_csv = '9_contacts'
+      terms_csv = '7_terms.csv' # indexer_terms
+      brands_csv = '8_brands.csv' # in_host_pos
+      clean_urls_csv = '1_clean_urls.csv'
+      redirects_csv = '2_redirects.csv'
+      indexers_csv = '3_indexers.csv'
+      locations_csv = '4_locations.csv'
+      whos_csv = '5_whos.csv'
+      core_accounts_csv = '6_core_accounts.csv'
+      contacts_csv = '9_contacts.csv'
 
       CsvTool.new(Term, terms_csv).import_terms
       completion_msg(Term, terms_csv)
