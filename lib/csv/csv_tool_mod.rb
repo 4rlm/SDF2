@@ -46,7 +46,6 @@ module CsvToolMod
 
     def backup_csv(model, file_name)
       # CsvTool.new.backup_csv(Term, 'X_terms.csv') # new
-      # CsvTool.new(Term, 'terms').backup_csv # old
       backups_file_path = "#{@backups_dir_path}/#{file_name}"
 
       CSV.open(backups_file_path, "wb") do |csv|
@@ -76,52 +75,67 @@ module CsvToolMod
       # Copy and paste each of below into rails c terminal to import.
       # Will skip rows containing invalid non-utf-8 characters, but will provide error report first.
 
-      terms_csv = '7_terms.csv' # indexer_terms
-      brands_csv = '8_brands.csv' # in_host_pos
-      clean_urls_csv = '1_clean_urls.csv'
-      redirects_csv = '2_redirects.csv'
-      indexers_csv = '3_indexers.csv'
-      locations_csv = '4_locations.csv'
-      whos_csv = '5_whos.csv'
-      core_accounts_csv = '6_core_accounts.csv'
-      contacts_csv = '9_contacts.csv'
+      CsvTool.new.import_seed_brands('8_brands.csv') # in_host_pos
+      binding.pry
 
-      CsvTool.new(Term, terms_csv).import_terms
-      completion_msg(Term, terms_csv)
+      CsvTool.new.import_seed_terms('7_terms.csv') # indexer_terms
+      binding.pry
 
-      CsvTool.new(Brand, brands_csv).import_brands
-      completion_msg(Brand, brands_csv)
+      CsvTool.new.import_seed_webs('1_clean_urls.csv')
+      binding.pry
+      
+      CsvTool.new.import_seed_webs('2_redirects.csv')
+      binding.pry
 
-      CsvTool.new(Web, clean_urls_csv).import_webs
-      completion_msg(Web, clean_urls_csv)
+      CsvTool.new.import_seed_uni_accounts('3_indexers.csv')
+      binding.pry
 
-      CsvTool.new(Web, redirects_csv).import_webs
-      completion_msg(Web, redirects_csv)
+      CsvTool.new.import_seed_uni_accounts('4_locations.csv')
+      binding.pry
 
-      CsvTool.new(Account, indexers_csv).import_uni_accounts
-      completion_msg(Account, indexers_csv)
+      CsvTool.new.import_seed_uni_accounts('5_whos.csv')
+      binding.pry
 
-      CsvTool.new(Account, locations_csv).import_uni_accounts
-      completion_msg(Account, locations_csv)
+      CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
+      binding.pry
 
-      CsvTool.new(Account, whos_csv).import_uni_accounts
-      completion_msg(Account, whos_csv)
-
-      CsvTool.new(Account, core_accounts_csv).import_uni_accounts
-      completion_msg(Account, core_accounts_csv)
-
-      CsvTool.new(Contact, contacts_csv).import_uni_contacts
-      completion_msg(Contact, contacts_csv)
+      CsvTool.new.import_seed_uni_contacts('9_contacts.csv')
+      binding.pry
 
     end
 
-    def self.completion_msg(model, file_name)
+    def completion_msg(model, file_name)
       puts "\n\n== Imported #{file_name} to #{model} table. ==\n\n"
       migration_report
-      binding.pry
     end
 
-    def import_uni_accounts
+
+    def import_seed_brands(file_name)
+      # CsvTool.new.import_seed_brands('8_brands.csv')
+      @file_path = "#{@seeds_dir_path}/#{file_name}"
+      clean_csv_hashes = iterate_csv_w_error_report
+
+      brands = []
+      clean_csv_hashes.each do |clean_csv_hash|
+        clean_csv_hash = clean_csv_hash.stringify_keys
+        brand_hash = validate_hash(Brand.column_names, clean_csv_hash)
+        brand = Brand.new(brand_hash)
+        brands << brand
+      end
+      Brand.import(brands)
+      completion_msg(Brand, file_name)
+    end
+
+
+
+    def import_seed_uni_accounts(file_name)
+      # CsvTool.new.import_seed_uni_accounts('3_indexers.csv')
+      # CsvTool.new.import_seed_uni_accounts('4_locations.csv')
+      # CsvTool.new.import_seed_uni_accounts('5_whos.csv')
+      # CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
+
+      @file_path = "#{@seeds_dir_path}/#{file_name}"
+
       clean_csv_hashes = iterate_csv_w_error_report
       accounts = []
 
@@ -133,9 +147,19 @@ module CsvToolMod
       end
       UniAccount.import(accounts)
       UniMigrator.new.uni_account_migrator
+      completion_msg(UniAccount, file_name)
     end
 
-    def import_uni_contacts
+
+
+
+    def import_seed_uni_contacts(file_name)
+      # CsvTool.new.import_seed_uni_contacts('9_contacts.csv')
+
+      binding.pry
+      @file_path = "#{@seeds_dir_path}/#{file_name}"
+      binding.pry
+
       clean_csv_hashes = iterate_csv_w_error_report
       contacts = []
 
@@ -147,10 +171,18 @@ module CsvToolMod
       end
       UniContact.import(contacts)
       UniMigrator.new.uni_contact_migrator
+      completion_msg(UniContact, file_name)
     end
 
 
-    def import_terms
+
+    def import_seed_terms(file_name)
+      # CsvTool.new.import_seed_terms('7_terms.csv') # indexer_terms
+
+      binding.pry
+      @file_path = "#{@seeds_dir_path}/#{file_name}"
+      binding.pry
+
       clean_csv_hashes = iterate_csv_w_error_report
       terms = []
 
@@ -161,24 +193,19 @@ module CsvToolMod
         terms << term
       end
       Term.import(terms)
+      completion_msg(Term, file_name)
     end
 
 
-    def import_brands
-      clean_csv_hashes = iterate_csv_w_error_report
-      brands = []
 
-      clean_csv_hashes.each do |clean_csv_hash|
-        clean_csv_hash = clean_csv_hash.stringify_keys
-        brand_hash = validate_hash(Brand.column_names, clean_csv_hash)
-        brand = Brand.new(brand_hash)
-        brands << brand
-      end
-      Brand.import(brands)
-    end
+    def import_seed_webs(file_name)
+      # CsvTool.new.import_seed_webs('1_clean_urls.csv')
+      # CsvTool.new.import_seed_webs('2_redirects.csv')
 
+      binding.pry
+      @file_path = "#{@seeds_dir_path}/#{file_name}"
+      binding.pry
 
-    def import_webs
       clean_csv_hashes = iterate_csv_w_error_report
       webs = []
 
@@ -201,6 +228,7 @@ module CsvToolMod
 
       end
       Web.import(webs)
+      completion_msg(Web, file_name)
     end
 
 
@@ -260,7 +288,7 @@ module CsvToolMod
     end
 
 
-    def self.migration_report
+    def migration_report
       # DISPLAY FINAL RESULTS AFTER MIGRATION COMPLETES.
       puts "Accounts: #{Account.all.count}"
       puts "Contacts: #{Contact.all.count}"

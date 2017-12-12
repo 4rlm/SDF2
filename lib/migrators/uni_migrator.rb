@@ -11,6 +11,7 @@ class UniMigrator
   def uni_account_migrator
     # UniMigrator.new.uni_account_migrator
 
+    rollbacks = []
     # UniAccount.all.each do |uni_account|
     # UniAccount.find((1..603).to_a).each do |uni_account|
     UniAccount.in_batches.each do |each_batch|
@@ -97,10 +98,20 @@ class UniMigrator
 
         rescue
           puts "\n\nRESCUE ERROR!!\n\n"
+
           binding.pry
+          rollbacks << uni_account_hash
+          binding.pry
+
+          rollbacks.each { |uni_account_hash| puts uni_account_hash }
+          binding.pry
+
         end
       end ## end of iteration.
     end
+    binding.pry
+    rollbacks.each { |uni_account_hash| puts uni_account_hash }
+    binding.pry
 
     UniAccount.destroy_all
   end
@@ -110,6 +121,7 @@ class UniMigrator
   def uni_contact_migrator
     # UniMigrator.new.uni_contact_migrator
 
+    rollbacks = []
     # UniContact.all.each do |uni_contact|
     # UniContact.find((1..100).to_a).each do |uni_contact|
     UniContact.in_batches.each do |each_batch|
@@ -171,9 +183,19 @@ class UniMigrator
         rescue
           puts "\n\nRESCUE ERROR!!\n\n"
           binding.pry
+
+          rollbacks << uni_contact
+          binding.pry
+
+          rollbacks.each { |uni_contact| puts uni_contact }
+          binding.pry
+
         end
       end ## end of iteration.
     end
+    binding.pry
+    rollbacks.each { |uni_contact| puts uni_contact }
+    binding.pry
 
     UniContact.destroy_all
   end
