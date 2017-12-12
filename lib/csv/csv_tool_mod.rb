@@ -1,11 +1,17 @@
+# IMPORTANT: Works with /lib/migrators/uni_migrator.rb
+
 # Notes:
 # 1) CsvTool class calls CsvToolMod module.  Both files work together.
 # 2) Note: Ensure config/application.rb extends autoload to concerns.
 
 # EXPORT:
-## Call: CsvTool.new(Account).backup_csv
-## Call: CsvTool.new(Account).download_csv
+## Call: CsvToolMod::Export.backup_entire_db
+## Call: CsvTool.new(Term, 'terms').backup_csv
+## Call: CsvTool.new(Term, 'terms').download_csv
 
+
+# IMPORT:
+#CALL: CsvToolMod::Import.import_entire_seeds
 
 require 'csv'
 require 'pry'
@@ -52,8 +58,8 @@ module CsvToolMod
 
   module Import
 
-    def self.grand_importer
-      #CALL: CsvToolMod::Import.grand_importer
+    def self.import_entire_seeds
+      #CALL: CsvToolMod::Import.import_entire_seeds
 
       ########### IMPORT: CURRENT VERSION ###########
       # Files should be stored in db/backups/... and not pushed to git (gitignore).  Saved locally only.

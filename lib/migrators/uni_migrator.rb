@@ -1,14 +1,8 @@
-# Notes:
+# IMPORTANT: Works with /lib/csv/csv_tool_mod.rb
+
 # 1) Note: Ensure config/application.rb extends autoload to concerns.
 # 2) Migrates uni_account AND uni_contact tableS (csv imported accounts/contacts) to their proper join tables, then deletes itself.
 
-# 3) IMPORT CSV:
-# CsvTool.new(Account).import_uni_accounts
-# CsvTool.new(Contact).import_uni_contacts
-
-# 4) MIGRATE IMPORTED CSV DATA:
-#Call: UniMigrator.new.uni_account_migrator
-#Call: UniMigrator.new.uni_contact_migrator
 
 require 'pry'
 
