@@ -41,34 +41,21 @@ module CsvToolMod
 
     def self.backup_entire_db
       #CALL: CsvToolMod::Export.backup_entire_db
-
-      # Rails.application.eager_load!
-      # db_table_list = ActiveRecord::Base.descendants.map(&:name)
-      # removables = ['ApplicationRecord', 'UniContact', 'UniAccount']
-      # removables.each { |table| db_table_list.delete(table) }
-      # db_table_list.reverse!
-
       db_table_list = CsvToolMod.get_db_table_list
-      binding.pry
-
       db_table_list.each do |table_name|
         model = table_name.constantize
         file_name = "#{table_name.pluralize}.csv"
         CsvTool.new.backup_csv(model, file_name)
       end
-
     end
 
 
     def backup_csv(model, file_name)
-      # CsvTool.new.backup_csv(Term, 'X_terms.csv') # new
       backups_file_path = "#{@backups_dir_path}/#{file_name}"
-
       CSV.open(backups_file_path, "wb") do |csv|
         csv << model.attribute_names
         model.all.each { |r| csv << r.attributes.values }
       end
-
     end
 
     def download_csv
@@ -148,8 +135,6 @@ module CsvToolMod
       @file_path = "#{@seeds_dir_path}/#{file_name}"
 
       parse_csv
-      @clean_csv_hashes
-
       brands = []
       @clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
@@ -192,10 +177,7 @@ module CsvToolMod
 
     def import_seed_uni_contacts(file_name)
       # CsvTool.new.import_seed_uni_contacts('9_contacts.csv')
-
-      binding.pry
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-      binding.pry
 
       parse_csv
       contacts = []

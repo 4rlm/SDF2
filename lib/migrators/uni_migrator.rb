@@ -102,7 +102,10 @@ class UniMigrator
     end
 
     @rollbacks.each { |uni_account_hash| puts uni_account_hash }
-    UniAccount.destroy_all
+    # UniAccount.destroy_all
+    
+    UniAccount.delete_all
+    ActiveRecord::Base.connection.reset_pk_sequence!('uni_accounts')
   end
 
 
@@ -177,7 +180,10 @@ class UniMigrator
     end
 
     @rollbacks.each { |uni_contact| puts uni_contact }
-    UniContact.destroy_all
+    # UniContact.destroy_all
+
+    UniContact.delete_all
+    ActiveRecord::Base.connection.reset_pk_sequence!('uni_contacts')
   end
 
 
