@@ -3,7 +3,6 @@
 # 1) Note: Ensure config/application.rb extends autoload to concerns.
 # 2) Migrates uni_account AND uni_contact tableS (csv imported accounts/contacts) to their proper join tables, then deletes itself.
 
-
 require 'pry'
 
 class UniMigrator
@@ -11,7 +10,7 @@ class UniMigrator
   def uni_account_migrator
     # UniMigrator.new.uni_account_migrator
 
-    rollbacks = []
+    @rollbacks = []
     # UniAccount.all.each do |uni_account|
     # UniAccount.find((1..603).to_a).each do |uni_account|
     UniAccount.in_batches.each do |each_batch|
@@ -95,24 +94,14 @@ class UniMigrator
             who_obj.webs << web_obj if (web_obj && !who_obj.webs.include?(web_obj))
           end
 
-
         rescue
           puts "\n\nRESCUE ERROR!!\n\n"
-
-          binding.pry
-          rollbacks << uni_account_hash
-          binding.pry
-
-          rollbacks.each { |uni_account_hash| puts uni_account_hash }
-          binding.pry
-
+          @rollbacks << uni_account_hash
         end
       end ## end of iteration.
     end
-    binding.pry
-    rollbacks.each { |uni_account_hash| puts uni_account_hash }
-    binding.pry
 
+    @rollbacks.each { |uni_account_hash| puts uni_account_hash }
     UniAccount.destroy_all
   end
 
@@ -121,7 +110,7 @@ class UniMigrator
   def uni_contact_migrator
     # UniMigrator.new.uni_contact_migrator
 
-    rollbacks = []
+    @rollbacks = []
     # UniContact.all.each do |uni_contact|
     # UniContact.find((1..100).to_a).each do |uni_contact|
     UniContact.in_batches.each do |each_batch|
@@ -182,21 +171,12 @@ class UniMigrator
 
         rescue
           puts "\n\nRESCUE ERROR!!\n\n"
-          binding.pry
-
-          rollbacks << uni_contact
-          binding.pry
-
-          rollbacks.each { |uni_contact| puts uni_contact }
-          binding.pry
-
+          @rollbacks << uni_contact
         end
       end ## end of iteration.
     end
-    binding.pry
-    rollbacks.each { |uni_contact| puts uni_contact }
-    binding.pry
 
+    @rollbacks.each { |uni_contact| puts uni_contact }
     UniContact.destroy_all
   end
 
@@ -231,7 +211,6 @@ class UniMigrator
     hash.delete_if { |k, v| v.nil? }
 
     if hash['updated_at']
-      binding.pry
       hash.delete('updated_at')
       obj.record_timestamps = false
     end

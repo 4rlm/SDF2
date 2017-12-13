@@ -33,8 +33,7 @@ module CsvToolMod
     db_table_list = ActiveRecord::Base.descendants.map(&:name)
     removables = ['ApplicationRecord', 'UniContact', 'UniAccount']
     removables.each { |table| db_table_list.delete(table) }
-    db_table_list.reverse!
-
+    db_table_list = db_table_list.sort_by(&:length)
     return db_table_list
   end
 
@@ -50,6 +49,7 @@ module CsvToolMod
       # db_table_list.reverse!
 
       db_table_list = CsvToolMod.get_db_table_list
+      binding.pry
 
       db_table_list.each do |table_name|
         model = table_name.constantize
@@ -85,46 +85,34 @@ module CsvToolMod
 
     def self.restore_all_backups
       #CALL: CsvToolMod::Import.restore_all_backups
-
       db_table_list = CsvToolMod.get_db_table_list
-      db_table_list.each do |table_name|
-        model = table_name.constantize
-        file_name = "#{table_name.pluralize}.csv"
-        CsvTool.new.restore_backup(model, file_name)
+      db_table_list_hashes = db_table_list.map do |table_name|
+        { model: table_name.classify.constantize,
+          plural_model_name: table_name.pluralize }
+      end
+
+      db_table_list_hashes.each do |hash|
+        hash[:model].delete_all
+        ActiveRecord::Base.connection.reset_pk_sequence!(hash[:plural_model_name])
+      end
+
+      db_table_list_hashes.each do |hash|
+        CsvTool.new.restore_backup(hash[:model], "#{hash[:plural_model_name]}.csv")
       end
 
     end
 
 
     def restore_backup(model, file_name)
-      # CsvTool.new.restore_backup(Term, 'Terms.csv')
-      model.destroy_all
-
       @file_path = "#{@backups_dir_path}/#{file_name}"
-      clean_csv_hashes = iterate_csv_w_error_report
-
-      new_objects = []
-      clean_csv_hashes.each do |clean_csv_hash|
-
-        new_obj = model.new(clean_csv_hash)
-        new_objects << new_obj
-
-        # clean_csv_hash = clean_csv_hash.stringify_keys
-        # clean_csv_hash.delete_if { |k, v| v.nil? }
-        #
-        # attr_hash = validate_hash(model.column_names, clean_csv_hash)
-        # new_obj = model.new(attr_hash)
-        # new_objects << new_obj if new_obj
-      end
-
-      model.import(new_objects)
+      parse_csv
+      @headers.map!(&:to_sym)
+      model.import(@headers, @rows, validate: false)
       completion_msg(model, file_name)
-
     end
 
+
     #########################################
-
-
 
 
     def self.import_entire_seeds
@@ -136,32 +124,14 @@ module CsvToolMod
       # Will skip rows containing invalid non-utf-8 characters, but will provide error report first.
 
       CsvTool.new.import_seed_brands('8_brands.csv') # in_host_pos
-      binding.pry
-
       CsvTool.new.import_seed_terms('7_terms.csv') # indexer_terms
-      binding.pry
-
       CsvTool.new.import_seed_webs('1_clean_urls.csv')
-      binding.pry
-
       CsvTool.new.import_seed_webs('2_redirects.csv')
-      binding.pry
-
       CsvTool.new.import_seed_uni_accounts('3_indexers.csv')
-      binding.pry
-
       CsvTool.new.import_seed_uni_accounts('4_locations.csv')
-      binding.pry
-
       CsvTool.new.import_seed_uni_accounts('5_whos.csv')
-      binding.pry
-
       CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
-      binding.pry
-
       CsvTool.new.import_seed_uni_contacts('9_contacts.csv')
-      binding.pry
-
     end
 
     def completion_msg(model, file_name)
@@ -176,10 +146,12 @@ module CsvToolMod
     def import_seed_brands(file_name)
       # CsvTool.new.import_seed_brands('8_brands.csv')
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-      clean_csv_hashes = iterate_csv_w_error_report
+
+      parse_csv
+      @clean_csv_hashes
 
       brands = []
-      clean_csv_hashes.each do |clean_csv_hash|
+      @clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         brand_hash = validate_hash(Brand.column_names, clean_csv_hash)
 
@@ -200,10 +172,10 @@ module CsvToolMod
       # CsvTool.new.import_seed_uni_accounts('5_whos.csv')
       # CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-      clean_csv_hashes = iterate_csv_w_error_report
 
+      parse_csv
       accounts = []
-      clean_csv_hashes.each do |clean_csv_hash|
+      @clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         account_hash = validate_hash(UniAccount.column_names, clean_csv_hash)
         account = UniAccount.new(account_hash)
@@ -225,10 +197,9 @@ module CsvToolMod
       @file_path = "#{@seeds_dir_path}/#{file_name}"
       binding.pry
 
-      clean_csv_hashes = iterate_csv_w_error_report
+      parse_csv
       contacts = []
-
-      clean_csv_hashes.each do |clean_csv_hash|
+      @clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         contact_hash = validate_hash(UniContact.column_names, clean_csv_hash)
         contact = UniContact.new(contact_hash)
@@ -243,10 +214,10 @@ module CsvToolMod
     def import_seed_terms(file_name)
       # CsvTool.new.import_seed_terms('7_terms.csv') # indexer_terms
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-      clean_csv_hashes = iterate_csv_w_error_report
 
+      parse_csv
       terms = []
-      clean_csv_hashes.each do |clean_csv_hash|
+      @clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         term_hash = validate_hash(Term.column_names, clean_csv_hash)
 
@@ -264,10 +235,10 @@ module CsvToolMod
       # CsvTool.new.import_seed_webs('1_clean_urls.csv')
       # CsvTool.new.import_seed_webs('2_redirects.csv')
       @file_path = "#{@seeds_dir_path}/#{file_name}"
-      clean_csv_hashes = iterate_csv_w_error_report
 
+      parse_csv
       webs = []
-      clean_csv_hashes.each do |clean_csv_hash|
+      @clean_csv_hashes.each do |clean_csv_hash|
         clean_csv_hash = clean_csv_hash.stringify_keys
         web_hash = validate_hash(Web.column_names, clean_csv_hash)
 
@@ -298,19 +269,51 @@ module CsvToolMod
     end
 
 
-    def iterate_csv_w_error_report
-      puts "\n\nPreparing CSV for Import..."
+    # def iterate_csv_w_error_report
+    #   puts "\n\nPreparing CSV for Import..."
+    #
+    #   clean_csv_hashes = []
+    #   counter = 0
+    #   error_row_numbers = []
+    #   @headers = []
+    #   File.open(@file_path).each do |line|
+    #     begin
+    #       line = line&.gsub(/\s/, ' ')&.strip
+    #
+    #       CSV.parse(line) do |row|
+    #         counter > 0 ? clean_csv_hashes << row_to_hash(row) : @headers = row
+    #         counter += 1
+    #       end
+    #     rescue => er
+    #       error_row_numbers << {"#{counter}": "#{er.message}"}
+    #       counter += 1
+    #       next
+    #     end
+    #   end
+    #
+    #   error_report(error_row_numbers)
+    #   return clean_csv_hashes
+    # end
 
-      clean_csv_hashes = []
+
+    def parse_csv
       counter = 0
       error_row_numbers = []
+      @clean_csv_hashes = []
       @headers = []
+      @rows = []
+
       File.open(@file_path).each do |line|
         begin
           line = line&.gsub(/\s/, ' ')&.strip
 
           CSV.parse(line) do |row|
-            counter > 0 ? clean_csv_hashes << row_to_hash(row) : @headers = row
+            if counter > 0
+              @clean_csv_hashes << row_to_hash(row)
+              @rows << row
+            else
+              @headers = row
+            end
             counter += 1
           end
         rescue => er
@@ -321,7 +324,7 @@ module CsvToolMod
       end
 
       error_report(error_row_numbers)
-      return clean_csv_hashes
+      # return @clean_csv_hashes
     end
 
 
