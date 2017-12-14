@@ -6,8 +6,8 @@ git_source(:github) do |repo_name|
 end
 
 ## MOVE dotenv TO TOP AND REQUIRE:
-gem 'dotenv-rails', require: 'dotenv/rails-now'
-gem 'dotenv-rails', groups: [:development, :test]
+# gem 'dotenv-rails', require: 'dotenv/rails-now'
+# gem 'dotenv-rails', groups: [:development, :test]
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -38,59 +38,89 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+  ## STANDARD DEFAULT BELOW:
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
+
+  ## SDF CUSTOM BELOW:
+  ## NONE
 end
 
 group :development do
+  ## STANDARD DEFAULT BELOW:
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+
+  ## SDF CUSTOM BELOW:
+  # gem 'rainbow', '~> 3.0'
+  gem 'pry', '~> 0.11.3'
+
+  gem 'sidekiq', '~> 5.0', '>= 5.0.5'
+  # gem 'sinatra', require: false
+  gem 'slim', '~> 3.0', '>= 3.0.9'
+  # gem 'thin', '~> 1.7'
+
+  # Use Redis adapter to run Action Cable in production
+  gem 'redis', '~> 3.3', '>= 3.3.1'
+
+  ## This is attempt to replace daemons for multiple workers.
+  #gem 'delayed_job_worker_pool', '~> 0.2.3'
+
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 
-
-## Adam's Gems ##
-gem 'pry'
-# gem 'bcrypt'
-# gem 'faker'
-# gem 'rspec', '~>3.0'
+## SDF GEMS:
+gem 'activerecord-import', '~> 0.21.0'
 # Use hirb for rails c table view.  Then in rails c:
-gem 'hirb'
+gem 'hirb', '~> 0.7.3'
 # require 'hirb'
 # Hirb.enable
 
+gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
+gem 'will_paginate', '~> 3.1', '>= 3.1.6'
+gem 'will_paginate-bootstrap', '~> 1.0', '>= 1.0.1'
+gem 'daemons', '~> 1.2', '>= 1.2.5'
+gem 'delayed_job_active_record', '~> 4.1', '>= 4.1.2'
+gem 'delayed_job_web', '~> 1.4'
+gem 'delayed_job', '~> 4.1', '>= 4.1.3'
+gem 'mechanize', '~> 2.7', '>= 2.7.5'
+gem 'geocoder', '~> 1.4', '>= 1.4.5'
+gem 'google_custom_search_api', '~> 2.0'
+gem 'google_places', '~> 1.0'
+gem 'gmaps4rails', '~> 2.1', '>= 2.1.2'
+gem 'underscore-rails', '~> 1.8', '>= 1.8.3'
+gem 'devise', '~> 4.3'
+gem 'figaro', '~> 1.1', '>= 1.1.1'
+# gem 'curb', '~> 0.9.4'
+# gem 'curb'
+gem 'whois', '~> 4.0', '>= 4.0.5'
+gem 'chartkick', '~> 2.2', '>= 2.2.5'
+gem 'foreman', '~> 0.84.0'
+###############
+
+## Adam's DBC Gems ##
+# gem 'bcrypt'
+# gem 'faker'
+# gem 'rspec', '~>3.0'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.3', '>= 4.3.1'
-gem 'bootstrap', '~> 4.0.0.beta2'
-# gem 'bootstrap-sass', '~> 3.2.0'
-gem 'autoprefixer-rails'
-gem 'font-awesome-sass', '~> 4.7.0'
-gem 'underscore-rails'
-
-gem 'activerecord-import', '~> 0.15.0'
-
-
-
-# gem 'pg_search'
-# gem 'stripe'
-# gem 'ransack', github: 'activerecord-hackery/ransack'
-# gem 'gmaps4rails'
-# gem 'geocoder'
+gem 'bootstrap', '~> 4.0.0.beta2.1'
+# gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
+# gem 'pg_search', '~> 2.1', '>= 2.1.1'
+# gem 'stripe', '~> 3.9'
+# gem 'ransack', '~> 1.8', '>= 1.8.4'
 # gem 'aws-sdk', '~> 1.6'
-# gem 'paperclip', '~> 4.3', '>= 4.3.6'
-
-# gem 'will_paginate', require: 'will_paginate'
-# gem 'will_paginate-bootstrap', :require => 'will_paginate-bootstrap'
-# gem 'google_places', '~> 0.32.0'
-# gem 'google-api-client', '~> 0.7.1'
+# gem 'paperclip', '~> 5.1'
+# gem 'google-api-client', '~> 0.18.0'
 # gem 'geokit', '~> 1.11'
