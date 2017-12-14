@@ -42,8 +42,7 @@ class AboutFormatter
   end
 
   def format_phones
-    # AboutFormatter.new.format_phones
-    # account = Account.find(25149)
+    # Call: AboutFormatter.new.format_phones
 
     # phone_objects = Phone.where.not(phone: nil)
     phone_objects = Phone.all
@@ -52,17 +51,8 @@ class AboutFormatter
       phone = phone_obj.phone
       if phone
         valid_phone = PhoneFormatter.validate_phone(phone)
-
-        if valid_phone.nil?
-          binding.pry
-          phone_obj.destroy
-          binding.pry
-        elsif valid_phone != phone
-          binding.pry
-          phone_obj.update_attributes(phone: valid_phone)
-          binding.pry
-        end
-
+        phone_obj.destroy if valid_phone.nil?
+        phone_obj.update_attributes(phone: valid_phone) if (valid_phone && valid_phone != phone)
       end
     end
   end

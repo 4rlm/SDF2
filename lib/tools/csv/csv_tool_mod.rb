@@ -13,7 +13,7 @@
 # IMPORT SEEDS:
 #CALL: CsvToolMod::Import.import_entire_seeds
 
-# IMPORT BACKUPS:
+# RESTORE BACKUPS:
 #CALL: CsvToolMod::Import.restore_all_backups
 
 
@@ -91,6 +91,8 @@ module CsvToolMod
 
 
     def restore_backup(model, file_name)
+    # Call: CsvTool.new.restore_backup(Phone, 'Phones.csv')
+
       @file_path = "#{@backups_dir_path}/#{file_name}"
       parse_csv
       @headers.map!(&:to_sym)
