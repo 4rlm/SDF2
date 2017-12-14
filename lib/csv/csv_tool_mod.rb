@@ -251,33 +251,6 @@ module CsvToolMod
     end
 
 
-    # def iterate_csv_w_error_report
-    #   puts "\n\nPreparing CSV for Import..."
-    #
-    #   clean_csv_hashes = []
-    #   counter = 0
-    #   error_row_numbers = []
-    #   @headers = []
-    #   File.open(@file_path).each do |line|
-    #     begin
-    #       line = line&.gsub(/\s/, ' ')&.strip
-    #
-    #       CSV.parse(line) do |row|
-    #         counter > 0 ? clean_csv_hashes << row_to_hash(row) : @headers = row
-    #         counter += 1
-    #       end
-    #     rescue => er
-    #       error_row_numbers << {"#{counter}": "#{er.message}"}
-    #       counter += 1
-    #       next
-    #     end
-    #   end
-    #
-    #   error_report(error_row_numbers)
-    #   return clean_csv_hashes
-    # end
-
-
     def parse_csv
       counter = 0
       error_row_numbers = []

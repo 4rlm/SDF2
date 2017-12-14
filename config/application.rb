@@ -18,14 +18,24 @@ module Sdf2
     config.autoload_paths << File.join(config.root, "lib")
     config.autoload_paths += %W(#{config.root}/controllers/concerns)
     # config.autoload_paths += %W(#{config.root}/lib/servicers)
-    config.autoload_paths << Rails.root.join('lib/servicers')
-    config.autoload_paths += Dir["#{config.root}/lib/servicers"]
+
+    config.autoload_paths << Rails.root.join('lib/cleaners')
+    config.autoload_paths += Dir["#{config.root}/lib/cleaners"]
 
     config.autoload_paths << Rails.root.join('lib/csv')
     config.autoload_paths += Dir["#{config.root}/lib/csv"]
 
+    config.autoload_paths << Rails.root.join('lib/formatters')
+    config.autoload_paths += Dir["#{config.root}/lib/formatters"]
+
     config.autoload_paths << Rails.root.join('lib/migrators')
     config.autoload_paths += Dir["#{config.root}/lib/migrators"]
+
+    config.autoload_paths << Rails.root.join('lib/scrapers')
+    config.autoload_paths += Dir["#{config.root}/lib/scrapers"]
+
+    config.autoload_paths << Rails.root.join('lib/servicers')
+    config.autoload_paths += Dir["#{config.root}/lib/servicers"]
 
   end
 end
