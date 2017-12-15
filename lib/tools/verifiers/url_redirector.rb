@@ -1,32 +1,36 @@
-require 'mechanize'
-require 'nokogiri'
-require 'open-uri'
-require 'delayed_job'
-require 'curb'
+# require 'mechanize'
+# require 'nokogiri'
+# require 'open-uri'
+# require 'delayed_job'
+# require 'curb'
+
+require 'internet_connection_validator'
 
 #RUNNER: IndexerService.new.url_redirect_starter
 #RUNNER: StafferService.new.cs_starter
 module UrlRedirector
-  extend ActiveSupport::Concern
+  # extend ActiveSupport::Concern
   include InternetConnectionValidator
 
   def start_curl
-    puts "Starting curl ...."
 
     begin
-      @result = Curl::Easy.perform(@raw_url) do |curl|
+      @result = Curl::Easy.perform(@web_url) do |curl|
         puts "=== CURL CONNECTED ==="
         curl.follow_location = true
         curl.useragent = "curb"
         curl.connect_timeout = 10
         curl.enable_cookies = true
+        curl.head = true #testing - new
         # curl.ssl_verify_peer = false
       end
-      curl_parser
+      # curl_parser
+      @curl_url = @result.last_effective_url
+      @curl_url = @curl_url[0..-2] if @curl_url[-1] == '/'
+
     rescue
-      if validate_url(@raw_url) #=> via InternetConnectionValidator
-        puts "validating url....."
-        start_curl
+      if validate_url(@web_url) #=> via InternetConnectionValidator
+        start_curl # restarting curl to try again, if valid.
       else
         @result = nil
         @error_message = "Error: #{$!.message}"
@@ -36,29 +40,26 @@ module UrlRedirector
 
   end
 
-  def curl_parser
-    curl_hash = url_formatter(@result.last_effective_url)
-    @curl_url = curl_hash[:new_url]
-    puts "@curl_url: #{@curl_url}"
-  end
-
   def error_parser
-    @indexer_status = "RD Error", @curl_url = nil
+    puts "ENTERED ERROR PARSER - CHECK @result.status"
+    @curl_url = nil
+
     if @error_message.include?("SSL connect error")
-      @redirect_status = "Error: SSL"
+      @web_status = "Error: SSL"
     elsif @error_message.include?("Couldn't resolve host name")
-      @redirect_status = "Error: Host"
+      @web_status = "Error: Host"
     elsif @error_message.include?("Peer certificate")
-      @redirect_status = "Error: Certificate"
+      @web_status = "Error: Certificate"
     elsif @error_message.include?("Failure when receiving data")
-      @redirect_status = "Error: Transfer"
+      @web_status = "Error: Transfer"
     else
-      @redirect_status = "Error: Undefined"
+      @web_status = "Error: Undefined"
     end
   end
 
   ###### Supporting Methods Below #######
   def url_formatter(url)
+
     unless url == nil || url == ""
       url.gsub!(/\P{ASCII}/, '')
       url = remove_slashes(url)

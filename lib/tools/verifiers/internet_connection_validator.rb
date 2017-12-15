@@ -1,15 +1,15 @@
-require 'mechanize'
-require 'nokogiri'
-require 'open-uri'
-require 'whois'
-require 'delayed_job'
-
-require 'timeout'
+# require 'mechanize'
+# require 'nokogiri'
+# require 'open-uri'
+# require 'whois'
+# require 'delayed_job'
+#
+# require 'timeout'
 
 #RUNNER: IndexerService.new.url_redirect_starter
 #RUNNER: StafferService.new.cs_starter
 module InternetConnectionValidator
-  extend ActiveSupport::Concern
+  # extend ActiveSupport::Concern
 
   ############ FOR MECHANIZE ONLY ############
   def start_mechanize(url_string)
@@ -75,12 +75,30 @@ module InternetConnectionValidator
     http://speedtest.hafslundtelekom.net/
     http://www.whatsmyip.org/
     https://fast.com/
+    https://www.cox.com/
     http://speedtest.xfinity.com/
     https://www.iplocation.net/
-    https://www.wikipedia.org/
     http://www.bandwidthplace.com/
     http://www.speedinternet.co/
-    https://www.google.com/)
+    http://www.centurylink.com/
+    https://frontier.com/
+    https://www.windstream.com/
+    https://www.rcn.com/
+    http://atlanticbb.com/
+    http://mygrande.com/
+    https://speedof.me/
+    https://www.lifewire.com/
+    https://www.cnet.com/
+    https://www.megapath.com/
+    https://www.consolidated.com/
+    http://www.merck.com/
+    https://www.pfizer.com/
+    https://www.gsk.com/
+    https://www.jnj.com/
+    https://www.johnsonsbaby.com/
+    https://www.discovernursing.com/
+    https://www.cancer.org/
+    https://www.verizon.com/)
     pingable_urls.sample
   end
 
@@ -117,6 +135,7 @@ module InternetConnectionValidator
   end
 
   def validate_url(url_string)
+
     if url_exist?(url_string)
       puts "=== GOOD URL ===\nURL: #{url_string}"
     else

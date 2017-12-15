@@ -6,15 +6,27 @@
 # require 'httparty'
 # require 'delayed_job'
 # require 'curb' #=> for url_redirector
+require 'web_formatter'
+
 
 ## CLASS METHOD TO START, EXPLAIN, OR TEST OTHER FORMATTER CLASSES AND METHODS.
 class AboutFormatter
+  include WebFormatter
+
   # AboutFormatter.new
   # AboutFormatter.new.method_name
 
   def initialize
     puts "Welcome to formatter!"
-    AddressFormatter.welcome
+    ## could auto-run methods or mudules if desired.
+    # AddressFormatter.welcome
+  end
+
+  def format_webs
+    # Call: AboutFormatter.new.format_webs
+    # webs = Web.where.not(staff_page: nil)[0..30]
+    webs = Web.all
+    webs.each { |web_obj| parse_staff_location_pages(web_obj) } # via WebFormatter
   end
 
   def format_addresses

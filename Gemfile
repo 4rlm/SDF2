@@ -11,7 +11,7 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.1', '>= 5.1.4'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
@@ -101,7 +101,8 @@ gem 'gmaps4rails', '~> 2.1', '>= 2.1.2'
 gem 'underscore-rails', '~> 1.8', '>= 1.8.3'
 gem 'devise', '~> 4.3'
 gem 'figaro', '~> 1.1', '>= 1.1.1'
-# gem 'curb', '~> 0.9.4'
+gem 'curb', '~> 0.9.4'
+# gem 'curb', '~> 0.9.3'
 # gem 'curb'
 gem 'whois', '~> 4.0', '>= 4.0.5'
 gem 'chartkick', '~> 2.2', '>= 2.2.5'
@@ -124,3 +125,6 @@ gem 'bootstrap', '~> 4.0.0.beta2.1'
 # gem 'paperclip', '~> 5.1'
 # gem 'google-api-client', '~> 0.18.0'
 # gem 'geokit', '~> 1.11'
+
+## Sample - Testing this gem below:
+# gem 'final_redirect_url', '~> 0.1.0'

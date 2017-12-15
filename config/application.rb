@@ -21,6 +21,33 @@ module Sdf2
 
     config.autoload_paths << Rails.root.join('lib/tools/*')
     config.autoload_paths += Dir["#{config.root}/lib/tools/*"]
-    
+
+    config.autoload_paths << Rails.root.join('lib/tools/about')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/about"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/cleaners')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/cleaners"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/csv')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/csv"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/formatters')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/formatters"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/iterators')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/iterators"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/migrators')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/migrators"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/scrapers')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/scrapers"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/servicers')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/servicers"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/verifiers')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/verifiers"]
+
   end
 end
