@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214212903) do
+ActiveRecord::Schema.define(version: 20171217134616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,9 +81,10 @@ ActiveRecord::Schema.define(version: 20171214212903) do
   end
 
   create_table "brands", force: :cascade do |t|
-    t.string "brand_term"
     t.string "brand_name"
     t.string "dealer_type"
+    t.string "brand_term"
+    t.index ["brand_term"], name: "index_brands_on_brand_term"
   end
 
   create_table "contact_descriptions", force: :cascade do |t|
@@ -143,6 +144,26 @@ ActiveRecord::Schema.define(version: 20171214212903) do
     t.index ["job_description"], name: "index_descriptions_on_job_description"
   end
 
+  create_table "linkings", force: :cascade do |t|
+    t.string "linkable_type"
+    t.integer "link_id"
+    t.integer "linkable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["link_id"], name: "index_linkings_on_link_id"
+    t.index ["linkable_id"], name: "index_linkings_on_linkable_id"
+    t.index ["linkable_type"], name: "index_linkings_on_linkable_type"
+  end
+
+  create_table "links", force: :cascade do |t|
+    t.string "link"
+    t.string "link_type"
+    t.string "link_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["link"], name: "index_links_on_link"
+  end
+
   create_table "phones", force: :cascade do |t|
     t.string "phone"
     t.index ["phone"], name: "index_phones_on_phone"
@@ -181,6 +202,26 @@ ActiveRecord::Schema.define(version: 20171214212903) do
     t.string "criteria_term"
     t.string "response_term"
     t.string "mth_name"
+  end
+
+  create_table "textings", force: :cascade do |t|
+    t.string "textable_type"
+    t.integer "text_id"
+    t.integer "textable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["text_id"], name: "index_textings_on_text_id"
+    t.index ["textable_id"], name: "index_textings_on_textable_id"
+    t.index ["textable_type"], name: "index_textings_on_textable_type"
+  end
+
+  create_table "texts", force: :cascade do |t|
+    t.string "text"
+    t.string "text_type"
+    t.string "text_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["text"], name: "index_texts_on_text"
   end
 
   create_table "titles", force: :cascade do |t|
@@ -263,6 +304,8 @@ ActiveRecord::Schema.define(version: 20171214212903) do
     t.string "url_redirect_id"
     t.string "staff_page"
     t.string "locations_page"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["archived"], name: "index_webs_on_archived"
     t.index ["locations_page"], name: "index_webs_on_locations_page"
     t.index ["staff_page"], name: "index_webs_on_staff_page"

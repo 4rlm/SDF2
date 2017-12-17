@@ -31,9 +31,11 @@ module CsvToolMod
   def self.get_db_table_list
     Rails.application.eager_load!
     db_table_list = ActiveRecord::Base.descendants.map(&:name)
-    removables = ['ApplicationRecord', 'UniContact', 'UniAccount']
+
+    removables = ['ApplicationRecord', 'UniContact', 'UniAccount', 'Delayed::Backend::ActiveRecord::Job']
     removables.each { |table| db_table_list.delete(table) }
     db_table_list = db_table_list.sort_by(&:length)
+
     return db_table_list
   end
 

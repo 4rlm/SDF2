@@ -40,6 +40,8 @@ class UrlVerifier
     raw_query = Web
     .select(:id)
     .where.not(archived: TRUE)
+    # .order("updated_at DESC")
+    # .order(:updated_at).reverse
 
     iterate_raw_query(raw_query) # via ComplexQueryIterator
   end
@@ -49,6 +51,7 @@ class UrlVerifier
   # #############################################
 
   def template_starter(id)
+    # @web_obj = Web.find(id)
     @web_obj = Web.where(id: id).select(:id, :archived, :web_status, :url, :url_redirect_id).first
 
     @web_url = @web_obj.url
@@ -71,10 +74,10 @@ class UrlVerifier
     elsif @web_url != @curl_url
       redirect_hash = {url: @curl_url}
       redirect_full_hash = {web_status: 'valid', archived: FALSE, url: @curl_url}
+
+    # Call: UrlVerifier.new.vu_starter
       redirected_url_obj = Web.find_by(redirect_hash)
-
       !redirected_url_obj ? redirected_url_obj = Web.create(redirect_full_hash) : redirected_url_obj.update_attributes(redirect_full_hash)
-
       updated_hash = {web_status: 'updated', archived: TRUE, url_redirect_id: redirected_url_obj.id}
       @web_obj.update_attributes(updated_hash)
     end

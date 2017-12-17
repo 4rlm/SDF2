@@ -9,6 +9,8 @@ class CreateWebs < ActiveRecord::Migration[5.1]
       t.string :staff_page, index: true, unique: true
       t.string :locations_page, index: true, unique: true
 
+      t.timestamps
+
     end
   end
 end
