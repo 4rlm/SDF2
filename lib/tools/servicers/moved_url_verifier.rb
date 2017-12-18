@@ -8,7 +8,7 @@
 #   include UrlRedirector #=> concerns/url_redirector.rb
 #   include ComplexQueryIterator
 #   # Call: IndexerService.new.start_url_redirect
-#   # Call: UrlVerifier.new.vu_starter
+#   # Call: UrlVerifier.new.run_url_verifier
 #
 #   def initialize
 #     puts "\n\n== Welcome to the UrlVerifier Class! ==\n\n"
@@ -21,7 +21,7 @@
 #     @number_of_groups = 2 #=> Divide query into groups of x.
 #   end
 #
-#   def vu_starter
+#   def run_url_verifier
 #     generate_query
 #   end
 #

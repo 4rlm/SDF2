@@ -4,6 +4,7 @@ class CreateTemplates < ActiveRecord::Migration[5.1]
 
       t.string :template_name, index: true, unique: true
 
+      t.timestamps
     end
   end
 end

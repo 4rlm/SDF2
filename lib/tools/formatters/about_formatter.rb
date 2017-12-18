@@ -22,49 +22,62 @@ class AboutFormatter
     # AddressFormatter.welcome
   end
 
+  def run_all_formatters
+  # Call: AboutFormatter.new.run_all_formatters
+    puts "Runs all Formatters methods:\nformat_webs\nformat_addresses\nformat_phones"
+
+    format_webs
+    format_addresses
+    format_phones
+  end
+
   def format_webs
     # Call: AboutFormatter.new.format_webs
-    # webs = Web.where.not(staff_page: nil)[0..30]
-    webs = Web.all
-    webs.each { |web_obj| parse_staff_location_pages(web_obj) } # via WebFormatter
+    web_ids = Web.all.order("updated_at ASC").pluck(:id)
+    web_ids.each { |id| parse_staff_location_links(id) } # via WebFormatter
   end
 
   def format_addresses
     # AboutFormatter.new.format_addresses
     # Address.where.not(full_address: nil).in_batches.each do |each_batch|
-    Address.in_batches.each do |each_batch|
-      each_batch.each do |obj|
-        current_zip = obj.zip
-        new_zip = AddressFormatter.format_zip(current_zip)
-        obj.update_attributes(zip: new_zip) if current_zip != new_zip
+    # Address.in_batches.each do |each_batch|
+    address_ids = Address.all.order("updated_at ASC").pluck(:id)
+    address_ids.each do |id|
+      address_obj = Address.find(id)
+      current_zip = address_obj.zip
+      new_zip = AddressFormatter.format_zip(current_zip)
+      address_obj.update_attributes(zip: new_zip) if current_zip != new_zip
 
-        update_hash = {}
-        current_full_address = obj.full_address
-        current_address_pin = obj.address_pin
+      update_hash = {}
+      current_full_address = address_obj.full_address
+      current_address_pin = address_obj.address_pin
 
-        new_full_address = AddressFormatter.generate_full_address(obj)
-        update_hash[:full_address] = new_full_address if current_full_address != new_full_address
-
-        new_address_pin = AddressFormatter.generate_address_pin(obj.street, obj.zip)
-        update_hash[:address_pin] = new_address_pin if current_address_pin != new_address_pin
-
-        obj.update_attributes(update_hash) if !update_hash.empty?
-      end
+      new_full_address = AddressFormatter.generate_full_address(address_obj)
+      update_hash[:full_address] = new_full_address if current_full_address != new_full_address
+      new_address_pin = AddressFormatter.generate_address_pin(address_obj.street, address_obj.zip)
+      update_hash[:address_pin] = new_address_pin if current_address_pin != new_address_pin
+      !update_hash.empty? ? address_obj.update_attributes(update_hash) : address_obj.touch
     end
   end
 
   def format_phones
     # Call: AboutFormatter.new.format_phones
-
-    # phone_objects = Phone.where.not(phone: nil)
-    phone_objects = Phone.all
-
-    phone_objects.each do |phone_obj|
+    phone_ids = Phone.where.not(phone: nil).order("updated_at ASC").pluck(:id)
+    phone_ids.each do |id|
+      phone_obj = Phone.find(id)
       phone = phone_obj.phone
+
       if phone
         valid_phone = PhoneFormatter.validate_phone(phone)
-        phone_obj.destroy if valid_phone.nil?
-        phone_obj.update_attributes(phone: valid_phone) if (valid_phone && valid_phone != phone)
+
+        if valid_phone.nil?
+          phone_obj.destroy
+        elsif valid_phone && valid_phone != phone
+          phone_obj.update_attributes(phone: valid_phone)
+        else
+          phone_obj.touch
+        end
+
       end
     end
   end

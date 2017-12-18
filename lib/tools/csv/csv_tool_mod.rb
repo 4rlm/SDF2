@@ -44,6 +44,8 @@ module CsvToolMod
     def self.backup_entire_db
       #CALL: CsvToolMod::Export.backup_entire_db
       db_table_list = CsvToolMod.get_db_table_list
+      # db_table_list = ["Link", "Linking", "Text", "Texting"]
+
       db_table_list.each do |table_name|
         model = table_name.constantize
         file_name = "#{table_name.pluralize}.csv"
@@ -88,6 +90,12 @@ module CsvToolMod
       db_table_list_hashes.each do |hash|
         CsvTool.new.restore_backup(hash[:model], "#{hash[:plural_model_name]}.csv")
       end
+
+      ######### Reset PK Sequence #########
+      ActiveRecord::Base.connection.tables.each do |t|
+        ActiveRecord::Base.connection.reset_pk_sequence!(t)
+      end
+
 
     end
 
@@ -307,6 +315,12 @@ module CsvToolMod
       puts "Webs: #{Web.all.count}"
       puts "Webings: #{Webing.all.count}"
 
+      puts "Texts: #{Text.all.count}"
+      puts "Textings: #{Texting.all.count}"
+
+      puts "Links: #{Link.all.count}"
+      puts "Linkings: #{Linking.all.count}"
+
       puts "Phones: #{Phone.all.count}"
       puts "Phonings: #{Phoning.all.count}"
 
@@ -314,6 +328,8 @@ module CsvToolMod
       puts "AccountAddresses: #{AccountAddress.all.count}"
 
       puts "Templates: #{Template.all.count}"
+      puts "Templatings: #{Templating.all.count}"
+
       puts "Who: #{Who.all.count}"
 
       puts "Job Titles: #{Title.all.count}"

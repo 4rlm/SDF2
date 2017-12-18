@@ -3,6 +3,9 @@ require 'nokogiri'
 require 'open-uri'
 require 'delayed_job'
 
+######### Delayed Job #########
+# $ rake jobs:clear
+
 # Call: StafferService.new.start_contact_scraper
 # Call: ContactScraper.new.cs_starter
 
@@ -12,7 +15,7 @@ module ComplexQueryIterator
 
 
   def iterate_raw_query(raw_query)
-    # Call: UrlVerifier.new.vu_starter
+    # Call: UrlVerifier.new.run_url_verifier
 
     @iterate_raw_query_pid = Process.pid
     raw_query.find_in_batches(batch_size: @query_limit) do |batch_of_ids|
@@ -43,15 +46,15 @@ module ComplexQueryIterator
     puts "PPID: #{Process.ppid}"
     puts "PID: #{Process.pid}"
 
-    batch_of_ids.each { |ids| delay.standard_iterator(ids) }
-    # batch_of_ids.each { |ids| standard_iterator(ids) }
+    # batch_of_ids.each { |ids| delay.standard_iterator(ids) }
+    batch_of_ids.each { |ids| standard_iterator(ids) }
   end
 
 
   def standard_iterator(ids)
     puts "ids: #{ids}"
-    # ids.each { |id| template_starter(id) if id }
-    ids.each { |id| delay.template_starter(id) if id }
+    ids.each { |id| template_starter(id) if id }
+    # ids.each { |id| delay.template_starter(id) if id }
   end
 
 end

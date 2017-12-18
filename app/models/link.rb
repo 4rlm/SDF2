@@ -1,5 +1,5 @@
 class Link < ApplicationRecord
-  
+
   has_many :linkings
   has_many :webs, through: :linkings, source: :linkable, source_type: :Web
   # has_many :linkings, dependent: :destroy

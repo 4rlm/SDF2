@@ -57,6 +57,8 @@ ActiveRecord::Schema.define(version: 20171217134616) do
     t.string "address_pin"
     t.float "latitude"
     t.float "longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["address_pin"], name: "index_addresses_on_address_pin"
     t.index ["address_status"], name: "index_addresses_on_address_status"
     t.index ["city"], name: "index_addresses_on_city"
@@ -84,6 +86,8 @@ ActiveRecord::Schema.define(version: 20171217134616) do
     t.string "brand_name"
     t.string "dealer_type"
     t.string "brand_term"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["brand_term"], name: "index_brands_on_brand_term"
   end
 
@@ -141,6 +145,8 @@ ActiveRecord::Schema.define(version: 20171217134616) do
 
   create_table "descriptions", force: :cascade do |t|
     t.string "job_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["job_description"], name: "index_descriptions_on_job_description"
   end
 
@@ -166,6 +172,8 @@ ActiveRecord::Schema.define(version: 20171217134616) do
 
   create_table "phones", force: :cascade do |t|
     t.string "phone"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["phone"], name: "index_phones_on_phone"
   end
 
@@ -182,6 +190,8 @@ ActiveRecord::Schema.define(version: 20171217134616) do
 
   create_table "templates", force: :cascade do |t|
     t.string "template_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["template_name"], name: "index_templates_on_template_name"
   end
 
@@ -202,6 +212,8 @@ ActiveRecord::Schema.define(version: 20171217134616) do
     t.string "criteria_term"
     t.string "response_term"
     t.string "mth_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "textings", force: :cascade do |t|
@@ -226,6 +238,8 @@ ActiveRecord::Schema.define(version: 20171217134616) do
 
   create_table "titles", force: :cascade do |t|
     t.string "job_title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["job_title"], name: "index_titles_on_job_title"
   end
 

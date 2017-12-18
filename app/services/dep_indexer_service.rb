@@ -46,8 +46,8 @@
 #   # Call: UrlVerifier.new.starter
 #   def start_url_redirect
 #     puts ">> start_url_redirect..."
-#     # UrlVerifier.new.delay.vu_starter
-#     UrlVerifier.new.vu_starter
+#     # UrlVerifier.new.delay.run_url_verifier
+#     UrlVerifier.new.run_url_verifier
 #   end
 #
 #   ###############################################

@@ -8,6 +8,7 @@ class CreateTerms < ActiveRecord::Migration[5.1]
       t.string :response_term
       t.string :mth_name
 
+      t.timestamps
     end
   end
 end

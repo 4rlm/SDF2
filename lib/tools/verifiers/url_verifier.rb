@@ -9,6 +9,9 @@ require 'complex_query_iterator'
 require 'final_redirect_url'
 # FinalRedirectUrl
 
+######### Delayed Job #########
+# $ rake jobs:clear
+
 
 class UrlVerifier
   include UrlRedirector #=> concerns/url_redirector.rb
@@ -16,7 +19,7 @@ class UrlVerifier
   # include FinalRedirectUrl #=> JUST SAMPLING THIS!!
 
   # Call: IndexerService.new.start_url_redirect
-  # Call: UrlVerifier.new.vu_starter
+  # Call: UrlVerifier.new.run_url_verifier
 
   def initialize
     puts "\n\n== Welcome to the UrlVerifier Class! ==\n\n"
@@ -30,8 +33,8 @@ class UrlVerifier
     @number_of_groups = 2 #=> Divide query into groups of x.
   end
 
-  def vu_starter
-    # Call: UrlVerifier.new.vu_starter
+  def run_url_verifier
+    # Call: UrlVerifier.new.run_url_verifier
     generate_query
   end
 
@@ -75,7 +78,7 @@ class UrlVerifier
       redirect_hash = {url: @curl_url}
       redirect_full_hash = {web_status: 'valid', archived: FALSE, url: @curl_url}
 
-    # Call: UrlVerifier.new.vu_starter
+    # Call: UrlVerifier.new.run_url_verifier
       redirected_url_obj = Web.find_by(redirect_hash)
       !redirected_url_obj ? redirected_url_obj = Web.create(redirect_full_hash) : redirected_url_obj.update_attributes(redirect_full_hash)
       updated_hash = {web_status: 'updated', archived: TRUE, url_redirect_id: redirected_url_obj.id}

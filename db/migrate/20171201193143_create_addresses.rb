@@ -12,7 +12,8 @@ class CreateAddresses < ActiveRecord::Migration[5.1]
       t.string :address_pin, index: true
       t.float :latitude, index: true
       t.float :longitude, index: true
-
+      
+      t.timestamps
     end
   end
 end
