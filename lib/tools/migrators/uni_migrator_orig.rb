@@ -5,10 +5,10 @@
 
 require 'pry'
 
-class UniMigrator
+class AboutMigrator
 
-  def uni_account_migrator
-    # UniMigrator.new.uni_account_migrator
+  def migrate_uni_accounts
+    # AboutMigrator.new.migrate_uni_accounts
 
     @rollbacks = []
     # UniAccount.all.each do |uni_account|
@@ -57,11 +57,24 @@ class UniMigrator
 
           end
           account ? update_obj_if_changed(account_hash, account) : account = Account.create(account_hash)
-          ## UniMigrator.new.uni_account_migrator
+          ## AboutMigrator.new.migrate_uni_accounts
 
           # FIND OR CREATE URL, THEN UPDATE IF APPLICABLE
           web_hash = validate_hash(Web.column_names, non_account_attributes_array.to_h) if url.present?
           web_obj = save_complex_association('web', account, {'url' => url}, web_hash) if url.present?
+
+          # binding.pry
+
+          ## Consider using WebFormatter.migrate_web_and_links(id) via lib/tools/formatters/web_formatter.rb
+          ## Will need to modify it to accomodate the data here.  Perhaps have it return a value at the end, too.
+
+          ## Slightly tricky.  Need to create two records in Links Table.  One for staff and another for locations.  Col names won't match the incoming hash csv fiels names, so will have to do some customizing.
+
+          ## Need to parse out staff_page and locations_page to Links before importing, because those cols have been removed from Webs Table.
+
+          ## Also need to parse the main url out of the staff and locations page.
+          links_hash = validate_hash(Link.column_names, non_account_attributes_array.to_h) if url.present?
+          # link | link_type | link_status
 
           # FIND OR CREATE PHONE, THEN UPDATE IF APPLICABLE
           phone = uni_account_hash['phone']
@@ -103,15 +116,15 @@ class UniMigrator
 
     @rollbacks.each { |uni_account_hash| puts uni_account_hash }
     # UniAccount.destroy_all
-    
+
     UniAccount.delete_all
     ActiveRecord::Base.connection.reset_pk_sequence!('uni_accounts')
   end
 
 
 
-  def uni_contact_migrator
-    # UniMigrator.new.uni_contact_migrator
+  def migrate_uni_contacts
+    # AboutMigrator.new.migrate_uni_contacts
 
     @rollbacks = []
     # UniContact.all.each do |uni_contact|

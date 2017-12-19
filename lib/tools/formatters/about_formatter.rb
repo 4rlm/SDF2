@@ -33,8 +33,16 @@ class AboutFormatter
 
   def format_webs
     # Call: AboutFormatter.new.format_webs
+
+    # web_ids = Web.all.order("updated_at ASC").pluck(:id)
+    # web_ids = Web.where.not(staff_page: nil).order("updated_at ASC").pluck(:id)
     web_ids = Web.all.order("updated_at ASC").pluck(:id)
-    web_ids.each { |id| parse_staff_location_links(id) } # via WebFormatter
+
+    web_ids.each do |id|
+      web_obj = Web.find(id)
+      migrate_web_and_links(web_obj) # via WebFormatter
+    end
+
   end
 
   def format_addresses

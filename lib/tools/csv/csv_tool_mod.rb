@@ -32,7 +32,7 @@ module CsvToolMod
     Rails.application.eager_load!
     db_table_list = ActiveRecord::Base.descendants.map(&:name)
 
-    removables = ['ApplicationRecord', 'UniContact', 'UniAccount', 'Delayed::Backend::ActiveRecord::Job']
+    removables = ['ApplicationRecord', 'UniAccount', 'UniContact', 'UniWeb', 'Delayed::Backend::ActiveRecord::Job']
     removables.each { |table| db_table_list.delete(table) }
     db_table_list = db_table_list.sort_by(&:length)
 
@@ -123,14 +123,46 @@ module CsvToolMod
       # Will skip rows containing invalid non-utf-8 characters, but will provide error report first.
 
       CsvTool.new.import_seed_brands('8_brands.csv') # in_host_pos
+      puts "import_seed_brands | 8_brands"
+      binding.pry
+
       CsvTool.new.import_seed_terms('7_terms.csv') # indexer_terms
+      puts "import_seed_terms | 7_terms"
+      binding.pry
+
       CsvTool.new.import_seed_webs('1_clean_urls.csv')
+      puts "import_seed_webs | 1_clean_urls"
+      binding.pry
+
       CsvTool.new.import_seed_webs('2_redirects.csv')
+      puts "import_seed_webs | 2_redirects"
+      binding.pry
+
       CsvTool.new.import_seed_uni_accounts('3_indexers.csv')
+      puts "import_seed_uni_accounts | 3_indexers"
+      binding.pry
+
       CsvTool.new.import_seed_uni_accounts('4_locations.csv')
+      puts "import_seed_uni_accounts | 4_locations"
+      binding.pry
+
       CsvTool.new.import_seed_uni_accounts('5_whos.csv')
+      puts "import_seed_uni_accounts | 5_whos"
+      binding.pry
+
+      ## CURRENT PROCESS BELOW:
       CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
+      puts "import_seed_uni_accounts | 6_core_accounts"
+      binding.pry
+
       CsvTool.new.import_seed_uni_contacts('9_contacts.csv')
+      puts "import_seed_uni_contacts | 9_contacts"
+      binding.pry
+
+      CsvTool.new.import_seed_uni_webs('10_uni_webs.csv')
+      puts "import_seed_uni_webs | 10_uni_webs"
+      binding.pry
+
     end
 
     def completion_msg(model, file_name)
@@ -180,7 +212,7 @@ module CsvToolMod
       end
 
       UniAccount.import(accounts)
-      UniMigrator.new.uni_account_migrator
+      AboutMigrator.new.migrate_uni_accounts
       completion_msg(UniAccount, file_name)
     end
 
@@ -200,7 +232,7 @@ module CsvToolMod
         contacts << contact
       end
       UniContact.import(contacts)
-      UniMigrator.new.uni_contact_migrator
+      AboutMigrator.new.migrate_uni_contacts
       completion_msg(UniContact, file_name)
     end
 
@@ -225,6 +257,50 @@ module CsvToolMod
     end
 
 
+
+    ## BELOW TRIAL.  DELETE ONE BELOW IT AFTER TESTING.
+
+
+
+    ## TRIAL - TEST, IMPORT WEBS AND PARSE LINKS.
+    def import_seed_uni_webs(file_name)
+      # CsvTool.new.import_seed_uni_webs('10_uni_webs.csv')
+      @file_path = "#{@seeds_dir_path}/#{file_name}"
+
+      parse_csv
+      webs = []
+      @clean_csv_hashes.each do |clean_csv_hash|
+        binding.pry
+
+        clean_csv_hash = clean_csv_hash.stringify_keys
+
+      ## CHANGE 'WEB' TO UNI_WEB (DO SAME AS UNI_ACCOUNT.)
+      ## NEED TO CREATE UNI_WEB MIGRATOR TOO.
+
+        web_hash = validate_hash(Web.column_names, clean_csv_hash)
+
+        url = web_hash['url']
+        redirect_url = web_hash['url_redirect_id'] ## Grabs url in id column to replace with id number (below)
+        redirect_url_obj = Web.find_by(url: redirect_url) if redirect_url
+        web_hash['url_redirect_id'] = redirect_url_obj.id if (redirect_url && redirect_url_obj)
+        url_obj = Web.find_by(url: url)
+
+        if url_obj
+          AboutMigrator.new.update_obj_if_changed(web_hash, url_obj)
+        else
+          url_obj = Web.new(web_hash)
+          webs << url_obj
+        end
+
+      end
+      Web.import(webs) if !webs.empty?
+      completion_msg(Web, file_name)
+    end
+
+
+    ## BELOW ORIGINAL.  DELETE AFTER TESTING TRIAL ABOVE.
+
+
     def import_seed_webs(file_name)
       # CsvTool.new.import_seed_webs('1_clean_urls.csv')
       # CsvTool.new.import_seed_webs('2_redirects.csv')
@@ -243,7 +319,7 @@ module CsvToolMod
         url_obj = Web.find_by(url: url)
 
         if url_obj
-          UniMigrator.new.update_obj_if_changed(web_hash, url_obj)
+          AboutMigrator.new.update_obj_if_changed(web_hash, url_obj)
         else
           url_obj = Web.new(web_hash)
           webs << url_obj
@@ -253,6 +329,14 @@ module CsvToolMod
       Web.import(webs) if !webs.empty?
       completion_msg(Web, file_name)
     end
+
+
+
+
+    ## ABOVE ORIGINAL.  DELETE AFTER TESTING ONE ABOVE IT.
+
+
+
 
 
     def validate_hash(cols, hash)
@@ -308,6 +392,8 @@ module CsvToolMod
 
 
     def migration_report
+    # CALL: CsvTool.new.migration_report
+
       # DISPLAY FINAL RESULTS AFTER MIGRATION COMPLETES.
       puts "Accounts: #{Account.all.count}"
       puts "Contacts: #{Contact.all.count}"

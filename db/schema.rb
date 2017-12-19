@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171217134616) do
+ActiveRecord::Schema.define(version: 20171219052552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -296,6 +296,19 @@ ActiveRecord::Schema.define(version: 20171217134616) do
     t.string "url"
     t.string "staff_page"
     t.string "locations_page"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "uni_webs", force: :cascade do |t|
+    t.string "url"
+    t.string "redirect_url"
+    t.string "staff_link"
+    t.string "staff_text"
+    t.string "staff_link_status"
+    t.string "locations_link"
+    t.string "locations_text"
+    t.string "locations_link_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

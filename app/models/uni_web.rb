@@ -1,0 +1,2 @@
+class UniWeb < ApplicationRecord
+end

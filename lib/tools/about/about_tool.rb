@@ -3,11 +3,13 @@
 ######### Delayed Job #########
 # $ rake jobs:clear
 
-
 ######### Reset PK Sequence #########
 # ActiveRecord::Base.connection.tables.each do |t|
 #   ActiveRecord::Base.connection.reset_pk_sequence!(t)
 # end
+
+# CALL: CsvTool.new.migration_report
+############################################
 
 class AboutTool
   # Call: AboutTool.new
