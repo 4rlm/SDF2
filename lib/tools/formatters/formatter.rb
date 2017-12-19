@@ -10,11 +10,11 @@ require 'web_formatter'
 
 
 ## CLASS METHOD TO START, EXPLAIN, OR TEST OTHER FORMATTER CLASSES AND METHODS.
-class AboutFormatter
+class Formatter
   include WebFormatter
 
-  # AboutFormatter.new
-  # AboutFormatter.new.method_name
+  # Formatter.new
+  # Formatter.new.method_name
 
   def initialize
     puts "Welcome to formatter!"
@@ -23,7 +23,7 @@ class AboutFormatter
   end
 
   def run_all_formatters
-  # Call: AboutFormatter.new.run_all_formatters
+  # Call: Formatter.new.run_all_formatters
     puts "Runs all Formatters methods:\nformat_webs\nformat_addresses\nformat_phones"
 
     format_webs
@@ -32,7 +32,7 @@ class AboutFormatter
   end
 
   def format_webs
-    # Call: AboutFormatter.new.format_webs
+    # Call: Formatter.new.format_webs
 
     # web_ids = Web.all.order("updated_at ASC").pluck(:id)
     # web_ids = Web.where.not(staff_page: nil).order("updated_at ASC").pluck(:id)
@@ -46,7 +46,7 @@ class AboutFormatter
   end
 
   def format_addresses
-    # AboutFormatter.new.format_addresses
+    # Formatter.new.format_addresses
     # Address.where.not(full_address: nil).in_batches.each do |each_batch|
     # Address.in_batches.each do |each_batch|
     address_ids = Address.all.order("updated_at ASC").pluck(:id)
@@ -69,7 +69,7 @@ class AboutFormatter
   end
 
   def format_phones
-    # Call: AboutFormatter.new.format_phones
+    # Call: Formatter.new.format_phones
     phone_ids = Phone.where.not(phone: nil).order("updated_at ASC").pluck(:id)
     phone_ids.each do |id|
       phone_obj = Phone.find(id)

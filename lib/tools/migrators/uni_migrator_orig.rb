@@ -5,10 +5,10 @@
 
 require 'pry'
 
-class AboutMigrator
+class Migrator
 
   def migrate_uni_accounts
-    # AboutMigrator.new.migrate_uni_accounts
+    # Migrator.new.migrate_uni_accounts
 
     @rollbacks = []
     # UniAccount.all.each do |uni_account|
@@ -57,11 +57,11 @@ class AboutMigrator
 
           end
           account ? update_obj_if_changed(account_hash, account) : account = Account.create(account_hash)
-          ## AboutMigrator.new.migrate_uni_accounts
+          ## Migrator.new.migrate_uni_accounts
 
           # FIND OR CREATE URL, THEN UPDATE IF APPLICABLE
           web_hash = validate_hash(Web.column_names, non_account_attributes_array.to_h) if url.present?
-          web_obj = save_complex_association('web', account, {'url' => url}, web_hash) if url.present?
+          web_obj = save_complex_object('web', account, {'url' => url}, web_hash) if url.present?
 
           # binding.pry
 
@@ -78,7 +78,7 @@ class AboutMigrator
 
           # FIND OR CREATE PHONE, THEN UPDATE IF APPLICABLE
           phone = uni_account_hash['phone']
-          save_simple_association('phone', account, obj_hash={'phone' => phone}) if phone.present?
+          save_simple_object('phone', account, obj_hash={'phone' => phone}) if phone.present?
 
           # FIND OR CREATE ADDRESS, THEN UPDATE IF APPLICABLE
           address_hash = validate_hash(Address.column_names, non_account_attributes_array.to_h)
@@ -93,12 +93,12 @@ class AboutMigrator
 
             full_address = address_hash.except('address_pin').values.compact.join(', ')
             address_hash['full_address'] = full_address
-            save_complex_association('address', account, {'full_address' => full_address}, address_hash)
+            save_complex_object('address', account, {'full_address' => full_address}, address_hash)
           end
 
           # FIND OR CREATE TEMPLATE, THEN UPDATE IF APPLICABLE
           template_name = uni_account_hash['template_name']
-          save_simple_association('template', account, obj_hash={'template_name' => template_name}) if template_name.present?
+          save_simple_object('template', account, obj_hash={'template_name' => template_name}) if template_name.present?
 
           # FIND OR CREATE WHO, THEN UPDATE IF APPLICABLE
           if uni_account_hash['ip'] || uni_account_hash['server1'] || uni_account_hash['server2']
@@ -124,7 +124,7 @@ class AboutMigrator
 
 
   def migrate_uni_contacts
-    # AboutMigrator.new.migrate_uni_contacts
+    # Migrator.new.migrate_uni_contacts
 
     @rollbacks = []
     # UniContact.all.each do |uni_contact|
@@ -171,19 +171,19 @@ class AboutMigrator
 
           # FIND OR CREATE WEB, THEN UPDATE IF APPLICABLE
           web_hash = validate_hash(Web.column_names, non_contact_attributes_array.to_h) if url.present?
-          save_complex_association('web', contact, {'url' => url}, web_hash) if url.present?
+          save_complex_object('web', contact, {'url' => url}, web_hash) if url.present?
 
           # FIND OR CREATE PHONE, THEN UPDATE IF APPLICABLE
           phone = uni_contact_hash['phone']
-          save_simple_association('phone', contact, {'phone' => phone}) if phone.present?
+          save_simple_object('phone', contact, {'phone' => phone}) if phone.present?
 
           # FIND OR CREATE TITLE, THEN UPDATE IF APPLICABLE
           job_title = uni_contact_hash['job_title']
-          save_simple_association('title', contact, {'job_title' => job_title}) if job_title.present?
+          save_simple_object('title', contact, {'job_title' => job_title}) if job_title.present?
 
           # FIND OR CREATE DESCRIPTION, THEN UPDATE IF APPLICABLE
           job_description = uni_contact_hash['job_description']
-          save_simple_association('description', contact, {'job_description' => job_description}) if job_description.present?
+          save_simple_object('description', contact, {'job_description' => job_description}) if job_description.present?
 
         rescue
           puts "\n\nRESCUE ERROR!!\n\n"
@@ -200,7 +200,7 @@ class AboutMigrator
   end
 
 
-  def save_simple_association(model, parent, attr_hash)
+  def save_simple_object(model, parent, attr_hash)
     obj = model.classify.constantize.find_or_create_by(attr_hash)
     parent.send(model.pluralize.to_sym) << obj if (obj && !parent.send(model.pluralize.to_sym).include?(obj))
 
@@ -212,7 +212,7 @@ class AboutMigrator
   end
 
 
-  def save_complex_association(model, parent, attr_hash, obj_hash)
+  def save_complex_object(model, parent, attr_hash, obj_hash)
     obj = model.classify.constantize.find_by(attr_hash)
     obj.present? ? update_obj_if_changed(obj_hash, obj) : obj = model.classify.constantize.create(obj_hash)
     parent.send(model.pluralize.to_sym) << obj if (obj && !parent.send(model.pluralize.to_sym).include?(obj))

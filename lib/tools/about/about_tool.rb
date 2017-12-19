@@ -65,7 +65,7 @@ class AboutTool
     CsvToolMod::Import.restore_all_backups
 
     puts msg_3
-    AboutFormatter.new.run_all_formatters
+    Formatter.new.run_all_formatters
 
     puts msg_4
     UrlVerifier.new.run_url_verifier

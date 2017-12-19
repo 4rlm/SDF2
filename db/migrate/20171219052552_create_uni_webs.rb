@@ -2,7 +2,10 @@ class CreateUniWebs < ActiveRecord::Migration[5.1]
   def change
     create_table :uni_webs do |t|
 
+      t.boolean :archived
+      t.string :web_status
       t.string :url
+      t.string :url_redirect_id
       t.string :redirect_url
 
       t.string :staff_link

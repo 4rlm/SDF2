@@ -301,7 +301,10 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   end
 
   create_table "uni_webs", force: :cascade do |t|
+    t.boolean "archived"
+    t.string "web_status"
     t.string "url"
+    t.string "url_redirect_id"
     t.string "redirect_url"
     t.string "staff_link"
     t.string "staff_text"

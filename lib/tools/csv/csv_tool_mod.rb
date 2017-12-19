@@ -124,11 +124,9 @@ module CsvToolMod
 
       CsvTool.new.import_seed_brands('8_brands.csv') # in_host_pos
       puts "import_seed_brands | 8_brands"
-      binding.pry
 
       CsvTool.new.import_seed_terms('7_terms.csv') # indexer_terms
       puts "import_seed_terms | 7_terms"
-      binding.pry
 
       CsvTool.new.import_seed_webs('1_clean_urls.csv')
       puts "import_seed_webs | 1_clean_urls"
@@ -150,7 +148,6 @@ module CsvToolMod
       puts "import_seed_uni_accounts | 5_whos"
       binding.pry
 
-      ## CURRENT PROCESS BELOW:
       CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
       puts "import_seed_uni_accounts | 6_core_accounts"
       binding.pry
@@ -197,9 +194,6 @@ module CsvToolMod
 
     def import_seed_uni_accounts(file_name)
       # CsvTool.new.import_seed_uni_accounts('3_indexers.csv')
-      # CsvTool.new.import_seed_uni_accounts('4_locations.csv')
-      # CsvTool.new.import_seed_uni_accounts('5_whos.csv')
-      # CsvTool.new.import_seed_uni_accounts('6_core_accounts.csv')
       @file_path = "#{@seeds_dir_path}/#{file_name}"
 
       parse_csv
@@ -212,7 +206,7 @@ module CsvToolMod
       end
 
       UniAccount.import(accounts)
-      AboutMigrator.new.migrate_uni_accounts
+      Migrator.new.migrate_uni_accounts
       completion_msg(UniAccount, file_name)
     end
 
@@ -232,7 +226,7 @@ module CsvToolMod
         contacts << contact
       end
       UniContact.import(contacts)
-      AboutMigrator.new.migrate_uni_contacts
+      Migrator.new.migrate_uni_contacts
       completion_msg(UniContact, file_name)
     end
 
@@ -286,7 +280,7 @@ module CsvToolMod
         url_obj = Web.find_by(url: url)
 
         if url_obj
-          AboutMigrator.new.update_obj_if_changed(web_hash, url_obj)
+          Migrator.new.update_obj_if_changed(web_hash, url_obj)
         else
           url_obj = Web.new(web_hash)
           webs << url_obj
@@ -319,7 +313,7 @@ module CsvToolMod
         url_obj = Web.find_by(url: url)
 
         if url_obj
-          AboutMigrator.new.update_obj_if_changed(web_hash, url_obj)
+          Migrator.new.update_obj_if_changed(web_hash, url_obj)
         else
           url_obj = Web.new(web_hash)
           webs << url_obj

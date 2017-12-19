@@ -1,9 +1,28 @@
-# Note: Web CSV data uploads to UniWeb Table.  Then UniWebMigrator parses it and migrates it to proper tables with associations (Web, Link, Text).  Access parent in Migrator class.
+## Note: UniWebMigrator sends data here, where it gets sent to WebFormatter, then gets saved.
+## Note: Can be used outside of UniWebMigrator, such as in Scraper methods and processes.
+## SHOULD BE GENERAL, SO CAN WORK WITH VARIOUS PROCESSES, SUCH AS SCRAPERS, GEO LOCATIONS, AND UniWebMigrator.
 
-module UniWebMigrator
+module WebMigrator
+  ## RECEIVES ONE ROW AT A TIME, NOT FOR BULK PROCESSESING.
+  # 1) MIGRATE URL ONLY (FORMATS, THEN SAVES/UPDATES)
+  # 2) MIGRATE LINK AND TEXT ONLY (WITH ALREADY FORMATTED AND SAVED URL).
+
+  #Call: Migrator.new.migrate_uni_webs
+  def migrate_web(url)
+
+    return url_obj
+  end
+
+  # def migrate_text_or_link(url)
+  #
+  #   return url_obj
+  # end
+
+
 
   #Call: Migrator.new.migrate_uni_webs
   def migrate_uni_webs
+    binding.pry
 
     @rollbacks = []
     # UniWeb.all.each do |uni_web|
