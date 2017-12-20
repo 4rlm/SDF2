@@ -72,9 +72,12 @@ class CsvTool
 
     File.open(@file_path).each do |line|
       begin
-        line = line&.gsub(/\s/, ' ')&.strip
+        line_1 = line&.gsub(/\s/, ' ')&.strip ## Removes carriage returns and new lines.
+        line_2 = force_utf_encoding(line_1) ## Removes non-utf8 chars.
 
-        CSV.parse(line) do |row|
+        CSV.parse(line_2) do |row|
+          row = row.collect { |x| x.try(:strip) } ## Strips white space from each el in row array.
+          
           if counter > 0
             @clean_csv_hashes << row_to_hash(row)
             @rows << row
@@ -109,6 +112,15 @@ class CsvTool
   def completion_msg(model, file_name)
     Reporter.migration_report
     puts "\n\n== Completed Import: #{file_name} to #{model} table. ==\n\n"
+  end
+
+  def force_utf_encoding(text)
+    # text = "Ã¥ÃŠÃ¥Â©team auto solutions"
+    # text = "Ã¥ÃŠÃ¥ÃŠÃ¥ÃŠour staff"
+    clean_text = text.delete("^\u{0000}-\u{007F}")
+    clean_text = clean_text.gsub(/\s+/, ' ')
+
+    return clean_text
   end
 
 

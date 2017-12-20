@@ -22,7 +22,19 @@ module UniContactMigrator
           uni_contact_array = uni_contact_hash.to_a
           contact_hash = validate_hash(Contact.column_names, uni_contact_array.to_h)
           non_contact_attributes_array = uni_contact_array - contact_hash.to_a
+
+          ##################################################################
+          ## IMPORTANT: NEED TO FORMAT URL PROPERLY.  UNRESOLVED ISSUE.  NEXT TIME!!
+          binding.pry
           url = uni_contact_hash['url'] ## Needed up here, because used to find Account ID
+
+          # web_hash = validate_hash(Web.column_names, non_account_attributes_array.to_h) if uni_account_hash['url'].present?
+          # web_hash['url'] = WebFormatter.format_url(web_hash['url'])
+          # url = web_hash['url']
+          ##################################################################
+          binding.pry
+
+
 
           # FIND OR CREATE ACCOUNT, THEN UPDATE IF APPLICABLE
           # Need to identify account before contact, to save account id in contact - less DB hits.

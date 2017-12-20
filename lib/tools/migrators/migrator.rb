@@ -1,14 +1,14 @@
 require 'uni_account_migrator'
 require 'uni_contact_migrator'
 require 'uni_web_migrator'
-require 'web_migrator'
+# require 'web_migrator'
 
 class Migrator
   # extend ActiveSupport::Concern
   include UniAccountMigrator
   include UniContactMigrator
   include UniWebMigrator
-  include WebMigrator
+  # include WebMigrator
 
   ### To call any of the three UniMigrator Modules ###
   #Call: Migrator.new.migrate_uni_accounts
@@ -21,17 +21,19 @@ class Migrator
   def save_simple_object(model, attr_hash)
     obj = model.classify.constantize.find_or_create_by(attr_hash)
     #Ex: phone_obj = Phone.find_or_create_by(phone: phone)
-    return obj if obj
+    return obj
   end
 
 
   ## Used for Tables where we need to first find by one attribute, then save or update several other attributes like Account or Contact.
   def save_complex_object(model, attr_hash, obj_hash)
+    obj_hash.delete_if { |key, value| value.blank? }
+    # attr_hash.each {|h| h.try(:downcase)}
     obj = model.classify.constantize.find_by(attr_hash)
     obj.present? ? update_obj_if_changed(obj_hash, obj) : obj = model.classify.constantize.create(obj_hash)
     #Ex: web_obj = Web.find_by(url: url)
     #Ex: web_obj.present? ? update_obj_if_changed(web_hash, web_obj) : web_obj = Web.create(web_hash)
-    return obj if obj
+    return obj
   end
 
 

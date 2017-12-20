@@ -45,31 +45,21 @@ module Importer
     @file_path = "#{@seeds_dir_path}/#{file_name}"
 
     parse_csv
-    uni_web = []
+    uni_webs = []
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
-      binding.pry
-
       clean_csv_hash.delete_if { |key, value| value.blank? } if !clean_csv_hash.empty?
-      binding.pry
-
       uni_web_hash = validate_hash(UniWeb.column_names, clean_csv_hash)
-      binding.pry
-
-      uni_web_obj = UniWeb.new(uni_web_hash)
-      binding.pry
-
-      uni_web << uni_web_obj
-      binding.pry
+      uni_webs << UniWeb.new(uni_web_hash)
     end
 
-    binding.pry
-    UniWeb.import(uni_web)
-    binding.pry
-
+    UniWeb.import(uni_webs)
     Migrator.new.migrate_uni_webs
     completion_msg(UniWeb, file_name)
   end
+
+  # UniWeb.delete_all
+  # ActiveRecord::Base.connection.reset_pk_sequence!('uni_webs')
 
 
   #CALL: CsvTool.new.import_seed_uni_accounts('4_crm_uni_accounts.csv')

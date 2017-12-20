@@ -8,15 +8,95 @@ module WebFormatter
   def self.format_url(url)
     url = url.downcase.strip
     url = url[0..-2] if url[-1] == '/'
+
     return url
   end
+
+
+  #Call: WebFormatter.format_link(url, link)
+  def self.format_link(url, link)
+    if url.present? && link.present?
+      url = strip_down_url(url)
+      link = strip_down_url(link)
+
+      link.slice!(url)
+      if link && link.include?(url) && !link.include?('@')# sometimes url is listed twice in link.
+        link.slice!(url)
+        link = link.gsub("///", '')
+      end
+
+      link = remove_invalid_links(link) if link.present?
+      link.insert(0, '/') if (link.present? && link[0] != '/')
+      link = link[0..-2] if (link.present? && link[-1] == '/')
+
+      return link
+    end
+  end
+
+
+  # Both Link and URL use this to make them equal for comparison, but only Link's changes save.  Not url.
+  # WebFormatter.strip_down_url(url_4)
+  def self.strip_down_url(url)
+    url = url.downcase.strip
+    url = url.gsub('www.', '')
+    url = url.split('://')
+    url = url[-1]
+
+    return url
+  end
+
+
+  def self.remove_invalid_links(link)
+    if link.present?
+
+      invalid_link_list = [':', '.co', '.net', '.gov', '.biz', '.edu', '(', '[', '@', '//', 'bye', 'hello', 'home', 'hours', 'form', 'regist', 'http', 'mail', 'mailto', 'none', 'test', 'twitter', 'www', 'yelp', 'login', 'feed', 'offer', 'service', 'graphic', 'phone', 'contact', 'event', 'youth', 'school', 'info', '%', '+', 'tire', 'business', 'review', 'inventory', 'download', '*', 'afri', 'drop', 'item', '.jpg', 'shop', 'face', 'book', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', '*', 'anounc', 'distrib', 'click', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
+
+      make_link_nil = invalid_link_list.any? {|word| link.include?(word) } if link.present?
+      link = nil if (make_link_nil || link == "/")
+      link = nil if link && link.length > 60
+
+      return link
+    end
+  end
+
+
+  def self.remove_invalid_texts(text)
+    if text.present?
+
+      text = nil if text && text.length > 35
+      invalid_text = Regexp.new(/[0-9]/)
+      text = nil if invalid_text.match(text)
+
+      # text = "Ã¥ÃŠhome"
+      # non_utf8 = Regexp.new(/[^[:print:]]/i)
+      # text = nil if non_utf8.match(text)
+
+      text = text.try(:downcase)
+      text = text.try(:strip)
+
+      invalid_text_list = ['none', '@', '.com', 'after', 'service', 'check', 'approved', 'deal', '?', 'inventory', 'truck', 'login', 'saving', 'event', 'holiday', 'light', 'shop', 'info', 'face', 'book', 'twitter', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'mail', 'contact', 'phone', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', 'tire', 'business', 'review', 'download', '*', 'afri', 'feed', 'anounc', 'distrib', 'click', 'charit', 'contrib', 'here', 'form', 'quote', 'quick', 'oil', 'regist', 'buy', 'pay', 'later', 'now', 'speci', 'commerc', 'sign', 'youth', 'blog', 'transla', 'golf', 'today', 'apply', 'employ', 'career', 'care', 'travel', '.jpg', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
+
+      make_text_nil = invalid_text_list.any? {|word| text.include?(word) } if text.present?
+      text = nil if make_text_nil
+
+      return text
+    end
+  end
+
+
+
+
+
+
+
+
+
+
 
 
 
   ## Should get pre-formatted url from Migrator.  Assumes url is already formatted.
   def format_link_or_text(url)
-
-
     return url
   end
 
@@ -51,22 +131,6 @@ module WebFormatter
   end
 
 
-  def format_link(url, link)
-    link = link.downcase.strip
-    link.slice!(url)
-    link = remove_invalid_links(link)
-    return link
-  end
-
-
-  def remove_invalid_links(link)
-    invalid_link_list = [':', '.com', '(', '[', '@', '//', '#', 'bye', 'hello', 'home', 'http', 'mail', 'mailto', 'none', 'test', 'twitter', 'www', 'yelp']
-    make_link_nil = invalid_link_list.any? {|word| link.include?(word) }
-    link.insert(0, '/') if link[0] != '/'
-    link = link[0..-2] if link[-1] == '/'
-    link = nil if (make_link_nil || link == "/")
-    return link
-  end
 
   #### ORIGINAL BELOW, DELETE AFTER TESTING BOTTOM REPLACEMENT ###
 

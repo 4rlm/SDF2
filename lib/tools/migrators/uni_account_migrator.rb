@@ -84,8 +84,9 @@ module UniAccountMigrator
           puts "\n\nRESCUE ERROR!!\n\n"
           @rollbacks << uni_account_hash
         end
-      end ## end of iteration.
-    end
+
+      end ## end of batch iteration.
+    end ## end of in_batches iteration
 
     @rollbacks.each { |uni_account_hash| puts uni_account_hash }
     # UniAccount.destroy_all

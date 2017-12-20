@@ -332,13 +332,11 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.string "web_status"
     t.string "url"
     t.string "url_redirect_id"
-    t.string "staff_page"
-    t.string "locations_page"
+    t.string "redirect_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["archived"], name: "index_webs_on_archived"
-    t.index ["locations_page"], name: "index_webs_on_locations_page"
-    t.index ["staff_page"], name: "index_webs_on_staff_page"
+    t.index ["redirect_url"], name: "index_webs_on_redirect_url"
     t.index ["url"], name: "index_webs_on_url"
     t.index ["url_redirect_id"], name: "index_webs_on_url_redirect_id"
     t.index ["web_status"], name: "index_webs_on_web_status"
