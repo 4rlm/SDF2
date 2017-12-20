@@ -51,8 +51,6 @@ module WebFormatter
   end
 
 
-
-
   def format_link(url, link)
     link = link.downcase.strip
     link.slice!(url)

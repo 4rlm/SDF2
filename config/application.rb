@@ -19,8 +19,8 @@ module Sdf2
     config.autoload_paths += %W(#{config.root}/controllers/concerns)
     # config.autoload_paths += %W(#{config.root}/lib/servicers)
 
-    config.autoload_paths << Rails.root.join('lib/tools/*')
-    config.autoload_paths += Dir["#{config.root}/lib/tools/*"]
+    config.autoload_paths << Rails.root.join('lib/tools')
+    config.autoload_paths += Dir["#{config.root}/lib/tools"]
 
     config.autoload_paths << Rails.root.join('lib/tools/about')
     config.autoload_paths += Dir["#{config.root}/lib/tools/about"]
@@ -45,6 +45,9 @@ module Sdf2
 
     config.autoload_paths << Rails.root.join('lib/tools/servicers')
     config.autoload_paths += Dir["#{config.root}/lib/tools/servicers"]
+
+    config.autoload_paths << Rails.root.join('lib/tools/reports')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/reports"]
 
     config.autoload_paths << Rails.root.join('lib/tools/verifiers')
     config.autoload_paths += Dir["#{config.root}/lib/tools/verifiers"]

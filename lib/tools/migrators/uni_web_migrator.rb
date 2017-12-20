@@ -4,6 +4,7 @@ module UniWebMigrator
 
   #Call: Migrator.new.migrate_uni_webs
   def migrate_uni_webs
+    binding.pry
 
     @rollbacks = []
     # UniWeb.all.each do |uni_web|
