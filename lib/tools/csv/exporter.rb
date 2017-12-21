@@ -1,11 +1,17 @@
 module Exporter
 
+  ################ !!! CAUTION !!! #########################
+  # THESE METHODS WILL OVER-WRITE PRIOR CSV BACKUPS !!
+  # Exports CSV to: db/csv/backups/file_name.csv
+  # CSVs can be re-imported via CsvTool.new.restore_all_backups
+  ###########################################################
+
+
   # CALL: CsvTool.new.backup_entire_db
   def backup_entire_db
-    # db_table_list = CsvToolMod.get_db_table_list
     # db_table_list = ["Link", "Linking", "Text", "Texting"]
     db_table_list = get_db_table_list
-
+    
     db_table_list.each do |table_name|
       model = table_name.constantize
       file_name = "#{table_name.pluralize}.csv"
@@ -14,6 +20,7 @@ module Exporter
   end
 
 
+  #CALL: CsvTool.new.backup_csv(model, file_name)
   def backup_csv(model, file_name)
     backups_file_path = "#{@backups_dir_path}/#{file_name}"
     CSV.open(backups_file_path, "wb") do |csv|
@@ -22,11 +29,13 @@ module Exporter
     end
   end
 
+
   def download_csv
     CSV.generate do |csv|
       csv << @model.attribute_names
       @model.all.each { |r| csv << r.attributes.values }
     end
   end
+
 
 end

@@ -17,31 +17,8 @@ class CsvTool
   end
 
 
-  #CALL: CsvTool.new.restore_all_backups
-  def restore_all_backups
-    db_table_list = get_db_table_list
-    db_table_list_hashes = db_table_list.map do |table_name|
-      { model: table_name.classify.constantize, plural_model_name: table_name.pluralize }
-    end
 
-    db_table_list_hashes.each do |hash|
-      hash[:model].delete_all
-      ActiveRecord::Base.connection.reset_pk_sequence!(hash[:plural_model_name])
-    end
-
-    db_table_list_hashes.each do |hash|
-      restore_backup(hash[:model], "#{hash[:plural_model_name]}.csv")
-    end
-
-    ######### Reset PK Sequence #########
-    ActiveRecord::Base.connection.tables.each do |t|
-      ActiveRecord::Base.connection.reset_pk_sequence!(t)
-    end
-
-  end
-
-
-  ### SHARED METHODS AMONGST BOTH MODULES ###
+  ###### SHARED METHODS AMONGST BOTH MODULES ######
 
 
   #CALL: CsvTool.new.get_db_table_list
@@ -110,9 +87,9 @@ class CsvTool
 
 
   def completion_msg(model, file_name)
-    Reporter.migration_report
-    puts "\n\n== Sleep(5): Completed Import: #{file_name} to #{model} table. ==\n\n"
-    sleep(3)
+    Reporter.db_totals_report
+    puts "\n\n== Sleep(2): Completed Import: #{file_name} to #{model} table. ==\n\n"
+    sleep(2)
   end
 
   def force_utf_encoding(text)

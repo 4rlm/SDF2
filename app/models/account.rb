@@ -15,9 +15,9 @@ class Account < ApplicationRecord
   has_many :webs, through: :webings
   accepts_nested_attributes_for :webings, :webs
 
-  has_many :templatings, as: :templatable
-  has_many :templates, through: :templatings
-  accepts_nested_attributes_for :templatings, :templates
+  # has_many :templatings, as: :templatable
+  # has_many :templates, through: :templatings
+  # accepts_nested_attributes_for :templatings, :templates
 
   has_many :brandings, as: :brandable
   has_many :brands, through: :brandings

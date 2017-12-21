@@ -1,45 +1,99 @@
 module Reporter
 
-  # CALL: Reporter.welcome_to_reporter
-  def self.welcome_to_reporter
-    puts "Welcome to the Reporter Module"
+
+  # CALL: Reporter.db_totals_report
+  def self.db_totals_report
+    db_totals = CsvTool.new.get_db_table_list.sort.map do |e|
+      [e.pluralize, e.constantize.all.count]
+    end.to_h
+
+    puts "\n\n#{'='*40}\n=== Report: DB Totals ==="
+    puts db_totals.to_yaml
+  end
+
+
+
+# CALL: Reporter.link_text_report
+  def self.link_text_report
+
+    ## TRYING TO DETERMINE WHICH TEMPLATES USE WHICH LINKS MOST OFTEN ##
+
+    staff_texts = Text.where(text_type: 'staff').map do |el|
+      binding.pry
+      text = el.text
+      text_webs = el.webs
+
+      templates = []
+      text_webs_templates = text_webs.map do |web|
+        binding.pry
+        templates << web.templates
+        puts templates
+      end
+
+      puts templates
+
+      binding.pry
+
+
+
+      [el.text, el.webs.count]
+    end.sort {|a,b| b[1]<=>a[1]}.to_h
+
+    puts "\n====== staff_texts =============\n\n"
+    puts staff_texts.to_yaml
     binding.pry
+
+
+
+
+
+
+    binding.pry
+    ## BELOW WORKING PERFECTLY!! - EXPERIMENTING ABOVE ##
+    binding.pry
+    binding.pry
+
+
+    staff_texts = Text.where(text_type: 'staff').map do |el|
+      [el.text, el.webs.count]
+    end.sort {|a,b| b[1]<=>a[1]}.to_h
+
+    puts "\n====== staff_texts =============\n\n"
+    puts staff_texts.to_yaml
+    binding.pry
+
+
+    locations_texts = Text.where(text_type: 'locations').map do |el|
+      [el.text, el.webs.count]
+    end.sort {|a,b| b[1]<=>a[1]}.to_h
+
+    puts "\n====== locations_texts =============\n\n"
+    puts locations_texts.to_yaml
+    binding.pry
+
+
+
+
+
+    staff_links = Link.where(link_type: 'staff').map do |el|
+      [el.link, el.webs.count]
+    end.sort {|a,b| b[1]<=>a[1]}.to_h
+
+    puts "\n====== staff_links =============\n\n"
+    puts staff_links.to_yaml
+    binding.pry
+
+
+    locations_links = Link.where(link_type: 'locations').map do |el|
+      [el.link, el.webs.count]
+    end.sort {|a,b| b[1]<=>a[1]}.to_h
+
+    puts "\n\n======== locations_links ===========\n\n"
+    puts locations_links.to_yaml
+    binding.pry
+
   end
 
-
-  # DISPLAY FINAL RESULTS AFTER MIGRATION COMPLETES.
-  # CALL: Reporter.migration_report
-  def self.migration_report
-    puts "Accounts: #{Account.all.count}"
-    puts "Contacts: #{Contact.all.count}"
-
-    puts "Webs: #{Web.all.count}"
-    puts "Webings: #{Webing.all.count}"
-
-    puts "Texts: #{Text.all.count}"
-    puts "Textings: #{Texting.all.count}"
-
-    puts "Links: #{Link.all.count}"
-    puts "Linkings: #{Linking.all.count}"
-
-    puts "Phones: #{Phone.all.count}"
-    puts "Phonings: #{Phoning.all.count}"
-
-    puts "Addresses: #{Address.all.count}"
-    puts "AccountAddresses: #{AccountAddress.all.count}"
-
-    puts "Templates: #{Template.all.count}"
-    puts "Templatings: #{Templating.all.count}"
-
-    puts "Who: #{Who.all.count}"
-
-    puts "Job Titles: #{Title.all.count}"
-    puts "Job Descriptions: #{Description.all.count}"
-
-    puts "Whos: #{Who.all.count}"
-    puts "Terms: #{Term.all.count}"
-    puts "Brands: #{Brand.all.count}"
-  end
 
 
 end

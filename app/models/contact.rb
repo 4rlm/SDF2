@@ -7,7 +7,6 @@ class Contact < ApplicationRecord
     [last_name, first_name].compact.join(',')
   end
 
-
   # belongs_to :account
   # belongs_to :account, inverse_of: :contacts
   # validates_presence_of :account

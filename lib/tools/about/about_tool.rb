@@ -8,7 +8,7 @@
 #   ActiveRecord::Base.connection.reset_pk_sequence!(t)
 # end
 
-# CALL: CsvTool.new.migration_report
+# CALL: CsvTool.new.db_totals_report
 ############################################
 
 class AboutTool
