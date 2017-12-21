@@ -21,9 +21,11 @@ module PhoneFormatter
 
   # Call: PhoneFormatter.validate_phone(phone)
   def self.validate_phone(phone)
-    reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
-    phone.first == "0" || phone.include?("(0") || !reg.match(phone) ? phone = nil : valid_phone = format_phone(phone)
-    return valid_phone
+    if phone.present?
+      reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
+      phone.first == "0" || phone.include?("(0") || !reg.match(phone) ? phone = nil : valid_phone = format_phone(phone)
+      return valid_phone
+    end
   end
 
 

@@ -1,9 +1,10 @@
 module Exporter
 
+  # CALL: CsvTool.new.backup_entire_db
   def backup_entire_db
-    #CALL: CsvToolMod::Export.backup_entire_db
-    db_table_list = CsvToolMod.get_db_table_list
+    # db_table_list = CsvToolMod.get_db_table_list
     # db_table_list = ["Link", "Linking", "Text", "Texting"]
+    db_table_list = get_db_table_list
 
     db_table_list.each do |table_name|
       model = table_name.constantize

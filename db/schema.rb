@@ -49,25 +49,17 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   create_table "addresses", force: :cascade do |t|
     t.string "address_status"
     t.string "street"
-    t.string "unit"
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.string "full_address"
     t.string "address_pin"
-    t.float "latitude"
-    t.float "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address_pin"], name: "index_addresses_on_address_pin"
     t.index ["address_status"], name: "index_addresses_on_address_status"
     t.index ["city"], name: "index_addresses_on_city"
-    t.index ["full_address"], name: "index_addresses_on_full_address"
-    t.index ["latitude"], name: "index_addresses_on_latitude"
-    t.index ["longitude"], name: "index_addresses_on_longitude"
     t.index ["state"], name: "index_addresses_on_state"
     t.index ["street"], name: "index_addresses_on_street"
-    t.index ["unit"], name: "index_addresses_on_unit"
     t.index ["zip"], name: "index_addresses_on_zip"
   end
 

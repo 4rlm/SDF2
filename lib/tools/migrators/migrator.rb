@@ -19,27 +19,33 @@ class Migrator
 
   ## Used for Tables where only one Attr matters, like Phone.phone
   def save_simple_object(model, attr_hash)
-    obj = model.classify.constantize.find_or_create_by(attr_hash)
-    #Ex: phone_obj = Phone.find_or_create_by(phone: phone)
-    return obj
+    if model.present? && attr_hash.present?
+      obj = model.classify.constantize.find_or_create_by(attr_hash)
+      #Ex: phone_obj = Phone.find_or_create_by(phone: phone)
+      return obj
+    end
   end
 
 
   ## Used for Tables where we need to first find by one attribute, then save or update several other attributes like Account or Contact.
   def save_complex_object(model, attr_hash, obj_hash)
-    obj_hash.delete_if { |key, value| value.blank? }
-    # attr_hash.each {|h| h.try(:downcase)}
-    obj = model.classify.constantize.find_by(attr_hash)
-    obj.present? ? update_obj_if_changed(obj_hash, obj) : obj = model.classify.constantize.create(obj_hash)
-    #Ex: web_obj = Web.find_by(url: url)
-    #Ex: web_obj.present? ? update_obj_if_changed(web_hash, web_obj) : web_obj = Web.create(web_hash)
-    return obj
+    if model.present? && attr_hash.present? && obj_hash.present?
+      obj_hash.delete_if { |key, value| value.blank? }
+      # attr_hash.each {|h| h.try(:downcase)}
+      obj = model.classify.constantize.find_by(attr_hash)
+      obj.present? ? update_obj_if_changed(obj_hash, obj) : obj = model.classify.constantize.create(obj_hash)
+      #Ex: web_obj = Web.find_by(url: url)
+      #Ex: web_obj.present? ? update_obj_if_changed(web_hash, web_obj) : web_obj = Web.create(web_hash)
+      return obj
+    end
   end
 
 
   def create_object_parent_association(model, obj, parent)
-    parent.send(model.pluralize.to_sym) << obj if (obj && !parent.send(model.pluralize.to_sym).include?(obj))
-    #Ex: account.phones << phone_obj if !account.phones.include?(phone_obj)
+    if model.present? && obj.present? && parent.present?
+      parent.send(model.pluralize.to_sym) << obj if (obj && !parent.send(model.pluralize.to_sym).include?(obj))
+      #Ex: account.phones << phone_obj if !account.phones.include?(phone_obj)
+    end
   end
 
 
@@ -57,10 +63,11 @@ class Migrator
 
 
   def validate_hash(cols, hash)
-    # cols.map!(&:to_sym)
-    keys = hash.keys
-    keys.each { |key| hash.delete(key) if !cols.include?(key) }
-    return hash
+    if cols.present? && hash.present?
+      keys = hash.keys
+      keys.each { |key| hash.delete(key) if !cols.include?(key) }
+      return hash
+    end
   end
 
 

@@ -77,7 +77,7 @@ class CsvTool
 
         CSV.parse(line_2) do |row|
           row = row.collect { |x| x.try(:strip) } ## Strips white space from each el in row array.
-          
+
           if counter > 0
             @clean_csv_hashes << row_to_hash(row)
             @rows << row
@@ -111,7 +111,8 @@ class CsvTool
 
   def completion_msg(model, file_name)
     Reporter.migration_report
-    puts "\n\n== Completed Import: #{file_name} to #{model} table. ==\n\n"
+    puts "\n\n== Sleep(5): Completed Import: #{file_name} to #{model} table. ==\n\n"
+    sleep(3)
   end
 
   def force_utf_encoding(text)

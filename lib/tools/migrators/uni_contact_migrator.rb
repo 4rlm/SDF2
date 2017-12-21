@@ -12,74 +12,50 @@ module UniContactMigrator
       each_batch.each do |uni_contact|
 
         begin
-          # FORMAT INCOMING DATA ROW FROM UniContact.
+          # UNI CONTACT HASH: FORMAT INCOMING DATA ROW FROM UniContact.
           uni_contact_hash = uni_contact.attributes
           uni_contact_hash.delete('id')
-          uni_contact_hash['id'] = uni_contact_hash.delete('contact_id')
+          uni_contact_hash.delete('contact_id')
+          uni_contact_hash['url'] = WebFormatter.format_url(uni_contact_hash['url'])
           uni_contact_hash.delete_if { |key, value| value.blank? }
 
-          # CREATE CONTACT HASH, AND ARRAY OF NON-CONTACT DATA FROM ROW.
+          # CONTACT HASH: CREATED FROM uni_contact_hash
           uni_contact_array = uni_contact_hash.to_a
-          contact_hash = validate_hash(Contact.column_names, uni_contact_array.to_h)
-          non_contact_attributes_array = uni_contact_array - contact_hash.to_a
+          cont_hash = validate_hash(Contact.column_names, uni_contact_array.to_h)
+          non_contact_attributes_array = uni_contact_array - cont_hash.to_a
 
-          ##################################################################
-          ## IMPORTANT: NEED TO FORMAT URL PROPERLY.  UNRESOLVED ISSUE.  NEXT TIME!!
-          binding.pry
-          url = uni_contact_hash['url'] ## Needed up here, because used to find Account ID
+          # WEB OBJECT: FIND, CREATE (saves association after account obj created)
+          web_obj = save_simple_object('web', {'url' => uni_contact_hash['url']})
 
-          # web_hash = validate_hash(Web.column_names, non_account_attributes_array.to_h) if uni_account_hash['url'].present?
-          # web_hash['url'] = WebFormatter.format_url(web_hash['url'])
-          # url = web_hash['url']
-          ##################################################################
-          binding.pry
+          # ACCOUNT OBJECT: FIND, CREATE, UPDATE
+          acct_hash = validate_hash(Account.column_names, non_contact_attributes_array.to_h)
+          acct_obj ||= Account.find_by(id: uni_contact_hash['account_id']) || Account.find_by(crm_acct_num: uni_contact_hash['crm_acct_num']) || web_obj.try(:accounts)[0]
+          acct_obj.present? ? update_obj_if_changed(acct_hash, acct_obj) : acct_obj = Account.create(acct_hash)
+          cont_hash['account_id'] = acct_obj.id
 
+          # WEB OBJECT: SAVE ASSOCIATION
+          create_object_parent_association('web', web_obj, acct_obj)
 
+          # CONTACT OBJECT: FIND, CREATE, UPDATE
+          cont_hash.delete_if { |key, value| value.blank? }
+          cont_obj ||= Contact.find_by(id: cont_hash['id']) || Contact.find_by(crm_cont_num: uni_contact_hash['crm_cont_num']) || Contact.find_by(email: uni_contact_hash['email'])
+          cont_obj.present? ? update_obj_if_changed(cont_hash, cont_obj) : cont_obj = Contact.create(cont_hash)
 
-          # FIND OR CREATE ACCOUNT, THEN UPDATE IF APPLICABLE
-          # Need to identify account before contact, to save account id in contact - less DB hits.
-          account_id = uni_contact_hash['account_id']
-          account_hash = validate_hash(Account.column_names, non_contact_attributes_array.to_h)
-          crm_acct_num = uni_contact_hash['crm_acct_num']
-          account = Account.find(account_id) if account_id.present?
-          account = Account.find_by(crm_acct_num: crm_acct_num) if (!account.present? && crm_acct_num.present?)
+          # CONTACT OBJECT: SAVE ASSOCIATION
+          create_object_parent_association('contact', cont_obj, acct_obj)
 
-          if (!account.present? && url.present?)
-            web_object = Web.find_by(url: url)
-            account = web_object.accounts.first if web_object.present?
-          end
-          account.present? ? update_obj_if_changed(account_hash, account) : account = Account.create(account_hash)
+          # PHONE OBJECT: FIND or CREATE, then SAVE ASSOCIATION
+          phone = PhoneFormatter.validate_phone(uni_contact_hash['phone'])
+          phone_obj = save_simple_object('phone', obj_hash={'phone' => phone})
+          create_object_parent_association('phone', phone_obj, cont_obj)
 
-          # FIND OR CREATE CONTACT, THEN UPDATE IF APPLICABLE
-          contact_hash['account_id'] = account.id if !contact_hash['account_id']
-          cont_id = contact_hash['id']
-          crm_cont_num = uni_contact_hash['crm_cont_num']
-          email = uni_contact_hash['email']
-          contact = Contact.find(cont_id) if cont_id.present?
-          contact = Contact.find_by(crm_cont_num: crm_cont_num) if (!contact.present? && crm_cont_num.present?)
-          contact = Contact.find_by(email: email) if (!contact.present? && email.present?)
-          contact.present? ? update_obj_if_changed(contact_hash, contact) : contact = Contact.create(contact_hash)
+          # TITLE OBJECT: FIND or CREATE, then SAVE ASSOCIATION
+          title_obj = save_simple_object('title', {'job_title' => uni_contact_hash['job_title']})
+          create_object_parent_association('title', title_obj, cont_obj)
 
-          # FIND OR CREATE WEB, THEN UPDATE IF APPLICABLE
-          web_hash = validate_hash(Web.column_names, non_contact_attributes_array.to_h) if url.present?
-          web_obj = save_complex_object('web', {'url' => url}, web_hash) if url.present?
-          create_object_parent_association('web', web_obj, contact) if web_obj.present?
-
-          # FIND OR CREATE PHONE, THEN UPDATE IF APPLICABLE
-          phone = uni_contact_hash['phone']
-          phone = PhoneFormatter.validate_phone(phone) if phone.present?
-          phone_obj = save_simple_object('phone', obj_hash={'phone' => phone}) if phone.present?
-          create_object_parent_association('phone', phone_obj, contact) if phone_obj.present?
-
-          # FIND OR CREATE TITLE, THEN UPDATE IF APPLICABLE
-          job_title = uni_contact_hash['job_title']
-          title_obj = save_simple_object('title', {'job_title' => job_title}) if job_title.present?
-          create_object_parent_association('title', title_obj, contact) if title_obj
-
-          # FIND OR CREATE DESCRIPTION, THEN UPDATE IF APPLICABLE
-          job_description = uni_contact_hash['job_description']
-          description_obj = save_simple_object('description', {'job_description' => job_description}) if job_description.present?
-          create_object_parent_association('description', description_obj, contact) if description_obj.present?
+          # DESCRIPTION OBJECT: FIND or CREATE, then SAVE ASSOCIATION
+          description_obj = save_simple_object('description', {'job_description' => uni_contact_hash['job_description']})
+          create_object_parent_association('description', description_obj, cont_obj)
 
         rescue
           puts "\n\nRESCUE ERROR!!\n\n"

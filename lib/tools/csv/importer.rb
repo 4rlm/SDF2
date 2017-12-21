@@ -21,8 +21,8 @@ module Importer
 
   #CALL: CsvTool.new.import_all_seed_files
   def import_all_seed_files
-    CsvTool.new.import_seed_uni_webs('1_valid_uni_webs.csv')
-    CsvTool.new.import_seed_uni_webs('2_archived_uni_webs.csv')
+    # CsvTool.new.import_seed_uni_webs('1_valid_uni_webs.csv')
+    # CsvTool.new.import_seed_uni_webs('2_archived_uni_webs.csv')
     CsvTool.new.import_seed_uni_webs('3_links_texts_uni_webs.csv')
 
     CsvTool.new.import_seed_uni_accounts('4_crm_uni_accounts.csv')
@@ -54,7 +54,13 @@ module Importer
     end
 
     UniWeb.import(uni_webs)
+    puts "Sleep(3) - Complete: UniWeb.import(uni_webs)"
+    sleep(3)
+
     Migrator.new.migrate_uni_webs
+    puts "Sleep(3) - Complete: Migrator.new.migrate_uni_webs"
+    sleep(3)
+
     completion_msg(UniWeb, file_name)
   end
 
@@ -79,7 +85,13 @@ module Importer
     end
 
     UniAccount.import(accounts)
+    puts "Sleep(3) - Complete: UniAccount.import(accounts)"
+    sleep(3)
+
     Migrator.new.migrate_uni_accounts
+    puts "Sleep(3) - Complete: Migrator.new.migrate_uni_accounts"
+    sleep(3)
+
     completion_msg(UniAccount, file_name)
   end
 
@@ -96,8 +108,15 @@ module Importer
       contact = UniContact.new(contact_hash)
       contacts << contact
     end
+
     UniContact.import(contacts)
+    puts "Sleep(3) - Complete: UniContact.import(contacts)"
+    sleep(3)
+
     Migrator.new.migrate_uni_contacts
+    puts "Sleep(3) - Complete: Migrator.new.migrate_uni_contacts"
+    sleep(3)
+
     completion_msg(UniContact, file_name)
   end
 
@@ -118,6 +137,9 @@ module Importer
     end
 
     Brand.import(brands)
+    puts "Sleep(3) - Complete: Brand.import(brands)"
+    sleep(3)
+
     completion_msg(Brand, file_name)
   end
 
@@ -138,6 +160,9 @@ module Importer
     end
 
     Term.import(terms)
+    puts "Sleep(3) - Complete: Term.import(terms)"
+    sleep(3)
+
     completion_msg(Term, file_name)
   end
 

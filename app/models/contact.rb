@@ -1,4 +1,13 @@
 class Contact < ApplicationRecord
+
+  attribute :full_name, :string
+  before_validation :full_name
+
+  def full_name
+    [last_name, first_name].compact.join(',')
+  end
+
+
   # belongs_to :account
   # belongs_to :account, inverse_of: :contacts
   # validates_presence_of :account

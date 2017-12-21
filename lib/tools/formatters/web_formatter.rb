@@ -6,10 +6,11 @@ module WebFormatter
 
   #Call: WebFormatter.format_url(url)
   def self.format_url(url)
-    url = url.downcase.strip
-    url = url[0..-2] if url[-1] == '/'
-
-    return url
+    if url.present?
+      url = url.downcase.strip
+      url = url[0..-2] if url[-1] == '/'
+      return url
+    end
   end
 
 
