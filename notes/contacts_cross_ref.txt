@@ -1,0 +1,55 @@
+class CreateContacts < ActiveRecord::Migration[5.1]
+  def change
+    create_table :contacts do |t|
+      t.string :cont_num
+      t.string :source
+      t.string :status
+      t.string :full_name
+      t.string :first_name
+      t.string :last_name
+      t.string :email
+      t.string :job_title
+
+      t.index :cont_num, unique: true
+
+      t.timestamps
+    end
+    add_index :contacts, [:full_name, :email, :job_title], unique: true, name: 'contact_index' #=> And in Model!
+
+    # add_index :contacts, [:full_name, :cont_num, :email, :job_title], unique: true, name: 'contact_index' #=> And in Model!
+  end
+end
+
+###################
+
+class Contact < ApplicationRecord
+  validates :cont_num, uniqueness: true
+
+  validates :full_name, :uniqueness => { :scope => [:email, :job_title] } #=> ALSO IN MIGRATION!
+
+  # validates :full_name, :uniqueness => { :scope => [:cont_num, :email, :job_title] } #=> ALSO IN MIGRATION!
+
+  has_many :contactings
+
+  has_many :phonings, as: :phonable
+  has_many :phones, through: :phonings
+
+  has_one :accounting, as: :accountable
+  has_one :account, through: :accounting
+end
+
+########################
+rails g model Profile user_id:integer:index name:string:index
+
+class CreateProfiles < ActiveRecord::Migration[5.1]
+  def change
+    create_table :profiles do |t|
+      t.integer :user_id
+      t.string :name
+
+      t.timestamps
+    end
+    add_index :profiles, :user_id
+    add_index :profiles, :name
+  end
+end

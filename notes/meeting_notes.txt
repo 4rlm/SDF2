@@ -1,0 +1,4 @@
+1) re-scrape data
+2) ensure merged data gets updated, but not unmerged (unless it has changed).
+3) add addresses into all contacts
+4) ability to search contacts by state
