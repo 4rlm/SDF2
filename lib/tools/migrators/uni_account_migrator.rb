@@ -71,9 +71,7 @@ module UniAccountMigrator
           # FIND OR CREATE TEMPLATE, THEN UPDATE IF APPLICABLE
           template_name = uni_account_hash['template_name']
           template_obj = save_simple_object('template', obj_hash={'template_name' => template_name}) if template_name.present?
-          # create_object_parent_association('template', template_obj, account) ## NOT JOINING THEM ANYMORE.  GO THROUGH WEB.
-          create_object_parent_association('template', template_obj, web_obj) if template_obj.present?
-
+          create_object_parent_association('template', template_obj, account) if template_obj.present?
 
           # FIND OR CREATE WHO, THEN UPDATE IF APPLICABLE
           if uni_account_hash['ip'] || uni_account_hash['server1'] || uni_account_hash['server2']

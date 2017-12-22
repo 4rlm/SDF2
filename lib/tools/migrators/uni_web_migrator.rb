@@ -20,7 +20,6 @@ module UniWebMigrator
           # FORMAT INCOMING DATA ROW FROM UniWeb.
           uni_web_hash = uni_web.attributes
           uni_web_hash['url'] = WebFormatter.format_url(uni_web_hash['url'])
-  
           uni_web_hash.delete('id')
           uni_web_hash.delete('url_redirect_id')
 
