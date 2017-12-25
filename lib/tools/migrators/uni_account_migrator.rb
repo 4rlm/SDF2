@@ -13,82 +13,79 @@ module UniAccountMigrator
 
         begin
           # FORMAT INCOMING DATA ROW FROM UniAccount.
-          uni_account_hash = uni_account.attributes
-          uni_account_hash.delete('id')
-          uni_account_hash['id'] = uni_account_hash.delete('account_id')
-          uni_account_hash.delete_if { |key, value| value.blank? }
+          # UNI CONTACT HASH: FORMAT INCOMING DATA ROW FROM UniContact.
+          uni_hsh = uni_account.attributes
+          uni_hsh.delete('id')
+          uni_hsh['id'] = uni_hsh.delete('account_id')
+          uni_hsh.delete_if { |key, value| value.blank? }
 
           # CREATE ACCOUNT HASH, AND ARRAY OF NON-ACCOUNT DATA FROM ROW.
-          uni_account_array = (uni_account_hash.to_a)
-          account_hash = validate_hash(Account.column_names, uni_account_array.to_h)
-          non_account_attributes_array = uni_account_array - account_hash.to_a
-          # url = uni_account_hash['url']
-          web_hash = validate_hash(Web.column_names, non_account_attributes_array.to_h) if uni_account_hash['url'].present?
-          web_hash['url'] = WebFormatter.format_url(web_hash['url'])
-          url = web_hash['url']
+          uni_account_array = (uni_hsh.to_a)
+          account_hsh = validate_hsh(Account.column_names, uni_account_array.to_h)
+          non_account_attributes_array = uni_account_array - account_hsh.to_a
+
+          # CREATE WEB HASH, and format Url, then save formatted url back into WEB HASH, and to url var.
+          web_hsh = validate_hsh(Web.column_names, non_account_attributes_array.to_h) if uni_hsh['url'].present?
+          web_hsh['url'] = WebFormatter.format_url(web_hsh['url']) if web_hsh.present?
+          url = web_hsh['url'] if web_hsh.present?
 
           # FIND OR CREATE ACCOUNT, THEN UPDATE IF APPLICABLE
-          crm_acct_num = account_hash['crm_acct_num']
-          acct_id = account_hash['id']
-          account_name = account_hash['account_name']
+          crm_acct_num = account_hsh['crm_acct_num']
+          acct_id = account_hsh['id']
+          account_name = account_hsh['account_name']
 
-          if acct_id.present?
-            account = Account.find(acct_id)
-          elsif !account.present? && crm_acct_num.present?
-            account = Account.find_by(crm_acct_num: crm_acct_num)
-          elsif !account.present? && account_name.present?
-            provisional_account = Account.find_by(account_name: account_name)
 
-            if provisional_account.present?
-              provisional_web = provisional_account.webs.find { |web| web.url == url }
+          # FIND ACCT based on id, crm_acct_num, account_name, or url.
+          account ||= Account.try(:find_by, id: acct_id) || Account.try(:find_by, crm_acct_num: crm_acct_num)
+          temp_acct = Account.try(:find_by, account_name: account_name) if !account.present?
+          temp_web = temp_acct.webs.find { |web| web.url == url } if temp_acct.present?
 
-              if provisional_web.present?
-                account = provisional_web.accounts.first
-              elsif !provisional_account.crm_acct_num.present?
-                account = provisional_account
-              end
-            end
-          end
-          account.present? ? update_obj_if_changed(account_hash, account) : account = Account.create(account_hash)
+          ## Assign account var to above account var obj, or create a new account object.
+          account ||= temp_web&.accounts&.first || account = temp_acct
+          account.present? ? update_obj_if_changed(account_hsh, account) : account = Account.create(account_hsh)
 
           # FIND OR CREATE URL, THEN UPDATE IF APPLICABLE
           # NOTE: PART OF WEB IS ATOP BECAUSE URL REQUIRED FOR FINDING SOME ACCOUNTS.
-          web_obj = save_complex_object('web', {'url' => url}, web_hash) if url.present?
-          create_object_parent_association('web', web_obj, account) if web_obj.present?
-
-          # FIND OR CREATE PHONE, THEN UPDATE IF APPLICABLE
-          phone = uni_account_hash['phone']
-          phone = PhoneFormatter.validate_phone(phone) if phone.present?
-          phone_obj = save_simple_object('phone', obj_hash={'phone' => phone}) if phone.present?
-          create_object_parent_association('phone', phone_obj, account) if phone_obj.present?
-
-          # FIND OR CREATE ADDRESS, THEN UPDATE IF APPLICABLE
-          address_hash = validate_hash(Address.column_names, non_account_attributes_array.to_h)
-          address_hash = AddressFormatter.format_address_hash(address_hash) if !address_hash.empty?
-          address_obj = save_simple_object('address', address_hash) if !address_hash.empty?
-          create_object_parent_association('address', address_obj, account) if address_obj
+          web_obj = save_complex_obj('web', {'url' => url}, web_hsh) if url.present?
+          create_obj_parent_assoc('web', web_obj, account) if web_obj.present?
 
           # FIND OR CREATE TEMPLATE, THEN UPDATE IF APPLICABLE
-          template_name = uni_account_hash['template_name']
-          template_obj = save_simple_object('template', obj_hash={'template_name' => template_name}) if template_name.present?
-          create_object_parent_association('template', template_obj, account) if template_obj.present?
+          template_name = uni_hsh['template_name']
+          template_obj = save_simple_obj('template', {'template_name' => template_name}) if template_name.present?
+          create_obj_parent_assoc('template', template_obj, web_obj) if template_obj && web_obj
+
+          # FIND OR CREATE PHONE, THEN UPDATE IF APPLICABLE
+          phone = uni_hsh['phone']
+          phone = PhoneFormatter.validate_phone(phone) if phone.present?
+          phone_obj = save_simple_obj('phone', obj_hsh={'phone' => phone}) if phone.present?
+          create_obj_parent_assoc('phone', phone_obj, account) if phone_obj.present?
+
+          # FIND OR CREATE ADDRESS, THEN UPDATE IF APPLICABLE
+          address_hsh = validate_hsh(Address.column_names, non_account_attributes_array.to_h)
+          address_hsh = AddressFormatter.format_address_hsh(address_hsh) if address_hsh.present?
+          address_obj = save_simple_obj('address', address_hsh) if address_hsh.present?
+          create_obj_parent_assoc('address', address_obj, account) if address_obj
 
           # FIND OR CREATE WHO, THEN UPDATE IF APPLICABLE
-          if uni_account_hash['ip'] || uni_account_hash['server1'] || uni_account_hash['server2']
-            who_hash = validate_hash(Who.column_names, non_account_attributes_array.to_h)
-            who_obj = Who.find_or_create_by(who_hash)
+          if uni_hsh['ip'] || uni_hsh['server1'] || uni_hsh['server2']
+            who_hsh = validate_hsh(Who.column_names, non_account_attributes_array.to_h)
+            who_obj = Who.find_or_create_by(who_hsh)
             who_obj.webs << web_obj if (web_obj && !who_obj.webs.include?(web_obj))
           end
 
-        rescue
-          puts "\n\nRESCUE ERROR!!\n\n"
-          @rollbacks << uni_account_hash
+        rescue StandardError => error
+          puts "\n\n=== RESCUE ERROR!! ==="
+          puts error.class.name
+          puts error.message
+          print error.backtrace.join("\n")
+          binding.pry
+          @rollbacks << uni_hsh
         end
 
       end ## end of batch iteration.
     end ## end of in_batches iteration
 
-    @rollbacks.each { |uni_account_hash| puts uni_account_hash }
+    @rollbacks.each { |uni_hsh| puts uni_hsh }
     # UniAccount.destroy_all
 
     UniAccount.delete_all

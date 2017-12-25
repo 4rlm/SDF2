@@ -5,9 +5,12 @@
 # require 'curb'
 
 # require 'iterators/complex_query_iterator'
+# FinalRedirectUrl
+
 require 'complex_query_iterator'
 require 'final_redirect_url'
-# FinalRedirectUrl
+# %w{complex_query_iterator final_redirect_url}.each { |x| require x }
+
 
 ######### Delayed Job #########
 # $ rake jobs:clear

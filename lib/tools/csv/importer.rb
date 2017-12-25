@@ -94,7 +94,7 @@ module Importer
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
       clean_csv_hash.delete_if { |key, value| value.blank? } if !clean_csv_hash.empty?
-      uni_web_hash = validate_hash(UniWeb.column_names, clean_csv_hash)
+      uni_web_hash = validate_hsh(UniWeb.column_names, clean_csv_hash)
       uni_webs << UniWeb.new(uni_web_hash)
     end
 
@@ -121,7 +121,7 @@ module Importer
     accounts = []
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
-      account_hash = validate_hash(UniAccount.column_names, clean_csv_hash)
+      account_hash = validate_hsh(UniAccount.column_names, clean_csv_hash)
       account = UniAccount.new(account_hash)
       accounts << account
     end
@@ -146,7 +146,7 @@ module Importer
     contacts = []
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
-      contact_hash = validate_hash(UniContact.column_names, clean_csv_hash)
+      contact_hash = validate_hsh(UniContact.column_names, clean_csv_hash)
       contact = UniContact.new(contact_hash)
       contacts << contact
     end
@@ -171,7 +171,7 @@ module Importer
     brands = []
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
-      brand_hash = validate_hash(Brand.column_names, clean_csv_hash)
+      brand_hash = validate_hsh(Brand.column_names, clean_csv_hash)
 
       brand_obj_exists = Brand.exists?(brand_hash)
       new_brand_obj = Brand.new(brand_hash) if !brand_obj_exists
@@ -194,7 +194,7 @@ module Importer
     terms = []
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
-      term_hash = validate_hash(Term.column_names, clean_csv_hash)
+      term_hash = validate_hsh(Term.column_names, clean_csv_hash)
 
       term_obj_exists = Term.exists?(term_hash)
       new_term_obj = Term.new(term_hash) if !term_obj_exists

@@ -6,6 +6,8 @@
 # require 'httparty'
 # require 'delayed_job'
 # require 'curb' #=> for url_redirector
+
+# %w{open-uri mechanize uri nokogiri socket httparty delayed_job curb}.each { |x| require x }
 require 'web_formatter'
 
 

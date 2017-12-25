@@ -1,7 +1,9 @@
-require 'mechanize'
-require 'nokogiri'
-require 'open-uri'
-require 'delayed_job'
+# require 'mechanize'
+# require 'nokogiri'
+# require 'open-uri'
+# require 'delayed_job'
+# %w{mechanize nokogiri open-uri delayed_job}.each {|x| require x }
+
 
 ######### Delayed Job #########
 # $ rake jobs:clear

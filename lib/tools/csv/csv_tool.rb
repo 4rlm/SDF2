@@ -1,7 +1,9 @@
-require 'csv'
-require 'pry'
-require 'exporter'
-require 'importer'
+# require 'csv'
+# require 'pry'
+# require 'exporter'
+# require 'importer'
+
+# %w{csv pry exporter importer}.each { |x| require x }
 
 class CsvTool
   extend ActiveSupport::Concern
@@ -32,7 +34,7 @@ class CsvTool
   end
 
 
-  def validate_hash(cols, hash)
+  def validate_hsh(cols, hash)
     # cols.map!(&:to_sym)
     keys = hash.keys
     keys.each { |key| hash.delete(key) if !cols.include?(key) }

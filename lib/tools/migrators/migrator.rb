@@ -1,7 +1,4 @@
-require 'uni_account_migrator'
-require 'uni_contact_migrator'
-require 'uni_web_migrator'
-# require 'web_migrator'
+%w{uni_account_migrator uni_contact_migrator uni_web_migrator}.each { |x| require x }
 
 class Migrator
   # extend ActiveSupport::Concern
@@ -18,34 +15,27 @@ class Migrator
   ### CAREFUL!!! BELOW METHODS BEING USED IN EACH UNI_MIGRATOR MODULE ###
 
   ## Used for Tables where only one Attr matters, like Phone.phone
-  def save_simple_object(model, attr_hash)
-    if model.present? && attr_hash.present?
-      obj = model.classify.constantize.find_or_create_by(attr_hash)
-      #Ex: phone_obj = Phone.find_or_create_by(phone: phone)
-      return obj
-    end
+  def save_simple_obj(model, attr_hash)
+    obj = model.classify.constantize.find_or_create_by(attr_hash)
+    #Ex: phone_obj = Phone.find_or_create_by(phone: phone)
+    return obj
   end
 
 
   ## Used for Tables where we need to first find by one attribute, then save or update several other attributes like Account or Contact.
-  def save_complex_object(model, attr_hash, obj_hash)
-    if model.present? && attr_hash.present? && obj_hash.present?
-      obj_hash.delete_if { |key, value| value.blank? }
-      # attr_hash.each {|h| h.try(:downcase)}
-      obj = model.classify.constantize.find_by(attr_hash)
-      obj.present? ? update_obj_if_changed(obj_hash, obj) : obj = model.classify.constantize.create(obj_hash)
-      #Ex: web_obj = Web.find_by(url: url)
-      #Ex: web_obj.present? ? update_obj_if_changed(web_hash, web_obj) : web_obj = Web.create(web_hash)
-      return obj
-    end
+  def save_complex_obj(model, attr_hash, obj_hash)
+    obj_hash.delete_if { |key, value| value.blank? }
+    obj = model.classify.constantize.find_by(attr_hash)
+    obj.present? ? update_obj_if_changed(obj_hash, obj) : obj = model.classify.constantize.create(obj_hash)
+    #Ex: web_obj = Web.find_by(url: url)
+    #Ex: web_obj.present? ? update_obj_if_changed(web_hash, web_obj) : web_obj = Web.create(web_hash)
+    return obj
   end
 
 
-  def create_object_parent_association(model, obj, parent)
-    if model.present? && obj.present? && parent.present?
-      parent.send(model.pluralize.to_sym) << obj if (obj && !parent.send(model.pluralize.to_sym).include?(obj))
-      #Ex: account.phones << phone_obj if !account.phones.include?(phone_obj)
-    end
+  def create_obj_parent_assoc(model, obj, parent)
+    parent.send(model.pluralize.to_sym) << obj if (obj && !parent.send(model.pluralize.to_sym).include?(obj))
+    #Ex: account.phones << phone_obj if !account.phones.include?(phone_obj)
   end
 
 
@@ -62,7 +52,7 @@ class Migrator
   end
 
 
-  def validate_hash(cols, hash)
+  def validate_hsh(cols, hash)
     if cols.present? && hash.present?
       keys = hash.keys
       keys.each { |key| hash.delete(key) if !cols.include?(key) }
