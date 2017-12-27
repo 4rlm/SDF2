@@ -34,15 +34,27 @@ module UniAccountMigrator
           acct_id = account_hsh['id']
           account_name = account_hsh['account_name']
 
-
           # FIND ACCT based on id, crm_acct_num, account_name, or url.
-          account ||= Account.try(:find_by, id: acct_id) || Account.try(:find_by, crm_acct_num: crm_acct_num)
-          temp_acct = Account.try(:find_by, account_name: account_name) if !account.present?
-          temp_web = temp_acct.webs.find { |web| web.url == url } if temp_acct.present?
+          if acct_id.present?
+            account = Account.find_by(id: acct_id)
+          elsif crm_acct_num.present?
+            account = Account.find_by(crm_acct_num: crm_acct_num)
+          elsif account_name.present?
+            temp_acct = Account.find_by(account_name: account_name)
+            temp_web = temp_acct.webs.find { |web| web&.url == url } if temp_acct.present?
+            account ||= temp_web&.accounts&.first || account = temp_acct if temp_acct.present?
+          end
+          account.present? ? update_obj_if_changed(account_hsh, account) : account = Account.create(account_hsh)
+
+          ## Above Replaces below.  Need to test if working. ##
+          # account ||= Account.try(:find_by, id: acct_id) || Account.try(:find_by, crm_acct_num: crm_acct_num)
+          # temp_acct = Account.try(:find_by, account_name: account_name) if !account.present?
+          # temp_web = temp_acct.webs.find { |web| web.url == url } if temp_acct.present?
 
           ## Assign account var to above account var obj, or create a new account object.
-          account ||= temp_web&.accounts&.first || account = temp_acct
-          account.present? ? update_obj_if_changed(account_hsh, account) : account = Account.create(account_hsh)
+          # account ||= temp_web&.accounts&.first || account = temp_acct
+          # account.present? ? update_obj_if_changed(account_hsh, account) : account = Account.create(account_hsh)
+
 
           # FIND OR CREATE URL, THEN UPDATE IF APPLICABLE
           # NOTE: PART OF WEB IS ATOP BECAUSE URL REQUIRED FOR FINDING SOME ACCOUNTS.
@@ -62,8 +74,8 @@ module UniAccountMigrator
 
           # FIND OR CREATE ADDRESS, THEN UPDATE IF APPLICABLE
           address_hsh = validate_hsh(Address.column_names, non_account_attributes_array.to_h)
-          address_hsh = AddressFormatter.format_address_hsh(address_hsh) if address_hsh.present?
-          address_obj = save_simple_obj('address', address_hsh) if address_hsh.present?
+          address_hsh = AddressFormatter.format_address_hsh(address_hsh) if address_hsh && !address_hsh.empty?
+          address_obj = save_simple_obj('address', address_hsh) if address_hsh && !address_hsh.empty?
           create_obj_parent_assoc('address', address_obj, account) if address_obj
 
           # FIND OR CREATE WHO, THEN UPDATE IF APPLICABLE

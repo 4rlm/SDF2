@@ -1,11 +1,11 @@
 class Contact < ApplicationRecord
 
-  attribute :full_name, :string
-  before_validation :full_name
-
-  def full_name
-    [last_name, first_name].compact.join(',')
-  end
+  # attribute :full_name, :string
+  # before_validation :full_name
+  #
+  # def full_name
+  #   [last_name, first_name].compact.join(',')
+  # end
 
   # belongs_to :account
   # belongs_to :account, inverse_of: :contacts
@@ -30,5 +30,7 @@ class Contact < ApplicationRecord
   accepts_nested_attributes_for :webings, :webs
 
   validates_uniqueness_of :crm_cont_num, allow_blank: true, allow_nil: true
+  # validates_uniqueness_of :crm_cont_num
+
 
 end

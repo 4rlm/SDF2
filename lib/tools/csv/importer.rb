@@ -1,7 +1,3 @@
-# To Reset DB PK ID:
-# model.delete_all #=> UniWeb.delete_all
-# ActiveRecord::Base.connection.reset_pk_sequence!('uni_webs')
-
 module Importer
 
   ############## BEST CSV IMPORT METHOD #####################
@@ -46,7 +42,6 @@ module Importer
 
 
 
-
   ############# WORST CSV IMPORT METHOD BELOW #############
   # IMPORT SEED METHODS BELOW - BIG PROCESS!!
   # Imports Raw Data files, which runs through extensive validations.
@@ -56,156 +51,92 @@ module Importer
 
   #CALL: CsvTool.new.import_all_seed_files
   def import_all_seed_files
-    CsvTool.new.import_seed_uni_webs('1_valid_uni_webs.csv')
-    CsvTool.new.import_seed_uni_webs('2_archived_uni_webs.csv')
-    CsvTool.new.import_seed_uni_webs('3_links_texts_uni_webs.csv')
+    Migrator.new.reset_pk_sequence
+    CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
+    CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
+    CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
 
-    CsvTool.new.import_seed_uni_accounts('4_crm_uni_accounts.csv')
-    CsvTool.new.import_seed_uni_accounts('5_indexers_uni_accounts.csv')
-    CsvTool.new.import_seed_uni_accounts('6_locations_uni_accounts.csv')
-    CsvTool.new.import_seed_uni_accounts('7_whos_uni_accounts.csv')
+    CsvTool.new.import_uni_seeds('uni_account', '4_crm_uni_accounts.csv')
+    CsvTool.new.import_uni_seeds('uni_account', '5_indexers_uni_accounts.csv')
+    CsvTool.new.import_uni_seeds('uni_account', '6_locations_uni_accounts.csv')
 
-    CsvTool.new.import_seed_uni_contacts('8_uni_contacts.csv')
+    CsvTool.new.import_uni_seeds('uni_contact', '7_uni_contacts.csv')
 
-    CsvTool.new.import_seed_brands('9_brands.csv') # in_host_pos
-    CsvTool.new.import_seed_terms('10_terms.csv') # indexer_terms
+    CsvTool.new.import_standard_seeds('who', '8_whos.csv')
+    CsvTool.new.import_standard_seeds('brand', '9_brands.csv')
+    CsvTool.new.import_standard_seeds('term', '10_terms.csv')
   end
-  ### ABOVE METHOD CALLS EACH OF THE METHODS BELOW ###
 
 
-  ### BELOW IMPORT SEED METHODS CAN BE RUN IN ISOLATION ###
-  # Data is Imported to a Temporary Table, then migrated.
-  # 1) import_seed_uni_webs => UniWeb Table => Migrator.new.migrate_uni_webs
-  # 2) import_seed_uni_accounts => UniAccount Table => Migrator.new.migrate_uni_accounts
-  # 3) import_seed_uni_contacts => UniContact Table => Migrator.new.migrate_uni_contacts
-  # 4) import_seed_brands => Brand Table (directly)
-  # 5) import_seed_terms => Term Table (directly)
+  ########## UNI SEED IMPORT BELOW ##########
+  #CALL: CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
+  #CALL: CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
+  #CALL: CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
+
+  #CALL: CsvTool.new.import_uni_seeds('uni_account', '4_crm_uni_accounts.csv')
+  #CALL: CsvTool.new.import_uni_seeds('uni_account', '5_indexers_uni_accounts.csv')
+  #CALL: CsvTool.new.import_uni_seeds('uni_account', '6_locations_uni_accounts.csv')
+  #CALL: CsvTool.new.import_uni_seeds('uni_account', '7_whos_uni_accounts.csv')
+
+  #CALL: CsvTool.new.import_uni_seeds('uni_contact', '8_uni_contacts.csv')
+
+  #CALL: CsvTool.new.import_uni_seeds('uni_contact', '8_uni_contacts_blank.csv')
 
 
-
-  #CALL: CsvTool.new.import_seed_uni_webs('1_valid_uni_webs.csv')
-  #CALL: CsvTool.new.import_seed_uni_webs('2_archived_uni_webs.csv')
-  #CALL: CsvTool.new.import_seed_uni_webs('3_links_texts_uni_webs.csv')
-  def import_seed_uni_webs(file_name)
+  def import_uni_seeds(model_name, file_name)
     @file_path = "#{@seeds_dir_path}/#{file_name}"
-
+    model = model_name.classify.constantize
+    plural_model_name = model_name.pluralize
+    custom_migrate_method = "migrate_#{plural_model_name}"
     parse_csv
-    uni_webs = []
+    objs = []
+
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
       clean_csv_hash.delete_if { |key, value| value.blank? } if !clean_csv_hash.empty?
-      uni_web_hash = validate_hsh(UniWeb.column_names, clean_csv_hash)
-      uni_webs << UniWeb.new(uni_web_hash)
+      uni_hsh = validate_hsh(model.column_names, clean_csv_hash)
+      objs << model.new(uni_hsh)
     end
 
-    UniWeb.import(uni_webs)
-    puts "Sleep(3) - Complete: UniWeb.import(uni_webs)"
+    model.import(objs)
+    puts "\nSleep(3) - Complete: model.import(objs)\n#{model_name}, #{file_name}"
     sleep(3)
 
-    Migrator.new.migrate_uni_webs
-    puts "Sleep(3) - Complete: Migrator.new.migrate_uni_webs"
+    Migrator.new.send(custom_migrate_method)  ### NEED TO WORK ON THIS!!!
+    puts "\nSleep(3) - Complete: Migrator.new.#{custom_migrate_method}\n#{file_name}"
     sleep(3)
 
-    completion_msg(UniWeb, file_name)
+    completion_msg(model, file_name)
   end
 
 
-  #CALL: CsvTool.new.import_seed_uni_accounts('4_crm_uni_accounts.csv')
-  #CALL: CsvTool.new.import_seed_uni_accounts('5_indexers_uni_accounts.csv')
-  #CALL: CsvTool.new.import_seed_uni_accounts('6_locations_uni_accounts.csv')
-  #CALL: CsvTool.new.import_seed_uni_accounts('7_whos_uni_accounts.csv')
-  def import_seed_uni_accounts(file_name)
+  ########## STANDARD SEED IMPORT BELOW ##########
+  # CsvTool.new.import_standard_seeds('brand', '9_brands.csv')
+  # CsvTool.new.import_standard_seeds('term', '10_terms.csv')
+
+  def import_standard_seeds(model_name, file_name)
     @file_path = "#{@seeds_dir_path}/#{file_name}"
+    model = model_name.classify.constantize
+    plural_model_name = model_name.pluralize
+    custom_migrate_method = "migrate_#{plural_model_name}"
 
     parse_csv
-    accounts = []
+    objs = []
     @clean_csv_hashes.each do |clean_csv_hash|
       clean_csv_hash = clean_csv_hash.stringify_keys
-      account_hash = validate_hsh(UniAccount.column_names, clean_csv_hash)
-      account = UniAccount.new(account_hash)
-      accounts << account
+      clean_csv_hash.delete_if { |key, value| value.blank? } if !clean_csv_hash.empty?
+      new_hsh = validate_hsh(model.column_names, clean_csv_hash)
+
+      obj_exists = model.exists?(new_hsh) if new_hsh.present?
+      obj = model.new(new_hsh) if !obj_exists
+      objs << obj if obj
     end
 
-    UniAccount.import(accounts)
-    puts "Sleep(3) - Complete: UniAccount.import(accounts)"
+    model.import(objs)
+    puts "\nSleep(3) - Complete: model.import(objs)\n#{model_name}, #{file_name}"
     sleep(3)
 
-    Migrator.new.migrate_uni_accounts
-    puts "Sleep(3) - Complete: Migrator.new.migrate_uni_accounts"
-    sleep(3)
-
-    completion_msg(UniAccount, file_name)
-  end
-
-
-  #CALL: CsvTool.new.import_seed_uni_contacts('8_uni_contacts.csv')
-  def import_seed_uni_contacts(file_name)
-    @file_path = "#{@seeds_dir_path}/#{file_name}"
-
-    parse_csv
-    contacts = []
-    @clean_csv_hashes.each do |clean_csv_hash|
-      clean_csv_hash = clean_csv_hash.stringify_keys
-      contact_hash = validate_hsh(UniContact.column_names, clean_csv_hash)
-      contact = UniContact.new(contact_hash)
-      contacts << contact
-    end
-
-    UniContact.import(contacts)
-    puts "Sleep(3) - Complete: UniContact.import(contacts)"
-    sleep(3)
-
-    Migrator.new.migrate_uni_contacts
-    puts "Sleep(3) - Complete: Migrator.new.migrate_uni_contacts"
-    sleep(3)
-
-    completion_msg(UniContact, file_name)
-  end
-
-
-  #CALL: CsvTool.new.import_seed_brands('9_brands.csv') # in_host_pos
-  def import_seed_brands(file_name)
-    @file_path = "#{@seeds_dir_path}/#{file_name}"
-
-    parse_csv
-    brands = []
-    @clean_csv_hashes.each do |clean_csv_hash|
-      clean_csv_hash = clean_csv_hash.stringify_keys
-      brand_hash = validate_hsh(Brand.column_names, clean_csv_hash)
-
-      brand_obj_exists = Brand.exists?(brand_hash)
-      new_brand_obj = Brand.new(brand_hash) if !brand_obj_exists
-      brands << new_brand_obj if new_brand_obj
-    end
-
-    Brand.import(brands)
-    puts "Sleep(3) - Complete: Brand.import(brands)"
-    sleep(3)
-
-    completion_msg(Brand, file_name)
-  end
-
-
-  #CALL: CsvTool.new.import_seed_terms('10_terms.csv') # indexer_terms
-  def import_seed_terms(file_name)
-    @file_path = "#{@seeds_dir_path}/#{file_name}"
-
-    parse_csv
-    terms = []
-    @clean_csv_hashes.each do |clean_csv_hash|
-      clean_csv_hash = clean_csv_hash.stringify_keys
-      term_hash = validate_hsh(Term.column_names, clean_csv_hash)
-
-      term_obj_exists = Term.exists?(term_hash)
-      new_term_obj = Term.new(term_hash) if !term_obj_exists
-      terms << new_term_obj if new_term_obj
-    end
-
-    Term.import(terms)
-    puts "Sleep(3) - Complete: Term.import(terms)"
-    sleep(3)
-
-    completion_msg(Term, file_name)
+    completion_msg(model, file_name)
   end
 
 

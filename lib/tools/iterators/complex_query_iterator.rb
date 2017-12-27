@@ -17,7 +17,7 @@ module ComplexQueryIterator
 
 
   def iterate_raw_query(raw_query)
-    # Call: UrlVerifier.new.run_url_verifier
+    # Call: UrlVerifier.new.start_url_verifier
 
     @iterate_raw_query_pid = Process.pid
     raw_query.find_in_batches(batch_size: @query_limit) do |batch_of_ids|

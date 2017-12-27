@@ -60,5 +60,12 @@ class Migrator
     end
   end
 
+  #Call: Migrator.new.reset_pk_sequence
+  def reset_pk_sequence
+    ActiveRecord::Base.connection.tables.each do |t|
+      ActiveRecord::Base.connection.reset_pk_sequence!(t)
+    end
+  end
+
 
 end

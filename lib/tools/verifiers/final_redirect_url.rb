@@ -3,7 +3,7 @@
 # require 'logger'
 #
 # module FinalRedirectUrl
-#   # Call: UrlVerifier.new.run_url_verifier
+#   # Call: UrlVerifier.new.start_url_verifier
 #
 #   # def self.final_redirect_url(url, options={})
 #   def final_redirect_url

@@ -25,5 +25,6 @@ class Account < ApplicationRecord
 
 
   validates_uniqueness_of :crm_acct_num, allow_blank: true, allow_nil: true
+  # validates_uniqueness_of :crm_acct_num
 
 end

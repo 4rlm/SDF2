@@ -3,17 +3,15 @@
 # require 'open-uri'
 # require 'delayed_job'
 # require 'curb'
-
 require 'internet_connection_validator'
 
 #RUNNER: IndexerService.new.url_redirect_starter
 #RUNNER: StafferService.new.cs_starter
 module UrlRedirector
-  # extend ActiveSupport::Concern
   include InternetConnectionValidator
+  # extend ActiveSupport::Concern
 
   def start_curl
-
     begin
       @result = Curl::Easy.perform(@web_url) do |curl|
         puts "=== CURL CONNECTED ==="
@@ -63,10 +61,12 @@ module UrlRedirector
     unless url == nil || url == ""
       url.gsub!(/\P{ASCII}/, '')
       url = remove_slashes(url)
+
       if url.include?("\\")
         url_arr = url.split("\\")
         url = url_arr[0]
       end
+
       unless url.include?("www.")
         url = url.gsub!("//", "//www.")
       else

@@ -39,11 +39,26 @@ module UniContactMigrator
 
           # CONT OBJ: FIND, CREATE, UPDATE
           cont_hsh.delete_if { |key, value| value.blank? }
-          cont_obj ||= Contact.find_by(id: cont_hsh['id']) || Contact.find_by(crm_cont_num: uni_hsh['crm_cont_num']) || Contact.find_by(email: uni_hsh['email'])
+
+          if cont_hsh['id'].present?
+            cont_obj = Contact.find_by(id: cont_hsh['id'])
+          elsif uni_hsh['crm_cont_num'].present?
+            cont_obj = Contact.find_by(crm_cont_num: uni_hsh['crm_cont_num'])
+          elsif uni_hsh['email']
+            cont_obj = Contact.find_by(email: uni_hsh['email'])
+          end
+
+          # cont_obj ||= Contact.find_by(id: cont_hsh['id']) || Contact.find_by(crm_cont_num: uni_hsh['crm_cont_num']) || Contact.find_by(email: uni_hsh['email'])
           cont_obj.present? ? update_obj_if_changed(cont_hsh, cont_obj) : cont_obj = Contact.create(cont_hsh)
 
           # CONT OBJ: SAVE ASSOC
-          create_obj_parent_assoc('contact', cont_obj, acct_obj) if cont_obj && acct_obj
+          # create_obj_parent_assoc('contact', cont_obj, acct_obj) if cont_obj && acct_obj
+          if cont_obj && acct_obj
+            create_obj_parent_assoc('contact', cont_obj, acct_obj)
+          else
+            binding.pry
+          end
+
 
           # PHONE OBJ: FIND-CREATE, then SAVE ASSOC
           phone = PhoneFormatter.validate_phone(uni_hsh['phone']) if uni_hsh['phone'].present?

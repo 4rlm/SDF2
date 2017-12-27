@@ -28,10 +28,10 @@ class AboutTool
     binding.pry
 
     UrlVerifier.new
-    # UrlVerifier.new.run_url_verifier
+    # UrlVerifier.new.start_url_verifier
     binding.pry
 
-    # UrlVerifier.new.delay.run_url_verifier
+    # UrlVerifier.new.delay.start_url_verifier
   end
 
   def application_master_program_starter
@@ -68,7 +68,7 @@ class AboutTool
     Formatter.new.run_all_formatters
 
     puts msg_4
-    UrlVerifier.new.run_url_verifier
+    UrlVerifier.new.start_url_verifier
 
     puts msg_5
     TemplateGrabber.new.run_template_grabber
