@@ -32,7 +32,7 @@
 #
 #   def format_query_results(batch_of_ids)
 #     puts "\n=== FORMATTING NEXT BATCH OF IDs ===\n\n"
-#     batch_of_ids = (batch_of_ids.map!{|object| object.id}).in_groups(@number_of_groups) #=> Converts objects into ids, then slices into nested arrays.
+#     batch_of_ids = (batch_of_ids.map!{|object| object.id}).in_groups(@stage2_workers) #=> Converts objects into ids, then slices into nested arrays.
 #     puts "batch_of_ids: #{batch_of_ids}"
 #     puts "PPID: #{Process.ppid}"
 #     puts "PID: #{Process.pid}"

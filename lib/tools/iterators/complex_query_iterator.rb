@@ -15,22 +15,24 @@ module ComplexQueryIterator
   # extend ActiveSupport::Concern
   # include InternetConnectionValidator
 
-
   def iterate_raw_query(raw_query)
     # Call: UrlVerifier.new.start_url_verifier
-
     @iterate_raw_query_pid = Process.pid
-    raw_query.find_in_batches(batch_size: @query_limit) do |batch_of_ids|
+
+    raw_query.in_groups(@stage1_groups).each do |batch_of_ids|
+      @raw_query_count -= batch_of_ids&.count
       pause_iteration
       format_query_results(batch_of_ids)
     end
+
   end
 
 
   def pause_iteration
     until get_dj_count <= @dj_count_limit
       puts "\nWaiting on #{get_dj_count} Queued Jobs | Queue Limit: #{@dj_count_limit}"
-      puts "Please wait #{@dj_wait_time} seconds ...\n\n"
+      puts "Round: #{@round}, Total Query Count: #{@raw_query_count}, Timeout: #{@timeout}"
+      puts "Please wait #{@dj_wait_time} seconds ..."
       sleep(@dj_wait_time)
     end
   end
@@ -42,21 +44,21 @@ module ComplexQueryIterator
 
 
   def format_query_results(batch_of_ids)
-    batch_of_ids = (batch_of_ids.map!{|object| object.id}).in_groups(@number_of_groups) #=> Converts objects into ids, then slices into nested arrays.
+    batch_of_ids.in_groups(@stage2_workers).each do |group_of_ids|
+      puts "\n\n==> batch_of_ids: #{batch_of_ids} <=="
+      puts "\nPPID: #{Process.ppid}"
+      puts "PID: #{Process.pid}"
 
-    puts "batch_of_ids: #{batch_of_ids}"
-    puts "PPID: #{Process.ppid}"
-    puts "PID: #{Process.pid}"
-
-    # batch_of_ids.each { |ids| delay.standard_iterator(ids) }
-    batch_of_ids.each { |ids| standard_iterator(ids) }
+      standard_iterator(group_of_ids)
+      # delay.standard_iterator(group_of_ids)
+    end
   end
 
 
   def standard_iterator(ids)
     puts "ids: #{ids}"
-    ids.each { |id| template_starter(id) if id }
-    # ids.each { |id| delay.template_starter(id) if id }
+    # ids.each { |id| template_starter(id) if id }
+    ids.each { |id| delay.template_starter(id) if id }
   end
 
 end

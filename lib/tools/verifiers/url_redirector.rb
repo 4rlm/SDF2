@@ -3,7 +3,9 @@
 # require 'open-uri'
 # require 'delayed_job'
 # require 'curb'
+require 'timeout'
 require 'internet_connection_validator'
+require 'net/ping'
 
 #RUNNER: IndexerService.new.url_redirect_starter
 #RUNNER: StafferService.new.cs_starter
@@ -13,15 +15,27 @@ module UrlRedirector
 
   def start_curl
     begin
-      @result = Curl::Easy.perform(@web_url) do |curl|
-        puts "=== CURL CONNECTED ==="
-        curl.follow_location = true
-        curl.useragent = "curb"
-        curl.connect_timeout = 10
-        curl.enable_cookies = true
-        curl.head = true #testing - new
-        # curl.ssl_verify_peer = false
+
+      begin # for timeout
+        # Timeout::timeout(2) do
+        Timeout.timeout(@timeout) do
+          @result = Curl::Easy.perform(@web_url) do |curl|
+            puts "=== CURL CONNECTED ==="
+            curl.follow_location = true
+            curl.useragent = "curb"
+            curl.connect_timeout = @timeout
+            curl.enable_cookies = true
+            curl.head = true #testing - new
+            # curl.ssl_verify_peer = false
+          end
+        end
+      rescue Timeout::Error
+        updated_hash = { web_status: @timeout_web_status, updated_at: Time.now }
+        @web_obj.update_attributes(updated_hash)
+        # Process.kill("QUIT", @iterate_raw_query_pid)
       end
+
+
       # curl_parser
       @curl_url = @result.last_effective_url
       @curl_url = @curl_url[0..-2] if @curl_url[-1] == '/'

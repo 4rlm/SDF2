@@ -1,12 +1,17 @@
+# Call: UrlVerifier.new.start_url_verifier
+
 # require 'mechanize'
 # require 'nokogiri'
 # require 'open-uri'
 # require 'delayed_job'
 # require 'curb'
 
+# require 'final_redirect_url'
 require 'complex_query_iterator'
-require 'final_redirect_url'
 require 'web_associator'
+require 'url_redirector'
+
+require 'net/ping'
 
 # %w{complex_query_iterator final_redirect_url}.each { |x| require x }
 
@@ -17,25 +22,67 @@ class UrlVerifier
   include UrlRedirector #=> concerns/url_redirector.rb
   include ComplexQueryIterator
   include WebAssociator
-  # include FinalRedirectUrl #=> JUST SAMPLING THIS!!
 
-  # Call: IndexerService.new.start_url_redirect
   # Call: UrlVerifier.new.start_url_verifier
   def start_url_verifier
-    # @class_pid = Process.pid
-    @query_limit = 20 #=> Number of rows per batch in raw_query.
+    @raw_query_count = nil
 
     ## Below are Settings for ComplexQueryIterator Module.
-    @dj_wait_time = 3 #=> How often to check dj queue count.
-    @dj_count_limit = 0 #=> Num allowed before releasing next batch.
-    @number_of_groups = 2 #=> Divide query into groups of x.
+    @class_pid = Process.pid
+    # @dj_wait_time = 5 #=> How often to check dj queue count.
+    @dj_count_limit = 20 #=> Num allowed before releasing next batch.
+    @stage2_workers = 3 #=> Divide format_query_results into groups of x.
 
-    raw_query = Web
-    .select(:id)
-    .where.not(archived: TRUE)
-    # .order("updated_at DESC")
-    # .order(:updated_at).reverse
+
+    ## ROUND 1 ##
+    # raw_query = Web.where.not(archived: TRUE).where.not(web_status: 'timeout').order("updated_at DESC").pluck(:id)
+    raw_query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
+    # raw_query = Web.where(archived: nil).where.not("web_status LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
+    @raw_query_count = raw_query.count
+    (@raw_query_count & @raw_query_count > 100) ? @stage1_groups = (@raw_query_count / 100) : @stage1_groups = 2
+    @timeout = 5
+    @dj_wait_time = @timeout
+    @round = 1
+    @timeout_web_status = 'timeout1'
     iterate_raw_query(raw_query) # via ComplexQueryIterator
+
+    ## ROUND 2 ##
+    binding.pry
+    raw_query = Web.where(archived: TRUE).order("updated_at DESC").pluck(:id)
+    # raw_query = Web.where(archived: nil).where(web_status: 'timeout').order("updated_at DESC").pluck(:id)
+    # raw_query = Web.where(archived: nil).where("web_status LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
+    @raw_query_count = raw_query.count
+    (@raw_query_count & @raw_query_count > 100) ? @stage1_groups = (@raw_query_count / 50) : @stage1_groups = 2
+    @timeout = 15
+    @dj_wait_time = @timeout
+    @round = 2
+    @timeout_web_status = 'timeout2'
+    iterate_raw_query(raw_query) # via ComplexQueryIterator
+
+    ## ROUND 3 ##
+    binding.pry
+    raw_query = Web.where("web_status LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
+    @raw_query_count = raw_query.count
+    (@raw_query_count & @raw_query_count > 100) ? @stage1_groups = (@raw_query_count / 50) : @stage1_groups = 2
+    @timeout = 30
+    @dj_wait_time = @timeout
+    @round = 3
+    @timeout_web_status = 'timeout3'
+    iterate_raw_query(raw_query) # via ComplexQueryIterator
+
+    ## ROUND 4 ##
+    binding.pry
+    raw_query = Web.where("web_status LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
+    @raw_query_count = raw_query.count
+    (@raw_query_count & @raw_query_count > 100) ? @stage1_groups = (@raw_query_count / 50) : @stage1_groups = 2
+    @timeout = 60
+    @dj_wait_time = @timeout
+    @round = 4
+    @timeout_web_status = 'timeout4'
+    iterate_raw_query(raw_query) # via ComplexQueryIterator
+
+    ## Should be run after UrlVerifier to link web associations to redirect web obj.
+    # WebAssociator.start_web_associator
   end
 
   # #############################################
@@ -44,7 +91,8 @@ class UrlVerifier
 
   def template_starter(id)
     # @web_obj = Web.find(id)
-    @web_obj = Web.where(id: id).select(:id, :archived, :web_status, :url, :url_redirect_id).first
+    @web_obj = Web.find(id)
+    # @web_obj = Web.where(id: id).select(:id, :archived, :web_status, :url, :url_redirect_id).first
     @web_url = @web_obj.url
     @web_archived = @web_obj.archived
     @web_status = @web_obj.web_status
@@ -56,7 +104,7 @@ class UrlVerifier
 
   def update_db(id)
     if !@curl_url && @error_message
-      updated_hash = { web_status: @web_status, archived: TRUE }
+      updated_hash = { web_status: @web_status, archived: TRUE, updated_at: Time.now }
       @web_obj.update_attributes(updated_hash)
     elsif !@curl_url
       puts "MYSTERY RESPONSE - UNEXPECTED"
@@ -67,7 +115,12 @@ class UrlVerifier
 
       redirected_url_obj = Web.find_by(redirect_hash)
       !redirected_url_obj ? redirected_url_obj = Web.create(redirect_full_hash) : redirected_url_obj.update_attributes(redirect_full_hash)
-      updated_hash = {web_status: 'updated', archived: TRUE, url_redirect_id: redirected_url_obj.id}
+      updated_hash = { web_status: 'updated', archived: TRUE, url_redirect_id: redirected_url_obj.id, redirect_url: redirected_url_obj.url, updated_at: Time.now }
+      @web_obj.update_attributes(updated_hash)
+      ## Links current web_obj associations to new redirect web obj.
+      WebAssociator.transfer_web_associations(@web_obj)
+    elsif @web_url == @curl_url
+      updated_hash = { web_status: 'valid', archived: FALSE, updated_at: Time.now }
       @web_obj.update_attributes(updated_hash)
     end
 

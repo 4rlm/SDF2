@@ -117,6 +117,7 @@ gem 'foreman', '~> 0.84.0'
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.3', '>= 4.3.1'
 gem 'bootstrap', '~> 4.0.0.beta2.1'
+gem 'net-ping', '~> 1.7', '>= 1.7.8'
 # gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
 # gem 'pg_search', '~> 2.1', '>= 2.1.1'
 # gem 'stripe', '~> 3.9'

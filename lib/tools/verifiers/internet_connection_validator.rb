@@ -1,10 +1,11 @@
-# require 'mechanize'
-# require 'nokogiri'
-# require 'open-uri'
-# require 'whois'
-# require 'delayed_job'
-#
-# require 'timeout'
+require 'mechanize'
+require 'nokogiri'
+require 'open-uri'
+require 'whois'
+require 'delayed_job'
+
+require 'timeout'
+require 'net/ping'
 
 #RUNNER: IndexerService.new.url_redirect_starter
 #RUNNER: StafferService.new.cs_starter
@@ -116,7 +117,7 @@ module InternetConnectionValidator
   def url_exist?(url_string)
     puts "Checking if URL Exists..."
     begin
-      Timeout::timeout(15) do
+      Timeout::timeout(10) do
         url = URI.parse(url_string)
         req = Net::HTTP.new(url.host, url.port)
         req.use_ssl = (url.scheme == 'https')
@@ -134,7 +135,21 @@ module InternetConnectionValidator
     end
   end
 
+  #CALL: InternetConnectionValidator.validate_url(url_string)
   def validate_url(url_string)
+    # good = 'http://www.google.com/index.html'
+    # bad  = 'http://www.ruby-lang.org/index.html'
+
+    # binding.pry
+    # p1 = Net::Ping::HTTP.new(good)
+    # p2 = Net::Ping::HTTP.new(bad)
+    # binding.pry
+    #
+    # p p2.ping?
+    # p p2.warning
+    # p p2.exception
+    # binding.pry
+
 
     if url_exist?(url_string)
       puts "=== GOOD URL ===\nURL: #{url_string}"

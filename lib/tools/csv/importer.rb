@@ -52,6 +52,8 @@ module Importer
   #CALL: CsvTool.new.import_all_seed_files
   def import_all_seed_files
     Migrator.new.reset_pk_sequence
+
+    ########## UNI SEED IMPORT BELOW ##########
     CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
     CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
     CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
@@ -62,6 +64,7 @@ module Importer
 
     CsvTool.new.import_uni_seeds('uni_contact', '7_uni_contacts.csv')
 
+    ########## STANDARD SEED IMPORT BELOW ##########
     CsvTool.new.import_standard_seeds('who', '8_whos.csv')
     CsvTool.new.import_standard_seeds('brand', '9_brands.csv')
     CsvTool.new.import_standard_seeds('term', '10_terms.csv')
@@ -69,19 +72,6 @@ module Importer
 
 
   ########## UNI SEED IMPORT BELOW ##########
-  #CALL: CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
-  #CALL: CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
-  #CALL: CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
-
-  #CALL: CsvTool.new.import_uni_seeds('uni_account', '4_crm_uni_accounts.csv')
-  #CALL: CsvTool.new.import_uni_seeds('uni_account', '5_indexers_uni_accounts.csv')
-  #CALL: CsvTool.new.import_uni_seeds('uni_account', '6_locations_uni_accounts.csv')
-  #CALL: CsvTool.new.import_uni_seeds('uni_account', '7_whos_uni_accounts.csv')
-
-  #CALL: CsvTool.new.import_uni_seeds('uni_contact', '8_uni_contacts.csv')
-
-  #CALL: CsvTool.new.import_uni_seeds('uni_contact', '8_uni_contacts_blank.csv')
-
 
   def import_uni_seeds(model_name, file_name)
     @file_path = "#{@seeds_dir_path}/#{file_name}"
@@ -111,8 +101,6 @@ module Importer
 
 
   ########## STANDARD SEED IMPORT BELOW ##########
-  # CsvTool.new.import_standard_seeds('brand', '9_brands.csv')
-  # CsvTool.new.import_standard_seeds('term', '10_terms.csv')
 
   def import_standard_seeds(model_name, file_name)
     @file_path = "#{@seeds_dir_path}/#{file_name}"

@@ -18,7 +18,7 @@
 #     ## Below are Settings for ComplexQueryIterator Module.
 #     @dj_wait_time = 3 #=> How often to check dj queue count.
 #     @dj_count_limit = 0 #=> Num allowed before releasing next batch.
-#     @number_of_groups = 2 #=> Divide query into groups of x.
+#     @stage2_workers = 2 #=> Divide query into groups of x.
 #   end
 #
 #   def start_url_verifier

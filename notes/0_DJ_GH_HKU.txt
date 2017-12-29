@@ -1,3 +1,6 @@
+2.3.1 :026 > Web.reflect_on_all_associations(:has_many).map(&:class_name)
+ => ["Webing", "Account", "Contact", "Who", "Texting", "Text", "Linking", "Link", "Templating", "Template"]
+
 ############ KILL Process Signal List ############
 	$ Signal.list
 	# Process.kill(9, Process.ppid)
@@ -10,6 +13,9 @@
 	$ tail -f log/development.log
 	$ rails c #=> StafferService.new.cs_starter
 	$ rails c #=> paste query.count
+
+######### Delayed Job #########
+  # $ rake jobs:clear
 
 	# IndexerService.new.url_redirect_starter
 	# StafferService.new.cs_starter

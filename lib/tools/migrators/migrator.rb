@@ -34,8 +34,10 @@ class Migrator
 
 
   def create_obj_parent_assoc(model, obj, parent)
-    parent.send(model.pluralize.to_sym) << obj if (obj && !parent.send(model.pluralize.to_sym).include?(obj))
-    #Ex: account.phones << phone_obj if !account.phones.include?(phone_obj)
+    if model.present? && obj.present? && parent.present?
+      parent.send(model.pluralize.to_sym) << obj if !parent.send(model.pluralize.to_sym).include?(obj)
+      #Ex: account.phones << phone_obj if !account.phones.include?(phone_obj)
+    end
   end
 
 
