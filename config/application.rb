@@ -40,6 +40,9 @@ module Sdf2
     config.autoload_paths << Rails.root.join('lib/tools/migrators')
     config.autoload_paths += Dir["#{config.root}/lib/tools/migrators"]
 
+    config.autoload_paths << Rails.root.join('lib/tools/nokos')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/nokos"]
+
     config.autoload_paths << Rails.root.join('lib/tools/scrapers')
     config.autoload_paths += Dir["#{config.root}/lib/tools/scrapers"]
 

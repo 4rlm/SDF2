@@ -90,9 +90,7 @@ class UrlVerifier
   # #############################################
 
   def template_starter(id)
-    # @web_obj = Web.find(id)
     @web_obj = Web.find(id)
-    # @web_obj = Web.where(id: id).select(:id, :archived, :web_status, :url, :url_redirect_id).first
     @web_url = @web_obj.url
     @web_archived = @web_obj.archived
     @web_status = @web_obj.web_status

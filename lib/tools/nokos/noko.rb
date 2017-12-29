@@ -9,14 +9,15 @@ require 'net/ping'
 
 #RUNNER: IndexerService.new.url_redirect_starter
 #RUNNER: StafferService.new.cs_starter
-module InternetConnectionValidator
+# module InternetConnectionValidator
+
+module Noko
   # extend ActiveSupport::Concern
 
   ############ FOR MECHANIZE ONLY ############
-  # MOVED TO NOKO
+  # def start_mechanize(url_string)
+  def start_noko(url_string)
 
-  def start_mechanize(url_string)
-    puts "Starting mechanize ...."
     begin
       Timeout::timeout(@timeout) do
         @agent = Mechanize.new
@@ -26,7 +27,7 @@ module InternetConnectionValidator
     rescue
       if validate_url(url_string)
         puts "validating url....."
-        start_mechanize(url_string)
+        start_noko(url_string)
       else
         @html = error_parser($!.message, url_string)
       end
