@@ -15,20 +15,20 @@ class Migrator
   ### CAREFUL!!! BELOW METHODS BEING USED IN EACH UNI_MIGRATOR MODULE ###
 
   ## Used for Tables where only one Attr matters, like Phone.phone
-  def save_simple_obj(model, attr_hash)
-    obj = model.classify.constantize.find_or_create_by(attr_hash)
+  def save_simple_obj(model, attr_hsh)
+    obj = model.classify.constantize.find_or_create_by(attr_hsh)
     #Ex: phone_obj = Phone.find_or_create_by(phone: phone)
     return obj
   end
 
 
   ## Used for Tables where we need to first find by one attribute, then save or update several other attributes like Act or Cont.
-  def save_complex_obj(model, attr_hash, obj_hash)
-    obj_hash.delete_if { |key, value| value.blank? }
-    obj = model.classify.constantize.find_by(attr_hash)
-    obj.present? ? update_obj_if_changed(obj_hash, obj) : obj = model.classify.constantize.create(obj_hash)
+  def save_complex_obj(model, attr_hsh, obj_hsh)
+    obj_hsh.delete_if { |key, value| value.blank? }
+    obj = model.classify.constantize.find_by(attr_hsh)
+    obj.present? ? update_obj_if_changed(obj_hsh, obj) : obj = model.classify.constantize.create(obj_hsh)
     #Ex: web_obj = Web.find_by(url: url)
-    #Ex: web_obj.present? ? update_obj_if_changed(web_hash, web_obj) : web_obj = Web.create(web_hash)
+    #Ex: web_obj.present? ? update_obj_if_changed(web_hsh, web_obj) : web_obj = Web.create(web_hsh)
     return obj
   end
 
@@ -41,24 +41,24 @@ class Migrator
   end
 
 
-  def update_obj_if_changed(hash, obj)
-    hash.delete_if { |k, v| v.nil? }
+  def update_obj_if_changed(hsh, obj)
+    hsh.delete_if { |k, v| v.nil? }
 
-    if hash['updated_at']
-      hash.delete('updated_at')
+    if hsh['updated_at']
+      hsh.delete('updated_at')
       obj.record_timestamps = false
     end
 
-    updated_attributes = (hash.values) - (obj.attributes.values)
-    obj.update_attributes(hash) if !updated_attributes.empty?
+    updated_attributes = (hsh.values) - (obj.attributes.values)
+    obj.update_attributes(hsh) if !updated_attributes.empty?
   end
 
 
-  def validate_hsh(cols, hash)
-    if cols.present? && hash.present?
-      keys = hash.keys
-      keys.each { |key| hash.delete(key) if !cols.include?(key) }
-      return hash
+  def validate_hsh(cols, hsh)
+    if cols.present? && hsh.present?
+      keys = hsh.keys
+      keys.each { |key| hsh.delete(key) if !cols.include?(key) }
+      return hsh
     end
   end
 

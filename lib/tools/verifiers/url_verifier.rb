@@ -102,24 +102,24 @@ class UrlVerifier
 
   def update_db(id)
     if !@curl_url && @error_message
-      updated_hash = { web_sts: @web_sts, archived: TRUE, updated_at: Time.now }
-      @web_obj.update_attributes(updated_hash)
+      updated_hsh = { web_sts: @web_sts, archived: TRUE, updated_at: Time.now }
+      @web_obj.update_attributes(updated_hsh)
     elsif !@curl_url
       puts "MYSTERY RESPONSE - UNEXPECTED"
       binding.pry
     elsif @web_url != @curl_url
-      redirect_hash = {url: @curl_url}
-      redirect_full_hash = {web_sts: 'valid', archived: FALSE, url: @curl_url}
+      redirect_hsh = {url: @curl_url}
+      redirect_full_hsh = {web_sts: 'valid', archived: FALSE, url: @curl_url}
 
-      redirected_url_obj = Web.find_by(redirect_hash)
-      !redirected_url_obj ? redirected_url_obj = Web.create(redirect_full_hash) : redirected_url_obj.update_attributes(redirect_full_hash)
-      updated_hash = { web_sts: 'updated', archived: TRUE, url_redirect_id: redirected_url_obj.id, redirect_url: redirected_url_obj.url, updated_at: Time.now }
-      @web_obj.update_attributes(updated_hash)
+      redirected_url_obj = Web.find_by(redirect_hsh)
+      !redirected_url_obj ? redirected_url_obj = Web.create(redirect_full_hsh) : redirected_url_obj.update_attributes(redirect_full_hsh)
+      updated_hsh = { web_sts: 'updated', archived: TRUE, url_redirect_id: redirected_url_obj.id, redirect_url: redirected_url_obj.url, updated_at: Time.now }
+      @web_obj.update_attributes(updated_hsh)
       ## Links current web_obj associations to new redirect web obj.
       WebAssociator.transfer_web_associations(@web_obj)
     elsif @web_url == @curl_url
-      updated_hash = { web_sts: 'valid', archived: FALSE, updated_at: Time.now }
-      @web_obj.update_attributes(updated_hash)
+      updated_hsh = { web_sts: 'valid', archived: FALSE, updated_at: Time.now }
+      @web_obj.update_attributes(updated_hsh)
     end
 
     starter if (id == @last_id) ## Restart, get next batch of ids.

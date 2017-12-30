@@ -35,11 +35,11 @@ class CsvTool
   end
 
 
-  def validate_hsh(cols, hash)
+  def validate_hsh(cols, hsh)
     # cols.map!(&:to_sym)
-    keys = hash.keys
-    keys.each { |key| hash.delete(key) if !cols.include?(key) }
-    return hash
+    keys = hsh.keys
+    keys.each { |key| hsh.delete(key) if !cols.include?(key) }
+    return hsh
   end
 
 
@@ -59,7 +59,7 @@ class CsvTool
           row = row.collect { |x| x.try(:strip) } ## Strips white space from each el in row array.
 
           if counter > 0
-            @clean_csv_hashes << row_to_hash(row)
+            @clean_csv_hashes << row_to_hsh(row)
             @rows << row
           else
             @headers = row
@@ -80,10 +80,10 @@ class CsvTool
 
   def error_report(error_row_numbers)
     puts "\nCSV data ready to import.\nCSV Errors Found: #{error_row_numbers.length}\nRows containing errors (if any) will be skipped.\nErrors on the lines listed below (if any):"
-    error_row_numbers.each_with_index { |hash, i| puts "#{i+1}) Row #{hash.keys[0]}: #{hash.values[0]}." }
+    error_row_numbers.each_with_index { |hsh, i| puts "#{i+1}) Row #{hsh.keys[0]}: #{hsh.values[0]}." }
   end
 
-  def row_to_hash(row)
+  def row_to_hsh(row)
     h = Hash[@headers.zip(row)]
     h.symbolize_keys
   end

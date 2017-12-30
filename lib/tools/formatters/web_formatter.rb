@@ -102,8 +102,8 @@ module WebFormatter
     staff_link = web_obj.staff_page
     locations_link = web_obj.locations_page
 
-    updated_web_hash = {}
-    updated_web_hash = {url: url, staff_page: nil, locations_page: nil}
+    updated_web_hsh = {}
+    updated_web_hsh = {url: url, staff_page: nil, locations_page: nil}
 
     staff_link = format_link(url, staff_link) if staff_link
     staff_link_obj = save_link(web_obj, staff_link, 'staff') if staff_link
@@ -111,7 +111,7 @@ module WebFormatter
     locations_link = format_link(url, locations_link) if locations_link
     locations_link_obj = save_link(web_obj, locations_link, 'locations') if locations_link
 
-    web_obj.update_attributes(updated_web_hash)
+    web_obj.update_attributes(updated_web_hsh)
   end
 
 

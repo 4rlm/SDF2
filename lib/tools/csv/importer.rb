@@ -14,13 +14,13 @@ module Importer
       { model: table_name.classify.constantize, plural_model_name: table_name.pluralize }
     end
 
-    db_table_list_hashes.each do |hash|
-      hash[:model].delete_all
-      ActiveRecord::Base.connection.reset_pk_sequence!(hash[:plural_model_name])
+    db_table_list_hashes.each do |hsh|
+      hsh[:model].delete_all
+      ActiveRecord::Base.connection.reset_pk_sequence!(hsh[:plural_model_name])
     end
 
-    db_table_list_hashes.each do |hash|
-      restore_backup(hash[:model], "#{hash[:plural_model_name]}.csv")
+    db_table_list_hashes.each do |hsh|
+      restore_backup(hsh[:model], "#{hsh[:plural_model_name]}.csv")
     end
 
     ######### Reset PK Sequence #########
@@ -81,10 +81,10 @@ module Importer
     parse_csv
     objs = []
 
-    @clean_csv_hashes.each do |clean_csv_hash|
-      clean_csv_hash = clean_csv_hash.stringify_keys
-      clean_csv_hash.delete_if { |key, value| value.blank? } if !clean_csv_hash.empty?
-      uni_hsh = validate_hsh(model.column_names, clean_csv_hash)
+    @clean_csv_hashes.each do |clean_csv_hsh|
+      clean_csv_hsh = clean_csv_hsh.stringify_keys
+      clean_csv_hsh.delete_if { |key, value| value.blank? } if !clean_csv_hsh.empty?
+      uni_hsh = validate_hsh(model.column_names, clean_csv_hsh)
       objs << model.new(uni_hsh)
     end
 
@@ -110,10 +110,10 @@ module Importer
 
     parse_csv
     objs = []
-    @clean_csv_hashes.each do |clean_csv_hash|
-      clean_csv_hash = clean_csv_hash.stringify_keys
-      clean_csv_hash.delete_if { |key, value| value.blank? } if !clean_csv_hash.empty?
-      new_hsh = validate_hsh(model.column_names, clean_csv_hash)
+    @clean_csv_hashes.each do |clean_csv_hsh|
+      clean_csv_hsh = clean_csv_hsh.stringify_keys
+      clean_csv_hsh.delete_if { |key, value| value.blank? } if !clean_csv_hsh.empty?
+      new_hsh = validate_hsh(model.column_names, clean_csv_hsh)
 
       obj_exists = model.exists?(new_hsh) if new_hsh.present?
       obj = model.new(new_hsh) if !obj_exists

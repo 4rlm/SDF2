@@ -58,15 +58,15 @@ class Formatter
       new_zip = AdrFormatter.format_zip(current_zip)
       adr_obj.update_attributes(zip: new_zip) if current_zip != new_zip
 
-      update_hash = {}
+      update_hsh = {}
       current_full_adr = adr_obj.full_adr
       current_adr_pin = adr_obj.adr_pin
 
       new_full_adr = AdrFormatter.generate_full_adr(adr_obj)
-      update_hash[:full_adr] = new_full_adr if current_full_adr != new_full_adr
+      update_hsh[:full_adr] = new_full_adr if current_full_adr != new_full_adr
       new_adr_pin = AdrFormatter.generate_adr_pin(adr_obj.street, adr_obj.zip)
-      update_hash[:adr_pin] = new_adr_pin if current_adr_pin != new_adr_pin
-      !update_hash.empty? ? adr_obj.update_attributes(update_hash) : adr_obj.touch
+      update_hsh[:adr_pin] = new_adr_pin if current_adr_pin != new_adr_pin
+      !update_hsh.empty? ? adr_obj.update_attributes(update_hsh) : adr_obj.touch
     end
   end
 
