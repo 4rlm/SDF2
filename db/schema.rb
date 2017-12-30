@@ -15,39 +15,39 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "account_addresses", force: :cascade do |t|
-    t.integer "account_id"
+  create_table "act_addresses", force: :cascade do |t|
+    t.integer "act_id"
     t.integer "address_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_account_addresses_on_account_id"
-    t.index ["address_id"], name: "index_account_addresses_on_address_id"
+    t.index ["act_id"], name: "index_act_addresses_on_act_id"
+    t.index ["address_id"], name: "index_act_addresses_on_address_id"
   end
 
-  create_table "account_webs", force: :cascade do |t|
-    t.integer "account_id"
+  create_table "act_webs", force: :cascade do |t|
+    t.integer "act_id"
     t.integer "web_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_account_webs_on_account_id"
-    t.index ["web_id"], name: "index_account_webs_on_web_id"
+    t.index ["act_id"], name: "index_act_webs_on_act_id"
+    t.index ["web_id"], name: "index_act_webs_on_web_id"
   end
 
-  create_table "accounts", force: :cascade do |t|
-    t.string "account_source"
-    t.string "account_status"
-    t.string "crm_acct_num"
-    t.string "account_name"
+  create_table "acts", force: :cascade do |t|
+    t.string "act_src"
+    t.string "act_sts"
+    t.string "crm_act_num"
+    t.string "act_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_name"], name: "index_accounts_on_account_name"
-    t.index ["account_source"], name: "index_accounts_on_account_source"
-    t.index ["account_status"], name: "index_accounts_on_account_status"
-    t.index ["crm_acct_num"], name: "index_accounts_on_crm_acct_num"
+    t.index ["act_name"], name: "index_acts_on_act_name"
+    t.index ["act_src"], name: "index_acts_on_act_src"
+    t.index ["act_sts"], name: "index_acts_on_act_sts"
+    t.index ["crm_act_num"], name: "index_acts_on_crm_act_num"
   end
 
   create_table "addresses", force: :cascade do |t|
-    t.string "address_status"
+    t.string "address_sts"
     t.string "street"
     t.string "city"
     t.string "state"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address_pin"], name: "index_addresses_on_address_pin"
-    t.index ["address_status"], name: "index_addresses_on_address_status"
+    t.index ["address_sts"], name: "index_addresses_on_address_sts"
     t.index ["city"], name: "index_addresses_on_city"
     t.index ["state"], name: "index_addresses_on_state"
     t.index ["street"], name: "index_addresses_on_street"
@@ -83,41 +83,41 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.index ["brand_term"], name: "index_brands_on_brand_term"
   end
 
-  create_table "contact_descriptions", force: :cascade do |t|
-    t.integer "contact_id"
+  create_table "cont_descriptions", force: :cascade do |t|
+    t.integer "cont_id"
     t.integer "description_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["contact_id"], name: "index_contact_descriptions_on_contact_id"
-    t.index ["description_id"], name: "index_contact_descriptions_on_description_id"
+    t.index ["cont_id"], name: "index_cont_descriptions_on_cont_id"
+    t.index ["description_id"], name: "index_cont_descriptions_on_description_id"
   end
 
-  create_table "contact_titles", force: :cascade do |t|
-    t.integer "contact_id"
+  create_table "cont_titles", force: :cascade do |t|
+    t.integer "cont_id"
     t.integer "title_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["contact_id"], name: "index_contact_titles_on_contact_id"
-    t.index ["title_id"], name: "index_contact_titles_on_title_id"
+    t.index ["cont_id"], name: "index_cont_titles_on_cont_id"
+    t.index ["title_id"], name: "index_cont_titles_on_title_id"
   end
 
-  create_table "contacts", force: :cascade do |t|
-    t.string "contact_source"
-    t.string "contact_status"
-    t.integer "account_id"
+  create_table "conts", force: :cascade do |t|
+    t.string "cont_src"
+    t.string "cont_sts"
+    t.integer "act_id"
     t.string "crm_cont_num"
     t.string "first_name"
     t.string "last_name"
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_contacts_on_account_id"
-    t.index ["contact_source"], name: "index_contacts_on_contact_source"
-    t.index ["contact_status"], name: "index_contacts_on_contact_status"
-    t.index ["crm_cont_num"], name: "index_contacts_on_crm_cont_num"
-    t.index ["email"], name: "index_contacts_on_email"
-    t.index ["first_name"], name: "index_contacts_on_first_name"
-    t.index ["last_name"], name: "index_contacts_on_last_name"
+    t.index ["act_id"], name: "index_conts_on_act_id"
+    t.index ["cont_src"], name: "index_conts_on_cont_src"
+    t.index ["cont_sts"], name: "index_conts_on_cont_sts"
+    t.index ["crm_cont_num"], name: "index_conts_on_crm_cont_num"
+    t.index ["email"], name: "index_conts_on_email"
+    t.index ["first_name"], name: "index_conts_on_first_name"
+    t.index ["last_name"], name: "index_conts_on_last_name"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   create_table "links", force: :cascade do |t|
     t.string "link"
     t.string "link_type"
-    t.string "link_status"
+    t.string "link_sts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["link"], name: "index_links_on_link"
@@ -222,7 +222,7 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   create_table "texts", force: :cascade do |t|
     t.string "text"
     t.string "text_type"
-    t.string "text_status"
+    t.string "text_sts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["text"], name: "index_texts_on_text"
@@ -235,14 +235,14 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.index ["job_title"], name: "index_titles_on_job_title"
   end
 
-  create_table "uni_accounts", force: :cascade do |t|
-    t.integer "account_id"
-    t.string "crm_acct_num"
-    t.string "account_source"
-    t.string "account_status"
-    t.string "account_name"
+  create_table "uni_acts", force: :cascade do |t|
+    t.integer "act_id"
+    t.string "crm_act_num"
+    t.string "act_src"
+    t.string "act_sts"
+    t.string "act_name"
     t.integer "address_id"
-    t.string "address_status"
+    t.string "address_sts"
     t.string "street"
     t.string "unit"
     t.string "city"
@@ -255,7 +255,7 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.string "phone"
     t.string "template_name"
     t.string "archived"
-    t.string "web_status"
+    t.string "web_sts"
     t.string "url"
     t.string "url_redirect_id"
     t.string "staff_page"
@@ -269,13 +269,13 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "uni_contacts", force: :cascade do |t|
-    t.integer "account_id"
-    t.integer "contact_id"
-    t.string "crm_acct_num"
+  create_table "uni_conts", force: :cascade do |t|
+    t.integer "act_id"
+    t.integer "cont_id"
+    t.string "crm_act_num"
     t.string "crm_cont_num"
-    t.string "contact_source"
-    t.string "contact_status"
+    t.string "cont_src"
+    t.string "cont_sts"
     t.string "first_name"
     t.string "last_name"
     t.string "email"
@@ -284,7 +284,7 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.integer "phone_id"
     t.string "phone"
     t.integer "web_id"
-    t.string "web_status"
+    t.string "web_sts"
     t.string "url"
     t.string "staff_page"
     t.string "locations_page"
@@ -294,16 +294,16 @@ ActiveRecord::Schema.define(version: 20171219052552) do
 
   create_table "uni_webs", force: :cascade do |t|
     t.boolean "archived"
-    t.string "web_status"
+    t.string "web_sts"
     t.string "url"
     t.string "url_redirect_id"
     t.string "redirect_url"
     t.string "staff_link"
     t.string "staff_text"
-    t.string "staff_link_status"
+    t.string "staff_link_sts"
     t.string "locations_link"
     t.string "locations_text"
-    t.string "locations_link_status"
+    t.string "locations_link_sts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -321,17 +321,33 @@ ActiveRecord::Schema.define(version: 20171219052552) do
 
   create_table "webs", force: :cascade do |t|
     t.boolean "archived"
-    t.string "web_status"
+    t.string "web_sts"
     t.string "url"
     t.string "url_redirect_id"
     t.string "redirect_url"
+    t.datetime "redirect_date"
+    t.string "temp_sts"
+    t.datetime "temp_date"
+    t.string "staff_link_sts"
+    t.string "loc_link_sts"
+    t.string "staff_text_sts"
+    t.string "loc_text_sts"
+    t.datetime "link_text_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["archived"], name: "index_webs_on_archived"
+    t.index ["link_text_date"], name: "index_webs_on_link_text_date"
+    t.index ["loc_link_sts"], name: "index_webs_on_loc_link_sts"
+    t.index ["loc_text_sts"], name: "index_webs_on_loc_text_sts"
+    t.index ["redirect_date"], name: "index_webs_on_redirect_date"
     t.index ["redirect_url"], name: "index_webs_on_redirect_url"
+    t.index ["staff_link_sts"], name: "index_webs_on_staff_link_sts"
+    t.index ["staff_text_sts"], name: "index_webs_on_staff_text_sts"
+    t.index ["temp_date"], name: "index_webs_on_temp_date"
+    t.index ["temp_sts"], name: "index_webs_on_temp_sts"
     t.index ["url"], name: "index_webs_on_url"
     t.index ["url_redirect_id"], name: "index_webs_on_url_redirect_id"
-    t.index ["web_status"], name: "index_webs_on_web_status"
+    t.index ["web_sts"], name: "index_webs_on_web_sts"
   end
 
   create_table "whos", force: :cascade do |t|

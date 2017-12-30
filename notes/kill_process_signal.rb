@@ -47,8 +47,8 @@ class JobWorker
       @pid = Process.pid
       puts "#{@staff_url} Fork: #{@pid}"
 
-      url_status = url_exist?(@staff_url)
-      puts "#{url_status}: #{@staff_url}"
+      url_sts = url_exist?(@staff_url)
+      puts "#{url_sts}: #{@staff_url}"
 
     end
     Process.wait

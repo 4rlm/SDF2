@@ -47,7 +47,7 @@ module UniWebMigrator
 
           # FIND OR CREATE staff_link_obj
           if staff_link.present?
-            staff_link_hsh = {link: staff_link, link_type: 'staff', link_status: link_text_hsh['link_status']}
+            staff_link_hsh = {link: staff_link, link_type: 'staff', link_sts: link_text_hsh['link_sts']}
             staff_link_hsh.delete_if { |key, value| value.blank? }
             staff_link_obj = save_complex_obj('link', {'link' => staff_link}, staff_link_hsh)
             create_obj_parent_assoc('link', staff_link_obj, web_obj) if staff_link_obj.present?
@@ -63,7 +63,7 @@ module UniWebMigrator
 
           # FIND OR CREATE locations_link_obj
           if locations_link.present?
-            locations_link_hsh = {link: locations_link, link_type: 'locations', link_status: link_text_hsh['link_status']}
+            locations_link_hsh = {link: locations_link, link_type: 'locations', link_sts: link_text_hsh['link_sts']}
             locations_link_obj = save_complex_obj('link', {'link' => locations_link}, locations_link_hsh)
             create_obj_parent_assoc('link', locations_link_obj, web_obj) if locations_link_obj.present?
           end
@@ -79,7 +79,7 @@ module UniWebMigrator
           staff_text = link_text_hsh['staff_text']
 
           if staff_text.present?
-            staff_text_hsh = {text: staff_text, text_type: 'staff', text_status: link_text_hsh['staff_link_status']}
+            staff_text_hsh = {text: staff_text, text_type: 'staff', text_sts: link_text_hsh['staff_link_sts']}
             staff_text_hsh.delete_if { |key, value| value.blank? }
             staff_text_obj = save_complex_obj('text', {'text' => staff_text}, staff_text_hsh)
             create_obj_parent_assoc('text', staff_text_obj, web_obj) if staff_text_obj.present?
@@ -94,7 +94,7 @@ module UniWebMigrator
 
 
           if locations_text.present?
-            locations_text_hsh = {text: locations_text, text_type: 'locations', text_status: link_text_hsh['locations_link_status']}
+            locations_text_hsh = {text: locations_text, text_type: 'locations', text_sts: link_text_hsh['locations_link_sts']}
             locations_text_hsh.delete_if { |key, value| value.blank? }
             locations_text_obj = save_complex_obj('text', {'text' => locations_text}, locations_text_hsh)
             create_obj_parent_assoc('text', locations_text_obj, web_obj) if locations_text_obj.present?

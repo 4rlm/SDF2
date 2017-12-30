@@ -205,21 +205,21 @@ end
 =begin
 ### BORROWED FROM OLD PAGE FINDER - TRY TO INTEGRATE ###
 error_msg = "Error: #{$!.message}"
-status = nil
-indexer_status = nil
+sts = nil
+indexer_sts = nil
 found = false
 
 indexer_terms = IndexerTerm.where(category: "url_redirect").where(sub_category: error_msg)
 indexer_terms.each do |term|
   if error_msg.include?(term.criteria_term)
 
-    status = term.response_term
+    sts = term.response_term
     found = true
   else
-    status = error_msg
+    sts = error_msg
   end
 
-  indexer_status = status == "TCP Error" ? status : "PF Error"
+  indexer_sts = sts == "TCP Error" ? sts : "PF Error"
   break if found
 end # indexer_terms iteration ends
 =end

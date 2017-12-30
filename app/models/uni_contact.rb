@@ -1,2 +1,0 @@
-class UniContact < ApplicationRecord
-end

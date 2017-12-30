@@ -48,8 +48,8 @@ class AboutTool
     msg_4 = "4) UrlVerifier: Verifies & updates urls valid/redirected."
     msg_5 = "5) TemplateGrabber: Verifies & updates (Dealer.com, Cobalt, etc.)."
     msg_6 = "6) LinkTextGrabber: Verifies & updates Links/Text (locations and staff pages)."
-    msg_7 = "7) AccountScraper"
-    msg_8 = "8) ContactScraper"
+    msg_7 = "7) ActScraper"
+    msg_8 = "8) ContScraper"
     msg_9 = "9) ApiScraper (verifies all data w/ google, especially Meta Results Data)"
     msg_10 = "10) FranchiseAlgo: verifies & updates franchise name and type."
     msg_11 = "11) DashboardAlgo: Calculates complex totals and saves results to track over time."
@@ -77,10 +77,10 @@ class AboutTool
     LinkTextGrabber.new.run_link_text_grabber
 
     puts msg_7
-    AccountScraper.new.run_account_scraper
+    ActScraper.new.run_act_scraper
 
     puts msg_8
-    ContactScraper.new.run_contact_scraper
+    ContScraper.new.run_cont_scraper
 
     puts msg_9
     ApiScraper.new.run_api_scraper
@@ -92,7 +92,7 @@ class AboutTool
     DashboardAlgo.new.run_dashboard_algo
 
     # puts msg_12
-    # ContactScraper.new.run_contact_scraper
+    # ContScraper.new.run_cont_scraper
 
 
 

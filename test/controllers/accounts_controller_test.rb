@@ -1,48 +1,48 @@
 require 'test_helper'
 
-class AccountsControllerTest < ActionDispatch::IntegrationTest
+class ActsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @account = accounts(:one)
+    @act = acts(:one)
   end
 
   test "should get index" do
-    get accounts_url
+    get acts_url
     assert_response :success
   end
 
   test "should get new" do
-    get new_account_url
+    get new_act_url
     assert_response :success
   end
 
-  test "should create account" do
-    assert_difference('Account.count') do
-      post accounts_url, params: { account: { crm_acct_num: @account.crm_acct_num, name: @account.name, source: @account.source, status: @account.status } }
+  test "should create act" do
+    assert_difference('Act.count') do
+      post acts_url, params: { act: { crm_act_num: @act.crm_act_num, name: @act.name, src: @act.src, sts: @act.sts } }
     end
 
-    assert_redirected_to account_url(Account.last)
+    assert_redirected_to act_url(Act.last)
   end
 
-  test "should show account" do
-    get account_url(@account)
+  test "should show act" do
+    get act_url(@act)
     assert_response :success
   end
 
   test "should get edit" do
-    get edit_account_url(@account)
+    get edit_act_url(@act)
     assert_response :success
   end
 
-  test "should update account" do
-    patch account_url(@account), params: { account: { crm_acct_num: @account.crm_acct_num, name: @account.name, source: @account.source, status: @account.status } }
-    assert_redirected_to account_url(@account)
+  test "should update act" do
+    patch act_url(@act), params: { act: { crm_act_num: @act.crm_act_num, name: @act.name, src: @act.src, sts: @act.sts } }
+    assert_redirected_to act_url(@act)
   end
 
-  test "should destroy account" do
-    assert_difference('Account.count', -1) do
-      delete account_url(@account)
+  test "should destroy act" do
+    assert_difference('Act.count', -1) do
+      delete act_url(@act)
     end
 
-    assert_redirected_to accounts_url
+    assert_redirected_to acts_url
   end
 end

@@ -102,7 +102,7 @@ module PhoneFormatter
 
 
   # def core_phone_norm
-  #   #normalizes phone in core sfdc accounts.
+  #   #normalizes phone in core sfdc acts.
   #   cores = Core.where.not(sfdc_ph: nil)
   #   cores.each do |core|
   #     alert = ""

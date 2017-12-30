@@ -28,7 +28,7 @@ class SampleScript
   end
 
   def sample_script_starter
-    queried_ids = Indexer.select(:id).where.not(staff_url: nil, contact_status: "CS Result").where('scrape_date <= ?', Date.today - 1.day).sort[0...50].pluck(:id)
+    queried_ids = Indexer.select(:id).where.not(staff_url: nil, cont_sts: "CS Result").where('scrape_date <= ?', Date.today - 1.day).sort[0...50].pluck(:id)
 
     nested_ids = queried_ids.in_groups(10)
     nested_ids.each { |ids| delay.nested_iterator(ids) }
@@ -50,7 +50,7 @@ class SampleScript
 
   def view_indexer_current_db_info(indexer)
     puts "\n=== Current DB Info ===\n"
-    puts "indexer_status: #{indexer.indexer_status}"
+    puts "indexer_sts: #{indexer.indexer_sts}"
     puts "template: #{indexer.template}"
     puts "staff_url: #{indexer.staff_url}"
     puts "web_staff_count: #{indexer.web_staff_count}"

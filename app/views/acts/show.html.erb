@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @act.src %>
+</p>
+
+<p>
+  <strong>sts:</strong>
+  <%= @act.sts %>
+</p>
+
+<p>
+  <strong>Crm act num:</strong>
+  <%= @act.crm_act_num %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @act.name %>
+</p>
+
+<%= link_to 'Edit', edit_act_path(@act) %> |
+<%= link_to 'Back', acts_path %>

@@ -1,2 +1,0 @@
-class UniAccount < ApplicationRecord
-end

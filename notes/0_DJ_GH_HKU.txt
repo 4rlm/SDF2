@@ -1,5 +1,5 @@
 2.3.1 :026 > Web.reflect_on_all_associations(:has_many).map(&:class_name)
- => ["Webing", "Account", "Contact", "Who", "Texting", "Text", "Linking", "Link", "Templating", "Template"]
+ => ["Webing", "Act", "Cont", "Who", "Texting", "Text", "Linking", "Link", "Templating", "Template"]
 
 ############ KILL Process Signal List ############
 	$ Signal.list
@@ -369,5 +369,5 @@ important - save below
 	alias killall="killall 'foreman: master'"
 
 #############################
-	staffers = Staffer.where(cont_source: "Web", scrape_date: nil).count
+	staffers = Staffer.where(cont_src: "Web", scrape_date: nil).count
 	staffers.each {|staffer| staffer.update_attributes(scrape_date: staffer.created_at) }

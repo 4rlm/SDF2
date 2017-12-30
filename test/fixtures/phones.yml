@@ -2,10 +2,10 @@
 
 one:
   source: MyString
-  status: MyString
+  sts: MyString
   phone: MyString
 
 two:
   source: MyString
-  status: MyString
+  sts: MyString
   phone: MyString

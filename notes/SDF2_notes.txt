@@ -1,12 +1,12 @@
 
-account = Account.create(source: 'source_1', status: 'status_1', crm_acct_num: 'crm_acct_num_1', name: 'sample_account_1', contacts_attributes: [source: 'source_1', status: 'status_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'], webs_attributes: [source: 'source_1', status: 'status_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'], addresses_attributes: [source: 'source_1', status: 'status_1', street: 'street_1', unit: 'unit_1', city: 'city_1', state: 'state_1', zip: 'zip_1', address_pin: 'address_pin_1', latitude: 'latitude_1', longitude: 'longitude_1'] )
+act = Act.create(src: 'src_1', sts: 'sts_1', crm_act_num: 'crm_act_num_1', name: 'sample_act_1', conts_attributes: [src: 'src_1', sts: 'sts_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'], webs_attributes: [src: 'src_1', sts: 'sts_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'], addresses_attributes: [src: 'src_1', sts: 'sts_1', street: 'street_1', unit: 'unit_1', city: 'city_1', state: 'state_1', zip: 'zip_1', address_pin: 'address_pin_1', latitude: 'latitude_1', longitude: 'longitude_1'] )
 
 ======================
 
-contact = Contact.create(source: 'source_7', status: 'status_7', crm_cont_num: 'crm_cont_num_7', first_name: 'first_name_7', last_name: 'last_name_7', email: 'email_7', titles_attributes: [job_title: 'job_title_1'], descriptions_attributes: [job_description: 'job_description_1'], phones_attributes: [source: 'source_1', status: 'status_1', phone: 'phone_1'])
+cont = Cont.create(src: 'src_7', sts: 'sts_7', crm_cont_num: 'crm_cont_num_7', first_name: 'first_name_7', last_name: 'last_name_7', email: 'email_7', titles_attributes: [job_title: 'job_title_1'], descriptions_attributes: [job_description: 'job_description_1'], phones_attributes: [src: 'src_1', sts: 'sts_1', phone: 'phone_1'])
 
-account = Account.find_or_create_by(crm_acct_num: 'crm_acct_num_7')
-account.contacts << contact
+act = Act.find_or_create_by(crm_act_num: 'crm_act_num_7')
+act.conts << cont
 
 
 ========================
@@ -17,29 +17,29 @@ address = Address.find_or_create_by(street: 'street_2')
 
 ================
 
-account = Account.create(
-  source: 'source_1', status: 'status_1', crm_acct_num: 'crm_acct_num_1', name: 'sample_account_1',
-  contacts_attributes: [source: 'source_1', status: 'status_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'],
-  webs_attributes: [source: 'source_1', status: 'status_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'],
+act = Act.create(
+  src: 'src_1', sts: 'sts_1', crm_act_num: 'crm_act_num_1', name: 'sample_act_1',
+  conts_attributes: [src: 'src_1', sts: 'sts_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'],
+  webs_attributes: [src: 'src_1', sts: 'sts_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'],
   addresses_attributes: [] )
 
-  account.assign_attributes(addresses_attributes: [])
+  act.assign_attributes(addresses_attributes: [])
 
 
   ==============================
 
 
-rails g model StarAccount
+rails g model StarAct
 
-  Accounts
-    t.string "account_source"
-    t.string "account_status"
-    t.string "crm_acct_num"
+  Acts
+    t.string "act_src"
+    t.string "act_sts"
+    t.string "crm_act_num"
     t.string "name"
 
   Addresses
-    t.string "address_source"
-    t.string "address_status"
+    t.string "address_src"
+    t.string "address_sts"
     t.string "street"
     t.string "unit"
     t.string "city"
@@ -51,13 +51,13 @@ rails g model StarAccount
     t.float "longitude"
 
   Phones
-    t.string "phone_source"
-    t.string "phone_status"
+    t.string "phone_src"
+    t.string "phone_sts"
     t.string "phone"
 
   Webs
-    t.string "web_source"
-    t.string "web_status"
+    t.string "web_src"
+    t.string "web_sts"
     t.string "url"
     t.string "staff_page"
     t.string "locations_page"

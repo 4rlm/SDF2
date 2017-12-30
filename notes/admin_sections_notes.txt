@@ -35,15 +35,15 @@ Admin Sections:
   finalizer_btn_path => /controllers/indexers_controller.rb => finalizer_btn => /services/indexer_service.rb =>
   > UrlSorter > REPLACED: url_arr_mover
   * pin_arr_mover
-  * acct_arr_mover
-  * acct_squeezer_caller
+  * act_arr_mover
+  * act_squeezer_caller
   * ph_arr_mover_express
 
 
   id_sorter_btn_path => /controllers/indexers_controller.rb =>
   * url_arr_mover ** SAME AS ABOVE! DUPLICATE!
   * pin_arr_mover ** SAME AS ABOVE! DUPLICATE!
-  * acct_arr_mover ** SAME AS ABOVE! DUPLICATE!
+  * act_arr_mover ** SAME AS ABOVE! DUPLICATE!
   * ph_arr_mover_express ** SAME AS ABOVE! DUPLICATE!
 
   score_calculator_btn_path => services/indexer_service.rb => score_calculator

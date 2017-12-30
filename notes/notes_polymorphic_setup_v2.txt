@@ -1,11 +1,11 @@
-9/18 Status:
+9/18 sts:
 important: DB development.sqlite3 and each csv file moved out of 'db' b/c too big for github.  Just copy them over from import_sdf_db_backups dir.
 
 Need to rake db:create, rake db:migrate
 
 1) Completed 1-4 below.  Csv files of each saved in db and in poly rails dir.
 2) Formatted Who csv, but missing full addr and zip pin, so need to grab converter from Max and make module.
-3) Currently formatting staffers csv to prepare for import, then need to make CsvToolParser.new.import_contacts
+3) Currently formatting staffers csv to prepare for import, then need to make CsvToolParser.new.import_conts
 
 ############## NEW BELOW (POLY MIXED) ##############
 Tips:
@@ -14,40 +14,40 @@ Try Method: nil.try(:strip)
 ###################
 Import Steps:
 1) Done- Import to Url from indexers urls => CsvToolParser.new.import_urls
-2) Done- Import to Account from cores => CsvToolParser.new.import_accounts
-3) Done- Import to Account from indexers => CsvToolParser.new.import_accounts
-4) Done- Import to Account from locations => CsvToolParser.new.import_accounts
-5) Pend- Import to Account from who => CsvToolParser.new.import_accounts
-6) Import to Contacts from contacts => CsvToolParser.new.import_contacts
-7) Import to Status from combination across all max models.
-** Phones and addresses are imported with Account, so no need to do separately.
+2) Done- Import to Act from cores => CsvToolParser.new.import_acts
+3) Done- Import to Act from indexers => CsvToolParser.new.import_acts
+4) Done- Import to Act from locations => CsvToolParser.new.import_acts
+5) Pend- Import to Act from who => CsvToolParser.new.import_acts
+6) Import to Conts from conts => CsvToolParser.new.import_conts
+7) Import to sts from combination across all max models.
+** Phones and addresses are imported with Act, so no need to do separately.
 
 ======================================
 6) SCAFFOLD
 ======================================
 Question: Will it belong to more than one thing?
 
-Account----(mixed)
-  $ rails g scaffold Account status act_num:uniq:index
+Act----(mixed)
+  $ rails g scaffold Act sts act_num:uniq:index
 
-Contact----(non-poly)
-  $ rails g scaffold Contact account:references cont_num:uniq:index source status full_name first_name last_name email job_title
-    add_index :contacts, [:full_name, :cont_num, :email, :job_title], unique: true, name: 'contact_index' #=> And in Model!
+Cont----(non-poly)
+  $ rails g scaffold Cont act:references cont_num:uniq:index src sts full_name first_name last_name email job_title
+    add_index :conts, [:full_name, :cont_num, :email, :job_title], unique: true, name: 'cont_index' #=> And in Model!
 
 Address----(poly)
-  $ rails g scaffold Address status street city state zip full:uniq:index pin
+  $ rails g scaffold Address sts street city state zip full:uniq:index pin
 
   $ rails g scaffold Addressing address:references{index} addressable:references{polymorphic}:index
     add_index :addressings, [:addressing_id, :addressable_type, :addressable_id], unique: true, name: 'addressings_index' #=> And in Model!
 
 Phone----(poly)
-  $ rails g scaffold Phone status phone:uniq:index
+  $ rails g scaffold Phone sts phone:uniq:index
 
   $ rails g scaffold Phoning phone:references{index} phonable:references{polymorphic}:index
     add_index :phonings, [:phone_id, :phonable_type, :phonable_id], unique: true, name: 'phonings_index' #=> And in Model!  #=> And in Model!
 
 Url----(poly)
-  $ rails g scaffold Url archive:boolean redirects_to:integer status url:uniq:index staff_page locations_page
+  $ rails g scaffold Url archive:boolean redirects_to:integer sts url:uniq:index staff_page locations_page
 
   $ rails g scaffold Urling url:references{index} urlable:references{polymorphic}:index
     add_index :urlings, [:url_id, :urlable_type, :urlable_id], unique: true, name: 'urlings_index' #=> And in Model!  #=> And in Model!
@@ -56,11 +56,11 @@ Url----(poly)
 UrlBot----(non-poly)
 $ rails g scaffold UrlBot
   url:references
-  redirect_status
+  redirect_sts
   redirect_date:datetime
 
   ---- headers from indexers ---
-  raw_url	redirect_status	clean_url	indexer_status	staff_url	staff_text	location_url	location_text	template	crm_id_arr	created_at	updated_at	loc_status	stf_status	contact_status	contacts_link	acct_name	rt_sts	cont_sts	full_addr	street	city	state	zip	phone	phones	acct_pin	raw_street	who_status	geo_status
+  raw_url	redirect_sts	clean_url	indexer_sts	staff_url	staff_text	location_url	location_text	template	crm_id_arr	created_at	updated_at	loc_sts	stf_sts	cont_sts	conts_link	act_name	rt_sts	cont_sts	full_addr	street	city	state	zip	phone	phones	act_pin	raw_street	who_sts	geo_sts
 
 ##############
 
@@ -69,10 +69,10 @@ $ rails g scaffold UrlBot
 7) MODEL CLASSES
 ======================================
 
-Account
-  -Account
+Act
+  -Act
     validates :act_num, uniqueness: true
-    has_many :contacts
+    has_many :conts
     #######################
 
     has_one :addressing, as: :addressable
@@ -84,16 +84,16 @@ Account
     has_one :urling, as: :urlable
     has_one :url, through: :urling
 
-    accepts_nested_attributes_for :contacts, :address, :phones, :url
+    accepts_nested_attributes_for :conts, :address, :phones, :url
     # accepts_nested_attributes_for :avatar, allow_destroy: true
 
-Contact
-  -Contact
-    belongs_to :account
+Cont
+  -Cont
+    belongs_to :act
 
     validates :full_name, presence: true, case_sensitive: false
     validates_uniqueness_of :cont_num, allow_blank: true, allow_nil: true
-    validates_uniqueness_of :full_name, allow_blank: true, allow_nil: true, :scope => [:account_id, :full_name, :email, :job_title], case_sensitive: false
+    validates_uniqueness_of :full_name, allow_blank: true, allow_nil: true, :scope => [:act_id, :full_name, :email, :job_title], case_sensitive: false
 
     has_many :phonings, as: :phonable
     has_many :phones, through: :phonings
@@ -105,7 +105,7 @@ Address
     validates :full, uniqueness: true
 
     has_many :addressings
-    has_many :act_nums, through: :addressings, source: :addressable, source_type: :Account
+    has_many :act_nums, through: :addressings, src: :addressable, src_type: :Act
 
   -Addressing
     belongs_to :addressable, polymorphic: true
@@ -117,7 +117,7 @@ Phone
   -Phone
     validates :phone, uniqueness: true
     has_many :phonings
-    has_many :act_nums, through: :phonings, source: :phonable, source_type: :Account
+    has_many :act_nums, through: :phonings, src: :phonable, src_type: :Act
 
   -Phoning
     belongs_to :phonable, polymorphic: true
@@ -130,7 +130,7 @@ Url
     validates :url, uniqueness: true
     has_many :urlings
 
-    has_many :act_nums, through: :urlings, source: :urlable, source_type: :Account
+    has_many :act_nums, through: :urlings, src: :urlable, src_type: :Act
 
   -Urling
     belongs_to :urlable, polymorphic: true
@@ -148,35 +148,35 @@ Url
 
 
 ######## OLD DATA ENTRY BELOW ########
->>>> Add accounts
+>>>> Add acts
 act_num_raw = 'ac_100'
-act_name_raw = 'Account 100'
+act_name_raw = 'Act 100'
 phone_raw = '100-100-1000'
 url_raw = 'http://www.100.com'
 full_raw = '100 Main St, Austin, TX, 78735'
 -------------------------------
 act_num_raw = 'ac_200'
-act_name_raw = 'Account 200'
+act_name_raw = 'Act 200'
 phone_raw = '200-200-2000'
 url_raw = 'http://www.200.com'
 full_raw = '200 Main St, Austin, TX, 78735'
 -------------------------------
 act_num_raw = 'ac_300'
-act_name_raw = 'Account 300'
+act_name_raw = 'Act 300'
 phone_raw = '300-300-3000'
 url_raw = 'http://www.300.com'
 full_raw = '300 Main St, Austin, TX, 78735'
 -------------------------------
-act_num = Account.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
+act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.phones << Phone.find_or_create_by(phone: phone_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
 act_num.address = Address.find_or_create_by(full: full_raw)
 
-act_num = Account.find_by(act_num: 'ac_100')
+act_num = Act.find_by(act_num: 'ac_100')
 
 ==View Data
-Account.all
-Accounting.all
+Act.all
+Acting.all
 
 Phone.all
 Phoning.all
@@ -190,45 +190,45 @@ Addressing.all
 --------------- IMPORTANT !!!
 
 
-Contact.new(account_id: 1, full_name: "Gwangbae Kim").save
-cont = Contact.all.first
+Cont.new(act_id: 1, full_name: "Gwangbae Kim").save
+cont = Cont.all.first
 
-act = Account.first
-act.contacts.first.full_name
+act = Act.first
+act.conts.first.full_name
 
-cont = Contact.where(full_name: "Gwangbae Kim").first
-cont.account.act_name
+cont = Cont.where(full_name: "Gwangbae Kim").first
+cont.act.act_name
 -----
 
-act = Account.find(1)
-act.contacts.build(full_name: "Master of Lorem Ipsum").save
-act.contacts.first.full_name
+act = Act.find(1)
+act.conts.build(full_name: "Master of Lorem Ipsum").save
+act.conts.first.full_name
 ----------------------------
 user.profiles.build(name: "Master of Lorem Ipsum").save
 user.profiles.first.name
 
 ------
-:account_id, :full_name, :email, :job_title
+:act_id, :full_name, :email, :job_title
 
-account_id = 1
-full_name = 'Contact 100'
-email = '100@contact.com'
+act_id = 1
+full_name = 'Cont 100'
+email = '100@cont.com'
 job_title = 'Job 100'
 
-cont = Contact.find_or_create_by(account_id: account_id, full_name: full_name, email: email, job_title: job_title)
+cont = Cont.find_or_create_by(act_id: act_id, full_name: full_name, email: email, job_title: job_title)
 cont.phones << Phone.find_or_create_by(phone: phone_raw)
 ----------------------
-account_id = 1
-full_name = 'Contact 300'
+act_id = 1
+full_name = 'Cont 300'
 email = 'happy'
 job_title = 'no'
 ----------------------
-account_id = 1
+act_id = 1
 full_name = nil
 email = 'www.800.com'
 job_title = 'Job 800'
 
-cont = Contact.find_or_create_by(account_id: account_id, full_name: full_name, email: email, job_title: job_title)
+cont = Cont.find_or_create_by(act_id: act_id, full_name: full_name, email: email, job_title: job_title)
 
 ======
 validates_uniqueness_of :acronym, :allow_blank => true, :scope => [:group_id], :case_sensitive => false
@@ -244,129 +244,129 @@ validates_uniqueness_of :acronym, :allow_blank => true, :scope => [:group_id], :
 
 
 
->>>> Add Contacts
+>>>> Add Conts
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_100')
+act_num = Act.find_by(act_num: 'ac_100')
 cont_num_raw = 'con_100'
-full_name_raw = 'Contact 100'
-email_raw = '100@contact.com'
+full_name_raw = 'Cont 100'
+email_raw = '100@cont.com'
 job_title_raw = 'Job 100'
 phone_raw = '100-100-1000'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_200')
+act_num = Act.find_by(act_num: 'ac_200')
 cont_num_raw = 'con_200'
-full_name_raw = 'Contact 200'
-email_raw = '200@contact.com'
+full_name_raw = 'Cont 200'
+email_raw = '200@cont.com'
 job_title_raw = 'Job 200'
 phone_raw = '200-200-2000'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_300')
+act_num = Act.find_by(act_num: 'ac_300')
 cont_num_raw = 'con_300'
-full_name_raw = 'Contact 300'
-email_raw = '300@contact.com'
+full_name_raw = 'Cont 300'
+email_raw = '300@cont.com'
 job_title_raw = 'Job 300'
 phone_raw = '300-300-3000'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_100')
+act_num = Act.find_by(act_num: 'ac_100')
 cont_num_raw = 'con_101'
-full_name_raw = 'Contact 101'
-email_raw = '101@contact.com'
+full_name_raw = 'Cont 101'
+email_raw = '101@cont.com'
 job_title_raw = 'Job 101'
 phone_raw = '100-101-1010'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_200')
+act_num = Act.find_by(act_num: 'ac_200')
 cont_num_raw = 'con_202'
-full_name_raw = 'Contact 202'
-email_raw = '202@contact.com'
+full_name_raw = 'Cont 202'
+email_raw = '202@cont.com'
 job_title_raw = 'Job 202'
 phone_raw = '202-202-2020'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_300')
+act_num = Act.find_by(act_num: 'ac_300')
 cont_num_raw = 'con_303'
-full_name_raw = 'Contact 303'
-email_raw = '303@contact.com'
+full_name_raw = 'Cont 303'
+email_raw = '303@cont.com'
 job_title_raw = 'Job 303'
 phone_raw = '303-303-3030'
 
-cont_num = Contact.find_or_create_by(cont_num: cont_num_raw)
+cont_num = Cont.find_or_create_by(cont_num: cont_num_raw)
 cont_num.update_attributes(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 
-cont = Contact.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 cont.phones << Phone.find_or_create_by(phone: phone_raw)
-cont.account_id = act_num
+cont.act_id = act_num
 
 
-cont_num = Contact.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont_num = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 cont_num.phones << Phone.find_or_create_by(phone: phone_raw)
-cont_num.account = act_num
+cont_num.act = act_num
 
 ----
-cont_num = Contact.find_by(cont_num: 'con_100')
-cont_num.account
-act_num = Account.find_by(act_num: 'ac_100')
+cont_num = Cont.find_by(cont_num: 'con_100')
+cont_num.act
+act_num = Act.find_by(act_num: 'ac_100')
 ----
 
 
 
 $$$$$$ Special Query Starts $$$$$$
 
-act_name_raw = 'Account 300'
+act_name_raw = 'Act 300'
 phone_raw = '300-300-3000'
 url_raw = 'http://www.300.com'
 full_raw = '300 Main St, Austin, TX, 78735'
 
-act = Account.find_or_create_by(act_name: act_name_raw)
+act = Act.find_or_create_by(act_name: act_name_raw)
 act.phones << Phone.find_or_create_by(phone: phone_raw)
 act.url = Url.find_or_create_by(url: url_raw)
 act.address = Address.find_or_create_by(full: full_raw)
 
-act = Account.find_by(act_num: 'ac_100')
+act = Act.find_by(act_num: 'ac_100')
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Y contacts = Contact.includes(:account).all
-Y contacts.first.account.id
-Y Contact.includes(:account).where(accounts: {id: 1}).first
+Y conts = Cont.includes(:act).all
+Y conts.first.act.id
+Y Cont.includes(:act).where(acts: {id: 1}).first
 
-Y Contact.includes(:account).where(accounts: {id: 1}, contacts: {id: 1}).first
-Y Contact.includes(:account).where(accounts: {id: 1}).where(contacts: {id: 1}).first
+Y Cont.includes(:act).where(acts: {id: 1}, conts: {id: 1}).first
+Y Cont.includes(:act).where(acts: {id: 1}).where(conts: {id: 1}).first
 
-Y Contact.includes(:account).where(accounts: {id: 1}, contacts: {full_name: 'Contact 100'}).first
-Y Contact.includes(:account).where(accounts: {id: 1}).where(contacts: {full_name: 'Contact 100'}).first
+Y Cont.includes(:act).where(acts: {id: 1}, conts: {full_name: 'Cont 100'}).first
+Y Cont.includes(:act).where(acts: {id: 1}).where(conts: {full_name: 'Cont 100'}).first
 ===============
 
-Y Contact.find_by(full_name: 'Contact 100')
-Y Contact.includes(:account).find_by(full_name: 'Contact 100')
-Y Contact.includes(:account).find_by(accounts: {id: 1})
+Y Cont.find_by(full_name: 'Cont 100')
+Y Cont.includes(:act).find_by(full_name: 'Cont 100')
+Y Cont.includes(:act).find_by(acts: {id: 1})
 
-Y Contact.includes(:account).find_by(accounts: {id: 2}, contacts: {full_name: 'Contact 300'})
+Y Cont.includes(:act).find_by(acts: {id: 2}, conts: {full_name: 'Cont 300'})
 
 
 
 
 
 >> IMPORTANT - HOW ????<<
-contacts = Account.find(1).contacts
-contacts.find_or_create_by(full_name: 'why?')
+conts = Act.find(1).conts
+conts.find_or_create_by(full_name: 'why?')
 >> IMPORTANT <<
 
-contacts = Account.find(1).contacts
+conts = Act.find(1).conts
 
 
 
 
-why_not? = Contact.includes(:account).find_or_create_by(account: {id: 2}, contact: {full_name: 'Contact 300'})
+why_not? = Cont.includes(:act).find_or_create_by(act: {id: 2}, cont: {full_name: 'Cont 300'})
 
-but_this_does = Account.includes(:contacts).find_or_create_by(accounts: {id: 1}, contact: {full_name: 'Contact 300'})
+but_this_does = Act.includes(:conts).find_or_create_by(acts: {id: 1}, cont: {full_name: 'Cont 300'})
 
 
 
 
 
 ~~~~~~~~~~~~~~~~~~~~~
-act_num = Account.find_by(act_num: 'ac_300')
+act_num = Act.find_by(act_num: 'ac_300')
 cont_num_raw = 'con_303'
-full_name_raw = 'Contact 303'
-email_raw = '303@contact.com'
+full_name_raw = 'Cont 303'
+email_raw = '303@cont.com'
 job_title_raw = 'Job 303'
 phone_raw = '303-303-3030'
 
@@ -380,27 +380,27 @@ phone_raw = '303-303-3030'
 Post.includes(:author, { comments: { author: :gravatar } }).each do |post|
 
 act_num_id = 'ac_100'
-act_name = 'Account 100'
+act_name = 'Act 100'
 act_num = ActNum.find_or_create_by(act_num: act_num_id)
 
 act_num = ActNum.includes(:act_name, :url, :phones, :address).where(act_num: 'ac_100')
 act_num = ActNum.includes(:act_numable)
 Address.includes(:addressing)
 ActName.includes(:act_namings)
-Account.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
+Act.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
 ##############################
 
 
 
 ======
 
-account_id = cont.account.id #=> 1
-Contact.where
+act_id = cont.act.id #=> 1
+Cont.where
 
-cont = Contact.find_or_create_by(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont = Cont.find_or_create_by(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 
-cont = Contact.find_by(full_name: 'Contact 100')
-cont = Contact.find_by(account.id: 1)
+cont = Cont.find_by(full_name: 'Cont 100')
+cont = Cont.find_by(act.id: 1)
 
 
 $$$$$$ Special Query Ends $$$$$$
@@ -415,40 +415,40 @@ rails c
 Hirb.enable
 
 -----
-act = Account.all.first
+act = Act.all.first
 act.cont_nums
 
-cont = Contact.all.first
-cont.account
+cont = Cont.all.first
+cont.act
 
 
 ----- crazy...
 act_num_raw = 'ac_100'
-act_name_raw = 'Account 100'
+act_name_raw = 'Act 100'
 url_raw = 'http://www.100.com'
 full_raw = '100 Main St, Austin, TX, 78735'
 
-act_num = Account.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
+act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
 act_num.address = Address.find_or_create_by(full: full_raw)
 
 cont_num_raw = 'con_100'
-full_name_raw = 'Contact 100'
+full_name_raw = 'Cont 100'
 phone_raw = '100-100-1000'
 
-cont_num = Contact.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw)
+cont_num = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw)
 cont_num.phones << Phone.find_or_create_by(phone: phone_raw)
 
 
 act_num.address
 act_num.cont_nums << cont_num
-act_num.cont_nums |>> no such column: accountings.account_id
+act_num.cont_nums |>> no such column: actings.act_id
 
 ------ still crazy...
 
 cont_num.phones
-cont_num.account = act_num
-cont_num.account |>> no such column: accountings.account_id
+cont_num.act = act_num
+cont_num.act |>> no such column: actings.act_id
 
 
 +++++++++++ CRAZY ENDS +++++++++++
@@ -456,8 +456,8 @@ cont_num.account |>> no such column: accountings.account_id
 
 
 ==View Data
-Account.all
-Accounting.all
+Act.all
+Acting.all
 
 Phone.all
 Phoning.all
@@ -502,7 +502,7 @@ Phoning.all
 ############## OLD BELOW (polymorphic ONLY)##############
 ==============================================
 Steps to Create Polymorphic Associations for SDF
-Accounts, Contacts, Phones, Addresses, Urls
+Acts, Conts, Phones, Addresses, Urls
 ======================================
 http://karimbutt.github.io/blog/2015/01/03/step-by-step-guide-to-polymorphic-associations-in-rails/
 
@@ -548,14 +548,14 @@ config.autoload_paths += Dir["#{config.root}/lib/servicers"]
 
 ======================================
 4) CREATE MODULE
-PATH: app/controllers/concerns/account_parser.rb
+PATH: app/controllers/concerns/act_parser.rb
 ======================================
 
-module AccountParser
+module ActParser
   extend ActiveSupport::Concern
 
   def welcome
-    puts "Welcome to the AccountParser!"
+    puts "Welcome to the ActParser!"
   end
 
 end
@@ -564,21 +564,21 @@ end
 
 ======================================
 5) CREATE SERVICER CLASS
-PATH: lib/servicers/account_saver.rb
+PATH: lib/servicers/act_saver.rb
 ======================================
 
-## Call: AccountSaver.new.start_account_saver
+## Call: ActSaver.new.start_act_saver
 ## Description: ........
 
-class AccountSaver
-  include AccountParser
+class ActSaver
+  include ActParser
 
   def initialize
-    puts "\n\n== Welcome to the AccountSaver Class! ==\n\n"
+    puts "\n\n== Welcome to the ActSaver Class! ==\n\n"
   end
 
-  def start_account_saver
-    welcome #=> via AccountParser
+  def start_act_saver
+    welcome #=> via ActParser
     sampler
   end
 
@@ -600,26 +600,26 @@ end
 ======================================
 6) SCAFFOLD
 ======================================
-Account----
-  $ rails g scaffold Account act_num source act_name status
+Act----
+  $ rails g scaffold Act act_num src act_name sts
     t.index :act_num, unique: true
 
-  $ rails g scaffold Accounting
-    t.references :account, index: true
-    t.references :accountable, polymorphic: true, index: true
+  $ rails g scaffold Acting
+    t.references :act, index: true
+    t.references :actable, polymorphic: true, index: true
 
     (after 1st end)>>
-    add_index :accountings, [:accounting_id, :accountable_type, :accountable_id], unique: true, name: 'accountings_index' #=> And in Model!
+    add_index :actings, [:acting_id, :actable_type, :actable_id], unique: true, name: 'actings_index' #=> And in Model!
 
-Contact----
-  $ rails g scaffold Contact cont_num source status full_name first_name last_name email job_title
+Cont----
+  $ rails g scaffold Cont cont_num src sts full_name first_name last_name email job_title
     t.index :cont_num, unique: true
 
     (after 1st end)>>
-    add_index :contacts, [:full_name, :email, :job_title], unique: true, name: 'contact_index' #=> And in Model!
+    add_index :conts, [:full_name, :email, :job_title], unique: true, name: 'cont_index' #=> And in Model!
 
 Address----
-  $ rails g scaffold Address status street city state zip full pin
+  $ rails g scaffold Address sts street city state zip full pin
     t.index :full, unique: true
 
   $ rails g scaffold Addressing
@@ -630,7 +630,7 @@ Address----
     add_index :addressings, [:addressing_id, :addressable_type, :addressable_id], unique: true, name: 'addressings_index' #=> And in Model!
 
 Phone----
-  $ rails g scaffold Phone status phone
+  $ rails g scaffold Phone sts phone
     t.index :phone, unique: true
 
   $ rails g scaffold Phoning
@@ -641,7 +641,7 @@ Phone----
     add_index :phonings, [:phone_id, :phonable_type, :phonable_id], unique: true, name: 'phonings_index' #=> And in Model!  #=> And in Model!
 
 Url----
-  $ rails g scaffold Url status url
+  $ rails g scaffold Url sts url
     t.index :url, unique: true
 
   $ rails g scaffold Urling
@@ -655,13 +655,13 @@ Url----
 7) MODEL CLASSES
 ======================================
 
-Account
-  -Account
+Act
+  -Act
     validates :act_num, uniqueness: true
-    has_many :accountings
+    has_many :actings
 
-    # has_many :cont_nums, through: :accountings, source: :accountable, source_type: :Contact
-    has_many :contacts, through: :accountings, source: :accountable, source_type: :Contact
+    # has_many :cont_nums, through: :actings, src: :actable, src_type: :Cont
+    has_many :conts, through: :actings, src: :actable, src_type: :Cont
       #######################
 
     has_one :addressing, as: :addressable
@@ -673,32 +673,32 @@ Account
     has_one :urling, as: :urlable
     has_one :url, through: :urling
 
-  -Accounting
-    belongs_to :accountable, polymorphic: true
-    belongs_to :account
+  -Acting
+    belongs_to :actable, polymorphic: true
+    belongs_to :act
 
-    validates :account_id, :uniqueness => { :scope => [:accountable_type, :accountable_id] } #=> ALSO IN MIGRATION!
+    validates :act_id, :uniqueness => { :scope => [:actable_type, :actable_id] } #=> ALSO IN MIGRATION!
 
-Contact
-  -Contact
+Cont
+  -Cont
     validates :cont_num, uniqueness: true
 
     * validates :full_name, :uniqueness => { :scope => [:email, :job_title] } #=> ALSO IN MIGRATION!
 
-    has_many :contactings
+    has_many :contings
 
     has_many :phonings, as: :phonable
     has_many :phones, through: :phonings
 
-    has_one :accounting, as: :accountable
-    has_one :account, through: :accounting
+    has_one :acting, as: :actable
+    has_one :act, through: :acting
 
 Address
   -Address
     validates :full, uniqueness: true
 
     has_many :addressings
-    has_many :act_nums, through: :addressings, source: :addressable, source_type: :Account
+    has_many :act_nums, through: :addressings, src: :addressable, src_type: :Act
 
   -Addressing
     belongs_to :addressable, polymorphic: true
@@ -710,7 +710,7 @@ Phone
   -Phone
     validates :phone, uniqueness: true
     has_many :phonings
-    has_many :act_nums, through: :phonings, source: :phonable, source_type: :Account
+    has_many :act_nums, through: :phonings, src: :phonable, src_type: :Act
 
   -Phoning
     belongs_to :phonable, polymorphic: true
@@ -723,7 +723,7 @@ Url
     validates :url, uniqueness: true
     has_many :urlings
 
-    has_many :act_nums, through: :urlings, source: :urlable, source_type: :Account
+    has_many :act_nums, through: :urlings, src: :urlable, src_type: :Act
 
   -Urling
     belongs_to :urlable, polymorphic: true
@@ -737,35 +737,35 @@ Url
 
 >>>>  ################## Add Data ##################
 
->>>> Add accounts
+>>>> Add acts
 act_num_raw = 'ac_100'
-act_name_raw = 'Account 100'
+act_name_raw = 'Act 100'
 phone_raw = '100-100-1000'
 url_raw = 'http://www.100.com'
 full_raw = '100 Main St, Austin, TX, 78735'
 -------------------------------
 act_num_raw = 'ac_200'
-act_name_raw = 'Account 200'
+act_name_raw = 'Act 200'
 phone_raw = '200-200-2000'
 url_raw = 'http://www.200.com'
 full_raw = '200 Main St, Austin, TX, 78735'
 -------------------------------
 act_num_raw = 'ac_300'
-act_name_raw = 'Account 300'
+act_name_raw = 'Act 300'
 phone_raw = '300-300-3000'
 url_raw = 'http://www.300.com'
 full_raw = '300 Main St, Austin, TX, 78735'
 -------------------------------
-act_num = Account.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
+act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.phones << Phone.find_or_create_by(phone: phone_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
 act_num.address = Address.find_or_create_by(full: full_raw)
 
-act_num = Account.find_by(act_num: 'ac_100')
+act_num = Act.find_by(act_num: 'ac_100')
 
 ==View Data
-Account.all
-Accounting.all
+Act.all
+Acting.all
 
 Phone.all
 Phoning.all
@@ -778,129 +778,129 @@ Addressing.all
 
 ---------------
 
->>>> Add Contacts
+>>>> Add Conts
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_100')
+act_num = Act.find_by(act_num: 'ac_100')
 cont_num_raw = 'con_100'
-full_name_raw = 'Contact 100'
-email_raw = '100@contact.com'
+full_name_raw = 'Cont 100'
+email_raw = '100@cont.com'
 job_title_raw = 'Job 100'
 phone_raw = '100-100-1000'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_200')
+act_num = Act.find_by(act_num: 'ac_200')
 cont_num_raw = 'con_200'
-full_name_raw = 'Contact 200'
-email_raw = '200@contact.com'
+full_name_raw = 'Cont 200'
+email_raw = '200@cont.com'
 job_title_raw = 'Job 200'
 phone_raw = '200-200-2000'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_300')
+act_num = Act.find_by(act_num: 'ac_300')
 cont_num_raw = 'con_300'
-full_name_raw = 'Contact 300'
-email_raw = '300@contact.com'
+full_name_raw = 'Cont 300'
+email_raw = '300@cont.com'
 job_title_raw = 'Job 300'
 phone_raw = '300-300-3000'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_100')
+act_num = Act.find_by(act_num: 'ac_100')
 cont_num_raw = 'con_101'
-full_name_raw = 'Contact 101'
-email_raw = '101@contact.com'
+full_name_raw = 'Cont 101'
+email_raw = '101@cont.com'
 job_title_raw = 'Job 101'
 phone_raw = '100-101-1010'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_200')
+act_num = Act.find_by(act_num: 'ac_200')
 cont_num_raw = 'con_202'
-full_name_raw = 'Contact 202'
-email_raw = '202@contact.com'
+full_name_raw = 'Cont 202'
+email_raw = '202@cont.com'
 job_title_raw = 'Job 202'
 phone_raw = '202-202-2020'
 -------------------------------
-act_num = Account.find_by(act_num: 'ac_300')
+act_num = Act.find_by(act_num: 'ac_300')
 cont_num_raw = 'con_303'
-full_name_raw = 'Contact 303'
-email_raw = '303@contact.com'
+full_name_raw = 'Cont 303'
+email_raw = '303@cont.com'
 job_title_raw = 'Job 303'
 phone_raw = '303-303-3030'
 
-cont_num = Contact.find_or_create_by(cont_num: cont_num_raw)
+cont_num = Cont.find_or_create_by(cont_num: cont_num_raw)
 cont_num.update_attributes(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 
-cont = Contact.find_or_create_by(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont = Cont.find_or_create_by(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 cont.phones << Phone.find_or_create_by(phone: phone_raw)
-cont.account = act_num
+cont.act = act_num
 
 
-cont_num = Contact.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont_num = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 cont_num.phones << Phone.find_or_create_by(phone: phone_raw)
-cont_num.account = act_num
+cont_num.act = act_num
 
 ----
-cont_num = Contact.find_by(cont_num: 'con_100')
-cont_num.account
-act_num = Account.find_by(act_num: 'ac_100')
+cont_num = Cont.find_by(cont_num: 'con_100')
+cont_num.act
+act_num = Act.find_by(act_num: 'ac_100')
 ----
 
 
 
 $$$$$$ Special Query Starts $$$$$$
 
-act_name_raw = 'Account 300'
+act_name_raw = 'Act 300'
 phone_raw = '300-300-3000'
 url_raw = 'http://www.300.com'
 full_raw = '300 Main St, Austin, TX, 78735'
 
-act = Account.find_or_create_by(act_name: act_name_raw)
+act = Act.find_or_create_by(act_name: act_name_raw)
 act.phones << Phone.find_or_create_by(phone: phone_raw)
 act.url = Url.find_or_create_by(url: url_raw)
 act.address = Address.find_or_create_by(full: full_raw)
 
-act = Account.find_by(act_num: 'ac_100')
+act = Act.find_by(act_num: 'ac_100')
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Y contacts = Contact.includes(:account).all
-Y contacts.first.account.id
-Y Contact.includes(:account).where(accounts: {id: 1}).first
+Y conts = Cont.includes(:act).all
+Y conts.first.act.id
+Y Cont.includes(:act).where(acts: {id: 1}).first
 
-Y Contact.includes(:account).where(accounts: {id: 1}, contacts: {id: 1}).first
-Y Contact.includes(:account).where(accounts: {id: 1}).where(contacts: {id: 1}).first
+Y Cont.includes(:act).where(acts: {id: 1}, conts: {id: 1}).first
+Y Cont.includes(:act).where(acts: {id: 1}).where(conts: {id: 1}).first
 
-Y Contact.includes(:account).where(accounts: {id: 1}, contacts: {full_name: 'Contact 100'}).first
-Y Contact.includes(:account).where(accounts: {id: 1}).where(contacts: {full_name: 'Contact 100'}).first
+Y Cont.includes(:act).where(acts: {id: 1}, conts: {full_name: 'Cont 100'}).first
+Y Cont.includes(:act).where(acts: {id: 1}).where(conts: {full_name: 'Cont 100'}).first
 ===============
 
-Y Contact.find_by(full_name: 'Contact 100')
-Y Contact.includes(:account).find_by(full_name: 'Contact 100')
-Y Contact.includes(:account).find_by(accounts: {id: 1})
+Y Cont.find_by(full_name: 'Cont 100')
+Y Cont.includes(:act).find_by(full_name: 'Cont 100')
+Y Cont.includes(:act).find_by(acts: {id: 1})
 
-Y Contact.includes(:account).find_by(accounts: {id: 2}, contacts: {full_name: 'Contact 300'})
+Y Cont.includes(:act).find_by(acts: {id: 2}, conts: {full_name: 'Cont 300'})
 
 
 
 
 
 >> IMPORTANT - HOW ????<<
-contacts = Account.find(1).contacts
-contacts.find_or_create_by(full_name: 'why?')
+conts = Act.find(1).conts
+conts.find_or_create_by(full_name: 'why?')
 >> IMPORTANT <<
 
-contacts = Account.find(1).contacts
+conts = Act.find(1).conts
 
 
 
 
-why_not? = Contact.includes(:account).find_or_create_by(account: {id: 2}, contact: {full_name: 'Contact 300'})
+why_not? = Cont.includes(:act).find_or_create_by(act: {id: 2}, cont: {full_name: 'Cont 300'})
 
-but_this_does = Account.includes(:contacts).find_or_create_by(accounts: {id: 1}, contact: {full_name: 'Contact 300'})
+but_this_does = Act.includes(:conts).find_or_create_by(acts: {id: 1}, cont: {full_name: 'Cont 300'})
 
 
 
 
 
 ~~~~~~~~~~~~~~~~~~~~~
-act_num = Account.find_by(act_num: 'ac_300')
+act_num = Act.find_by(act_num: 'ac_300')
 cont_num_raw = 'con_303'
-full_name_raw = 'Contact 303'
-email_raw = '303@contact.com'
+full_name_raw = 'Cont 303'
+email_raw = '303@cont.com'
 job_title_raw = 'Job 303'
 phone_raw = '303-303-3030'
 
@@ -914,27 +914,27 @@ phone_raw = '303-303-3030'
 Post.includes(:author, { comments: { author: :gravatar } }).each do |post|
 
 act_num_id = 'ac_100'
-act_name = 'Account 100'
+act_name = 'Act 100'
 act_num = ActNum.find_or_create_by(act_num: act_num_id)
 
 act_num = ActNum.includes(:act_name, :url, :phones, :address).where(act_num: 'ac_100')
 act_num = ActNum.includes(:act_numable)
 Address.includes(:addressing)
 ActName.includes(:act_namings)
-Account.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
+Act.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
 ##############################
 
 
 
 ======
 
-account_id = cont.account.id #=> 1
-Contact.where
+act_id = cont.act.id #=> 1
+Cont.where
 
-cont = Contact.find_or_create_by(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont = Cont.find_or_create_by(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 
-cont = Contact.find_by(full_name: 'Contact 100')
-cont = Contact.find_by(account.id: 1)
+cont = Cont.find_by(full_name: 'Cont 100')
+cont = Cont.find_by(act.id: 1)
 
 
 $$$$$$ Special Query Ends $$$$$$
@@ -949,40 +949,40 @@ rails c
 Hirb.enable
 
 -----
-act = Account.all.first
+act = Act.all.first
 act.cont_nums
 
-cont = Contact.all.first
-cont.account
+cont = Cont.all.first
+cont.act
 
 
 ----- crazy...
 act_num_raw = 'ac_100'
-act_name_raw = 'Account 100'
+act_name_raw = 'Act 100'
 url_raw = 'http://www.100.com'
 full_raw = '100 Main St, Austin, TX, 78735'
 
-act_num = Account.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
+act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
 act_num.address = Address.find_or_create_by(full: full_raw)
 
 cont_num_raw = 'con_100'
-full_name_raw = 'Contact 100'
+full_name_raw = 'Cont 100'
 phone_raw = '100-100-1000'
 
-cont_num = Contact.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw)
+cont_num = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw)
 cont_num.phones << Phone.find_or_create_by(phone: phone_raw)
 
 
 act_num.address
 act_num.cont_nums << cont_num
-act_num.cont_nums |>> no such column: accountings.account_id
+act_num.cont_nums |>> no such column: actings.act_id
 
 ------ still crazy...
 
 cont_num.phones
-cont_num.account = act_num
-cont_num.account |>> no such column: accountings.account_id
+cont_num.act = act_num
+cont_num.act |>> no such column: actings.act_id
 
 
 +++++++++++ CRAZY ENDS +++++++++++
@@ -990,8 +990,8 @@ cont_num.account |>> no such column: accountings.account_id
 
 
 ==View Data
-Account.all
-Accounting.all
+Act.all
+Acting.all
 
 Phone.all
 Phoning.all
@@ -1010,7 +1010,7 @@ Phoning.all
 
 
 ======================================
-4a) Add Account Data (VIA RAILS CONSOLE)
+4a) Add Act Data (VIA RAILS CONSOLE)
 ======================================
 
 $ rails c
@@ -1018,28 +1018,28 @@ $ rails c
 # require 'hirb'
 # Hirb.enable
 
-========== Add Accounts:
+========== Add Acts:
 
 act_num_id = 'ac_100'
-act_name = 'Account 100'
+act_name = 'Act 100'
 phone = '100-100-1000'
 url = 'http://www.100.com'
 full = '100 Main St, Austin, TX, 10010'
 
 act_num_id = 'ac_200'
-act_name = 'Account 200'
+act_name = 'Act 200'
 phone = '200-200-2000'
 url = 'http://www.200.com'
 full = '200 Main St, Austin, TX, 20020'
 
 act_num_id = 'ac_300'
-act_name = 'Account 300'
+act_name = 'Act 300'
 phone = '300-300-3000'
 url = 'http://www.300.com'
 full = '300 Main St, Austin, TX, 30030'
 
 act_num_id = 'ac_400'
-act_name = 'Account 400'
+act_name = 'Act 400'
 phone = '400-400-4000'
 url = 'http://www.400.com'
 full = '400 Main St, Austin, TX, 40040'
@@ -1061,7 +1061,7 @@ ContNum.all.first.act_num
 ContNum.all.first.act_numing
 
 cont_num_id = 'cont_100'
-full_name = 'Contact Full Name 100'
+full_name = 'Cont Full Name 100'
 phone = '100-100-1000'
 
 cont_num = ContNum.find_or_create_by(cont_num: cont_num_id)
@@ -1113,19 +1113,19 @@ cont_num.act_numing
 ################
 
 cont_num_id = 'cont_100'
-full_name = 'Contact Full Name 800'
+full_name = 'Cont Full Name 800'
 phone = '800-100-1000'
 
 cont_num_id = 'cont_200'
-full_name = 'Contact Full Name 200'
+full_name = 'Cont Full Name 200'
 phone = '200-200-2000'
 
 cont_num_id = 'cont_300'
-full_name = 'Contact Full Name 300'
+full_name = 'Cont Full Name 300'
 phone = '300-300-3000'
 
 cont_num_id = 'cont_400'
-full_name = 'Contact Full Name 400'
+full_name = 'Cont Full Name 400'
 phone = '400-400-4000'
 
 
@@ -1140,7 +1140,7 @@ cont_num.phones << Phone.find_or_create_by(phone: phone)
 http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
 
 act_num_id = 'ac_100'
-act_name = 'Account 100'
+act_name = 'Act 100'
 
 act_num = ActNum.find_or_create_by(act_num: act_num_id)
 user.profiles.build(name: "Master of Lorem Ipsum").save
@@ -1167,7 +1167,7 @@ business.profile.name
 ########### Eager Loading ###########
 
 act_num_id = 'ac_100'
-act_name = 'Account 100'
+act_name = 'Act 100'
 act_num = ActNum.find_or_create_by(act_num: act_num_id)
 
 Post.includes(:author, { comments: { author: :gravatar } }).each do |post|
@@ -1191,7 +1191,7 @@ Address.includes(:addressing)
 
 ActName.includes(:act_namings)
 
-Account.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
+Act.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
 
 ======================================
 
@@ -1232,24 +1232,24 @@ act_num.address.full
 
 ======================================
 9) (Old - Reference) SERVICER CLASS
-PATH: lib/servicers/account_saver.rb
+PATH: lib/servicers/act_saver.rb
 ======================================
 
 
-## Call: AccountSaver.new.start_account_saver
+## Call: ActSaver.new.start_act_saver
 ## Description: ........
 
-class AccountSaver
-  # include AccountParser
+class ActSaver
+  # include ActParser
 
   def initialize
-    puts "\n\n== Welcome to the AccountSaver Class! ==\n\n"
+    puts "\n\n== Welcome to the ActSaver Class! ==\n\n"
   end
 
 
-  def start_account_saver
+  def start_act_saver
     # welcome
-    # query_account_hashes
+    # query_act_hashes
     sampler
   end
 
@@ -1265,11 +1265,11 @@ class AccountSaver
     act_num_id = 'ac_400'
     act_num_id = 'ac_500'
 
-    act_name = 'Account 100'
-    act_name = 'Account 200'
-    act_name = 'Account 300'
-    act_name = 'Account 400'
-    act_name = 'Account 500'
+    act_name = 'Act 100'
+    act_name = 'Act 200'
+    act_name = 'Act 300'
+    act_name = 'Act 400'
+    act_name = 'Act 500'
 
     phone = '888-888-8888'
     phone = '777-777-7777'
@@ -1287,32 +1287,32 @@ class AccountSaver
   #######################################
 
 
-  def query_account_hashes
-    puts "Querying Account Hash, then Saving to DB..."
-    # raw_account_hashes = []
-    # account_hash = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_source: 'HERE', account_status: 'HERE', account_source: 'HERE', url: 'HERE', url_status: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_address: 'HERE', address_pin: 'HERE', phone: 'HERE'}
+  def query_act_hashes
+    puts "Querying Act Hash, then Saving to DB..."
+    # raw_act_hashes = []
+    # act_hash = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_address: 'HERE', address_pin: 'HERE', phone: 'HERE'}
 
-    account_hash = {crm_id: 'ac_100', crm_id_category: 'account', crm_id_source: 'crm', account_status: 'imported', account_source: 'crm', url: 'http://www.sample123.com', url_status: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_address: '123 Main St., Happytown, AZ, 12345', address_pin: 's123-z12345', phone: '(123) 456-7890'}
+    act_hash = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_address: '123 Main St., Happytown, AZ, 12345', address_pin: 's123-z12345', phone: '(123) 456-7890'}
 
-    parse_account_hash(account_hash)
+    parse_act_hash(act_hash)
   end
 
-  def parse_account_hash(account_hash)
-    puts "Parsing Account Hash, then Saving to DB..."
+  def parse_act_hash(act_hash)
+    puts "Parsing Act Hash, then Saving to DB..."
 
     @crm_data = nil
-    @account_data = nil
+    @act_data = nil
     @url_data = nil
     @org_data = nil
     @address_data = nil
     @phone_data = nil
 
-    @crm_data = { crm_id: account_hash[:crm_id], category: account_hash[:crm_id_category], source: account_hash[:crm_id_source] }
-    @account_data = { status: account_hash[:account_status], source: account_hash[:account_source] }
-    @url_data = { url: account_hash[:url], status: account_hash[:url_status] }
-    @org_data = { name: account_hash[:org_name] }
-    @address_data = { street: account_hash[:street], city: account_hash[:city], zip: account_hash[:zip], state: account_hash[:state], full_address: account_hash[:full_address], address_pin: account_hash[:address_pin] }
-    @phone_data = { phone: account_hash[:phone] }
+    @crm_data = { crm_id: act_hash[:crm_id], category: act_hash[:crm_id_category], src: act_hash[:crm_id_src] }
+    @act_data = { sts: act_hash[:act_sts], src: act_hash[:act_src] }
+    @url_data = { url: act_hash[:url], sts: act_hash[:url_sts] }
+    @org_data = { name: act_hash[:org_name] }
+    @address_data = { street: act_hash[:street], city: act_hash[:city], zip: act_hash[:zip], state: act_hash[:state], full_address: act_hash[:full_address], address_pin: act_hash[:address_pin] }
+    @phone_data = { phone: act_hash[:phone] }
 
     save_or_update_db
   end
@@ -1327,63 +1327,63 @@ class AccountSaver
   ################################
 
   def save_or_update_db
-    # Account.where(whatever: "condition").includes(:idnums)
-    # Account.all.includes(:idnums).map(&:idnums)
-    # Account.includes(:idnums).map(&:idnums)
-    # Account.includes(:idnums).where(idnums: {crm_id: 'ac_100'})
-    # Account.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
-    # crm_id_status = Crm.find_by(crm_id: @crm_data[:crm_id]).present?
+    # Act.where(whatever: "condition").includes(:idnums)
+    # Act.all.includes(:idnums).map(&:idnums)
+    # Act.includes(:idnums).map(&:idnums)
+    # Act.includes(:idnums).where(idnums: {crm_id: 'ac_100'})
+    # Act.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
+    # crm_id_sts = Crm.find_by(crm_id: @crm_data[:crm_id]).present?
 
-    # Account.includes(:idnums).where(idnums: {crm_id: 'ac_100'})
+    # Act.includes(:idnums).where(idnums: {crm_id: 'ac_100'})
     # Crm.find_by(crm_id: 'ac_100')
     #
-    # Account.includes(:idnums).where(idnums: {crm_id: 'ac_100'})
+    # Act.includes(:idnums).where(idnums: {crm_id: 'ac_100'})
     #
     # User.create_with(last_name: 'Johansson').find_or_create_by(first_name: 'Scarlett')
     #
     # Crm.find_by(crm_id: 'ac_100')
     #
-    # , account_status: 'imported', account_source: 'crm'
+    # , act_sts: 'imported', act_src: 'crm'
     #
-    # Account.find_or_create_by(status: 'imported', source: 'crm')
+    # Act.find_or_create_by(sts: 'imported', src: 'crm')
     #
-    # .includes(:idnums).find_or_create_by(idnums: {crm_id: 'ac_100', crm_id_category: 'account', crm_id_source: 'crm'})
+    # .includes(:idnums).find_or_create_by(idnums: {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm'})
 
 
 
 
 
-    # # crm_id_status = Crm.find_by(crm_id: 'ac_100').present?
-    # crm_id_status = Crm.find_by(crm_id: @crm_data[:crm_id]).present?
+    # # crm_id_sts = Crm.find_by(crm_id: 'ac_100').present?
+    # crm_id_sts = Crm.find_by(crm_id: @crm_data[:crm_id]).present?
     #
-    # if crm_id_status == false
-    #   puts "Account CRM ID: Unique - Saving to DB!"
-    #   account = Account.create(@account_data)
-    #   account.idnums << Crm.create(@crm_data)
+    # if crm_id_sts == false
+    #   puts "Act CRM ID: Unique - Saving to DB!"
+    #   act = Act.create(@act_data)
+    #   act.idnums << Crm.create(@crm_data)
     #
-    #   account.orgs << Org.find_or_create_by(@org_data)
-    #   account.urls << Url.find_or_create_by(@url_data)
-    #   account.phones << Phone.find_or_create_by(@phone_data)
-    #   account.addresses << Address.find_or_create_by(@address_data)
+    #   act.orgs << Org.find_or_create_by(@org_data)
+    #   act.urls << Url.find_or_create_by(@url_data)
+    #   act.phones << Phone.find_or_create_by(@phone_data)
+    #   act.addresses << Address.find_or_create_by(@address_data)
     # else
-    #   puts "Account CRM ID: Duplicate - Rollback"
+    #   puts "Act CRM ID: Duplicate - Rollback"
     # end
 
 
-    # crm_id_status = Crm.find_by(crm_id: 'ac_100').present?
-    crm_id_status = Crm.find_by(crm_id: @crm_data[:crm_id]).present?
+    # crm_id_sts = Crm.find_by(crm_id: 'ac_100').present?
+    crm_id_sts = Crm.find_by(crm_id: @crm_data[:crm_id]).present?
 
-    if crm_id_status == false
-      puts "Account CRM ID: Unique - Saving to DB!"
-      account = Account.create(@account_data)
-      account.idnums << Crm.create(@crm_data)
+    if crm_id_sts == false
+      puts "Act CRM ID: Unique - Saving to DB!"
+      act = Act.create(@act_data)
+      act.idnums << Crm.create(@crm_data)
 
-      account.orgs << Org.find_or_create_by(@org_data)
-      account.urls << Url.find_or_create_by(@url_data)
-      account.phones << Phone.find_or_create_by(@phone_data)
-      account.addresses << Address.find_or_create_by(@address_data)
+      act.orgs << Org.find_or_create_by(@org_data)
+      act.urls << Url.find_or_create_by(@url_data)
+      act.phones << Phone.find_or_create_by(@phone_data)
+      act.addresses << Address.find_or_create_by(@address_data)
     else
-      puts "Account CRM ID: Duplicate - Rollback"
+      puts "Act CRM ID: Duplicate - Rollback"
     end
 
   end

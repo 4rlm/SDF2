@@ -2,20 +2,20 @@
 
 one:
   source: MyString
-  status: MyString
-  account_id: 1
+  sts: MyString
+  act_id: 1
   crm_cont_num: MyString
   first_name: MyString
   last_name: MyString
   email: MyString
-  account: one
+  act: one
 
 two:
   source: MyString
-  status: MyString
-  account_id: 1
+  sts: MyString
+  act_id: 1
   crm_cont_num: MyString
   first_name: MyString
   last_name: MyString
   email: MyString
-  account: two
+  act: two

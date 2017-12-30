@@ -37,13 +37,13 @@ end
 
 
 **********
-scraped_contacts_sts_checker on indexer_service (line 576)
+scraped_conts_sts_checker on indexer_service (line 576)
 
 
 ***********
 New Feature: migrate_address_to_staffers
 on indexer_service
-# Will be button in admin to migrate rt addresses into each contact in staffers.
+# Will be button in admin to migrate rt addresses into each cont in staffers.
 
 migrate_address_to_staffers
 migrate_address_to_staffers_btn

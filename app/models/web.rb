@@ -1,8 +1,8 @@
 class Web < ApplicationRecord
 
   has_many :webings
-  has_many :accounts, through: :webings, source: :webable, source_type: :Account
-  has_many :contacts, through: :webings, source: :webable, source_type: :Contact
+  has_many :acts, through: :webings, source: :webable, source_type: :Act
+  has_many :conts, through: :webings, source: :webable, source_type: :Cont
   has_many :whos, through: :webings, source: :webable, source_type: :Who
 
   has_many :textings, as: :textable

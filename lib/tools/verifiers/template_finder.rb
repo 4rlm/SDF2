@@ -19,8 +19,8 @@ class TemplateFinder
     @stage2_workers = 3 #=> Divide format_query_results into groups of x.
     # @dj_wait_time = 5 #=> How often to check dj queue count.
 
-    # @indexer = Indexer.where(id: id).select(:id, :indexer_status, :clean_url, :template, :template_date, :template_status).first
-    # raw_query = Web.where.not(archived: TRUE, temp_status: nil).order("updated_at ASC").pluck(:id)
+    # @indexer = Indexer.where(id: id).select(:id, :indexer_sts, :clean_url, :template, :template_date, :template_sts).first
+    # raw_query = Web.where.not(archived: TRUE, temp_sts: nil).order("updated_at ASC").pluck(:id)
     raw_query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
 
     @raw_query_count = raw_query.count
@@ -28,7 +28,7 @@ class TemplateFinder
     @timeout = 5
     @dj_wait_time = @timeout
     @round = 1
-    @timeout_web_status = 'timeout1'
+    @timeout_web_sts = 'timeout1'
 
     ## TEMPORARILY BYPASSING iterate_raw_query B/C IT'S DOING BIG JOB NOW ##
     # iterate_raw_query(raw_query) # via ComplexQueryIterator
@@ -41,7 +41,7 @@ class TemplateFinder
 
   def template_starter(id)
 
-    # @temp_status = @web_obj.temp_status  # After migration, uncomment.
+    # @temp_sts = @web_obj.temp_sts  # After migration, uncomment.
     @web_obj = Web.find(id)
     @url = @web_obj.url
     @current_template = @web_obj.templates&.first&.template_name
@@ -96,10 +96,10 @@ class TemplateFinder
     puts "\n\n@new_template: #{@new_template}"
     binding.pry
 
-    get_result_status
-    puts "\n\n#{"="*30}\ntemplate_status: '#{@template_status}'\nurl: '#{@url}'\ncurrent_template: '#{@current_template}'\nnew_template: '#{@new_template}'\n\n"
+    get_result_sts
+    puts "\n\n#{"="*30}\ntemplate_sts: '#{@template_sts}'\nurl: '#{@url}'\ncurrent_template: '#{@current_template}'\nnew_template: '#{@new_template}'\n\n"
 
-    @indexer.update_attributes(indexer_status: "TemplateFinder", template: @new_template, template_date: DateTime.now, template_status: @template_status)
+    @indexer.update_attributes(indexer_sts: "TemplateFinder", template: @new_template, template_date: DateTime.now, template_sts: @template_sts)
 
     if id == @last_id
       puts "\n\n===== Last ID: #{id}===== \n\n"
@@ -107,12 +107,12 @@ class TemplateFinder
     end
   end
 
-  def get_result_status
+  def get_result_sts
     @current_template = @indexer.template
     if @current_template && @current_template == @new_template
-      @template_status = "Same"
+      @template_sts = "Same"
     else
-      @template_status = "Updated"
+      @template_sts = "Updated"
     end
   end
 

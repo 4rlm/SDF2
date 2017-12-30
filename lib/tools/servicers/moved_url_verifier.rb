@@ -28,7 +28,7 @@
 #   def generate_query
 #     raw_query = Indexer
 #     .select(:id)
-#     .where.not(indexer_status: "Archived")
+#     .where.not(indexer_sts: "Archived")
 #     .where(url_redirect_date: nil)
 #
 #     iterate_raw_query(raw_query) #=> Method is in ComplexQueryIterator.
@@ -39,20 +39,20 @@
 #   #############################################
 #
 #   def template_starter(id)
-#     @indexer = Indexer.where(id: id).select(:id, :raw_url, :clean_url, :indexer_status, :redirect_status).first
+#     @indexer = Indexer.where(id: id).select(:id, :raw_url, :clean_url, :indexer_sts, :redirect_sts).first
 #     @raw_url = @indexer.clean_url #=> Verifying clean_url still valid. (vs running raw_url)
-#     @indexer_status = @indexer.indexer_status
-#     @redirect_status = @indexer.redirect_status
+#     @indexer_sts = @indexer.indexer_sts
+#     @redirect_sts = @indexer.redirect_sts
 #     start_curl
 #     db_updater(id)
 #   end
 #
 #   def get_curl_response
-#     @indexer_status = "RD Result"
+#     @indexer_sts = "RD Result"
 #     if @raw_url != @curl_url
-#       @redirect_status = "Updated"
+#       @redirect_sts = "Updated"
 #     else
-#       @redirect_status = "Same"
+#       @redirect_sts = "Same"
 #     end
 #   end
 #
@@ -60,13 +60,13 @@
 #     puts "DB raw_url: #{@raw_url}"
 #     get_curl_response if @curl_url
 #     # puts "NEW curl_url: #{@curl_url}"
-#     puts "NEW indexer_status: #{@indexer_status}"
-#     puts "NEW redirect_status: #{@redirect_status}"
+#     puts "NEW indexer_sts: #{@indexer_sts}"
+#     puts "NEW redirect_sts: #{@redirect_sts}"
 #     puts "#{"="*30}\n\n"
 #
-#     @indexer.update_attributes(url_redirect_date: DateTime.now, indexer_status: @indexer_status, redirect_status: @redirect_status, clean_url: @curl_url)
+#     @indexer.update_attributes(url_redirect_date: DateTime.now, indexer_sts: @indexer_sts, redirect_sts: @redirect_sts, clean_url: @curl_url)
 #
-#     # @indexer = Indexer.where(id: id).select(:id, :raw_url, :clean_url, :indexer_status, :redirect_status).first
+#     # @indexer = Indexer.where(id: id).select(:id, :raw_url, :clean_url, :indexer_sts, :redirect_sts).first
 #     # puts @indexer.inspect
 #
 #     if id == @last_id

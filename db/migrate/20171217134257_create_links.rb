@@ -4,7 +4,7 @@ class CreateLinks < ActiveRecord::Migration[5.1]
 
       t.string :link, index: true, unique: true
       t.string :link_type
-      t.string :link_status
+      t.string :link_sts
 
       t.timestamps
     end

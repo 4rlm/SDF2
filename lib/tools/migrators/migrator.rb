@@ -1,15 +1,15 @@
-%w{uni_account_migrator uni_contact_migrator uni_web_migrator}.each { |x| require x }
+%w{uni_act_migrator uni_cont_migrator uni_web_migrator}.each { |x| require x }
 
 class Migrator
   # extend ActiveSupport::Concern
-  include UniAccountMigrator
-  include UniContactMigrator
+  include UniActMigrator
+  include UniContMigrator
   include UniWebMigrator
   # include WebMigrator
 
   ### To call any of the three UniMigrator Modules ###
-  #Call: Migrator.new.migrate_uni_accounts
-  #Call: Migrator.new.migrate_uni_contacts
+  #Call: Migrator.new.migrate_uni_acts
+  #Call: Migrator.new.migrate_uni_conts
   #Call: Migrator.new.migrate_uni_webs
 
   ### CAREFUL!!! BELOW METHODS BEING USED IN EACH UNI_MIGRATOR MODULE ###
@@ -22,7 +22,7 @@ class Migrator
   end
 
 
-  ## Used for Tables where we need to first find by one attribute, then save or update several other attributes like Account or Contact.
+  ## Used for Tables where we need to first find by one attribute, then save or update several other attributes like Act or Cont.
   def save_complex_obj(model, attr_hash, obj_hash)
     obj_hash.delete_if { |key, value| value.blank? }
     obj = model.classify.constantize.find_by(attr_hash)
@@ -36,7 +36,7 @@ class Migrator
   def create_obj_parent_assoc(model, obj, parent)
     if model.present? && obj.present? && parent.present?
       parent.send(model.pluralize.to_sym) << obj if !parent.send(model.pluralize.to_sym).include?(obj)
-      #Ex: account.phones << phone_obj if !account.phones.include?(phone_obj)
+      #Ex: act.phones << phone_obj if !act.phones.include?(phone_obj)
     end
   end
 

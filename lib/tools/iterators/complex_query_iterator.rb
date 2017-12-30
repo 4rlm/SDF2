@@ -8,8 +8,8 @@
 ######### Delayed Job #########
 # $ rake jobs:clear
 
-# Call: StafferService.new.start_contact_scraper
-# Call: ContactScraper.new.cs_starter
+# Call: StafferService.new.start_cont_scraper
+# Call: ContScraper.new.cs_starter
 
 module ComplexQueryIterator
   # extend ActiveSupport::Concern

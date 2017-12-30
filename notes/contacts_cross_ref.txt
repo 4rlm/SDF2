@@ -1,9 +1,9 @@
-class CreateContacts < ActiveRecord::Migration[5.1]
+class CreateConts < ActiveRecord::Migration[5.1]
   def change
-    create_table :contacts do |t|
+    create_table :conts do |t|
       t.string :cont_num
-      t.string :source
-      t.string :status
+      t.string :src
+      t.string :sts
       t.string :full_name
       t.string :first_name
       t.string :last_name
@@ -14,28 +14,28 @@ class CreateContacts < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
-    add_index :contacts, [:full_name, :email, :job_title], unique: true, name: 'contact_index' #=> And in Model!
+    add_index :conts, [:full_name, :email, :job_title], unique: true, name: 'cont_index' #=> And in Model!
 
-    # add_index :contacts, [:full_name, :cont_num, :email, :job_title], unique: true, name: 'contact_index' #=> And in Model!
+    # add_index :conts, [:full_name, :cont_num, :email, :job_title], unique: true, name: 'cont_index' #=> And in Model!
   end
 end
 
 ###################
 
-class Contact < ApplicationRecord
+class Cont < ApplicationRecord
   validates :cont_num, uniqueness: true
 
   validates :full_name, :uniqueness => { :scope => [:email, :job_title] } #=> ALSO IN MIGRATION!
 
   # validates :full_name, :uniqueness => { :scope => [:cont_num, :email, :job_title] } #=> ALSO IN MIGRATION!
 
-  has_many :contactings
+  has_many :contings
 
   has_many :phonings, as: :phonable
   has_many :phones, through: :phonings
 
-  has_one :accounting, as: :accountable
-  has_one :account, through: :accounting
+  has_one :acting, as: :actable
+  has_one :act, through: :acting
 end
 
 ########################

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StarAccountTest < ActiveSupport::TestCase
+class StarActTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

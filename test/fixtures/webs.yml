@@ -2,14 +2,14 @@
 
 one:
   source: MyString
-  status: MyString
+  sts: MyString
   url: MyString
   staff_page: MyString
   locations_page: MyString
 
 two:
   source: MyString
-  status: MyString
+  sts: MyString
   url: MyString
   staff_page: MyString
   locations_page: MyString

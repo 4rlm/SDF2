@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StarContactTest < ActiveSupport::TestCase
+class StarContTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

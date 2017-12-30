@@ -30,7 +30,7 @@ module UrlRedirector
           end
         end
       rescue Timeout::Error
-        updated_hash = { web_status: @timeout_web_status, updated_at: Time.now }
+        updated_hash = { web_sts: @timeout_web_sts, updated_at: Time.now }
         @web_obj.update_attributes(updated_hash)
         # Process.kill("QUIT", @iterate_raw_query_pid)
       end
@@ -53,19 +53,19 @@ module UrlRedirector
   end
 
   def error_parser
-    puts "ENTERED ERROR PARSER - CHECK @result.status"
+    puts "ENTERED ERROR PARSER - CHECK @result.sts"
     @curl_url = nil
 
     if @error_message.include?("SSL connect error")
-      @web_status = "Error: SSL"
+      @web_sts = "Error: SSL"
     elsif @error_message.include?("Couldn't resolve host name")
-      @web_status = "Error: Host"
+      @web_sts = "Error: Host"
     elsif @error_message.include?("Peer certificate")
-      @web_status = "Error: Certificate"
+      @web_sts = "Error: Certificate"
     elsif @error_message.include?("Failure when receiving data")
-      @web_status = "Error: Transfer"
+      @web_sts = "Error: Transfer"
     else
-      @web_status = "Error: Undefined"
+      @web_sts = "Error: Undefined"
     end
   end
 

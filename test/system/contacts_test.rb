@@ -1,9 +1,9 @@
 require "application_system_test_case"
 
-class ContactsTest < ApplicationSystemTestCase
+class ContsTest < ApplicationSystemTestCase
   # test "visiting the index" do
-  #   visit contacts_url
+  #   visit conts_url
   #
-  #   assert_selector "h1", text: "Contact"
+  #   assert_selector "h1", text: "Cont"
   # end
 end

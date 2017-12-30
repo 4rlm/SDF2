@@ -32,17 +32,17 @@
     <type label="SET" length="1" sql="SET" quote=""/>
     <type label="Bit" length="0" sql="bit" quote=""/>
   </group>
-</datatypes><table x="329" y="31" name="account">
+</datatypes><table x="329" y="31" name="act">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="crm_acct_num" null="1" autoincrement="0">
+<row name="crm_act_num" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="source" null="1" autoincrement="0">
+<row name="src" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="status" null="1" autoincrement="0">
+<row name="sts" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="name" null="1" autoincrement="0">
@@ -52,21 +52,21 @@
 <part>id</part>
 </key>
 </table>
-<table x="753" y="74" name="contact">
+<table x="753" y="74" name="cont">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="account_id" null="1" autoincrement="0">
+<row name="act_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="account" row="id" />
+<default>NULL</default><relation table="act" row="id" />
 </row>
 <row name="crm_cont_num" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="source" null="1" autoincrement="0">
+<row name="src" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="status" null="1" autoincrement="0">
+<row name="sts" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="first_name" null="1" autoincrement="0">
@@ -86,10 +86,10 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="source" null="1" autoincrement="0">
+<row name="src" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="status" null="1" autoincrement="0">
+<row name="sts" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="street" null="1" autoincrement="0">
@@ -124,10 +124,10 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="source" null="1" autoincrement="0">
+<row name="src" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="status" null="1" autoincrement="0">
+<row name="sts" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="phone_number" null="1" autoincrement="0">
@@ -141,10 +141,10 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="source" null="1" autoincrement="0">
+<row name="src" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="status" null="1" autoincrement="0">
+<row name="sts" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="url" null="1" autoincrement="0">
@@ -178,13 +178,13 @@
 <part>id</part>
 </key>
 </table>
-<table x="323" y="232" name="account_web">
+<table x="323" y="232" name="act_web">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="account_id" null="1" autoincrement="0">
+<row name="act_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="account" row="id" />
+<default>NULL</default><relation table="act" row="id" />
 </row>
 <row name="web_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -194,13 +194,13 @@
 <part>id</part>
 </key>
 </table>
-<table x="94" y="228" name="account_address">
+<table x="94" y="228" name="act_address">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="account_id" null="1" autoincrement="0">
+<row name="act_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="account" row="id" />
+<default>NULL</default><relation table="act" row="id" />
 </row>
 <row name="address_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -210,7 +210,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="576" y="311" name="contact_title">
+<table x="576" y="311" name="cont_title">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -218,21 +218,21 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="title" row="id" />
 </row>
-<row name="contact_id" null="1" autoincrement="0">
+<row name="cont_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="contact" row="id" />
+<default>NULL</default><relation table="cont" row="id" />
 </row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="913" y="306" name="contact_description">
+<table x="913" y="306" name="cont_description">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="contact_id" null="1" autoincrement="0">
+<row name="cont_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="contact" row="id" />
+<default>NULL</default><relation table="cont" row="id" />
 </row>
 <row name="description_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>

@@ -44,7 +44,7 @@ module WebFormatter
 
   #CALL: WebFormatter.remove_invalid_links(link)
   def self.remove_invalid_links(link)
-    invalid_link_list = [':', '.co', '.net', '.gov', '.biz', '.edu', '(', '[', '@', '//', 'bye', 'hello', 'home', 'hours', 'form', 'regist', 'http', 'mail', 'mailto', 'none', 'test', 'twitter', 'www', 'yelp', 'login', 'feed', 'offer', 'service', 'graphic', 'phone', 'contact', 'event', 'youth', 'school', 'info', '%', '+', 'tire', 'business', 'review', 'inventory', 'download', '*', 'afri', 'drop', 'item', '.jpg', 'shop', 'face', 'book', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', '*', 'anounc', 'distrib', 'click', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
+    invalid_link_list = [':', '.co', '.net', '.gov', '.biz', '.edu', '(', '[', '@', '//', 'bye', 'hello', 'home', 'hours', 'form', 'regist', 'http', 'mail', 'mailto', 'none', 'test', 'twitter', 'www', 'yelp', 'login', 'feed', 'offer', 'service', 'graphic', 'phone', 'cont', 'event', 'youth', 'school', 'info', '%', '+', 'tire', 'business', 'review', 'inventory', 'download', '*', 'afri', 'drop', 'item', '.jpg', 'shop', 'face', 'book', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', '*', 'anounc', 'distrib', 'click', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
 
     make_link_nil = invalid_link_list.any? {|word| link&.include?(word) }  ## .try and &.
     link = nil if (make_link_nil || link == "/")
@@ -60,7 +60,7 @@ module WebFormatter
     text = text&.downcase   ## .try and &.
     text = text&.strip   ## .try and &.
 
-    invalid_text_list = ['none', '@', '.com', 'after', 'service', 'check', 'approved', 'deal', '?', 'inventory', 'truck', 'login', 'saving', 'event', 'holiday', 'light', 'shop', 'info', 'face', 'book', 'twitter', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'mail', 'contact', 'phone', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', 'tire', 'business', 'review', 'download', '*', 'afri', 'feed', 'anounc', 'distrib', 'click', 'charit', 'contrib', 'here', 'form', 'quote', 'quick', 'oil', 'regist', 'buy', 'pay', 'later', 'now', 'speci', 'commerc', 'sign', 'youth', 'blog', 'transla', 'golf', 'today', 'apply', 'employ', 'career', 'care', 'travel', '.jpg', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
+    invalid_text_list = ['none', '@', '.com', 'after', 'service', 'check', 'approved', 'deal', '?', 'inventory', 'truck', 'login', 'saving', 'event', 'holiday', 'light', 'shop', 'info', 'face', 'book', 'twitter', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'mail', 'cont', 'phone', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', 'tire', 'business', 'review', 'download', '*', 'afri', 'feed', 'anounc', 'distrib', 'click', 'charit', 'contrib', 'here', 'form', 'quote', 'quick', 'oil', 'regist', 'buy', 'pay', 'later', 'now', 'speci', 'commerc', 'sign', 'youth', 'blog', 'transla', 'golf', 'today', 'apply', 'employ', 'career', 'care', 'travel', '.jpg', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
 
     make_text_nil = invalid_text_list.any? {|word| text&.include?(word) }  ## .try and &.
     text = nil if make_text_nil
@@ -93,9 +93,9 @@ module WebFormatter
 
   # Call: WebFormatter.migrate_web_and_links(web_obj)
 
-  # IMPORTANT: MIGHT NEED TO ADAPT AND INTEGRATE THIS WITH Migrator.new.migrate_uni_accounts via lib/tools/migrators/uni_migrator.rb
+  # IMPORTANT: MIGHT NEED TO ADAPT AND INTEGRATE THIS WITH Migrator.new.migrate_uni_acts via lib/tools/migrators/uni_migrator.rb
   ## MIGHT NOT NEED LOGIC BELOW, BECAUSE STAFF_PAGE AND LOCATIONS_PAGE COLUMNS WILL BE REMOVED. ##
-  ## CONSIDER ADAPTING THIS FOR UniAccounts MIGRATOR TO PARSE UP WEB URL FIELDS INTO ASSOCIATIONS.
+  ## CONSIDER ADAPTING THIS FOR UniActs MIGRATOR TO PARSE UP WEB URL FIELDS INTO ASSOCIATIONS.
   ## 2 conditionals below format staff and locations page, then find or create Link object in links table, then save associations to web_obj.  Then remove staff and locations page link from Web object.
 
     url = format_url(web_obj.url)

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UniContactTest < ActiveSupport::TestCase
+class UniContTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

@@ -1,6 +1,6 @@
 class Address < ApplicationRecord
-  has_many :account_addresses, dependent: :destroy
-  has_many :accounts, through: :account_addresses
+  has_many :act_addresses, dependent: :destroy
+  has_many :acts, through: :act_addresses
 
   # attribute :full_address, :string
   # before_validation :full_address

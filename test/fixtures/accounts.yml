@@ -2,12 +2,12 @@
 
 one:
   source: MyString
-  status: MyString
-  crm_acct_num: MyString
+  sts: MyString
+  crm_act_num: MyString
   name: MyString
 
 two:
   source: MyString
-  status: MyString
-  crm_acct_num: MyString
+  sts: MyString
+  crm_act_num: MyString
   name: MyString

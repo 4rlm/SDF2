@@ -1,48 +1,48 @@
 require 'test_helper'
 
-class ContactsControllerTest < ActionDispatch::IntegrationTest
+class ContsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @contact = contacts(:one)
+    @cont = conts(:one)
   end
 
   test "should get index" do
-    get contacts_url
+    get conts_url
     assert_response :success
   end
 
   test "should get new" do
-    get new_contact_url
+    get new_cont_url
     assert_response :success
   end
 
-  test "should create contact" do
-    assert_difference('Contact.count') do
-      post contacts_url, params: { contact: { account_id: @contact.account_id, account_id: @contact.account_id, crm_cont_num: @contact.crm_cont_num, email: @contact.email, first_name: @contact.first_name, last_name: @contact.last_name, source: @contact.source, status: @contact.status } }
+  test "should create cont" do
+    assert_difference('Cont.count') do
+      post conts_url, params: { cont: { act_id: @cont.act_id, act_id: @cont.act_id, crm_cont_num: @cont.crm_cont_num, email: @cont.email, first_name: @cont.first_name, last_name: @cont.last_name, src: @cont.src, sts: @cont.sts } }
     end
 
-    assert_redirected_to contact_url(Contact.last)
+    assert_redirected_to cont_url(Cont.last)
   end
 
-  test "should show contact" do
-    get contact_url(@contact)
+  test "should show cont" do
+    get cont_url(@cont)
     assert_response :success
   end
 
   test "should get edit" do
-    get edit_contact_url(@contact)
+    get edit_cont_url(@cont)
     assert_response :success
   end
 
-  test "should update contact" do
-    patch contact_url(@contact), params: { contact: { account_id: @contact.account_id, account_id: @contact.account_id, crm_cont_num: @contact.crm_cont_num, email: @contact.email, first_name: @contact.first_name, last_name: @contact.last_name, source: @contact.source, status: @contact.status } }
-    assert_redirected_to contact_url(@contact)
+  test "should update cont" do
+    patch cont_url(@cont), params: { cont: { act_id: @cont.act_id, act_id: @cont.act_id, crm_cont_num: @cont.crm_cont_num, email: @cont.email, first_name: @cont.first_name, last_name: @cont.last_name, src: @cont.src, sts: @cont.sts } }
+    assert_redirected_to cont_url(@cont)
   end
 
-  test "should destroy contact" do
-    assert_difference('Contact.count', -1) do
-      delete contact_url(@contact)
+  test "should destroy cont" do
+    assert_difference('Cont.count', -1) do
+      delete cont_url(@cont)
     end
 
-    assert_redirected_to contacts_url
+    assert_redirected_to conts_url
   end
 end

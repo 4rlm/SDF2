@@ -58,11 +58,11 @@ module Importer
     CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
     CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
 
-    CsvTool.new.import_uni_seeds('uni_account', '4_crm_uni_accounts.csv')
-    CsvTool.new.import_uni_seeds('uni_account', '5_indexers_uni_accounts.csv')
-    CsvTool.new.import_uni_seeds('uni_account', '6_locations_uni_accounts.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '4_crm_uni_acts.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '5_indexers_uni_acts.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '6_locations_uni_acts.csv')
 
-    CsvTool.new.import_uni_seeds('uni_contact', '7_uni_contacts.csv')
+    CsvTool.new.import_uni_seeds('uni_cont', '7_uni_conts.csv')
 
     ########## STANDARD SEED IMPORT BELOW ##########
     CsvTool.new.import_standard_seeds('who', '8_whos.csv')

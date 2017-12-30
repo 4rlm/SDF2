@@ -16,7 +16,7 @@ class LinkTextGrabber
   def initialize
     puts "\n\n== Welcome to the LinkTextGrabber Class! ==\nGrabs or Verifies Location & Staff page Links and Text."
 
-    welcome_msg = "\n#1) Should visit each valid non-archived url to verify that current Link (location, staff) correct.\n#2) Verify valid link via url redirect with full link (looking for redirect and/or status code/error msg.)\n#3) If invalid link, try most common links per template to use first.  If not valid, try most common texts (href link text) per template.\n\n"
+    welcome_msg = "\n#1) Should visit each valid non-archived url to verify that current Link (location, staff) correct.\n#2) Verify valid link via url redirect with full link (looking for redirect and/or sts code/error msg.)\n#3) If invalid link, try most common links per template to use first.  If not valid, try most common texts (href link text) per template.\n\n"
 
     puts welcome_msg
   end

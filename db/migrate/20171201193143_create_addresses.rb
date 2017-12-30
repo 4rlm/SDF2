@@ -2,7 +2,7 @@ class CreateAddresses < ActiveRecord::Migration[5.1]
   def change
     create_table :addresses do |t|
 
-      t.string :address_status, index: true
+      t.string :address_sts, index: true
       t.string :street, index: true
       # t.string :unit, index: true
       t.string :city, index: true
