@@ -25,7 +25,7 @@ Admin Sections:
   > FormatterCaller
   phone_migrator_btn_path => services/indexer_service.rb => phone_migrator
   > GeoPhoneMigrator
-  address_formatter_btn_path => services/indexer_service.rb => address_formatter
+  adr_formatter_btn_path => services/indexer_service.rb => adr_formatter
   > CleanGeoMigrator
   geo_to_indexer_btn_path => services/indexer_service.rb => geo_to_indexer
   > MetaGeoMigrator

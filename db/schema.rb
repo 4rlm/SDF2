@@ -15,13 +15,13 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "act_addresses", force: :cascade do |t|
+  create_table "act_adrs", force: :cascade do |t|
     t.integer "act_id"
-    t.integer "address_id"
+    t.integer "adr_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["act_id"], name: "index_act_addresses_on_act_id"
-    t.index ["address_id"], name: "index_act_addresses_on_address_id"
+    t.index ["act_id"], name: "index_act_adrs_on_act_id"
+    t.index ["adr_id"], name: "index_act_adrs_on_adr_id"
   end
 
   create_table "act_webs", force: :cascade do |t|
@@ -46,21 +46,21 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.index ["crm_act_num"], name: "index_acts_on_crm_act_num"
   end
 
-  create_table "addresses", force: :cascade do |t|
-    t.string "address_sts"
+  create_table "adrs", force: :cascade do |t|
+    t.string "adr_sts"
     t.string "street"
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.string "address_pin"
+    t.string "adr_pin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["address_pin"], name: "index_addresses_on_address_pin"
-    t.index ["address_sts"], name: "index_addresses_on_address_sts"
-    t.index ["city"], name: "index_addresses_on_city"
-    t.index ["state"], name: "index_addresses_on_state"
-    t.index ["street"], name: "index_addresses_on_street"
-    t.index ["zip"], name: "index_addresses_on_zip"
+    t.index ["adr_pin"], name: "index_adrs_on_adr_pin"
+    t.index ["adr_sts"], name: "index_adrs_on_adr_sts"
+    t.index ["city"], name: "index_adrs_on_city"
+    t.index ["state"], name: "index_adrs_on_state"
+    t.index ["street"], name: "index_adrs_on_street"
+    t.index ["zip"], name: "index_adrs_on_zip"
   end
 
   create_table "brandings", force: :cascade do |t|
@@ -241,15 +241,15 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.string "act_src"
     t.string "act_sts"
     t.string "act_name"
-    t.integer "address_id"
-    t.string "address_sts"
+    t.integer "adr_id"
+    t.string "adr_sts"
     t.string "street"
     t.string "unit"
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.string "full_address"
-    t.string "address_pin"
+    t.string "full_adr"
+    t.string "adr_pin"
     t.float "latitude"
     t.float "longitude"
     t.string "phone"

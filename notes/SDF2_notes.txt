@@ -1,5 +1,5 @@
 
-act = Act.create(src: 'src_1', sts: 'sts_1', crm_act_num: 'crm_act_num_1', name: 'sample_act_1', conts_attributes: [src: 'src_1', sts: 'sts_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'], webs_attributes: [src: 'src_1', sts: 'sts_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'], addresses_attributes: [src: 'src_1', sts: 'sts_1', street: 'street_1', unit: 'unit_1', city: 'city_1', state: 'state_1', zip: 'zip_1', address_pin: 'address_pin_1', latitude: 'latitude_1', longitude: 'longitude_1'] )
+act = Act.create(src: 'src_1', sts: 'sts_1', crm_act_num: 'crm_act_num_1', name: 'sample_act_1', conts_attributes: [src: 'src_1', sts: 'sts_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'], webs_attributes: [src: 'src_1', sts: 'sts_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'], adrs_attributes: [src: 'src_1', sts: 'sts_1', street: 'street_1', unit: 'unit_1', city: 'city_1', state: 'state_1', zip: 'zip_1', adr_pin: 'adr_pin_1', latitude: 'latitude_1', longitude: 'longitude_1'] )
 
 ======================
 
@@ -12,7 +12,7 @@ act.conts << cont
 ========================
 
 
-address = Address.find_or_create_by(street: 'street_2')
+adr = Adr.find_or_create_by(street: 'street_2')
 
 
 ================
@@ -21,9 +21,9 @@ act = Act.create(
   src: 'src_1', sts: 'sts_1', crm_act_num: 'crm_act_num_1', name: 'sample_act_1',
   conts_attributes: [src: 'src_1', sts: 'sts_1', crm_cont_num: 'crm_cont_num_1', first_name: 'first_name_1', last_name: 'last_name_1', email: 'email_1'],
   webs_attributes: [src: 'src_1', sts: 'sts_1', url: 'url_1', staff_page: 'staff_page_1', locations_page: 'locations_page_1'],
-  addresses_attributes: [] )
+  adrs_attributes: [] )
 
-  act.assign_attributes(addresses_attributes: [])
+  act.assign_attributes(adrs_attributes: [])
 
 
   ==============================
@@ -37,16 +37,16 @@ rails g model StarAct
     t.string "crm_act_num"
     t.string "name"
 
-  Addresses
-    t.string "address_src"
-    t.string "address_sts"
+  Adrs
+    t.string "adr_src"
+    t.string "adr_sts"
     t.string "street"
     t.string "unit"
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.string "full_address"
-    t.string "address_pin"
+    t.string "full_adr"
+    t.string "adr_pin"
     t.float "latitude"
     t.float "longitude"
 

@@ -82,7 +82,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="110" y="382" name="address">
+<table x="110" y="382" name="adr">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -107,7 +107,7 @@
 <row name="zip" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="address_pin" null="1" autoincrement="0">
+<row name="adr_pin" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="latitude" null="1" autoincrement="0">
@@ -194,7 +194,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="94" y="228" name="act_address">
+<table x="94" y="228" name="act_adr">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -202,9 +202,9 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="act" row="id" />
 </row>
-<row name="address_id" null="1" autoincrement="0">
+<row name="adr_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="address" row="id" />
+<default>NULL</default><relation table="adr" row="id" />
 </row>
 <key type="PRIMARY" name="">
 <part>id</part>

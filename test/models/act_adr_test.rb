@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ActAddressTest < ActiveSupport::TestCase
+class ActAdrTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

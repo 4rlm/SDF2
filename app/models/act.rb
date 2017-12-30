@@ -3,9 +3,9 @@ class Act < ApplicationRecord
   has_many :conts
   accepts_nested_attributes_for :conts
 
-  has_many :act_addresses, dependent: :destroy
-  has_many :addresses, through: :act_addresses
-  accepts_nested_attributes_for :act_addresses, :addresses
+  has_many :act_adrs, dependent: :destroy
+  has_many :adrs, through: :act_adrs
+  accepts_nested_attributes_for :act_adrs, :adrs
 
   has_many :phonings, as: :phonable
   has_many :phones, through: :phonings

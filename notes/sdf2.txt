@@ -1,6 +1,6 @@
 Act
 Cont
-Address
+Adr
 Phone
 Web
 
@@ -9,7 +9,7 @@ Description
 
 Phoning
 ActWeb
-ActAddress
+ActAdr
 ContTitle
 ContDescription
 ========================
@@ -35,8 +35,8 @@ $ rails g scaffold Cont src sts act_id:integer crm_cont_num first_name last_name
 
 t.index :email, unique: true
 
-==Address==
-$ rails g scaffold Address src sts street unit city state zip address_pin latitude:float longitude:float
+==Adr==
+$ rails g scaffold Adr src sts street unit city state zip adr_pin latitude:float longitude:float
 
 ==Phone==
 $ rails g scaffold Phone src sts phone
@@ -53,7 +53,7 @@ $ rails g model Phoning phonable_type phone_id:integer phonable_id:integer
 
 $ rails g model ActWeb act_id:integer web_id:integer
 
-$ rails g model ActAddress act_id:integer address_id:integer
+$ rails g model ActAdr act_id:integer adr_id:integer
 
 $ rails g model ContTitle cont_id:integer title_id:integer
 
@@ -76,8 +76,8 @@ MODEL
   has_many :phonings, as: :phonable
   has_many :phones, through: :phonings
 
-  has_many :act_addresses, dependent: :destroy
-  has_many :addresses, through: :act_addresses
+  has_many :act_adrs, dependent: :destroy
+  has_many :adrs, through: :act_adrs
 
   has_many :act_webs, dependent: :destroy
   has_many :webs, through: :act_webs
@@ -97,11 +97,11 @@ MODEL
 
 
 
-== Address ==
-  has_many :act_addresses, dependent: :destroy
-  has_many :acts, through: :act_addresses
+== Adr ==
+  has_many :act_adrs, dependent: :destroy
+  has_many :acts, through: :act_adrs
 
-  def full_address
+  def full_adr
     [street, city, state, zip].compact.join(',')
   end
 
@@ -144,11 +144,11 @@ MODEL
   validates_uniqueness_of :act, scope: :website_id
 
 
-== ActAddress ==
+== ActAdr ==
   belongs_to :act
-  belongs_to :address
+  belongs_to :adr
 
-  validates_uniqueness_of :act, scope: :address_id
+  validates_uniqueness_of :act, scope: :adr_id
 
 
 == ContDescription ==

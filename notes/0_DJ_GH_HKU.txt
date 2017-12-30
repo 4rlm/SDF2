@@ -21,8 +21,8 @@
 	# StafferService.new.cs_starter
 
 ############ Runner Scripts ############
-	# $ rails runner db/scripts/staffer_address_migrator.rb
-	# $ heroku run rails runner db/scripts/staffer_address_migrator.rb --app bds-max
+	# $ rails runner db/scripts/staffer_adr_migrator.rb
+	# $ heroku run rails runner db/scripts/staffer_adr_migrator.rb --app bds-max
 
 ############
 	# $ rails runner db/scripts/staffer_scrape_date_migrator.rb

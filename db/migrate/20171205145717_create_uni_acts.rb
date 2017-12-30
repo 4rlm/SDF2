@@ -9,16 +9,16 @@ class CreateUniActs < ActiveRecord::Migration[5.1]
       t.string :act_sts
       t.string :act_name
 
-    # Addresses
-      t.integer :address_id
-      t.string :address_sts
+    # Adrs
+      t.integer :adr_id
+      t.string :adr_sts
       t.string :street
       t.string :unit
       t.string :city
       t.string :state
       t.string :zip
-      t.string :full_address
-      t.string :address_pin
+      t.string :full_adr
+      t.string :adr_pin
       t.float :latitude
       t.float :longitude
 

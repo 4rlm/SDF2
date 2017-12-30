@@ -20,7 +20,7 @@ Import Steps:
 5) Pend- Import to Act from who => CsvToolParser.new.import_acts
 6) Import to Conts from conts => CsvToolParser.new.import_conts
 7) Import to sts from combination across all max models.
-** Phones and addresses are imported with Act, so no need to do separately.
+** Phones and adrs are imported with Act, so no need to do separately.
 
 ======================================
 6) SCAFFOLD
@@ -34,11 +34,11 @@ Cont----(non-poly)
   $ rails g scaffold Cont act:references cont_num:uniq:index src sts full_name first_name last_name email job_title
     add_index :conts, [:full_name, :cont_num, :email, :job_title], unique: true, name: 'cont_index' #=> And in Model!
 
-Address----(poly)
-  $ rails g scaffold Address sts street city state zip full:uniq:index pin
+Adr----(poly)
+  $ rails g scaffold Adr sts street city state zip full:uniq:index pin
 
-  $ rails g scaffold Addressing address:references{index} addressable:references{polymorphic}:index
-    add_index :addressings, [:addressing_id, :addressable_type, :addressable_id], unique: true, name: 'addressings_index' #=> And in Model!
+  $ rails g scaffold Adring adr:references{index} adrable:references{polymorphic}:index
+    add_index :adrings, [:adring_id, :adrable_type, :adrable_id], unique: true, name: 'adrings_index' #=> And in Model!
 
 Phone----(poly)
   $ rails g scaffold Phone sts phone:uniq:index
@@ -75,8 +75,8 @@ Act
     has_many :conts
     #######################
 
-    has_one :addressing, as: :addressable
-    has_one :address, through: :addressing
+    has_one :adring, as: :adrable
+    has_one :adr, through: :adring
 
     has_many :phonings, as: :phonable
     has_many :phones, through: :phonings
@@ -84,7 +84,7 @@ Act
     has_one :urling, as: :urlable
     has_one :url, through: :urling
 
-    accepts_nested_attributes_for :conts, :address, :phones, :url
+    accepts_nested_attributes_for :conts, :adr, :phones, :url
     # accepts_nested_attributes_for :avatar, allow_destroy: true
 
 Cont
@@ -100,18 +100,18 @@ Cont
 
     accepts_nested_attributes_for :phones, allow_destroy: true
 
-Address
-  -Address
+Adr
+  -Adr
     validates :full, uniqueness: true
 
-    has_many :addressings
-    has_many :act_nums, through: :addressings, src: :addressable, src_type: :Act
+    has_many :adrings
+    has_many :act_nums, through: :adrings, src: :adrable, src_type: :Act
 
-  -Addressing
-    belongs_to :addressable, polymorphic: true
-    belongs_to :address
+  -Adring
+    belongs_to :adrable, polymorphic: true
+    belongs_to :adr
 
-    validates :address_id, :uniqueness => { :scope => [:addressable_type, :addressable_id] } #=> ALSO IN MIGRATION!
+    validates :adr_id, :uniqueness => { :scope => [:adrable_type, :adrable_id] } #=> ALSO IN MIGRATION!
 
 Phone
   -Phone
@@ -170,7 +170,7 @@ full_raw = '300 Main St, Austin, TX, 78735'
 act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.phones << Phone.find_or_create_by(phone: phone_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
-act_num.address = Address.find_or_create_by(full: full_raw)
+act_num.adr = Adr.find_or_create_by(full: full_raw)
 
 act_num = Act.find_by(act_num: 'ac_100')
 
@@ -184,8 +184,8 @@ Phoning.all
 Url.all
 Urling.all
 
-Address.all
-Addressing.all
+Adr.all
+Adring.all
 
 --------------- IMPORTANT !!!
 
@@ -318,7 +318,7 @@ full_raw = '300 Main St, Austin, TX, 78735'
 act = Act.find_or_create_by(act_name: act_name_raw)
 act.phones << Phone.find_or_create_by(phone: phone_raw)
 act.url = Url.find_or_create_by(url: url_raw)
-act.address = Address.find_or_create_by(full: full_raw)
+act.adr = Adr.find_or_create_by(full: full_raw)
 
 act = Act.find_by(act_num: 'ac_100')
 
@@ -383,9 +383,9 @@ act_num_id = 'ac_100'
 act_name = 'Act 100'
 act_num = ActNum.find_or_create_by(act_num: act_num_id)
 
-act_num = ActNum.includes(:act_name, :url, :phones, :address).where(act_num: 'ac_100')
+act_num = ActNum.includes(:act_name, :url, :phones, :adr).where(act_num: 'ac_100')
 act_num = ActNum.includes(:act_numable)
-Address.includes(:addressing)
+Adr.includes(:adring)
 ActName.includes(:act_namings)
 Act.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
 ##############################
@@ -430,7 +430,7 @@ full_raw = '100 Main St, Austin, TX, 78735'
 
 act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
-act_num.address = Address.find_or_create_by(full: full_raw)
+act_num.adr = Adr.find_or_create_by(full: full_raw)
 
 cont_num_raw = 'con_100'
 full_name_raw = 'Cont 100'
@@ -440,7 +440,7 @@ cont_num = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_r
 cont_num.phones << Phone.find_or_create_by(phone: phone_raw)
 
 
-act_num.address
+act_num.adr
 act_num.cont_nums << cont_num
 act_num.cont_nums |>> no such column: actings.act_id
 
@@ -502,7 +502,7 @@ Phoning.all
 ############## OLD BELOW (polymorphic ONLY)##############
 ==============================================
 Steps to Create Polymorphic Associations for SDF
-Acts, Conts, Phones, Addresses, Urls
+Acts, Conts, Phones, Adrs, Urls
 ======================================
 http://karimbutt.github.io/blog/2015/01/03/step-by-step-guide-to-polymorphic-associations-in-rails/
 
@@ -618,16 +618,16 @@ Cont----
     (after 1st end)>>
     add_index :conts, [:full_name, :email, :job_title], unique: true, name: 'cont_index' #=> And in Model!
 
-Address----
-  $ rails g scaffold Address sts street city state zip full pin
+Adr----
+  $ rails g scaffold Adr sts street city state zip full pin
     t.index :full, unique: true
 
-  $ rails g scaffold Addressing
-    t.references :address, index: true
-    t.references :addressable, polymorphic: true, index: true
+  $ rails g scaffold Adring
+    t.references :adr, index: true
+    t.references :adrable, polymorphic: true, index: true
 
     (after 1st end)>>
-    add_index :addressings, [:addressing_id, :addressable_type, :addressable_id], unique: true, name: 'addressings_index' #=> And in Model!
+    add_index :adrings, [:adring_id, :adrable_type, :adrable_id], unique: true, name: 'adrings_index' #=> And in Model!
 
 Phone----
   $ rails g scaffold Phone sts phone
@@ -664,8 +664,8 @@ Act
     has_many :conts, through: :actings, src: :actable, src_type: :Cont
       #######################
 
-    has_one :addressing, as: :addressable
-    has_one :address, through: :addressing
+    has_one :adring, as: :adrable
+    has_one :adr, through: :adring
 
     has_many :phonings, as: :phonable
     has_many :phones, through: :phonings
@@ -693,18 +693,18 @@ Cont
     has_one :acting, as: :actable
     has_one :act, through: :acting
 
-Address
-  -Address
+Adr
+  -Adr
     validates :full, uniqueness: true
 
-    has_many :addressings
-    has_many :act_nums, through: :addressings, src: :addressable, src_type: :Act
+    has_many :adrings
+    has_many :act_nums, through: :adrings, src: :adrable, src_type: :Act
 
-  -Addressing
-    belongs_to :addressable, polymorphic: true
-    belongs_to :address
+  -Adring
+    belongs_to :adrable, polymorphic: true
+    belongs_to :adr
 
-    validates :address_id, :uniqueness => { :scope => [:addressable_type, :addressable_id] } #=> ALSO IN MIGRATION!
+    validates :adr_id, :uniqueness => { :scope => [:adrable_type, :adrable_id] } #=> ALSO IN MIGRATION!
 
 Phone
   -Phone
@@ -759,7 +759,7 @@ full_raw = '300 Main St, Austin, TX, 78735'
 act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.phones << Phone.find_or_create_by(phone: phone_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
-act_num.address = Address.find_or_create_by(full: full_raw)
+act_num.adr = Adr.find_or_create_by(full: full_raw)
 
 act_num = Act.find_by(act_num: 'ac_100')
 
@@ -773,8 +773,8 @@ Phoning.all
 Url.all
 Urling.all
 
-Address.all
-Addressing.all
+Adr.all
+Adring.all
 
 ---------------
 
@@ -852,7 +852,7 @@ full_raw = '300 Main St, Austin, TX, 78735'
 act = Act.find_or_create_by(act_name: act_name_raw)
 act.phones << Phone.find_or_create_by(phone: phone_raw)
 act.url = Url.find_or_create_by(url: url_raw)
-act.address = Address.find_or_create_by(full: full_raw)
+act.adr = Adr.find_or_create_by(full: full_raw)
 
 act = Act.find_by(act_num: 'ac_100')
 
@@ -917,9 +917,9 @@ act_num_id = 'ac_100'
 act_name = 'Act 100'
 act_num = ActNum.find_or_create_by(act_num: act_num_id)
 
-act_num = ActNum.includes(:act_name, :url, :phones, :address).where(act_num: 'ac_100')
+act_num = ActNum.includes(:act_name, :url, :phones, :adr).where(act_num: 'ac_100')
 act_num = ActNum.includes(:act_numable)
-Address.includes(:addressing)
+Adr.includes(:adring)
 ActName.includes(:act_namings)
 Act.includes(:idnums, :phones).where(idnums: {crm_id: 'ac_100'}).where(phones: {phone: '(123) 456-7890'})
 ##############################
@@ -964,7 +964,7 @@ full_raw = '100 Main St, Austin, TX, 78735'
 
 act_num = Act.find_or_create_by(act_num: act_num_raw, act_name: act_name_raw)
 act_num.url = Url.find_or_create_by(url: url_raw)
-act_num.address = Address.find_or_create_by(full: full_raw)
+act_num.adr = Adr.find_or_create_by(full: full_raw)
 
 cont_num_raw = 'con_100'
 full_name_raw = 'Cont 100'
@@ -974,7 +974,7 @@ cont_num = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_r
 cont_num.phones << Phone.find_or_create_by(phone: phone_raw)
 
 
-act_num.address
+act_num.adr
 act_num.cont_nums << cont_num
 act_num.cont_nums |>> no such column: actings.act_id
 
@@ -1048,7 +1048,7 @@ act_num = ActNum.find_or_create_by(act_num: act_num_id)
 act_num.act_name = ActName.find_or_create_by(act_name: act_name)
 act_num.phones << Phone.find_or_create_by(phone: phone)
 act_num.url = Url.find_or_create_by(url: url)
-act_num.address = Address.find_or_create_by(full: full)
+act_num.adr = Adr.find_or_create_by(full: full)
 
 ################
 \\\\\\\\\\\\\\\
@@ -1175,19 +1175,19 @@ Post.includes(:author, { comments: { author: :gravatar } }).each do |post|
 
 ##############################
 
-act_num = ActNum.includes(:act_name, :url, :phones, :address).where(act_num: 'ac_100')
+act_num = ActNum.includes(:act_name, :url, :phones, :adr).where(act_num: 'ac_100')
 
 puts act_num.act_num
 puts act_name.act_name
 puts url.url
 puts phones.phone.first
-puts address.full
+puts adr.full
 
 #################
 
 act_num = ActNum.includes(:act_numable)
 
-Address.includes(:addressing)
+Adr.includes(:adring)
 
 ActName.includes(:act_namings)
 
@@ -1207,8 +1207,8 @@ ActNum.all
 ActName.all
 ActNaming.all
 
-Address.all
-Addressing.all
+Adr.all
+Adring.all
 
 Phone.all
 Phoning.all
@@ -1220,12 +1220,12 @@ act_num = ActNum.find_or_create_by(act_num: act_num_id)
 act_num.act_name
 act_num.phones
 act_num.url
-act_num.address
+act_num.adr
 
 act_num.act_name.act_name
 act_num.phones.first.phone
 act_num.url.url
-act_num.address.full
+act_num.adr.full
 ======================================
 
 
@@ -1290,9 +1290,9 @@ class ActSaver
   def query_act_hashes
     puts "Querying Act Hash, then Saving to DB..."
     # raw_act_hashes = []
-    # act_hash = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_address: 'HERE', address_pin: 'HERE', phone: 'HERE'}
+    # act_hash = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_adr: 'HERE', adr_pin: 'HERE', phone: 'HERE'}
 
-    act_hash = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_address: '123 Main St., Happytown, AZ, 12345', address_pin: 's123-z12345', phone: '(123) 456-7890'}
+    act_hash = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_adr: '123 Main St., Happytown, AZ, 12345', adr_pin: 's123-z12345', phone: '(123) 456-7890'}
 
     parse_act_hash(act_hash)
   end
@@ -1304,14 +1304,14 @@ class ActSaver
     @act_data = nil
     @url_data = nil
     @org_data = nil
-    @address_data = nil
+    @adr_data = nil
     @phone_data = nil
 
     @crm_data = { crm_id: act_hash[:crm_id], category: act_hash[:crm_id_category], src: act_hash[:crm_id_src] }
     @act_data = { sts: act_hash[:act_sts], src: act_hash[:act_src] }
     @url_data = { url: act_hash[:url], sts: act_hash[:url_sts] }
     @org_data = { name: act_hash[:org_name] }
-    @address_data = { street: act_hash[:street], city: act_hash[:city], zip: act_hash[:zip], state: act_hash[:state], full_address: act_hash[:full_address], address_pin: act_hash[:address_pin] }
+    @adr_data = { street: act_hash[:street], city: act_hash[:city], zip: act_hash[:zip], state: act_hash[:state], full_adr: act_hash[:full_adr], adr_pin: act_hash[:adr_pin] }
     @phone_data = { phone: act_hash[:phone] }
 
     save_or_update_db
@@ -1364,7 +1364,7 @@ class ActSaver
     #   act.orgs << Org.find_or_create_by(@org_data)
     #   act.urls << Url.find_or_create_by(@url_data)
     #   act.phones << Phone.find_or_create_by(@phone_data)
-    #   act.addresses << Address.find_or_create_by(@address_data)
+    #   act.adrs << Adr.find_or_create_by(@adr_data)
     # else
     #   puts "Act CRM ID: Duplicate - Rollback"
     # end
@@ -1381,7 +1381,7 @@ class ActSaver
       act.orgs << Org.find_or_create_by(@org_data)
       act.urls << Url.find_or_create_by(@url_data)
       act.phones << Phone.find_or_create_by(@phone_data)
-      act.addresses << Address.find_or_create_by(@address_data)
+      act.adrs << Adr.find_or_create_by(@adr_data)
     else
       puts "Act CRM ID: Duplicate - Rollback"
     end

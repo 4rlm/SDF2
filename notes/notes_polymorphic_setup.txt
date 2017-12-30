@@ -177,15 +177,15 @@ Url----
         t.references :full_name, index: true
         t.references :contable, polymorphic: true, index: true
 
-    Address----
-      $ rails g scaffold Address sts street city state zip full pin
+    Adr----
+      $ rails g scaffold Adr sts street city state zip full pin
         t.index :full, unique: true
 
-      $ rails g scaffold Addressing
+      $ rails g scaffold Adring
         t.references :full, index: true
-        t.references :addressable, polymorphic: true, index: true
+        t.references :adrable, polymorphic: true, index: true
 
-        (after 1st end)>> add_index :addressings, [:addressing_id, :addressable_id], unique: true  #=> And in Model!
+        (after 1st end)>> add_index :adrings, [:adring_id, :adrable_id], unique: true  #=> And in Model!
 
 
 ============
@@ -225,8 +225,8 @@ ActNum----(MAIN)
     # has_many :cont_numings, as: :cont_numable
     # has_many :cont_nums, through: :cont_numings
 
-    # has_one :addressing, as: :addressable
-    # has_one :address, through: :addressing
+    # has_one :adring, as: :adrable
+    # has_one :adr, through: :adring
     #######
 
   -ActNuming
@@ -279,18 +279,18 @@ Url----
     validates :urlable_id, uniqueness: true
     validates :url_id, :uniqueness => { scope: :urlable_id } #=> ALSO IN MIGRATION!
 
-  Address----
-    -Address
+  Adr----
+    -Adr
       validates :full, uniqueness: true
-      has_many :addressings
-      has_many :act_nums, through: :addressings, src: :addressable, src_type: :ActNum
+      has_many :adrings
+      has_many :act_nums, through: :adrings, src: :adrable, src_type: :ActNum
 
-    -Addressing
-      belongs_to :addressable, polymorphic: true
-      belongs_to :address
+    -Adring
+      belongs_to :adrable, polymorphic: true
+      belongs_to :adr
 
-      validates :addressable_id, uniqueness: true
-      validates :address_id, :uniqueness => { scope: :addressable_id } #=> ALSO IN MIGRATION!
+      validates :adrable_id, uniqueness: true
+      validates :adr_id, :uniqueness => { scope: :adrable_id } #=> ALSO IN MIGRATION!
 
 
 ==== later ====
@@ -315,8 +315,8 @@ Url----
         has_many :urlings, as: :urlable
         has_many :urls, through: :urlings
 
-        has_many :addressings, as: :addressable
-        has_many :addresses, through: :addressings
+        has_many :adrings, as: :adrable
+        has_many :adrs, through: :adrings
         #######
 
       -ContNuming
@@ -458,9 +458,9 @@ class ActSaver
   def query_act_hashes
     puts "Querying Act Hash, then Saving to DB..."
     # raw_act_hashes = []
-    # act_hash = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_address: 'HERE', address_pin: 'HERE', phone: 'HERE'}
+    # act_hash = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_adr: 'HERE', adr_pin: 'HERE', phone: 'HERE'}
 
-    act_hash = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_address: '123 Main St., Happytown, AZ, 12345', address_pin: 's123-z12345', phone: '(123) 456-7890'}
+    act_hash = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_adr: '123 Main St., Happytown, AZ, 12345', adr_pin: 's123-z12345', phone: '(123) 456-7890'}
 
     parse_act_hash(act_hash)
   end
@@ -472,14 +472,14 @@ class ActSaver
     @act_data = nil
     @url_data = nil
     @org_data = nil
-    @address_data = nil
+    @adr_data = nil
     @phone_data = nil
 
     @crm_data = { crm_id: act_hash[:crm_id], category: act_hash[:crm_id_category], src: act_hash[:crm_id_src] }
     @act_data = { sts: act_hash[:act_sts], src: act_hash[:act_src] }
     @url_data = { url: act_hash[:url], sts: act_hash[:url_sts] }
     @org_data = { name: act_hash[:org_name] }
-    @address_data = { street: act_hash[:street], city: act_hash[:city], zip: act_hash[:zip], state: act_hash[:state], full_address: act_hash[:full_address], address_pin: act_hash[:address_pin] }
+    @adr_data = { street: act_hash[:street], city: act_hash[:city], zip: act_hash[:zip], state: act_hash[:state], full_adr: act_hash[:full_adr], adr_pin: act_hash[:adr_pin] }
     @phone_data = { phone: act_hash[:phone] }
 
     save_or_update_db
@@ -523,7 +523,7 @@ class ActSaver
     #   act.orgs << Org.find_or_create_by(@org_data)
     #   act.urls << Url.find_or_create_by(@url_data)
     #   act.phones << Phone.find_or_create_by(@phone_data)
-    #   act.addresses << Address.find_or_create_by(@address_data)
+    #   act.adrs << Adr.find_or_create_by(@adr_data)
     # else
     #   puts "Act CRM ID: Duplicate - Rollback"
     # end
@@ -540,7 +540,7 @@ class ActSaver
       act.orgs << Org.find_or_create_by(@org_data)
       act.urls << Url.find_or_create_by(@url_data)
       act.phones << Phone.find_or_create_by(@phone_data)
-      act.addresses << Address.find_or_create_by(@address_data)
+      act.adrs << Adr.find_or_create_by(@adr_data)
     else
       puts "Act CRM ID: Duplicate - Rollback"
     end

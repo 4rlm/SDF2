@@ -5,7 +5,7 @@ street
 city
 state
 zip
-full_address
+full_adr
 domain
 
 
@@ -41,13 +41,13 @@ scraped_conts_sts_checker on indexer_service (line 576)
 
 
 ***********
-New Feature: migrate_address_to_staffers
+New Feature: migrate_adr_to_staffers
 on indexer_service
-# Will be button in admin to migrate rt addresses into each cont in staffers.
+# Will be button in admin to migrate rt adrs into each cont in staffers.
 
-migrate_address_to_staffers
-migrate_address_to_staffers_btn
-migrate_address_to_staffers_btn_path
+migrate_adr_to_staffers
+migrate_adr_to_staffers_btn
+migrate_adr_to_staffers_btn_path
 
 
 FOR MY GEM!!!!!!

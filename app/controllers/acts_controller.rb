@@ -79,15 +79,15 @@ class ActsController < ApplicationController
       # # WORKING NESTED ATTRIBUTE - Webs
       # params.require(:act).permit(:src, :sts, :crm_act_num, :name, web_attributes: [:src, :sts, :url, :staff_page, :locations_page, :created_at, :updated_at ])
 
-      # # WORKING NESTED ATTRIBUTE - Addresses
-      # params.require(:act).permit(:src, :sts, :crm_act_num, :name, address_attributes: [:src, :sts, :street, :unit, :city, :state, :zip, :address_pin, :latitude, :longitude, :created_at, :updated_at ])
+      # # WORKING NESTED ATTRIBUTE - Adrs
+      # params.require(:act).permit(:src, :sts, :crm_act_num, :name, adr_attributes: [:src, :sts, :street, :unit, :city, :state, :zip, :adr_pin, :latitude, :longitude, :created_at, :updated_at ])
 
       #######################################
 
-      # # WORKING NESTED ATTRIBUTE - Webs && Addresses ???
+      # # WORKING NESTED ATTRIBUTE - Webs && Adrs ???
       params.require(:act).permit(:id, :src, :sts, :crm_act_num, :name, :created_at, :updated_at,
           web_attributes: [:id, :src, :sts, :url, :staff_page, :locations_page, :created_at, :updated_at ],
-          address_attributes: [:id, :src, :sts, :street, :unit, :city, :state, :zip, :address_pin, :latitude, :longitude, :created_at, :updated_at ],
+          adr_attributes: [:id, :src, :sts, :street, :unit, :city, :state, :zip, :adr_pin, :latitude, :longitude, :created_at, :updated_at ],
           phone_attributes: [:id, :src, :sts, :phone, :created_at, :updated_at ])
 
 

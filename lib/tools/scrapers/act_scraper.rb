@@ -13,7 +13,7 @@ class ActScraper
   # include ComplexQueryIterator
 
   def initialize
-    puts "\n== Welcome to the ActScraper Class! ==\nUpdates Act RT Data (like mailing address and name.)"
+    puts "\n== Welcome to the ActScraper Class! ==\nUpdates Act RT Data (like mailing adr and name.)"
 
     welcome_msg = "\n1) This will be pseudocode and instructions for how ActScraper will work.\n2) More directions and pseudocode ... \n3) More directions and pseudocode ... \n\n"
 

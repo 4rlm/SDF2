@@ -73,10 +73,10 @@ module UniActMigrator
           create_obj_parent_assoc('phone', phone_obj, act) if phone_obj.present?
 
           # FIND OR CREATE ADDRESS, THEN UPDATE IF APPLICABLE
-          address_hsh = validate_hsh(Address.column_names, non_act_attributes_array.to_h)
-          address_hsh = AddressFormatter.format_address_hsh(address_hsh) if address_hsh && !address_hsh.empty?
-          address_obj = save_simple_obj('address', address_hsh) if address_hsh && !address_hsh.empty?
-          create_obj_parent_assoc('address', address_obj, act) if address_obj
+          adr_hsh = validate_hsh(Adr.column_names, non_act_attributes_array.to_h)
+          adr_hsh = AdrFormatter.format_adr_hsh(adr_hsh) if adr_hsh && !adr_hsh.empty?
+          adr_obj = save_simple_obj('adr', adr_hsh) if adr_hsh && !adr_hsh.empty?
+          create_obj_parent_assoc('adr', adr_obj, act) if adr_obj
 
           # FIND OR CREATE WHO, THEN UPDATE IF APPLICABLE
           if uni_hsh['ip'] || uni_hsh['server1'] || uni_hsh['server2']
