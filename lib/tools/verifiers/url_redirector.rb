@@ -32,7 +32,7 @@ module UrlRedirector
       rescue Timeout::Error
         updated_hsh = { web_sts: @timeout_web_sts, updated_at: Time.now }
         @web_obj.update_attributes(updated_hsh)
-        # Process.kill("QUIT", @iterate_raw_query_pid)
+        # Process.kill("QUIT", @iterate_query_pid)
       end
 
 

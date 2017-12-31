@@ -3,9 +3,9 @@ module WebAssociator
 
   #CALL: WebAssociator.start_web_associator
   def self.start_web_associator
-    raw_query = Web.where.not(redirect_url: nil).order("updated_at DESC").pluck(:id)
+    query = Web.where.not(redirect_url: nil).order("updated_at DESC").pluck(:id)
 
-    raw_query.each do |id|
+    query.each do |id|
       web_obj = Web.find(id)
       transfer_web_associations(web_obj)
     end

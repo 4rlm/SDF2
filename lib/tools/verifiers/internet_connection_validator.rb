@@ -127,7 +127,8 @@ module InternetConnectionValidator
         if res.kind_of?(Net::HTTPRedirection)
           url_exist?(res['location']) # Go after any redirect and make sure you can access the redirected URL
         else
-          res.code[0] != "4" #false if http code starts with 4 - error on your side.
+          return
+          # res.code[0] != "4" #false if http code starts with 4 - error on your side.
         end
       end
 
@@ -172,15 +173,15 @@ module InternetConnectionValidator
           if ping_attempt_count >= ping_attempt_limit
             puts "\n=== Forced Exit due to #{ping_attempt_limit} Failed Connection Attempts! ===\n\n"
             puts "\n\n@class_pid: #{@class_pid}\n\n"
-            puts "\n\n@iterate_raw_query_pid: #{@iterate_raw_query_pid}\n\n"
+            puts "\n\n@iterate_query_pid: #{@iterate_query_pid}\n\n"
 
             ### Best Approach ###
             # Process.kill("QUIT", @class_pid)  #=> quits class.
-            Process.kill("QUIT", @iterate_raw_query_pid) #=> quits top level iterator.
+            Process.kill("QUIT", @iterate_query_pid) #=> quits top level iterator.
 
             ### Works Well ###
             # Process.kill(9, @class_pid) #=> kills class.
-            # Process.kill(9, @iterate_raw_query_pid) #=> kills top level iterator.
+            # Process.kill(9, @iterate_query_pid) #=> kills top level iterator.
 
             ### Too Strong ###
             # Process.kill(9, Process.pid) #=> kills rails server.

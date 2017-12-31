@@ -15,12 +15,12 @@ module ComplexQueryIterator
   # extend ActiveSupport::Concern
   # include InternetConnectionValidator
 
-  def iterate_raw_query(raw_query)
+  def iterate_query(query)
     # Call: UrlVerifier.new.start_url_verifier
-    @iterate_raw_query_pid = Process.pid
+    @iterate_query_pid = Process.pid
 
-    raw_query.in_groups(@stage1_groups).each do |batch_of_ids|
-      @raw_query_count -= batch_of_ids&.count
+    query.in_groups(@stage1_groups).each do |batch_of_ids|
+      @query_count -= batch_of_ids&.count
       pause_iteration
       format_query_results(batch_of_ids)
     end
@@ -31,7 +31,7 @@ module ComplexQueryIterator
   def pause_iteration
     until get_dj_count <= @dj_count_limit
       puts "\nWaiting on #{get_dj_count} Queued Jobs | Queue Limit: #{@dj_count_limit}"
-      puts "Round: #{@round}, Total Query Count: #{@raw_query_count}, Timeout: #{@timeout}"
+      puts "Round: #{@round}, Total Query Count: #{@query_count}, Timeout: #{@timeout}"
       puts "Please wait #{@dj_wait_time} seconds ..."
       sleep(@dj_wait_time)
     end

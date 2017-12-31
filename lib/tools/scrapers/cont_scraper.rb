@@ -29,12 +29,12 @@ class ContScraper
   def generate_query
     puts "Sample query generating for ContScraper"
 
-    # raw_query = Web
+    # query = Web
     # .select(:id)
     # .where.not(archived: TRUE)
     # .order("updated_at DESC")
 
-    # iterate_raw_query(raw_query) # via ComplexQueryIterator
+    # iterate_query(query) # via ComplexQueryIterator
   end
 
 
