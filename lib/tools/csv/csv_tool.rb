@@ -51,10 +51,10 @@ class CsvTool
     @rows = []
 
     File.open(@file_path).each do |line|
-      line_1 = line&.gsub(/\s/, ' ')&.strip ## Removes carriage returns and new lines.
-      line_2 = force_utf_encoding(line_1) ## Removes non-utf8 chars.
-
       begin
+        line_1 = line&.gsub(/\s/, ' ')&.strip ## Removes carriage returns and new lines.
+        line_2 = force_utf_encoding(line_1) ## Removes non-utf8 chars.
+
         CSV.parse(line_2) do |row|
           row = row.collect { |x| x.try(:strip) } ## Strips white space from each el in row array.
 

@@ -46,6 +46,8 @@ class UrlVerifier
     @timeout_web_sts = 'timeout1'
     iterate_raw_query(raw_query) # via ComplexQueryIterator
 
+    return ## STOP HERE.  DON'T RUN ROUND 2.
+
     ## ROUND 2 ##
     binding.pry
     raw_query = Web.where(archived: TRUE).order("updated_at DESC").pluck(:id)
