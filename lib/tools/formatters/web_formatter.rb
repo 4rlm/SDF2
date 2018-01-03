@@ -5,66 +5,146 @@ module WebFormatter
 
   #CALL: WebFormatter.format_url(url)
   def self.format_url(url)
-    # if url.present?
-      url = url.downcase.strip
+
+    begin
+      url = url&.split('|')&.first
+      url = url&.split('\\')&.first
+      url&.gsub!(/\P{ASCII}/, '')
+      url = url&.downcase&.strip
+      return nil if url&.length < 7
+      return nil if url.include?('cobaltgroup')
+      return nil if url.include?('demo')
+      return nil if url.include?('cdk')
+
+      url&.gsub!("cms.dealer.com", "com")
+      url&.gsub!("dealerconnection.com", "com")
+      url&.gsub!("foxdealersites.com", "com")
+      url&.gsub!(".websiteoutlook.com", "")
+
+      2.times { remove_ww3(url) } if url.present?
+      url = remove_slashes(url) if url.present?
+      url&.strip!
+
+      return nil if !url.present? || url&.include?(' ')
       url = url[0..-2] if url[-1] == '/'
-      return url
-    # end
+
+      symbs = ['(', ')', '[', ']', '{', '}', '*', '@', '^', '$', '+', '!', '<', '>', '~', ',', "'"]
+      return nil if symbs.any? {|symb| url&.include?(symb) }
+
+      uri = URI(url)
+      if uri.present?
+        bad_exts = %w(au ca edu es es gov ru uk us)
+        host_parts = uri.host&.split(".")
+        bad_host_sts = host_parts&.map { |part| TRUE if bad_exts.any? {|ext| part == ext } }&.compact&.first
+        url = nil if bad_host_sts
+
+        # host_parts = uri.host.split(".")
+        # if host_parts.count > 3
+        #   url = host_parts
+        #   return url
+        # end
+
+        host = uri.host
+        scheme = uri.scheme
+        if host.present? && scheme.present?
+          url = "#{scheme}://#{host}"
+        end
+
+        url = "http://#{url}" if url[0..3] != "http"
+        url = url.gsub("//", "//www.") if !url.include?("www.")
+
+        bad_text_in_url = %w(approv avis budget business collis eat enterprise facebook financ food google gourmet hertz hotel hyatt insur invest loan lube mobility motel motorola parts quick rent repair restaur rv ryder service softwar travel twitter webhost yellowpages yelp youtube)
+        url = nil if bad_text_in_url.any? {|bad_text| url&.include?(bad_text) }
+        return url
+      end
+
+    rescue
+      puts "\n\n=====Rescued: WebFormatter.format_url(url) ====="
+      puts "url: #{url}"
+      return nil
+    end # rescue
+  end # def
+  ###### Supporting Methods Below #######
+
+
+  def self.remove_ww3(url)
+    if url.present?
+      url.split('.').map { |part| url.gsub!(part,'www') if part.scan(/ww[0-9]/).any? }
+      url&.gsub!("www.www", "www")
+    end
+  end
+
+
+  def self.remove_slashes(url)
+    # For rare cases w/ urls with mistaken double slash twice.
+    if url.present? && url.include?('//')
+      parts = url.split('//')
+      return parts[0..1].join if parts.length > 2
+    end
+    return url
   end
 
 
   #CALL: WebFormatter.format_link(url, link)
   def self.format_link(url, link)
-    url = strip_down_url(url)
-    link = strip_down_url(link)
-    link.slice!(url)
-
-    if link&.include?(url) && !link.include?('@')# sometimes url is listed twice in link.
+    if url.present? && link.present?
+      url = strip_down_url(url)
+      link = strip_down_url(link)
       link.slice!(url)
-      link = link.gsub("///", '')
-    end
 
-    link = remove_invalid_links(link) if link.present?
-    link.insert(0, '/') if (link.present? && link[0] != '/')  # link&.send('[]', 0).send('!=')
-    link = link[0..-2] if (link.present? && link[-1] == '/')
-    return link
+      if link&.include?(url) && !link.include?('@')# sometimes url is listed twice in link.
+        link.slice!(url)
+        link = link.gsub("///", '')
+      end
+
+      link = remove_invalid_links(link) if link.present?
+      link.insert(0, '/') if (link.present? && link[0] != '/')  # link&.send('[]', 0).send('!=')
+      link = link[0..-2] if (link.present? && link[-1] == '/')
+      return link
+    end
   end
 
 
   # Both Link and URL use this to make them equal for comparison, but only Link's changes save.  Not url.
   #CALL: WebFormatter.strip_down_url(url_4)
   def self.strip_down_url(url)
-    url = url.downcase.strip
-    url = url.gsub('www.', '')
-    url = url.split('://')
-    url = url[-1]
-    return url
+    if url.present?
+      url = url.downcase.strip
+      url = url.gsub('www.', '')
+      url = url.split('://')
+      url = url[-1]
+      return url
+    end
   end
 
 
   #CALL: WebFormatter.remove_invalid_links(link)
   def self.remove_invalid_links(link)
-    invalid_link_list = [':', '.co', '.net', '.gov', '.biz', '.edu', '(', '[', '@', '//', 'bye', 'hello', 'home', 'hours', 'form', 'regist', 'http', 'mail', 'mailto', 'none', 'test', 'twitter', 'www', 'yelp', 'login', 'feed', 'offer', 'service', 'graphic', 'phone', 'cont', 'event', 'youth', 'school', 'info', '%', '+', 'tire', 'business', 'review', 'inventory', 'download', '*', 'afri', 'drop', 'item', '.jpg', 'shop', 'face', 'book', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', '*', 'anounc', 'distrib', 'click', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
+    if link.present?
+      bad_links = %w(: .biz .co .edu .gov .jpg .net [ @ * // % + afri anounc book business buy bye call cash cheap click collis cont distrib download drop event face feature feed financ find fleet form gas generat graphic hello home hospi hour hours http info insta inventory item join login mail mailto mobile movie museu music news none offer part phone policy priva pump rate regist review schedul school service shop site test ticket tire tv twitter watch www yelp youth)
 
-    make_link_nil = invalid_link_list.any? {|word| link&.include?(word) }  ## .try and &.
-    link = nil if (make_link_nil || link == "/")
-    link = nil if link&.length&.> 60    ## .try and &.
-    return link
+      make_link_nil = bad_links.any? {|word| link&.include?(word) }  ## .try and &.
+      link = nil if (make_link_nil || link == "/")
+      link = nil if link&.length&.> 60    ## .try and &.
+      return link
+    end
   end
 
 
   def self.remove_invalid_texts(text)
-    text = nil if text&.length&.> 35  ## .try and &.
-    invalid_text = Regexp.new(/[0-9]/)
-    text = nil if invalid_text&.match(text) ## .try and &.
-    text = text&.downcase   ## .try and &.
-    text = text&.strip   ## .try and &.
+    if text.present?
+      bad_texts = %w(? .com .jpg @ * afri after anounc apply approved blog book business buy call care career cash charit cheap check click collis commerc cont contrib deal distrib download employ event face feature feed financ find fleet form gas generat golf here holiday hospi hour info insta inventory join later light login mail mobile movie museu music news none now oil part pay phone policy priva pump quick quote rate regist review saving schedul service shop sign site speci ticket tire today transla travel truck tv twitter watch youth)
 
-    invalid_text_list = ['none', '@', '.com', 'after', 'service', 'check', 'approved', 'deal', '?', 'inventory', 'truck', 'login', 'saving', 'event', 'holiday', 'light', 'shop', 'info', 'face', 'book', 'twitter', 'insta', 'ticket', 'cheap', 'gas', 'priva', 'mobile', 'site', 'call', 'mail', 'cont', 'phone', 'part', 'feature', 'hospi', 'financ', 'fleet', 'policy', 'watch', 'tv', 'rate', 'hour', 'collis', 'schedul', 'find', 'tire', 'business', 'review', 'download', '*', 'afri', 'feed', 'anounc', 'distrib', 'click', 'charit', 'contrib', 'here', 'form', 'quote', 'quick', 'oil', 'regist', 'buy', 'pay', 'later', 'now', 'speci', 'commerc', 'sign', 'youth', 'blog', 'transla', 'golf', 'today', 'apply', 'employ', 'career', 'care', 'travel', '.jpg', 'museu', 'movie', 'music', 'news', 'join', 'buy', 'cash', 'generat', 'pump']
+      text = nil if text&.length&.> 35  ## .try and &.
+      invalid_text = Regexp.new(/[0-9]/)
+      text = nil if invalid_text&.match(text) ## .try and &.
+      text = text&.downcase   ## .try and &.
+      text = text&.strip   ## .try and &.
 
-    make_text_nil = invalid_text_list.any? {|word| text&.include?(word) }  ## .try and &.
-    text = nil if make_text_nil
-    return text
+      make_text_nil = bad_texts.any? {|word| text&.include?(word) }  ## .try and &.
+      text = nil if make_text_nil
+      return text
+    end
   end
 
 

@@ -28,6 +28,9 @@ module UniContMigrator
           web_obj = save_simple_obj('web', {'url' => uni_hsh['url']}) if uni_hsh['url'].present?
 
           # ACCOUNT OBJ: FIND, CREATE, UPDATE
+          ## NEED TO FORMAT crm_act_num IF IT IS AN INDEXER 'ACT_SRC: WEB' URL. ##
+          ## IF USING URL AS crm_act_num, IT NEEDS TO BE FORMATTED WHEN FINDING ACCOUNT WITH SAME URL!! ##
+
           act_hsh = validate_hsh(Act.column_names, non_cont_attributes_array.to_h)
           act_obj ||= Act.find_by(id: uni_hsh['act_id']) || Act.find_by(crm_act_num: uni_hsh['crm_act_num']) || web_obj&.acts&.first
 
@@ -55,8 +58,8 @@ module UniContMigrator
           # create_obj_parent_assoc('cont', cont_obj, act_obj) if cont_obj && act_obj
           if cont_obj && act_obj
             create_obj_parent_assoc('cont', cont_obj, act_obj)
-          else
-            binding.pry
+          # else
+          #   binding.pry
           end
 
 

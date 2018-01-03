@@ -4,6 +4,7 @@ class CreateWebs < ActiveRecord::Migration[5.1]
 
       t.boolean  :archived, index: true
       t.string   :web_sts, index: true
+      t.string   :sts_code, index: true
       t.string   :url, index: true, unique: true
       t.string   :url_redirect_id, index: true
       t.string   :redirect_url, index: true

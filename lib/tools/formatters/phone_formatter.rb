@@ -5,7 +5,7 @@
 # require 'socket'
 # require 'httparty'
 # require 'delayed_job'
-# require 'curb' #=> for url_redirector
+# require 'curb' #=> for curler
 
 
 module PhoneFormatter

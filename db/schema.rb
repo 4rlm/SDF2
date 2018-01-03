@@ -322,6 +322,7 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   create_table "webs", force: :cascade do |t|
     t.boolean "archived"
     t.string "web_sts"
+    t.string "sts_code"
     t.string "url"
     t.string "url_redirect_id"
     t.string "redirect_url"
@@ -343,6 +344,7 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.index ["redirect_url"], name: "index_webs_on_redirect_url"
     t.index ["staff_link_sts"], name: "index_webs_on_staff_link_sts"
     t.index ["staff_text_sts"], name: "index_webs_on_staff_text_sts"
+    t.index ["sts_code"], name: "index_webs_on_sts_code"
     t.index ["temp_date"], name: "index_webs_on_temp_date"
     t.index ["temp_sts"], name: "index_webs_on_temp_sts"
     t.index ["url"], name: "index_webs_on_url"

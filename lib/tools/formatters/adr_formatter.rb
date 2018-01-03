@@ -5,6 +5,7 @@ module AdrFormatter
     adr_hsh&.delete_if { |key, value| value&.downcase.include?('meta') }
     if !adr_hsh.empty?
       adr_hsh['zip'] = format_zip(adr_hsh['zip']) if adr_hsh['zip']
+      adr_hsh['street'] = format_street(adr_hsh['street']) if adr_hsh['street']
       adr_hsh['adr_pin'] = generate_adr_pin(adr_hsh['street'], adr_hsh['zip'])
       adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
     end
@@ -17,6 +18,48 @@ module AdrFormatter
     zip_temp = zip.tr('^0-9', '')
     zip = "0#{zip_temp}" if zip_temp.length == 4
     return zip
+  end
+
+  #Call: Migrator.new.migrate_uni_acts
+
+  # CALL: AdrFormatter.format_street(street)
+  def self.format_street(street)
+
+    if street.present?
+      street = Formatter.new.letter_case_check(street)
+      street = " #{street} " # Adds white space, to match below, then strip.
+      street&.gsub!(".", "")
+
+      street&.gsub!(" North ", " N ")
+      street&.gsub!(" South ", " S ")
+      street&.gsub!(" East ", " E ")
+      street&.gsub!(" West ", " W ")
+
+      street&.gsub!(" Ne ", " NE ")
+      street&.gsub!(" Nw ", " NW ")
+      street&.gsub!(" Se ", " SE ")
+      street&.gsub!(" Sw ", " SW ")
+
+      street&.gsub!("Avenue", "Ave")
+      street&.gsub!("Boulevard", "Blvd")
+      street&.gsub!("Drive", "Dr")
+      street&.gsub!("Expressway", "Expy")
+      street&.gsub!("Freeway", "Fwy")
+      street&.gsub!("Highway", "Hwy")
+      street&.gsub!("Lane", "Ln")
+      street&.gsub!("Parkway", "Pkwy")
+      street&.gsub!("Road", "Rd")
+      street&.gsub!("Route", "Rte")
+      street&.gsub!("Street", "St")
+      street&.gsub!("Terrace", "Ter")
+      street&.gsub!("Trail", "Trl")
+      street&.gsub!("Turnpike", "Tpke")
+
+      street&.strip!
+      street&.squeeze!(" ")
+
+      return street
+    end
   end
 
 

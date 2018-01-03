@@ -19,7 +19,7 @@ module ComplexQueryIterator
     # Call: UrlVerifier.new.start_url_verifier
     @iterate_query_pid = Process.pid
 
-    query.in_groups(@stage1_groups).each do |batch_of_ids|
+    query.in_groups(@group_count).each do |batch_of_ids|
       @query_count -= batch_of_ids&.count
       pause_iteration
       format_query_results(batch_of_ids)
@@ -31,7 +31,7 @@ module ComplexQueryIterator
   def pause_iteration
     until get_dj_count <= @dj_count_limit
       puts "\nWaiting on #{get_dj_count} Queued Jobs | Queue Limit: #{@dj_count_limit}"
-      puts "Round: #{@round}, Total Query Count: #{@query_count}, Timeout: #{@timeout}"
+      puts "Total Query Count: #{@query_count}, Timeout: #{@timeout}"
       puts "Please wait #{@dj_wait_time} seconds ..."
       sleep(@dj_wait_time)
     end
@@ -44,7 +44,7 @@ module ComplexQueryIterator
 
 
   def format_query_results(batch_of_ids)
-    batch_of_ids.in_groups(@stage2_workers).each do |group_of_ids|
+    batch_of_ids.in_groups(@workers).each do |group_of_ids|
       puts "\n\n==> batch_of_ids: #{batch_of_ids} <=="
       puts "\nPPID: #{Process.ppid}"
       puts "PID: #{Process.pid}"

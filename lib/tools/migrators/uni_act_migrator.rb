@@ -32,6 +32,8 @@ module UniActMigrator
           # FIND OR CREATE ACCOUNT, THEN UPDATE IF APPLICABLE
           crm_act_num = act_hsh['crm_act_num']
           act_id = act_hsh['id']
+
+          act_hsh['act_name'] = ActFormatter.format_act_name(act_hsh['act_name']) if act_hsh.present?
           act_name = act_hsh['act_name']
 
           # FIND ACCT based on id, crm_act_num, act_name, or url.
@@ -90,7 +92,6 @@ module UniActMigrator
           puts error.class.name
           puts error.message
           print error.backtrace.join("\n")
-          binding.pry
           @rollbacks << uni_hsh
         end
 

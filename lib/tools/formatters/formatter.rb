@@ -5,37 +5,34 @@
 # require 'socket'
 # require 'httparty'
 # require 'delayed_job'
-# require 'curb' #=> for url_redirector
+# require 'curb' #=> for curler
 
 # %w{open-uri mechanize uri nokogiri socket httparty delayed_job curb}.each { |x| require x }
 require 'web_formatter'
+require 'phone_formatter'
+require 'adr_formatter'
+require 'act_formatter'
 
 
 ## CLASS METHOD TO START, EXPLAIN, OR TEST OTHER FORMATTER CLASSES AND METHODS.
 class Formatter
   include WebFormatter
+  include PhoneFormatter
+  include AdrFormatter
+  include ActFormatter
 
-  # Formatter.new
-  # Formatter.new.method_name
 
-  def initialize
-    puts "Welcome to formatter!"
-    ## could auto-run methods or mudules if desired.
-    # AdrFormatter.welcome
-  end
-
+  #Call: Formatter.new.run_all_formatters
   def run_all_formatters
-  # Call: Formatter.new.run_all_formatters
     puts "Runs all Formatters methods:\nformat_webs\nformat_adrs\nformat_phones"
-
     format_webs
     format_adrs
     format_phones
   end
 
-  def format_webs
-    # Call: Formatter.new.format_webs
 
+  #Call: Formatter.new.format_webs
+  def format_webs
     # web_ids = Web.all.order("updated_at ASC").pluck(:id)
     # web_ids = Web.where.not(staff_page: nil).order("updated_at ASC").pluck(:id)
     web_ids = Web.all.order("updated_at ASC").pluck(:id)
@@ -47,8 +44,9 @@ class Formatter
 
   end
 
+
+  #CALL: Formatter.new.format_adrs
   def format_adrs
-    # Formatter.new.format_adrs
     # Adr.where.not(full_adr: nil).in_batches.each do |each_batch|
     # Adr.in_batches.each do |each_batch|
     adr_ids = Adr.all.order("updated_at ASC").pluck(:id)
@@ -70,8 +68,9 @@ class Formatter
     end
   end
 
+
+  #Call: Formatter.new.format_phones
   def format_phones
-    # Call: Formatter.new.format_phones
     phone_ids = Phone.where.not(phone: nil).order("updated_at ASC").pluck(:id)
     phone_ids.each do |id|
       phone_obj = Phone.find(id)
@@ -89,6 +88,52 @@ class Formatter
         end
 
       end
+    end
+  end
+
+
+
+
+
+
+
+
+  #Call: Migrator.new.migrate_uni_acts
+
+  #CALL: Formatter.new.letter_case_check(street)
+  def letter_case_check(str)
+    if str.present?
+      flashes = str&.gsub(/[^ A-Za-z]/, '')&.strip&.split(' ')
+      flash = flashes&.reject {|e| e.length < 3 }.join(' ')
+
+      if flash.present?
+        has_caps = flash.scan(/[A-Z]/).any?
+        has_lows = flash.scan(/[a-z]/).any?
+        if !has_caps || !has_lows
+          str = str.split(' ')&.each { |el| el.capitalize! if el.gsub(/[^ A-Za-z]/, '')&.strip&.length > 2 }&.join(' ')
+        end
+      end
+      return str
+    end
+  end
+
+
+  #CALL: Formatter.new.check_common_words(str)
+  def check_common_words(str)
+    if str.present?
+      commons = %w(a an and as by in Inc LLC of out to with)
+      str_parts = str.split(' ')
+      str_parts.map do |str_part|
+        if str_part.scan(/[a-zA-Z]/).any?
+          commons.each do |common|
+            if str_part.downcase == common
+              str_parts = str_parts&.join(' ')&.gsub(str_part, common)&.split(' ')
+            end
+          end
+        end
+      end
+      str = str_parts.join(' ')
+      return str
     end
   end
 

@@ -9,7 +9,7 @@
 # require 'final_redirect_url'
 
 class ActScraper
-  # include UrlRedirector #=> concerns/url_redirector.rb
+  # include Curler #=> concerns/curler.rb
   # include ComplexQueryIterator
 
   def initialize

@@ -1,12 +1,14 @@
 # Call: TemplateFinder.new.start_template_finder
 
 require 'complex_query_iterator'
-require 'url_redirector'
+require 'curler'
+# require 'net_verifier'
 require 'noko'
 
 class TemplateFinder
   include ComplexQueryIterator
-  include InternetConnectionValidator
+  # include NetVerifier
+  # include InternetConnectionValidator
   include Noko
 
   # Call: TemplateFinder.new.start_template_finder
@@ -16,20 +18,20 @@ class TemplateFinder
     @query_count = nil
     @class_pid = Process.pid
     @dj_count_limit = 20 #=> Num allowed before releasing next batch.
-    @stage2_workers = 3 #=> Divide format_query_results into groups of x.
+    @workers = 3 #=> Divide format_query_results into groups of x.
     # @dj_wait_time = 5 #=> How often to check dj queue count.
+    @timeout = 30
+    @dj_wait_time = @timeout
+    @timeout_web_sts = 'timeout1'
 
     # @indexer = Indexer.where(id: id).select(:id, :indexer_sts, :clean_url, :template, :template_date, :template_sts).first
     # query = Web.where.not(archived: TRUE, temp_sts: nil).order("updated_at ASC").pluck(:id)
     # query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
     query = Web.where(web_sts: '++').order("updated_at ASC").pluck(:id)
 
+    obj_in_grp = 150
     @query_count = query.count
-    (@query_count & @query_count > 100) ? @stage1_groups = (@query_count / 100) : @stage1_groups = 2
-    @timeout = 5
-    @dj_wait_time = @timeout
-    @round = 1
-    @timeout_web_sts = 'timeout1'
+    (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
     ## TEMPORARILY BYPASSING iterate_query B/C IT'S DOING BIG JOB NOW ##
     # iterate_query(query) # via ComplexQueryIterator
@@ -49,7 +51,10 @@ class TemplateFinder
     html = @html
 
     terms = Term.where(category: "template_finder").where(sub_category: "at_css")
-    terms.map { |term| @new_temp = term.response_term if html.at_css('html').text.include?(term.criteria_term) }
+
+    if html.present?
+      terms.map { |term| @new_temp = term.response_term if html.at_css('html').text.include?(term.criteria_term) }
+    end
 
     @new_temp.present? ? @temp_sts = '++' : @temp_sts = '??'
     @temp_sts = @error_code if @error_code.present?

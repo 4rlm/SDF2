@@ -105,7 +105,6 @@ module UniWebMigrator
           puts error.class.name
           puts error.message
           print error.backtrace.join("\n")
-          binding.pry
           @rollbacks << uni_web_hsh
         end
 
