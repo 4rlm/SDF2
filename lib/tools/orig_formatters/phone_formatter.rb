@@ -9,10 +9,18 @@
 
 
 module PhoneFormatter
+  # Call: PhoneFormatter.method_name
+
+  def self.welcome
+  # Call: PhoneFormatter.welcome
+    puts "Welcome to PhoneFormatter!"
+  end
+
+  #################################
   ## Checks every phone number in table to verify that it meets phone criteria, then calls format_phone method to format valid results.  Otherwise destroys invalid phone fields and associations.
 
-  # Call: Formatter.new.validate_phone(phone)
-  def validate_phone(phone)
+  # Call: PhoneFormatter.validate_phone(phone)
+  def self.validate_phone(phone)
     if phone.present?
       reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
       phone.first == "0" || phone.include?("(0") || !reg.match(phone) ? phone = nil : valid_phone = format_phone(phone)
@@ -25,8 +33,8 @@ module PhoneFormatter
   ## FORMATS PHONE AS: (000) 000-0000
   ## Assumes phone is legitimate, then formats.  Not designed to detect valid phone number.
 
-  # Call: Formatter.new.format_phone(phone)
-  def format_phone(phone)
+  # Call: PhoneFormatter.format_phone(phone)
+  def self.format_phone(phone)
     regex = Regexp.new("[A-Z]+[a-z]+")
     if !phone.blank? && (phone != "N/A" || phone != "0") && !regex.match(phone)
       phone_stripped = phone.gsub(/[^0-9]/, "")

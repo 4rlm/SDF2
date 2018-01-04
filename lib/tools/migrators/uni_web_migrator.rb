@@ -14,12 +14,18 @@ module UniWebMigrator
         begin
           # FORMAT INCOMING DATA ROW FROM UniWeb.
           uni_web_hsh = uni_web.attributes
-          uni_web_hsh['url'] = WebFormatter.format_url(uni_web_hsh['url']) if uni_web_hsh['url'].present?
+
+          # uni_web_hsh['url'] = WebFormatter.format_url(uni_web_hsh['url']) if uni_web_hsh['url'].present?
+          uni_web_hsh['url'] = Formatter.new.format_url(uni_web_hsh['url']) if uni_web_hsh['url'].present?
+
           uni_web_hsh.delete('id')
           uni_web_hsh.delete('url_redirect_id')
 
           if uni_web_hsh['redirect_url'].present?
-            uni_web_hsh['redirect_url'] = WebFormatter.format_url(uni_web_hsh['redirect_url'])
+
+            # uni_web_hsh['redirect_url'] = WebFormatter.format_url(uni_web_hsh['redirect_url'])
+            uni_web_hsh['redirect_url'] = Formatter.new.format_url(uni_web_hsh['redirect_url'])
+
             redirect_url = uni_web_hsh['redirect_url']
             redirect_web_obj = save_simple_obj('web', {'url' => redirect_url}) if redirect_url.present?
             uni_web_hsh['url_redirect_id'] = redirect_web_obj&.id
@@ -42,7 +48,9 @@ module UniWebMigrator
 
           # FORMAT staff_link
           staff_link = link_text_hsh['staff_link']
-          link_text_hsh['staff_link'] = WebFormatter.format_link(url, staff_link) if staff_link.present?
+
+          # link_text_hsh['staff_link'] = WebFormatter.format_link(url, staff_link) if staff_link.present?
+          link_text_hsh['staff_link'] = Formatter.new.format_link(url, staff_link) if staff_link.present?
           staff_link = link_text_hsh['staff_link']
 
           # FIND OR CREATE staff_link_obj
@@ -53,13 +61,13 @@ module UniWebMigrator
             create_obj_parent_assoc('link', staff_link_obj, web_obj) if staff_link_obj.present?
           end
 
-
           #########################
           # FORMAT locations_link
           locations_link = link_text_hsh['locations_link']
-          link_text_hsh['locations_link'] = WebFormatter.format_link(url, locations_link) if locations_link.present?
-          locations_link = link_text_hsh['locations_link']
 
+          # link_text_hsh['locations_link'] = WebFormatter.format_link(url, locations_link) if locations_link.present?
+          link_text_hsh['locations_link'] = Formatter.new.format_link(url, locations_link) if locations_link.present?
+          locations_link = link_text_hsh['locations_link']
 
           # FIND OR CREATE locations_link_obj
           if locations_link.present?
@@ -75,7 +83,9 @@ module UniWebMigrator
 
           # FORMAT staff_text
           staff_text = link_text_hsh['staff_text']
-          link_text_hsh['staff_text'] = WebFormatter.remove_invalid_texts(staff_text) if staff_text.present?
+
+          # link_text_hsh['staff_text'] = WebFormatter.remove_invalid_texts(staff_text) if staff_text.present?
+          link_text_hsh['staff_text'] = Formatter.new.remove_invalid_texts(staff_text) if staff_text.present?
           staff_text = link_text_hsh['staff_text']
 
           if staff_text.present?
@@ -89,9 +99,10 @@ module UniWebMigrator
           #########################
           # FIND OR CREATE locations_text_obj
           locations_text = link_text_hsh['locations_text']
-          link_text_hsh['locations_text'] = WebFormatter.remove_invalid_texts(locations_text) if locations_text.present?
-          locations_text = link_text_hsh['locations_text']
 
+          # link_text_hsh['locations_text'] = WebFormatter.remove_invalid_texts(locations_text) if locations_text.present?
+          link_text_hsh['locations_text'] = Formatter.new.remove_invalid_texts(locations_text) if locations_text.present?
+          locations_text = link_text_hsh['locations_text']
 
           if locations_text.present?
             locations_text_hsh = {text: locations_text, text_type: 'locations', text_sts: link_text_hsh['locations_link_sts']}

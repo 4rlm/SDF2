@@ -8,20 +8,18 @@
 # require 'curb' #=> for curler
 
 # %w{open-uri mechanize uri nokogiri socket httparty delayed_job curb}.each { |x| require x }
-# require 'adr_formatter'
-# require 'act_formatter'
-# require 'phone_formatter'
-# require 'web_formatter'
-%w{adr_formatter act_formatter cross_ref phone_formatter web_formatter}.each { |x| require x }
+require 'web_formatter'
+require 'phone_formatter'
+require 'adr_formatter'
+require 'act_formatter'
 
 
 ## CLASS METHOD TO START, EXPLAIN, OR TEST OTHER FORMATTER CLASSES AND METHODS.
 class Formatter
-  include ActFormatter
-  include AdrFormatter
-  include CrossRef
-  include PhoneFormatter
   include WebFormatter
+  include PhoneFormatter
+  include AdrFormatter
+  include ActFormatter
 
 
   #Call: Formatter.new.run_all_formatters
@@ -123,7 +121,7 @@ class Formatter
   #CALL: Formatter.new.check_conjunctions(str)
   def check_conjunctions(str)
     if str.present?
-      commons = %w(a an and as by in of out to with)
+      commons = %w(a an and as by in Inc LLC of out to with)
       str_parts = str.split(' ')
       str_parts.map do |str_part|
         if str_part.scan(/[a-zA-Z]/).any?

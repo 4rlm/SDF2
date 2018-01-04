@@ -7,6 +7,11 @@ class Start
   ## == IMPORTS-EXPORTS == ##
   ###################
 
+  #CALL: Start.import_seeds
+  def self.import_seeds
+    CsvTool.new.import_all_seed_files
+  end
+
 
   #CALL: Start.create_backups
   def self.create_backups
@@ -17,12 +22,6 @@ class Start
   #CALL: Start.restore_backups
   def self.restore_backups
     CsvTool.new.restore_all_backups
-  end
-
-
-  #CALL: Start.import_seeds
-  def self.import_seeds
-    CsvTool.new.import_all_seed_files
   end
 
 

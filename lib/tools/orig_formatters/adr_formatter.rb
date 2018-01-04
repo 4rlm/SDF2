@@ -1,7 +1,7 @@
 module AdrFormatter
 
-  #CALL: Formatter.new.format_adr_hsh(adr_hsh)
-  def format_adr_hsh(adr_hsh)
+  #CALL: AdrFormatter.format_adr_hsh(adr_hsh)
+  def self.format_adr_hsh(adr_hsh)
     adr_hsh&.delete_if { |key, value| value&.downcase.include?('meta') }
     if !adr_hsh.empty?
       adr_hsh['zip'] = format_zip(adr_hsh['zip']) if adr_hsh['zip']
@@ -13,8 +13,8 @@ module AdrFormatter
   end
 
 
-  #CALL: Formatter.new.format_zip(zip)
-  def format_zip(zip)
+  #CALL: AdrFormatter.format_zip(zip)
+  def self.format_zip(zip)
     zip_temp = zip.tr('^0-9', '')
     zip = "0#{zip_temp}" if zip_temp.length == 4
     return zip
@@ -22,8 +22,8 @@ module AdrFormatter
 
   #Call: Migrator.new.migrate_uni_acts
 
-  # CALL: Formatter.new.format_street(street)
-  def format_street(street)
+  # CALL: AdrFormatter.format_street(street)
+  def self.format_street(street)
 
     if street.present?
       street = Formatter.new.letter_case_check(street)
@@ -63,8 +63,8 @@ module AdrFormatter
   end
 
 
-  # CALL: Formatter.new.generate_adr_pin(street, zip)
-  def generate_adr_pin(street, zip)
+  # CALL: AdrFormatter.generate_adr_pin(street, zip)
+  def self.generate_adr_pin(street, zip)
     if street && zip
       adr_pin = nil
       street_parts = street.split(" ")

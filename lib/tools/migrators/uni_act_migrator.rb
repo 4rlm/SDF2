@@ -26,14 +26,17 @@ module UniActMigrator
 
           # CREATE WEB HASH, and format Url, then save formatted url back into WEB HASH, and to url var.
           web_hsh = validate_hsh(Web.column_names, non_act_attributes_array.to_h) if uni_hsh['url'].present?
-          web_hsh['url'] = WebFormatter.format_url(web_hsh['url']) if web_hsh.present?
+
+          # web_hsh['url'] = WebFormatter.format_url(web_hsh['url']) if web_hsh.present?
+          web_hsh['url'] = Formatter.new.format_url(web_hsh['url']) if web_hsh.present?
           url = web_hsh['url'] if web_hsh.present?
 
           # FIND OR CREATE ACCOUNT, THEN UPDATE IF APPLICABLE
           crm_act_num = act_hsh['crm_act_num']
           act_id = act_hsh['id']
 
-          act_hsh['act_name'] = ActFormatter.format_act_name(act_hsh['act_name']) if act_hsh.present?
+          # act_hsh['act_name'] = ActFormatter.format_act_name(act_hsh['act_name']) if act_hsh.present?
+          act_hsh['act_name'] = Formatter.new.format_act_name(act_hsh['act_name']) if act_hsh.present?
           act_name = act_hsh['act_name']
 
           # FIND ACCT based on id, crm_act_num, act_name, or url.
@@ -70,13 +73,18 @@ module UniActMigrator
 
           # FIND OR CREATE PHONE, THEN UPDATE IF APPLICABLE
           phone = uni_hsh['phone']
-          phone = PhoneFormatter.validate_phone(phone) if phone.present?
+          # phone = PhoneFormatter.validate_phone(phone) if phone.present?
+          phone = Formatter.new.validate_phone(phone) if phone.present?
+
           phone_obj = save_simple_obj('phone', obj_hsh={'phone' => phone}) if phone.present?
           create_obj_parent_assoc('phone', phone_obj, act) if phone_obj.present?
 
           # FIND OR CREATE ADDRESS, THEN UPDATE IF APPLICABLE
           adr_hsh = validate_hsh(Adr.column_names, non_act_attributes_array.to_h)
-          adr_hsh = AdrFormatter.format_adr_hsh(adr_hsh) if adr_hsh && !adr_hsh.empty?
+
+          # adr_hsh = AdrFormatter.format_adr_hsh(adr_hsh) if adr_hsh && !adr_hsh.empty?
+          adr_hsh = Formatter.new.format_adr_hsh(adr_hsh) if adr_hsh && !adr_hsh.empty?
+
           adr_obj = save_simple_obj('adr', adr_hsh) if adr_hsh && !adr_hsh.empty?
           create_obj_parent_assoc('adr', adr_obj, act) if adr_obj
 

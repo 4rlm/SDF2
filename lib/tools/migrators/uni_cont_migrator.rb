@@ -16,7 +16,11 @@ module UniContMigrator
           uni_hsh = uni_cont.attributes
           uni_hsh.delete('id')
           uni_hsh.delete('cont_id')
-          uni_hsh['url'] = WebFormatter.format_url(uni_hsh['url']) if uni_hsh['url'].present?
+
+
+          # uni_hsh['url'] = WebFormatter.format_url(uni_hsh['url']) if uni_hsh['url'].present?
+          uni_hsh['url'] = Formatter.new.format_url(uni_hsh['url']) if uni_hsh['url'].present?
+
           uni_hsh.delete_if { |key, value| value.blank? }
 
           # CONT HASH: CREATED FROM uni_hsh
@@ -64,7 +68,9 @@ module UniContMigrator
 
 
           # PHONE OBJ: FIND-CREATE, then SAVE ASSOC
-          phone = PhoneFormatter.validate_phone(uni_hsh['phone']) if uni_hsh['phone'].present?
+          # phone = PhoneFormatter.validate_phone(uni_hsh['phone']) if uni_hsh['phone'].present?
+          phone = Formatter.new.validate_phone(uni_hsh['phone']) if uni_hsh['phone'].present?
+
           phone_obj = save_simple_obj('phone', {'phone' => phone}) if phone.present?
           create_obj_parent_assoc('phone', phone_obj, cont_obj) if phone_obj && cont_obj
 

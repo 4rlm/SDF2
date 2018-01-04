@@ -3,8 +3,8 @@ module WebFormatter
 
   ## Migrator should send raw url here, then receive formatted url before sending it to be used in format_link_text.
 
-  #CALL: Formatter.new.format_url(url)
-  def format_url(url)
+  #CALL: WebFormatter.format_url(url)
+  def self.format_url(url)
 
     begin
       url = url&.split('|')&.first
@@ -67,8 +67,7 @@ module WebFormatter
   ###### Supporting Methods Below #######
 
 
-  #CALL: Formatter.new.remove_ww3(url)
-  def remove_ww3(url)
+  def self.remove_ww3(url)
     if url.present?
       url.split('.').map { |part| url.gsub!(part,'www') if part.scan(/ww[0-9]/).any? }
       url&.gsub!("www.www", "www")
@@ -76,8 +75,7 @@ module WebFormatter
   end
 
 
-  #CALL: Formatter.new.remove_slashes(url)
-  def remove_slashes(url)
+  def self.remove_slashes(url)
     # For rare cases w/ urls with mistaken double slash twice.
     if url.present? && url.include?('//')
       parts = url.split('//')
@@ -87,8 +85,8 @@ module WebFormatter
   end
 
 
-  #CALL: Formatter.new.format_link(url, link)
-  def format_link(url, link)
+  #CALL: WebFormatter.format_link(url, link)
+  def self.format_link(url, link)
     if url.present? && link.present?
       url = strip_down_url(url)
       link = strip_down_url(link)
@@ -108,8 +106,8 @@ module WebFormatter
 
 
   # Both Link and URL use this to make them equal for comparison, but only Link's changes save.  Not url.
-  #CALL: Formatter.new.strip_down_url(url_4)
-  def strip_down_url(url)
+  #CALL: WebFormatter.strip_down_url(url_4)
+  def self.strip_down_url(url)
     if url.present?
       url = url.downcase.strip
       url = url.gsub('www.', '')
@@ -120,8 +118,8 @@ module WebFormatter
   end
 
 
-  #CALL: Formatter.new.remove_invalid_links(link)
-  def remove_invalid_links(link)
+  #CALL: WebFormatter.remove_invalid_links(link)
+  def self.remove_invalid_links(link)
     if link.present?
       bad_links = %w(: .biz .co .edu .gov .jpg .net [ @ * // % + afri anounc book business buy bye call cash cheap click collis cont distrib download drop event face feature feed financ find fleet form gas generat graphic hello home hospi hour hours http info insta inventory item join login mail mailto mobile movie museu music news none offer part phone policy priva pump rate regist review schedul school service shop site test ticket tire tv twitter watch www yelp youth)
 
@@ -133,7 +131,7 @@ module WebFormatter
   end
 
 
-  def remove_invalid_texts(text)
+  def self.remove_invalid_texts(text)
     if text.present?
       bad_texts = %w(? .com .jpg @ * afri after anounc apply approved blog book business buy call care career cash charit cheap check click collis commerc cont contrib deal distrib download employ event face feature feed financ find fleet form gas generat golf here holiday hospi hour info insta inventory join later light login mail mobile movie museu music news none now oil part pay phone policy priva pump quick quote rate regist review saving schedul service shop sign site speci ticket tire today transla travel truck tv twitter watch youth)
 
@@ -173,7 +171,7 @@ module WebFormatter
   def migrate_web_and_links(web_obj)
   # Call: Formatter.new.format_webs
 
-  # Call: Formatter.new.migrate_web_and_links(web_obj)
+  # Call: WebFormatter.migrate_web_and_links(web_obj)
 
   # IMPORTANT: MIGHT NEED TO ADAPT AND INTEGRATE THIS WITH Migrator.new.migrate_uni_acts via lib/tools/migrators/uni_migrator.rb
   ## MIGHT NOT NEED LOGIC BELOW, BECAUSE STAFF_PAGE AND LOCATIONS_PAGE COLUMNS WILL BE REMOVED. ##
