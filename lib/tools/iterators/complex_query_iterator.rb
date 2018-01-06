@@ -32,8 +32,8 @@ module ComplexQueryIterator
     until get_dj_count <= @dj_count_limit
       puts "\nWaiting on #{get_dj_count} Queued Jobs | Queue Limit: #{@dj_count_limit}"
       puts "Total Query Count: #{@query_count}, Timeout: #{@timeout}"
-      puts "Please wait #{@dj_wait_time} seconds ..."
-      sleep(@dj_wait_time)
+      puts "Please wait #{@timeout} seconds ..."
+      sleep(@timeout)
     end
   end
 

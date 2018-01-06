@@ -15,18 +15,22 @@ class NetVerifier
     connection = false
 
     if !test_internet_connection
-      ping_attempt_limit = 5
+      ping_attempt_limit = 3
       ping_attempt_count = 1
       sleep_time = 3
 
       while !connection
-        sleep_time * ping_attempt_count
-        sleep(sleep_time)
-        connection = test_internet_connection
+        # sleep_time * ping_attempt_count
+        sleep_time *= ping_attempt_count
         ping_attempt_count += 1
+        puts "Waiting #{sleep_time} for ping attempt #{ping_attempt_count}"
+        sleep(sleep_time)
+
+        connection = test_internet_connection
         break if connection
 
         if ping_attempt_count >= ping_attempt_limit
+          puts "Force Quit: #{ping_attempt_limit} pings | #{sleep_time} seconds"
           connection = false
           return connection ## See if this works.  Would be lightest option.
           # Process.kill("QUIT", @class_pid)  #=> quits class.
@@ -47,11 +51,14 @@ class NetVerifier
 
   def test_internet_connection
     sample_url = ping_url
+    puts "PING: #{sample_url}"
+
     begin
-      result = true if open(ping_url)
+      result = true if open(sample_url)
     rescue
       result = false
     end
+
     return result
   end
 
@@ -85,7 +92,8 @@ class NetVerifier
     https://www.discovernursing.com/
     https://www.cancer.org/
     https://www.verizon.com/)
-    pingable_urls.sample
+
+    return pingable_urls.sample
   end
 
 

@@ -15,66 +15,61 @@ module Curler
   # include NetVerifier
   # extend ActiveSupport::Concern
 
-  def start_curl
-    begin
+  # def start_curl
+  def start_curl(web_url)
+    curl_hsh = { sts_code: nil, curl_url: nil, err_msg: nil }
+    result = nil
 
+    begin
       begin # for timeout
         Timeout.timeout(@timeout) do
         # Timeout.timeout(9000) do
-          @formatted_url = WebFormatter.format_url(@web_url)
-          if @formatted_url.present?
-            @result = Curl::Easy.perform(@formatted_url) do |curl|
-              puts "=== CURL CONNECTED ==="
+          if web_url.present?
+            puts "\n\n=== WAITING FOR CURL RESPONSE ==="
+            result = Curl::Easy.perform(web_url) do |curl|
               curl.follow_location = true
               curl.useragent = "curb"
               curl.connect_timeout = @timeout
               curl.enable_cookies = true
               curl.head = true #testing - new
-            end
-          else
-            return nil
-          end
-        end
-      rescue Timeout::Error
-        @error_urls << [@web_url]
-        @web_obj.update_attributes(web_sts: @timeout_web_sts, updated_at: Time.now)
-        # Process.kill("QUIT", @iterate_query_pid)
+            end # result
+
+            curl_hsh[:sts_code] = result&.response_code.to_s
+            curl_hsh[:curl_url] = Formatter.new.format_url(result&.last_effective_url)
+          end # conditional
+        end # timeout
+
+      rescue Timeout::Error # timeout rescue
+        curl_hsh[:err_msg] = "timeout:#{@timeout}"
       end
 
-      # curl_parser
-      @curl_url = @result&.last_effective_url
-      @curl_url = WebFormatter.format_url(@curl_url) if @curl_url.present?
-      @curl_sts_code = @result&.response_code.to_s
-
-    rescue
-      # if validate_url(@web_url) #=> via InternetConnectionValidator
-      #   start_curl # restarting curl to try again, if valid.
-      # else
-        @error_urls << [@web_url]
-        @result = nil
-        @curl_url = nil
-        @error_message = "Error: #{$!.message}"
-        error_parser
-      # end
+    rescue # LoadError => e  # curl rescue
+      err_msg = error_parser("Error: #{$!.message}")
+      NetVerifier.new.check_internet if err_msg.include?('TCP')
+      curl_hsh[:err_msg] = err_msg
     end
 
+    return curl_hsh
   end
 
-  def error_parser
-    puts "ENTERED ERROR PARSER - CHECK @result.sts"
-    @curl_url = nil
 
-    if @error_message.include?("SSL connect error")
-      @web_sts = "Error: SSL"
-    elsif @error_message.include?("Couldn't resolve host name")
-      @web_sts = "Error: Host"
-    elsif @error_message.include?("Peer certificate")
-      @web_sts = "Error: Certificate"
-    elsif @error_message.include?("Failure when receiving data")
-      @web_sts = "Error: Transfer"
+  def error_parser(err_msg)
+    if err_msg.include?("Couldn't connect to server")
+      err_msg = "Error: Expired Url"
+    elsif err_msg.include?("SSL connect error")
+      err_msg = "Error: SSL"
+    elsif err_msg.include?("Couldn't resolve host name")
+      err_msg = "Error: Host"
+    elsif err_msg.include?("Peer certificate")
+      err_msg = "Error: Certificate"
+    elsif err_msg.include?("Failure when receiving data")
+      err_msg = "Error: Transfer"
+    elsif err_msg.include?("TCP connection")
+      err_msg = "Error: TCP"
     else
-      @web_sts = "Error: Undefined"
+      err_msg = "Error: Undefined"
     end
+    return err_msg
   end
 
 

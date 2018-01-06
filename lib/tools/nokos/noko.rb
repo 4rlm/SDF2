@@ -9,45 +9,45 @@ require 'net/ping'
 
 module Noko
 
-
-  # def start_mechanize(url_string)
-  def start_noko(url_string)
+  # def start_mechanize(web_url)
+  def start_noko(web_url)
+    noko_hsh = { page: nil, err_msg: nil }
 
     begin
-      Timeout::timeout(@timeout) do
-        @agent = Mechanize.new
-        @html = @agent.get(url_string)
-        puts "=== GOOD URL ===\nURL: #{url_string}"
+      begin
+        Timeout::timeout(@timeout) do
+          puts "\n\n=== WAITING FOR Noko RESPONSE ==="
+          page = Mechanize.new.get(web_url)
+          page.respond_to?('at_css') ? noko_hsh[:noko_page] = Mechanize.new.get(web_url) : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
+        end
+      rescue Timeout::Error # timeout rescue
+        noko_hsh[:err_msg] = "timeout:#{@timeout}"
       end
-    rescue
-      # if validate_url(url_string)
-      if NetVerifier.new.validate_url(url_string)
-        binding.pry
-        puts "validating url....."
-        start_noko(url_string)
-      else
-        @html = error_parser($!.message, url_string)
-      end
+    rescue # LoadError => e  # noko rescue
+      err_msg = error_parser("Error: #{$!.message}")
+      NetVerifier.new.check_internet if err_msg.include?('TCP')
+      noko_hsh[:err_msg] = err_msg
     end
+
+    return noko_hsh
   end
 
 
-  ## TIP: Consider consolidating: Helper.new.err_code_finder($!.message)
-  def error_parser(error_response, url_string)
-    if error_response.include?("404 => Net::HTTPNotFound")
-      @error_code = "URL Error: 404"
-    elsif error_response.include?("connection refused")
-      @error_code = "URL Error: Connection"
-    elsif error_response.include?("undefined method")
-      @error_code = "URL Error: Method"
-    elsif error_response.include?("TCP connection")
-      @error_code = "URL Error: TCP"
-    elsif error_response.include?("execution expired")
-      @error_code = "URL Error: Runtime"
+  def error_parser(err_msg)
+    if err_msg.include?("404 => Net::HTTPNotFound")
+      err_msg = "Error: 404"
+    elsif err_msg.include?("connection refused")
+      err_msg = "Error: Connection"
+    elsif err_msg.include?("undefined method")
+      err_msg = "Error: Method"
+    elsif err_msg.include?("TCP connection")
+      err_msg = "Error: TCP"
+    elsif err_msg.include?("execution expired")
+      err_msg = "Error: Runtime"
     else
-      @error_code = "URL Error: Undefined"
+      err_msg = "Error: Undefined"
     end
-    puts "\n\n#{@error_code}: #{url_string}\n\n"
+    return err_msg
   end
 
 end

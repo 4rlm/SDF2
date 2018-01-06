@@ -33,7 +33,7 @@ module WebFormatter
 
       uri = URI(url)
       if uri.present?
-        bad_exts = %w(au ca edu es es gov ru uk us)
+        bad_exts = %w(au ca edu es gov in ru uk us)
         host_parts = uri.host&.split(".")
         bad_host_sts = host_parts&.map { |part| TRUE if bad_exts.any? {|ext| part == ext } }&.compact&.first
         url = nil if bad_host_sts
