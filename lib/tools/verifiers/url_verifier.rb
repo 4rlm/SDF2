@@ -28,10 +28,9 @@ class UrlVerifier
   # Call: UrlVerifier.new.start_url_verifier
   def start_url_verifier
     ## Settings for ComplexQueryIterator Module.
-    @class_pid = Process.pid
-    @timeout = 15
+    @timeout = 10
     @dj_count_limit = 20 #=> Num allowed before releasing next batch.
-    @workers = 3 #=> Divide format_query_results into groups of x.
+    @workers = 4 #=> Divide format_query_results into groups of x.
 
     # query = Web.where.not(archived: TRUE).where.not(web_sts: 'timeout').order("updated_at DESC").pluck(:id)
     # query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
@@ -44,10 +43,12 @@ class UrlVerifier
     # query = Web.all.order("updated_at ASC").pluck(:id)
     # query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
     # query = Web.where.not(web_sts: 'valid').order("updated_at ASC").pluck(:id)
-    query = Web.where(archived: TRUE).order("updated_at ASC").pluck(:id)
+    # query = Web.where(archived: TRUE).order("updated_at ASC").pluck(:id)
+    query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
 
 
-    obj_in_grp = 150
+
+    obj_in_grp = 20
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 

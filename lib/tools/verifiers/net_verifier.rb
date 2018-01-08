@@ -3,7 +3,6 @@ require 'nokogiri'
 require 'open-uri'
 require 'whois'
 require 'delayed_job'
-
 require 'timeout'
 require 'net/ping'
 
@@ -15,9 +14,9 @@ class NetVerifier
     connection = false
 
     if !test_internet_connection
-      ping_attempt_limit = 3
+      ping_attempt_limit = 1
       ping_attempt_count = 1
-      sleep_time = 3
+      sleep_time = 5
 
       while !connection
         # sleep_time * ping_attempt_count
@@ -30,12 +29,12 @@ class NetVerifier
         break if connection
 
         if ping_attempt_count >= ping_attempt_limit
-          puts "Force Quit: #{ping_attempt_limit} pings | #{sleep_time} seconds"
+          # puts "Force Quit: #{ping_attempt_limit} pings | #{sleep_time} seconds"
           connection = false
-          return connection ## See if this works.  Would be lightest option.
-          # Process.kill("QUIT", @class_pid)  #=> quits class.
-          # Process.kill("QUIT", @iterate_query_pid) #=> quits top level iterator.
-          # Process.kill(9, Process.pid) #=> Too Strong: kills rails server.
+          return
+          # return connection ## See if this works.  Would be lightest option.
+          # Process.kill("WINCH", Process.pid)  #=> quits class.
+          # Process.kill(28)
           # Process.kill(9, Process.ppid) #=> Too Strong: kills rails server.
         end
 

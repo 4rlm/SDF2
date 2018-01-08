@@ -1,3 +1,5 @@
+# Call: TemplateFinder.new.start_template_finder
+
 require 'mechanize'
 require 'nokogiri'
 require 'open-uri'
@@ -17,16 +19,45 @@ module Noko
       begin
         Timeout::timeout(@timeout) do
           puts "\n\n=== WAITING FOR Noko RESPONSE ==="
-          page = Mechanize.new.get(web_url)
-          page.respond_to?('at_css') ? noko_hsh[:noko_page] = Mechanize.new.get(web_url) : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
+
+          agent = Mechanize.new # { |agent| agent.follow_meta_refresh = true }
+          agent.user_agent_alias = 'Mac Safari'
+          agent.follow_meta_refresh = true
+          agent.read_timeout = @timeout
+          agent.open_timeout = @timeout # Length of time to wait until a connection is opened in seconds
+          agent.idle_timeout = @timeout # Reset connections that have not been used in this many seconds
+          agent.keep_alive = false # enable
+
+          begin
+            uri = URI(web_url)
+            page = agent.get(uri)
+            # page = agent.get(web_url)
+          rescue Mechanize::ResponseReadError => e
+            page = e.force_parse
+          end
+
+          page.respond_to?('at_css') ? noko_hsh[:noko_page] = page : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
+            
+          #### ORIGINAL ####
+          # page = Mechanize.new.get(web_url)
+          # page.respond_to?('at_css') ? noko_hsh[:noko_page] = Mechanize.new.get(web_url) : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
         end
       rescue Timeout::Error # timeout rescue
         noko_hsh[:err_msg] = "timeout:#{@timeout}"
       end
     rescue # LoadError => e  # noko rescue
       err_msg = error_parser("Error: #{$!.message}")
-      NetVerifier.new.check_internet if err_msg.include?('TCP')
       noko_hsh[:err_msg] = err_msg
+
+      # if err_msg.include?('TCP')
+        # puts "\n\nTCP Sleep Delay: (#{@timeout}) seconds\n\n"
+        # sleep(@timeout)
+        # NetVerifier.new.check_internet
+        # return connection ## See if this works.  Would be lightest option.
+        # Process.kill(1, @process_pid)  #=> quits class.
+        # Process.kill(17)
+        # Process.kill(9, Process.ppid) #=> Too Strong: kills rails server.
+      # end
     end
 
     return noko_hsh

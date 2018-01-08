@@ -17,14 +17,12 @@ module ComplexQueryIterator
 
   def iterate_query(query)
     # Call: UrlVerifier.new.start_url_verifier
-    @iterate_query_pid = Process.pid
-
+    # Delayed::Worker.max_run_time = 2.seconds
     query.in_groups(@group_count).each do |batch_of_ids|
       @query_count -= batch_of_ids&.count
       pause_iteration
       format_query_results(batch_of_ids)
     end
-
   end
 
 
@@ -45,10 +43,6 @@ module ComplexQueryIterator
 
   def format_query_results(batch_of_ids)
     batch_of_ids.in_groups(@workers).each do |group_of_ids|
-      puts "\n\n==> batch_of_ids: #{batch_of_ids} <=="
-      puts "\nPPID: #{Process.ppid}"
-      puts "PID: #{Process.pid}"
-
       standard_iterator(group_of_ids)
       # delay.standard_iterator(group_of_ids)
     end
@@ -56,7 +50,6 @@ module ComplexQueryIterator
 
 
   def standard_iterator(ids)
-    puts "ids: #{ids}"
     # ids.each { |id| template_starter(id) if id }
     ids.each { |id| delay.template_starter(id) if id }
   end

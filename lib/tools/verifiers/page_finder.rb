@@ -36,14 +36,9 @@ class PageFinder
 
   def initialize
     ## Below are Settings for ComplexQueryIterator Module.
-    @query_count = nil
-    @class_pid = Process.pid
+    @timeout = 10
     @dj_count_limit = 20 #=> Num allowed before releasing next batch.
-    @workers = 3 #=> Divide format_query_results into groups of x.
-    # @timeout = 5 #=> How often to check dj queue count.
-    @timeout = 5
-    @timeout = @timeout
-    @timeout_web_sts = 'timeout1'
+    @workers = 4 #=> Divide format_query_results into groups of x.
   end
 
   def start_page_finder
@@ -51,7 +46,7 @@ class PageFinder
     query = Web.where(temp_sts: 'valid').order("updated_at ASC")[150..250].pluck(:id)
 
 
-    obj_in_grp = 150
+    obj_in_grp = 20
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
@@ -61,49 +56,78 @@ class PageFinder
 
 
   def template_starter(id)
-    @web_obj = Web.find(id)
-    @url = @web_obj.url
-    noko_hsh = start_noko(@url)
+    web_obj = Web.find(id)
+    noko_hsh = start_noko(web_obj.url)
     noko_page = noko_hsh[:noko_page]
     err_msg = noko_hsh[:err_msg]
-    # @web_update_hsh = { staff_link_sts: nil, loc_link_sts: nil, staff_text_sts: nil, loc_text_sts: nil, link_text_date: Time.now }
-    @web_update_hsh = { link_text_date: Time.now }
+    # web_update_hsh = { staff_link_sts: nil, loc_link_sts: nil, staff_text_sts: nil, loc_text_sts: nil, link_text_date: Time.now }
+    web_update_hsh = { link_text_date: Time.now }
 
     if err_msg.present?
       puts err_msg
       binding.pry
-      @web_update_hsh.merge!({staff_link_sts: err_msg, loc_link_sts: err_msg, staff_text_sts: err_msg, loc_text_sts: err_msg})
-      @web_obj.update_attributes(@web_update_hsh)
+      web_update_hsh.merge!({staff_link_sts: err_msg, loc_link_sts: err_msg, staff_text_sts: err_msg, loc_text_sts: err_msg})
+      web_obj.update_attributes(web_update_hsh)
     elsif noko_page.present?
 
-      staff_hsh = parse_page(noko_page, "staff")
+      staff_hsh = parse_page(web_obj, noko_page, "staff")
       staff_link = staff_hsh[:link]
       staff_text = staff_hsh[:text]
       staff_link.present? ? staff_link_sts = 'valid' : staff_link_sts = 'invalid'
       staff_text.present? ? staff_text_sts = 'valid' : staff_text_sts = 'invalid'
 
-      loc_hsh = parse_page(noko_page, "location")
+      loc_hsh = parse_page(web_obj, noko_page, "location")
       loc_link = loc_hsh[:link]
       loc_text = loc_hsh[:text]
       loc_link.present? ? loc_link_sts = 'valid' : loc_link_sts = 'invalid'
       loc_text.present? ? loc_text_sts = 'valid' : loc_text_sts = 'invalid'
 
-      @web_update_hsh.merge!({staff_link_sts: staff_link_sts, loc_link_sts: loc_link_sts, staff_text_sts: staff_text_sts, loc_text_sts: loc_text_sts})
+      web_update_hsh.merge!({staff_link_sts: staff_link_sts, loc_link_sts: loc_link_sts, staff_text_sts: staff_text_sts, loc_text_sts: loc_text_sts})
+      ###########################
 
-      puts "\n\n==================\n#{@web_update_hsh.to_yaml}\n#{staff_hsh.to_yaml}\n#{loc_hsh.to_yaml}\n"
+       # "/meetourstaff.aspx", link_type: "staff", link_sts: nil,
+
       # parse_page(noko_page, "location")
       # loc_link_sts: nil, loc_text_sts: nil,
     end
 
+    update_db(id, web_obj, web_update_hsh, staff_hsh, loc_hsh)
   end
+
+
+  def update_db(id, web_obj, web_update_hsh, staff_hsh, loc_hsh)
+    puts "\n\n==================\n#{web_update_hsh.to_yaml}\n#{staff_hsh.to_yaml}\n#{loc_hsh.to_yaml}\n"
+    binding.pry
+
+
+
+    # temp_obj = Template.find_by(template_name: new_temp) if new_temp.present?
+    # Migrator.new.create_obj_parent_assoc('template', temp_obj, web_obj) if temp_obj.present?
+    # web_obj.update_attributes(temp_sts: temp_sts, temp_date: Time.now, updated_at: Time.now)
+    # tf_starter if id == @last_id
+  end
+
+  # def update_db(status, text, href, link, mode)
+  #   binding.pry
+  #   # Clean the Data before updating database
+  #   # clean = record_cleaner(text, href, link)
+  #   # text, href, link = clean[:text], clean[:href], clean[:link]
+  #
+  #   if mode == "location"
+  #     # @indexer.update_attributes(indexer_status: "PageFinder", loc_status: status, location_url: link, location_text: text, page_finder_date: DateTime.now) if @indexer != nil
+  #   elsif mode == "staff"
+  #     # @indexer.update_attributes(indexer_status: "PageFinder", stf_status: status, staff_url: link, staff_text: text, page_finder_date: DateTime.now) if @indexer != nil
+  #   end
+  # end
+
 
 
   ########################################
   #CALL: PageFinder.new.start_page_finder
   ########################################
 
-  def parse_page(noko_page, mode)
-    list = text_href_list(mode)
+  def parse_page(web_obj, noko_page, mode)
+    list = text_href_list(web_obj, mode)
     text_list = list[:text_list]
     parsed_hsh = {}
 
@@ -112,7 +136,7 @@ class PageFinder
       noko_page.links.each do |noko_link|
         link_text = format_href(noko_link&.text)
         if link_text&.include?(text)
-          formatted_link = Formatter.new.format_link(@url, noko_link&.href)
+          formatted_link = Formatter.new.format_link(web_obj.url, noko_link&.href)
           formatted_text = noko_link&.text&.strip
 
           if formatted_text.present? && formatted_link.present?
@@ -130,7 +154,7 @@ class PageFinder
          noko_page.links.each do |noko_link|
           link_href = format_href(noko_link&.href)
           if link_href&.include?(href)
-            formatted_link = Formatter.new.format_link(@url, noko_link&.href)
+            formatted_link = Formatter.new.format_link(web_obj.url, noko_link&.href)
             formatted_text = noko_link&.text&.strip
 
             if formatted_text.present? && formatted_link.present?
@@ -143,24 +167,13 @@ class PageFinder
       end
     end
 
-
-    # update_db("PF Result", links.text.strip, links.href, joined_url, mode)
     return parsed_hsh
   end
 
 
-  def update_db(status, text, href, link, mode)
-    binding.pry
-    # Clean the Data before updating database
-    # clean = record_cleaner(text, href, link)
-    # text, href, link = clean[:text], clean[:href], clean[:link]
-
-    if mode == "location"
-      # @indexer.update_attributes(indexer_status: "PageFinder", loc_status: status, location_url: link, location_text: text, page_finder_date: DateTime.now) if @indexer != nil
-    elsif mode == "staff"
-      # @indexer.update_attributes(indexer_status: "PageFinder", stf_status: status, staff_url: link, staff_text: text, page_finder_date: DateTime.now) if @indexer != nil
-    end
-  end
+  ##################################################
+  ############ HELPER METHODS BELOW ################
+  ##################################################
 
 
   # def to_regexp(arr)
@@ -188,11 +201,11 @@ class PageFinder
   end
 
 
-  def text_href_list(mode)
+  def text_href_list(web_obj, mode)
     if mode == "staff"
       text = "staff_text"
       href = "staff_href"
-      term = @web_obj.templates&.order("updated_at DESC")&.first&.template_name
+      term = web_obj.templates&.order("updated_at DESC")&.first&.template_name
       special_templates = ["Cobalt", "Dealer Inspire", "DealerFire"]
       term = 'general' if !special_templates.include?(term)
     elsif mode == "location"
@@ -207,9 +220,10 @@ class PageFinder
     href_list = format_href_list(Term.where(sub_category: href).where(criteria_term: term).map(&:response_term))
 
     return {text_list: text_list, href_list: href_list}
-    # list = text_href_list(mode)
+    # list = text_href_list(web_obj, mode)
     # text_list = list[:text_list]
   end
+
 
 
 end

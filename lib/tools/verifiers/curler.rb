@@ -45,7 +45,7 @@ module Curler
 
     rescue # LoadError => e  # curl rescue
       err_msg = error_parser("Error: #{$!.message}")
-      NetVerifier.new.check_internet if err_msg.include?('TCP')
+      # NetVerifier.new.check_internet if err_msg.include?('TCP')
       curl_hsh[:err_msg] = err_msg
     end
 
