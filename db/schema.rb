@@ -334,9 +334,17 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.string "staff_text_sts"
     t.string "loc_text_sts"
     t.datetime "link_text_date"
+    t.string "acs_sts"
+    t.datetime "acs_date"
+    t.string "cs_sts"
+    t.datetime "cs_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["acs_date"], name: "index_webs_on_acs_date"
+    t.index ["acs_sts"], name: "index_webs_on_acs_sts"
     t.index ["archived"], name: "index_webs_on_archived"
+    t.index ["cs_date"], name: "index_webs_on_cs_date"
+    t.index ["cs_sts"], name: "index_webs_on_cs_sts"
     t.index ["link_text_date"], name: "index_webs_on_link_text_date"
     t.index ["loc_link_sts"], name: "index_webs_on_loc_link_sts"
     t.index ["loc_text_sts"], name: "index_webs_on_loc_text_sts"

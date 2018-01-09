@@ -1,21 +1,11 @@
-# require 'mechanize'
-# require 'nokogiri'
-# require 'open-uri'
-# require 'delayed_job'
-# require 'curb'
 require 'timeout'
 # require 'net_verifier'
 require 'net/ping'
 
-#RUNNER: IndexerService.new.url_redirect_starter
-#RUNNER: StafferService.new.cs_starter
-# %w{}.each { |x| require x }
 
 module Curler
-  # include NetVerifier
-  # extend ActiveSupport::Concern
 
-  # def start_curl
+
   def start_curl(web_url)
     curl_hsh = { sts_code: nil, curl_url: nil, err_msg: nil }
     result = nil

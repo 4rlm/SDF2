@@ -123,7 +123,9 @@ module WebFormatter
   #CALL: Formatter.new.remove_invalid_links(link)
   def remove_invalid_links(link)
     if link.present?
-      bad_links = %w(: .biz .co .edu .gov .jpg .net [ @ * // % + afri anounc book business buy bye call cash cheap click collis cont distrib download drop event face feature feed financ find fleet form gas generat graphic hello home hospi hour hours http info insta inventory item join login mail mailto mobile movie museu music news none offer part phone policy priva pump rate regist review schedul school service shop site test ticket tire tv twitter watch www yelp youth)
+      bad_links = %w(: .biz .co .edu .gov .jpg .net // afri anounc book business buy bye call cash cheap click collis cont distrib download drop event face feature feed financ find fleet form gas generat graphic hello home hospi hour hours http info insta inventory item join login mail mailto mobile movie museu music news none offer part phone policy priva pump rate regist review schedul school service shop site test ticket tire tv twitter watch www yelp youth)
+      symbs = ['(', ')', '[', ']', '{', '}', '*', '@', '^', '$', '%', '+', '!', '<', '>', '~', ',', "'"]
+      bad_links += symbs
 
       make_link_nil = bad_links.any? {|word| link&.include?(word) }  ## .try and &.
       link = nil if (make_link_nil || link == "/")
@@ -136,6 +138,18 @@ module WebFormatter
   def remove_invalid_texts(text)
     if text.present?
       bad_texts = %w(? .com .jpg @ * afri after anounc apply approved blog book business buy call care career cash charit cheap check click collis commerc cont contrib deal distrib download employ event face feature feed financ find fleet form gas generat golf here holiday hospi hour info insta inventory join later light login mail mobile movie museu music news none now oil part pay phone policy priva pump quick quote rate regist review saving schedul service shop sign site speci ticket tire today transla travel truck tv twitter watch youth)
+      symbs = ['{', '}', '*', '@', '^', '$', '%', '+', '!', '<', '>', '~']
+      bad_texts += symbs
+
+      text = text.split('|').join(' ')
+      text = text.split('/').join(' ')
+
+      text&.gsub!("(", ' ')
+      text&.gsub!(")", ' ')
+      text&.gsub!("[", ' ')
+      text&.gsub!("]", ' ')
+      text&.gsub!(",", ' ')
+      text&.gsub!("'", ' ')
 
       text = nil if text&.length&.> 35  ## .try and &.
       invalid_text = Regexp.new(/[0-9]/)

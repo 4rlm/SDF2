@@ -2,16 +2,13 @@
 
 require 'complex_query_iterator'
 require 'curler'
-# require 'net_verifier'
 require 'noko'
 
 class TemplateFinder
   include ComplexQueryIterator
-  # include NetVerifier
   include Noko
 
   def initialize
-    ## Below are Settings for ComplexQueryIterator Module.
     @timeout = 10
     @dj_count_limit = 25 #=> Num allowed before releasing next batch.
     @workers = 4 #=> Divide format_query_results into groups of x.

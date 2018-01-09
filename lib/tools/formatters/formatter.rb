@@ -78,7 +78,7 @@ class Formatter
       phone_obj = Phone.find(id)
       phone = phone_obj.phone
 
-      if phone
+      if phone.present?
         valid_phone = PhoneFormatter.validate_phone(phone)
 
         if valid_phone.nil?

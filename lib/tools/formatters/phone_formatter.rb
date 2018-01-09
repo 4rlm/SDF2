@@ -14,6 +14,7 @@ module PhoneFormatter
   # Call: Formatter.new.validate_phone(phone)
   def validate_phone(phone)
     if phone.present?
+      phone = phone&.gsub(/\s/, ' ')&.strip
       reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
       phone.first == "0" || phone.include?("(0") || !reg.match(phone) ? phone = nil : valid_phone = format_phone(phone)
       return valid_phone

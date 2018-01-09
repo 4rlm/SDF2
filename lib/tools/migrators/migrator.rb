@@ -14,6 +14,10 @@ class Migrator
 
   ### CAREFUL!!! BELOW METHODS BEING USED IN EACH UNI_MIGRATOR MODULE ###
 
+  def initialize
+    @formatter = Formatter.new
+  end
+
   ## Used for Tables where only one Attr matters, like Phone.phone
   def save_simple_obj(model, attr_hsh)
     obj = model.classify.constantize.find_or_create_by(attr_hsh)

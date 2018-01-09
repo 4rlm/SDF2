@@ -31,7 +31,7 @@ module Importer
   end
 
 
-  # Call: CsvTool.new.restore_backup(Phone, 'Phones.csv')
+  # Call: CsvTool.new.restore_backup(Term, 'Terms.csv')
   def restore_backup(model, file_name)
     @file_path = "#{@backups_dir_path}/#{file_name}"
     parse_csv

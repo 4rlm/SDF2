@@ -19,9 +19,11 @@ class CreateWebs < ActiveRecord::Migration[5.1]
       t.string   :loc_text_sts, index: true
       t.datetime :link_text_date, index: true
 
+      t.string   :acs_sts, index: true
+      t.datetime :acs_date, index: true
 
-      # t.string :staff_page, index: true, unique: true
-      # t.string :locations_page, index: true, unique: true
+      t.string   :cs_sts, index: true
+      t.datetime :cs_date, index: true
 
       t.timestamps
     end

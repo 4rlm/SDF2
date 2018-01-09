@@ -1,19 +1,5 @@
-# require 'mechanize'
-# require 'nokogiri'
-# require 'open-uri'
-# require 'delayed_job'
-# %w{mechanize nokogiri open-uri delayed_job}.each {|x| require x }
-
-
-######### Delayed Job #########
-# $ rake jobs:clear
-
-# Call: StafferService.new.start_cont_scraper
-# Call: ContScraper.new.cs_starter
 
 module ComplexQueryIterator
-  # extend ActiveSupport::Concern
-  # include InternetConnectionValidator
 
   def iterate_query(query)
     # Call: UrlVerifier.new.start_url_verifier

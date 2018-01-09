@@ -42,5 +42,18 @@ class Start
   end
 
 
+  #CALL: Start.find_pages
+  def self.find_pages
+    PageFinder.new.start_page_finder
+  end
+
+
+  #CALL: Start.scrape_acts
+  def self.scrape_acts
+    ActScraper.new.start_act_scraper
+  end
+
+
+
 
 end
