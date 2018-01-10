@@ -4,7 +4,7 @@ class AsDealerEprocess
     @helper = AsHelper.new
   end
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     orgs, streets, cities, states, zips, phones, addrs = [], [], [], [], [], [], []
 
     orgs << noko_page.at_css('.hd_site_title')&.text

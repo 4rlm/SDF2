@@ -4,7 +4,7 @@ class AsDealerInspire
     @helper  = AsHelper.new
   end
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     org = noko_page.at_css('.organization-name')&.text
     acc_phones = noko_page.css('.tel')&.collect {|phone| phone&.text }
     phone = acc_phones.join(', ')

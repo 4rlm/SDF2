@@ -6,7 +6,7 @@ class AsDealerCom
     @helper = AsHelper.new
   end
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     selector = "//meta[@name='author']/@content"
 
     act_scrape_hsh = {

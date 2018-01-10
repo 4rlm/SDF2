@@ -5,7 +5,7 @@ class AsCobalt
     @helper  = AsHelper.new
   end
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     orgs, streets, cities, states, zips, phones = [], [], [], [], [], []
 
     ### OUTLYER: Special format, so doesn't follow same process as others below.

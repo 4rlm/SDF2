@@ -41,12 +41,11 @@ class UrlVerifier
     # query = Web.where(archived: nil).where.not("web_sts LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
     # query = Web.where.not(web_sts: '++').order("updated_at ASC").pluck(:id)
     # query = Web.all.order("updated_at ASC").pluck(:id)
-    # query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
     # query = Web.where.not(web_sts: 'valid').order("updated_at ASC").pluck(:id)
     # query = Web.where(archived: TRUE).order("updated_at ASC").pluck(:id)
-    query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
-
-
+    # query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
+    query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 20
     @query_count = query.count

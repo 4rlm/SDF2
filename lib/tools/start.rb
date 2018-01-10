@@ -34,6 +34,7 @@ class Start
   def self.verify_urls
     UrlVerifier.new.start_url_verifier
   end
+  ## Use with foreman start
 
 
   ##############################
@@ -45,12 +46,14 @@ class Start
   def self.find_templates
     TemplateFinder.new.start_template_finder
   end
+    ## Use with foreman start
 
 
   # 6) CALL: Start.find_pages
   def self.find_pages
     PageFinder.new.start_page_finder
   end
+    ## Use with foreman start
 
 
   ##############################
@@ -62,6 +65,7 @@ class Start
   def self.scrape_acts
     ActScraper.new.start_act_scraper
   end
+    ## Use with foreman start
 
 
   # 8) CALL: Start.scrape_conts

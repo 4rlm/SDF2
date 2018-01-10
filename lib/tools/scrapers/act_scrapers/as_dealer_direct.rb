@@ -4,7 +4,7 @@ class AsDealerDirect
     @helper = AsHelper.new
   end
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     orgs, streets, cities, states, zips, phones = [], [], [], [], [], []
 
     orgs << noko_page.at_css('.dealer-name')&.text

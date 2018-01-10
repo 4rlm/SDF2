@@ -4,7 +4,7 @@ class AsDealerfire
     @helper  = AsHelper.new
   end
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     # v7_street = noko_page.at_css('.full-address .address-1').text if noko_page.at_css('.full-address .address-1')
     # v7_city_st_zp = noko_page.at_css('.full-address .address-2').text if noko_page.at_css('.full-address .address-2')
     addr_hash = find_address(noko_page)

@@ -19,6 +19,7 @@ class ActScraper
 
 
   def start_act_scraper
+    binding.pry
     query = Web.where(temp_sts: 'valid', acs_sts: nil).order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 30
@@ -52,27 +53,27 @@ class ActScraper
       if term.present?
         case term
         when "as_dealer_com"
-          as_hsh = AsDealerCom.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsDealerCom.new.scrape_act(noko_page)
         when "as_cobalt"
-          as_hsh = AsCobalt.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsCobalt.new.scrape_act(noko_page)
         when "as_dealeron"
-          as_hsh = AsDealeron.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsDealeron.new.scrape_act(noko_page)
         when "as_dealercar_search"
-          as_hsh = AsDealercarSearch.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsDealercarSearch.new.scrape_act(noko_page)
         when "as_dealer_direct"
-          as_hsh = AsDealerDirect.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsDealerDirect.new.scrape_act(noko_page)
         when "as_dealer_inspire"
-          as_hsh = AsDealerInspire.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsDealerInspire.new.scrape_act(noko_page)
         when "as_dealerfire"
-          as_hsh = AsDealerfire.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsDealerfire.new.scrape_act(noko_page)
         when "as_dealer_eprocess"
-         as_hsh =  AsDealerEprocess.new.scrape_act(noko_page, web_obj)
+         as_hsh =  AsDealerEprocess.new.scrape_act(noko_page)
         else
-          as_hsh = AsMeta.new.scrape_act(noko_page, web_obj)
+          as_hsh = AsMeta.new.scrape_act(noko_page)
         end
         update_db(web_obj, as_hsh)
       else
-        as_hsh = AsMeta.new.scrape_act(noko_page, web_obj)
+        as_hsh = AsMeta.new.scrape_act(noko_page)
         update_db(web_obj, as_hsh)
       end
 

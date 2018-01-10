@@ -4,7 +4,7 @@ class AsDealeron
     @helper  = AsHelper.new
   end
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     acc_phones = noko_page&.css('.callNowClass')&.collect {|phone| phone&.text }
     raw_full_addr = noko_page&.at_css('.adr')&.text
     full_addr_arr = raw_full_addr.split(",") if raw_full_addr

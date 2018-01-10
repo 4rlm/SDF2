@@ -8,7 +8,7 @@ class AsMeta
   end
 
 
-  def scrape_act(noko_page, web_obj)
+  def scrape_act(noko_page)
     all_text = noko_page.at_css('body')&.text
     org = noko_page&.at_css('head title') ? noko_page&.at_css('head title')&.text : nil
     as_phones = @helper.as_phones_finder(noko_page)
