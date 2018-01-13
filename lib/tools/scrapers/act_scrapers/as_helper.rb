@@ -12,13 +12,31 @@ class AsHelper # RoofTop Scraper Helper Method
     raw_data_2 = noko_page.at_css('body').text
     reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
     invalid = Regexp.new("[0-9]{5,}")
-    data_1 = raw_data_1.scan(reg)
-    data_2 = raw_data_2.scan(reg)
-    phones = data_1.uniq + data_2.uniq
-    phones = phones.uniq.sort
-    phones = phones.reject { |x| invalid.match(x) }
-    phones = phones.map { |phone| @formatter.validate_phone(phone) if phone.present? }
+
+    begin
+      # raw_data_1 = utf_cleaner(raw_data_1)
+      # raw_data_2 = utf_cleaner(raw_data_2)
+      data_1 = raw_data_1&.scan(reg)
+      data_2 = raw_data_2&.scan(reg)
+      phones = data_1&.uniq + data_2&.uniq
+      phones = phones&.uniq&.sort
+      phones = phones&.reject { |x| invalid.match(x) }
+    rescue
+      puts "PHONE RESCUE!!!"
+      # phones = nil
+      # return phones
+    end
+
+    phones = phones&.map { |phone| @formatter.validate_phone(phone) if phone.present? } if phones.present?
     return phones
+  end
+
+  def utf_cleaner(string)
+    if string.present?
+      string = string&.gsub(/\s/, ' ')&.strip ## Removes carriage returns and new lines.
+      string = force_utf_encoding(string) ## Removes non-utf8 chars.
+      return string
+    end
   end
 
 

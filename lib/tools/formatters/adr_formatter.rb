@@ -6,91 +6,28 @@ module AdrFormatter
     adr_hsh&.delete_if { |key, value| value&.downcase&.include?('meta') }
 
     if adr_hsh.values.compact.present?
-      adr_hsh[:street] = format_street(adr_hsh[:street]) if adr_hsh[:street]
-      # adr_hsh['state'] = format_state(adr_hsh['state']) if adr_hsh['state']
-      if adr_hsh[:state].present?
-        state = format_state(adr_hsh[:state])
-        adr_hsh[:state] = state if state.present?
-        if state == nil && !adr_hsh[:city].present?
-          adr_hsh[:city] = adr_hsh[:state]
-          adr_hsh[:state] = nil
-        elsif state == nil && adr_hsh[:street].present? && adr_hsh[:city].present?
-          street = "#{adr_hsh[:street]} #{adr_hsh[:city]}"
-          adr_hsh[:street] = street
-          adr_hsh[:city] = adr_hsh[:state]
-          adr_hsh[:state] = nil
-        end
-      end
+      street = adr_hsh[:street]
+      city = adr_hsh[:city]
+      state = adr_hsh[:state]
+      zip = adr_hsh[:zip]
 
-      adr_hsh[:city] = format_city(adr_hsh[:city]) if adr_hsh[:city]
-      adr_hsh[:zip] = format_zip(adr_hsh[:zip]) if adr_hsh[:zip]
-      adr_hsh[:adr_pin] = generate_adr_pin(adr_hsh[:street], adr_hsh[:zip])
+      adr_hsh[:street] = format_street(street) if street.present?
+      adr_hsh[:city] = format_city(city) if city.present?
+      state_pair = format_state(state)
+      adr_hsh[:state] = state_pair&.last
+      adr_hsh[:zip] = format_zip(zip) if zip.present?
+      adr_hsh[:adr_pin] = generate_adr_pin(street, zip) if (street.present? && zip.present?)
+
+      adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
+      return adr_hsh
     end
 
-    adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
-    return adr_hsh
-  end
-
-  def format_city(city)
-    city = city&.gsub(/\s/, ' ')&.strip
-    city = nil if city&.scan(/[0-9]/)&.any?
-    city = nil if city&.downcase&.include?('category')
-    city = nil if city&.downcase&.include?('model')
-    city = nil if city&.downcase&.include?('make')
-    city = nil if city&.downcase&.include?('inventory')
-
-    if city.present?
-      street_types = %w(avenue boulevard drive expressway freeway highway lane parkway road route street terrace trail turnpike)
-      invalid_city = street_types.find { |street_type| city.downcase.include?(street_type) }
-      city = nil if invalid_city.present?
-
-      if city.present?
-        st_types = %w(ave blvd dr expy fwy hwy ln pkwy rd rte st ter trl tpke)
-        city_parts = city.split(' ')
-
-        invalid_city = city_parts.select do |city_part|
-          st_types.find { |st_type| city_part.downcase == st_type }
-        end
-
-        city = nil if invalid_city.present?
-        return city
-      end
-    end
-
-    return city
-  end
-
-  def format_state(state)
-    state = state&.gsub(/\s/, ' ')&.strip
-
-    if state.present?
-      state = state.tr('^A-Za-z', '')
-      state = nil if state&.length < 2
-
-      if state.length > 2
-        states_hsh = { 'Alabama'=>'AL', 'Alaska'=>'AK', 'Arizona'=>'AZ', 'Arkansas'=>'AR', 'California'=>'CA', 'Colorado'=>'CO', 'Connecticut'=>'CT', 'Delaware'=>'DE', 'Florida'=>'FL', 'Georgia'=>'GA', 'Hawaii'=>'HI', 'Idaho'=>'ID', 'Illinois'=>'IL', 'Indiana'=>'IN', 'Iowa'=>'IA', 'Kansas'=>'KS', 'Kentucky'=>'KY', 'Louisiana'=>'LA', 'Maine'=>'ME', 'Maryland'=>'MD', 'Massachusetts'=>'MA', 'Michigan'=>'MI', 'Minnesota'=>'MN', 'Mississippi'=>'MS', 'Missouri'=>'MO', 'Montana'=>'MT', 'Nebraska'=>'NE', 'Nevada'=>'NV', 'New Hampshire'=>'NH', 'New Jersey'=>'NJ', 'New Mexico'=>'NM', 'New York'=>'NY', 'North Carolina'=>'NC', 'North Dakota'=>'ND', 'Ohio'=>'OH', 'Oklahoma'=>'OK', 'Oregon'=>'OR', 'Pennsylvania'=>'PA', 'Rhode Island'=>'RI', 'South Carolina'=>'SC', 'South Dakota'=>'SD', 'Tennessee'=>'TN', 'Texas'=>'TX', 'Utah'=>'UT', 'Vermont'=>'VT', 'Virginia'=>'VA', 'Washington'=>'WA', 'West Virginia'=>'WV', 'Wisconsin'=>'WI', 'Wyoming'=>'WY' }
-
-        state = state.capitalize
-        states_hsh.map { |k,v| state = v if state == k }
-        state = nil if state&.length != 2
-        state = nil if state&.include?('ST')
-      end
-
-      state&.upcase!
-    end
-    return state
   end
 
 
-  #CALL: Formatter.new.format_zip(zip)
-  def format_zip(zip)
-    zip = zip&.gsub(/\s/, ' ')&.strip
-    if zip.present?
-      zip_temp = zip.tr('^0-9', '')
-      zip = "0#{zip_temp}" if zip_temp.length == 4
-    end
-    return zip
-  end
+  ##################################
+  ######### FORMAT STREET ##########
+  ##################################
 
 
   # CALL: Formatter.new.format_street(street)
@@ -104,9 +41,11 @@ module AdrFormatter
       street = nil if street&.downcase&.include?("phone")
       street = nil if street&.downcase&.include?("sales")
       street = nil if street&.downcase&.include?("parts")
+      street = nil if street&.downcase&.include?("vin")
+      street = nil if street&.downcase&.include?("terior")
+      street = nil if street&.downcase&.include?("other")
 
       if street.present?
-
         if street.include?("•")
           street_parts = street.split("•")
           street = street_parts.first
@@ -147,14 +86,146 @@ module AdrFormatter
         street&.gsub!("Turnpike", "Tpke")
         street&.gsub!("|", " ")
         street&.gsub!("•", " ")
+        street&.gsub!("Welcome to", " ")
+        street&.gsub!("var address = \"", " ")
+
+        street = nil if street&.downcase&.include?("/")
+        street = nil if street&.downcase&.include?("www")
+        street = nil if street&.downcase&.include?("*")
+        street = nil if street&.downcase&.include?("number")
+        street = nil if street&.downcase&.include?("stock")
+        street = nil if street&.downcase&.include?("shop")
+        street = nil if street&.downcase&.include?("once")
+        street = nil if street&.downcase&.include?(":")
+        street = nil if street&.include?("ID")
 
         street&.strip!
         street&.squeeze!(" ")
+        street = nil if street.present? && street.length > 50
       end
     end
 
     return street
   end
+
+
+  ##################################
+  ########## FORMAT CITY ###########
+  ##################################
+
+
+  def format_city(city)
+    city = city&.gsub(/\s/, ' ')&.strip
+    city = nil if city&.scan(/[0-9]/)&.any?
+    city = nil if city&.downcase&.include?('category')
+    city = nil if city&.downcase&.include?('model')
+    city = nil if city&.downcase&.include?('make')
+    city = nil if city&.downcase&.include?('inventory')
+    city = nil if city&.downcase&.include?('tracker')
+    city = nil if city&.downcase&.include?('push')
+    city = nil if city&.downcase&.include?("(")
+    city = nil if city&.downcase&.include?(")")
+    city = nil if city&.downcase&.include?("[")
+    city = nil if city&.downcase&.include?("]")
+    city&.gsub!("|", " ")
+    city&.gsub!("•", " ")
+
+    if city.present?
+      street_types = %w(avenue boulevard drive expressway freeway highway lane parkway road route street terrace trail turnpike)
+      invalid_city = street_types.find { |street_type| city.downcase.include?(street_type) }
+      city = nil if invalid_city.present?
+
+      if city.present?
+        st_types = %w(ave blvd dr expy fwy hwy ln pkwy rd rte st ter trl tpke)
+        city_parts = city.split(' ')
+
+        invalid_city = city_parts.select do |city_part|
+          st_types.find { |st_type| city_part.downcase == st_type }
+        end
+
+        city = nil if invalid_city.present?
+        city = nil if city&.downcase&.include?("/")
+        city = nil if city&.downcase&.include?("www")
+        city = nil if city&.downcase&.include?("*")
+        city = nil if city&.downcase&.include?("number")
+        city = nil if city&.downcase&.include?("stock")
+        city = nil if city&.downcase&.include?(":")
+        city = nil if city&.downcase&.include?("ID")
+
+        city&.strip!
+        city&.squeeze!(" ")
+        city = nil if city.present? && city.length > 50
+        city = nil if city.present? && city.length < 4
+
+      end
+    end
+
+    return city
+  end
+
+
+  ##################################
+  ########## FORMAT STATE ##########
+  ##################################
+
+  def find_states(states)
+    nested_states = []
+    states.each { |state| nested_states << format_state(state) }
+    nested_states_response = nested_states&.compact&.uniq
+    state_pair = nested_states_response&.first
+
+    state_long = state_pair&.first
+    state_short = state_pair&.last
+    state_hsh = { state_long: state_long, state_short: state_short }
+    return state_hsh
+  end
+
+
+  def format_state(state)
+    state = state&.gsub(/\s/, ' ')&.strip
+
+    if state.present?
+      states_hsh = { 'Alabama'=>'AL', 'Alaska'=>'AK', 'Arizona'=>'AZ', 'Arkansas'=>'AR', 'California'=>'CA', 'Colorado'=>'CO', 'Connecticut'=>'CT', 'Delaware'=>'DE', 'Florida'=>'FL', 'Georgia'=>'GA', 'Hawaii'=>'HI', 'Idaho'=>'ID', 'Illinois'=>'IL', 'Indiana'=>'IN', 'Iowa'=>'IA', 'Kansas'=>'KS', 'Kentucky'=>'KY', 'Louisiana'=>'LA', 'Maine'=>'ME', 'Maryland'=>'MD', 'Massachusetts'=>'MA', 'Michigan'=>'MI', 'Minnesota'=>'MN', 'Mississippi'=>'MS', 'Missouri'=>'MO', 'Montana'=>'MT', 'Nebraska'=>'NE', 'Nevada'=>'NV', 'New Hampshire'=>'NH', 'New Jersey'=>'NJ', 'New Mexico'=>'NM', 'New York'=>'NY', 'North Carolina'=>'NC', 'North Dakota'=>'ND', 'Ohio'=>'OH', 'Oklahoma'=>'OK', 'Oregon'=>'OR', 'Pennsylvania'=>'PA', 'Rhode Island'=>'RI', 'South Carolina'=>'SC', 'South Dakota'=>'SD', 'Tennessee'=>'TN', 'Texas'=>'TX', 'Utah'=>'UT', 'Vermont'=>'VT', 'Virginia'=>'VA', 'Washington'=>'WA', 'West Virginia'=>'WV', 'Wisconsin'=>'WI', 'Wyoming'=>'WY' }
+
+      state = state.tr('^A-Za-z', '')
+      if state.present? && state.length < 2
+        state = nil
+      elsif state.present? && state.length > 2
+        state = state.capitalize
+        states_hsh.map { |k,v| state = v if state == k }
+      end
+
+      if state.present?
+        state.upcase!
+        valid_state = states_hsh.find { |k,v| state == v }
+        # state = nil if !valid_state.present?
+        return valid_state
+      end
+    end
+  end
+
+
+  ##################################
+  ########### FORMAT ZIP ###########
+  ##################################
+
+
+  #CALL: Formatter.new.format_zip(zip)
+  def format_zip(zip)
+    zip = zip&.gsub(/\s/, ' ')&.strip
+    zip = nil if zip&.scan(/[A-Za-z]/)&.any?
+    (zip = "0#{zip}" if zip.length == 4) if zip.present?
+    (zip = nil if zip.length < 5) if zip.present?
+
+    zip&.strip!
+    zip&.squeeze!(" ")
+    return zip
+  end
+
+
+  ##################################
+  ############# ADR PIN ############
+  ##################################
 
 
   # CALL: Formatter.new.generate_adr_pin(street, zip)

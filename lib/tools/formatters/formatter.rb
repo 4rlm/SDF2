@@ -24,9 +24,101 @@ class Formatter
   include WebFormatter
 
 
+  #######################################
+  #CALL: ActScraper.new.start_act_scraper
+  #######################################
+
+  # Formatter.new.remove_city_from_act_name('act_name')
+  def remove_city_from_act_name(act_name)
+    if act_name.present?
+      name_parts = act_name.split(' in ')
+      name_parts = act_name.split(' In ') if name_parts.length == 1
+      name_parts = act_name.split(' Near Me ') if name_parts.length == 1
+      name_parts = act_name.split(' near me ') if name_parts.length == 1
+      name_parts = act_name.split(' of ') if name_parts.length == 1
+
+      name_parts.length > 1 ? name_parts_last = name_parts.last : name_parts_last = name_parts
+      found_city_hsh = remove_city_from_act_name_helper(act_name, name_parts_last)
+      return found_city_hsh
+    end
+  end
+
+
+  def remove_city_from_act_name_helper(act_name, name_section)
+    if act_name && name_section
+      city_list = get_cities
+      name_parts = name_section.split(' ')
+      count = 0
+      found_city = nil
+
+      while found_city == nil && count < name_parts.length
+        name_part = name_parts[0..count].join(' ')
+        temp_name_part = name_part.tr('^A-Za-z0-9', '')&.downcase
+        city_list.find do |city|
+          temp_city = city.tr('^A-Za-z0-9', '')&.downcase
+          found_city = city if temp_name_part == temp_city
+        end
+        count += 1
+      end
+
+      act_name = (act_name.split(' ') - found_city.split(' ')).join(' ') if found_city
+      found_city_hsh = { found_city: found_city, act_name: act_name }
+      return found_city_hsh
+    end
+  end
+
+
+  def remove_invalids(act_name, invalid_list)
+    if act_name && invalid_list
+      sngl_invals = []
+      dbl_invals = []
+      invals = []
+
+      ##### DBL Part - Start ####
+      invalid_list.each do |inval|
+        inval_parts_length = inval.split(' ').length
+        if inval_parts_length > 1 && act_name.downcase.include?(inval.downcase)
+          dbl_invals << inval
+        end
+      end
+      dbl_invals.each { |inval| act_name = act_name.gsub(inval, '') }
+      ##### DBL Part - End ####
+
+      ##### SNGL Part - Start ####
+      act_name&.split(' ')&.select do |part|
+        formatted_part = part.tr('^A-Za-z0-9', '')&.downcase
+        inval = invalid_list.find { |inval| formatted_part == inval.downcase }
+        sngl_invals << part if inval.present?
+      end
+      act_name = (act_name.split(' ') - sngl_invals).join(' ')
+      ##### SNGL Part - End ####
+
+      invals += sngl_invals += dbl_invals
+      found = invals&.first
+      inval_hsh = {invals: invals, found: found, act_name: act_name}
+      return inval_hsh
+    end
+  end
+
+
+  def remove_phones_from_text(text)
+    phones = []
+    text.split(' ')&.each do |text_part|
+      reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
+      text_part = nil if text_part.first == "0" || text_part.include?("(0") || !reg.match(text_part)
+      phones << text_part if text_part
+    end
+    phones.each { |phone| text = text.gsub(phone, '') }
+
+    return text
+  end
+
+
+
+  ### CONSIDER DELETING Some of BELOW - DON'T THINK ALL BEING USED #####
+
   #Call: Formatter.new.run_all_formatters
   def run_all_formatters
-    puts "Runs all Formatters methods:\nformat_webs\nformat_adrs\nformat_phones"
     format_webs
     format_adrs
     format_phones
@@ -92,12 +184,6 @@ class Formatter
       end
     end
   end
-
-
-
-
-
-
 
 
   #Call: Migrator.new.migrate_uni_acts

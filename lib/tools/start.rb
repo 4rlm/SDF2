@@ -45,6 +45,7 @@ class Start
   # 5) CALL: Start.find_templates
   def self.find_templates
     TemplateFinder.new.start_template_finder
+    ### REMEMBER TO RUN TIMEOUT QUERY ###
   end
     ## Use with foreman start
 

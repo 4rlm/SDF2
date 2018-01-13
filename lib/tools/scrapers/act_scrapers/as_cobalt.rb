@@ -47,8 +47,6 @@ class AsCobalt
     addr4 = noko_page.at_css('address')&.text
     addr5 = noko_page.css('.card .content .text .copy span').map(&:children).map(&:text).join(', ') if noko_page.css('.card .content .text .copy span')
 
-    # puts "\n>>>>>>>>>>\n orgs: #{orgs}, addr_n_org1: #{addr_n_org1}, phones: #{phones}\n>>>>>>>>>>\n"
-
     result_1 = @helper.addr_processor(addr2)
     result_2 = @helper.addr_processor(addr3)
     result_3 = @helper.addr_processor(addr_n_ph1)

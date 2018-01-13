@@ -9,27 +9,28 @@ class TemplateFinder
   include Noko
 
   def initialize
-    @timeout = 10
-    @dj_count_limit = 25 #=> Num allowed before releasing next batch.
+    @timeout = 5
+    @dj_count_limit = 30 #=> Num allowed before releasing next batch.
     @workers = 4 #=> Divide format_query_results into groups of x.
   end
 
 
   def get_primary_query
-    # query = Web.where(web_sts: 'valid').order("updated_at ASC").pluck(:id)
     # sts_codes = Web.where(sts_code: [200..299]).count
-    # primary_query = Web.where(web_sts: 'valid', sts_code: 200, temp_sts: nil).order("updated_at ASC").pluck(:id)
-    # primary_query = Web.where(web_sts: 'valid', sts_code: 200, temp_sts: 'valid').order("updated_at ASC").pluck(:id)
     primary_query = Web.where(web_sts: 'valid', temp_sts: nil).order("updated_at ASC").pluck(:id)
   end
 
 
+  def get_timeout_query
+    timeout_query = Web.where("temp_sts LIKE '%timeout%'").order("updated_at ASC").pluck(:id)
+  end
+
+
   def get_tcp_query
-    # tcp_query = Web.where(web_sts: 'valid', sts_code: 200).where("temp_sts LIKE '%Error%'").order("updated_at ASC").pluck(:id)
-    # tcp_query = Web.where("temp_sts LIKE '%Error%'").order("updated_at ASC").pluck(:id)
-    # tcp_query = Web.where(web_sts: 'valid', sts_code: 200, temp_sts: 'Error: TCP').order("updated_at ASC").pluck(:id)
     tcp_query = Web.where(temp_sts: 'Error: TCP').order("updated_at ASC").pluck(:id)
   end
+
+
 
 
   # Call: TemplateFinder.new.start_template_finder
@@ -43,19 +44,28 @@ class TemplateFinder
       start_template_finder
     end
 
+    timeout_query = get_timeout_query
+    timeout_query_count = timeout_query.count
+    @timeout = 30
+    if timeout_query_count > 0
+      setup_iterator(timeout_query)
+      # break if timeout_query_count == get_timeout_query.count
+      # start_template_finder
+    end
+
     tcp_query = get_tcp_query
     tcp_query_count = tcp_query.count
-    while tcp_query_count > 0
+    if tcp_query_count > 0
       setup_iterator(tcp_query)
-      break if tcp_query_count == get_tcp_query.count
-      start_template_finder
+      # break if tcp_query_count == get_tcp_query.count
+      # start_template_finder
     end
 
   end
 
 
   def setup_iterator(query)
-    obj_in_grp = 30
+    obj_in_grp = 50
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 

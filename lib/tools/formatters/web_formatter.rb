@@ -59,8 +59,6 @@ module WebFormatter
       end
 
     rescue
-      puts "\n\n=====Rescued: WebFormatter.format_url(url) ====="
-      puts "url: #{url}"
       return nil
     end # rescue
   end # def

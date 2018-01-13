@@ -8,14 +8,14 @@ class PageFinder
 
   def initialize
     @timeout = 10
-    @dj_count_limit = 25 #=> Num allowed before releasing next batch.
+    @dj_count_limit = 30 #=> Num allowed before releasing next batch.
     @workers = 4 #=> Divide format_query_results into groups of x.
   end
 
   def start_page_finder
     query = Web.where(temp_sts: 'valid').order("updated_at ASC").pluck(:id)
 
-    obj_in_grp = 30
+    obj_in_grp = 50
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
