@@ -23,50 +23,9 @@ class Formatter
   include PhoneFormatter
   include WebFormatter
 
-
   #######################################
   #CALL: ActScraper.new.start_act_scraper
   #######################################
-
-  # Formatter.new.remove_city_from_act_name('act_name')
-  def remove_city_from_act_name(act_name)
-    if act_name.present?
-      name_parts = act_name.split(' in ')
-      name_parts = act_name.split(' In ') if name_parts.length == 1
-      name_parts = act_name.split(' Near Me ') if name_parts.length == 1
-      name_parts = act_name.split(' near me ') if name_parts.length == 1
-      name_parts = act_name.split(' of ') if name_parts.length == 1
-
-      name_parts.length > 1 ? name_parts_last = name_parts.last : name_parts_last = name_parts
-      found_city_hsh = remove_city_from_act_name_helper(act_name, name_parts_last)
-      return found_city_hsh
-    end
-  end
-
-
-  def remove_city_from_act_name_helper(act_name, name_section)
-    if act_name && name_section
-      city_list = get_cities
-      name_parts = name_section.split(' ')
-      count = 0
-      found_city = nil
-
-      while found_city == nil && count < name_parts.length
-        name_part = name_parts[0..count].join(' ')
-        temp_name_part = name_part.tr('^A-Za-z0-9', '')&.downcase
-        city_list.find do |city|
-          temp_city = city.tr('^A-Za-z0-9', '')&.downcase
-          found_city = city if temp_name_part == temp_city
-        end
-        count += 1
-      end
-
-      act_name = (act_name.split(' ') - found_city.split(' ')).join(' ') if found_city
-      found_city_hsh = { found_city: found_city, act_name: act_name }
-      return found_city_hsh
-    end
-  end
-
 
   def remove_invalids(act_name, invalid_list)
     if act_name && invalid_list

@@ -66,8 +66,7 @@ class AsCobalt
     city:   @helper.final_arr_qualifier(cities, "city"),
     state:  @helper.final_arr_qualifier(states, "state"),
     zip:    @helper.final_arr_qualifier(zips, "zip"),
-    phone:  @helper.final_arr_qualifier(phones, "phone"),
-    as_phones: @helper.as_phones_finder(noko_page) }
+    phone:  @helper.final_arr_qualifier(phones, "phone") }
 
     return act_scrape_hsh
   end

@@ -2,13 +2,15 @@ class CreateWebs < ActiveRecord::Migration[5.1]
   def change
     create_table :webs do |t|
 
+      t.string   :url, index: true, unique: true
       t.boolean  :archived, index: true
       t.string   :web_sts, index: true
       t.string   :sts_code, index: true
-      t.string   :url, index: true, unique: true
       t.string   :url_redirect_id, index: true
       t.string   :redirect_url, index: true
       t.datetime :redirect_date, index: true
+      t.string   :goog_id, index: true
+      t.string   :place_id, index: true  
 
       t.string   :temp_sts, index: true
       t.datetime :temp_date, index: true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171219052552) do
+ActiveRecord::Schema.define(version: 20180114021526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,14 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.index ["brand_term"], name: "index_brands_on_brand_term"
   end
 
+  create_table "cities", force: :cascade do |t|
+    t.string "city_name"
+    t.string "state_code"
+    t.string "city_pop"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cont_descriptions", force: :cascade do |t|
     t.integer "cont_id"
     t.integer "description_id"
@@ -118,6 +126,16 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.index ["email"], name: "index_conts_on_email"
     t.index ["first_name"], name: "index_conts_on_first_name"
     t.index ["last_name"], name: "index_conts_on_last_name"
+  end
+
+  create_table "dealers", force: :cascade do |t|
+    t.string "dealer_name"
+    t.string "dealer_length"
+    t.string "owner"
+    t.string "city"
+    t.string "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -320,13 +338,15 @@ ActiveRecord::Schema.define(version: 20171219052552) do
   end
 
   create_table "webs", force: :cascade do |t|
+    t.string "url"
     t.boolean "archived"
     t.string "web_sts"
     t.string "sts_code"
-    t.string "url"
     t.string "url_redirect_id"
     t.string "redirect_url"
     t.datetime "redirect_date"
+    t.string "goog_id"
+    t.string "place_id"
     t.string "temp_sts"
     t.datetime "temp_date"
     t.string "staff_link_sts"
@@ -345,9 +365,11 @@ ActiveRecord::Schema.define(version: 20171219052552) do
     t.index ["archived"], name: "index_webs_on_archived"
     t.index ["cs_date"], name: "index_webs_on_cs_date"
     t.index ["cs_sts"], name: "index_webs_on_cs_sts"
+    t.index ["goog_id"], name: "index_webs_on_goog_id"
     t.index ["link_text_date"], name: "index_webs_on_link_text_date"
     t.index ["loc_link_sts"], name: "index_webs_on_loc_link_sts"
     t.index ["loc_text_sts"], name: "index_webs_on_loc_text_sts"
+    t.index ["place_id"], name: "index_webs_on_place_id"
     t.index ["redirect_date"], name: "index_webs_on_redirect_date"
     t.index ["redirect_url"], name: "index_webs_on_redirect_url"
     t.index ["staff_link_sts"], name: "index_webs_on_staff_link_sts"

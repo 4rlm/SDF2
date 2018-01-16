@@ -15,8 +15,7 @@ class AsDealerCom
     city:   noko_page&.at_css('.adr .locality')&.text,
     state:  noko_page&.at_css('.adr .region')&.text,
     zip:    noko_page&.at_css('.adr .postal-code')&.text,
-    phone:  noko_page&.at_css('.value')&.text,
-    as_phones: @helper.as_phones_finder(noko_page) }
+    phone:  noko_page&.at_css('.value')&.text }
 
     return act_scrape_hsh
   end

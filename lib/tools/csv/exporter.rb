@@ -11,7 +11,7 @@ module Exporter
   def backup_entire_db
     # db_table_list = ["Link", "Linking", "Text", "Texting"]
     db_table_list = get_db_table_list
-    
+
     db_table_list.each do |table_name|
       model = table_name.constantize
       file_name = "#{table_name.pluralize}.csv"
@@ -20,6 +20,8 @@ module Exporter
   end
 
 
+  #CALL: CsvTool.new.backup_csv(City, 'Cities.csv')
+  #CALL: CsvTool.new.backup_csv(Dealer, 'Dealers.csv')
   #CALL: CsvTool.new.backup_csv(model, file_name)
   def backup_csv(model, file_name)
     backups_file_path = "#{@backups_dir_path}/#{file_name}"

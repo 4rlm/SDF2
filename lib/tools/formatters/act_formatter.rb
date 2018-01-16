@@ -4,51 +4,74 @@
 
 module ActFormatter
 
+  #######################################
   # CALL: Formatter.new.format_act_name('act_name')
-  def format_act_name(act_name)
-    if act_name.present?
-      puts "======="
-      puts act_name
-      act_name = act_name&.gsub(/\s/, ' ')&.strip
-      act_name = act_name.split(' ').uniq.join(' ')
+  def format_act_name(original_act_name)
+    if original_act_name.present?
+      original_act_name&.gsub!(/\s/, ' ')&.strip
+      act_name = original_act_name
+      last_resort_act_name = process_difficult_act_name(act_name)
 
-      ## Removes Punctuation Chars from Act_Name ##
-      punct_invalid_list = [",", "&", ":", ";", "," ".", "(", ")", "[", "]", "•", "!"]
-      punct_invalid_list.each { |inval| act_name&.gsub!(inval, ' ') }
+      city_state_hsh = get_city_state_from_act_name(act_name)
+      city = city_state_hsh[:city]
+      state = city_state_hsh[:state]
+      # act_name = city_state_hsh[:act_name]
 
-      ## Removes Phone from Act_Name ##
-      act_name = remove_phones_from_text(act_name)
-
-      ## Gsub City Abreviations before running remove_invalids
-      act_name&.gsub!("Sprgs", "Springs")
-      act_name&.gsub!("Mtn", "Mountain")
-      act_name&.gsub!('Ft', 'Fort')
-
-      ## Gets City Name from Act_Name ##
-      found_city_hsh = remove_city_from_act_name(act_name)
-      found_city = found_city_hsh[:found_city]
-      act_name = found_city_hsh[:act_name]
-
-      ## Remove All Additional City Names from Act_Name, and gets found_city if above returned nil. ##
-      inval_hsh = remove_invalids(act_name, get_cities)
-      found_city = inval_hsh[:found] if !found_city
-      act_name = inval_hsh[:act_name]
-
-      ## Removes False-Positive State Abrevs from Act_Name ##
-      act_name.split(' ').each do |act_name_part|
-        act_name_part_dwn = act_name_part.downcase
-        ['in', 'co', 'mt', 'me'].each do |inval|
-          if inval.downcase == act_name_part_dwn
-            act_name.gsub!(act_name_part, '')
-          end
-        end
+      city_state = nil
+      if city.present? && state.present?
+        city_state = "#{city}, #{state}"
+      elsif state.present?
+        city_state = state
+      elsif city.present?
+        city_state = city
       end
 
-      ## Gets State from Act_Name ##
-      state_parts = act_name.split(' ')
-      state_hsh = find_states(state_parts)
-      state_long = state_hsh[:state_long]
-      state_short = state_hsh[:state_short]
+      dealer_name = check_dealer_in_name(act_name)
+      brand_string = check_brand_in_name(act_name) if act_name.present?
+
+      if dealer_name.present? && city_state.present?
+        act_name = "#{dealer_name} #{brand_string} of #{city_state}"
+      elsif dealer_name.present? && !city_state.present?
+        act_name = "#{dealer_name} #{brand_string}"
+      elsif !dealer_name.present? && !city_state.present?
+        act_name = "#{brand_string} Dealership"
+      elsif !dealer_name.present? && brand_string.present? && city_state.present?
+        act_name = "#{brand_string} of #{city_state}"
+      elsif brand_string.present?
+        act_name = "#{brand_string} Dealership"
+      elsif city_state.present?
+        act_name = "Dealership in #{city_state}"
+      else
+        puts "\n\n============================="
+        binding.pry
+      end
+
+      act_name&.strip!
+      act_name&.squeeze!(" ")
+      act_name = act_name.split(' ').reverse.uniq.reverse.join(' ') if act_name.present?
+      act_name.present? ? final_act_name = act_name : final_act_name = nil
+      return final_act_name
+    end
+  end
+
+
+
+
+
+
+  #######################################
+  ######### HELPER METHODS BELOW ########
+  #######################################
+
+
+  def process_difficult_act_name(act_name)
+    ## For Act_Name without recognized brand, dealership, city, or state.  Instead of returning just 'Dealership'
+    if act_name.present?
+      act_name = act_name.split(' ').uniq.join(' ')
+
+      punct_invalid_list = [".", ",", "&", ":", ";", ",", "(", ")", "[", "]", "•", "!"]
+      punct_invalid_list.each { |inval| act_name&.gsub!(inval, ' ') }
+      act_name = remove_phones_from_text(act_name)
 
       act_name = act_name.split("d/b/a")&.last
       act_name = act_name.split('www')&.first
@@ -103,12 +126,9 @@ module ActFormatter
           act_name
         end
 
-        #######################################
-        #CALL: ActScraper.new.start_act_scraper
-        #######################################
         more_invalid_list = ["One On One", "one on", "One On", "2017-2018"]
         more_invalid_list.each { |inval| act_name&.gsub!(inval, " ") }
-        invalid_list = %w(2014 2015 2016 2017 2018 2019 2020 amp approved customers featuring inc incorporated inventory its llc opens preferred search selection serving welcome welcomes window your used co mt car cars source driving heartland since 1923 has ready for next test drive bad credit loans loan dealership dealer pre-owned preowned pre owned own metro alternative personal service parts part drivers driver parish provider automotive trucks suvs truck suv new selling vehicles vehicle full buy luxury sedans sedan financing finance certified near serves beyond specials huge meet best sales sale welcome trusted trust township shoppers shop visit premiere here save pay dealership dealer deal now with for and also by in at the is of a to)
+        invalid_list = %w(2014 2015 2016 2017 2018 2019 2020 amp approved customers featuring inc incorporated inventory its llc opens preferred search selection serving welcome welcomes window your used co mt car cars source driving heartland since 1923 has ready for next test drive bad credit loans loan dealership dealer pre-owned preowned pre owned own metro alternative personal service parts part drivers driver parish provider automotive trucks suvs truck suv new selling vehicles vehicle full buy luxury sedans sedan financing finance certified near serves beyond specials huge meet best sales sale welcome trusted trust township shoppers shop visit premiere here save pay dealership dealer deal now with for and also by in at the is of a to servg experience spanish)
 
         inval_hsh = remove_invalids(act_name, invalid_list)
         act_name = inval_hsh[:act_name]
@@ -124,60 +144,152 @@ module ActFormatter
         act_name&.gsub!("Chrysler Dodge Jeep Ram", " CDJR ")
         act_name&.gsub!("Chrysler Dodge Jeep" " CDJR ")
         act_name&.gsub!("Chrysler Jeep Dodge", " CDJR ")
-        act_name&.gsub!("Chevy" " Chevrolet ")
+        act_name&.gsub!("Ram Dodge Chrysler Jeep", " CDJR ")
         act_name&.gsub!("Chevrolet-Buick", " Chevrolet Buick ")
         act_name = act_name[0..45] if act_name
 
-        if found_city.present? && (state_long.present? || state_short.present?)
-          invalid_list = [state_long, state_long.downcase, state_short, state_short.capitalize, state_short.downcase]
-          inval_hsh = remove_invalids(act_name, invalid_list)
-          act_name = inval_hsh[:act_name] if inval_hsh.present?
-          act_name = "#{act_name} Dealership in #{found_city}, #{state_short}"
-        elsif state_long.present? || state_short.present?
-          invalid_list = [state_long, state_long.downcase, state_short, state_short.capitalize, state_short.downcase]
-          inval_hsh = remove_invalids(act_name, invalid_list)
-          act_name = inval_hsh[:act_name] if inval_hsh.present?
-          act_name = "#{act_name} Dealership in #{state_short}"
-        elsif found_city.present?
-          act_name = "#{act_name} Dealership in #{found_city}"
-        end
-
-        act_name&.strip!
-        act_name&.squeeze!(" ")
-        act_name = act_name.split(' ').reverse.uniq.reverse.join(' ') if act_name.present?
-
-        act_name
+        act_name.present? ? final_act_name = act_name : final_act_name = nil
+        return final_act_name
       end
-
-      puts "======="
-      puts act_name
-      binding.pry
-
-      return act_name
     end
   end
 
 
-  #Call: Migrator.new.migrate_uni_acts
+  def get_city_state_from_act_name(act_name)
+    if act_name.present?
+      act_name = act_name.split(' ').uniq.join(' ')
+
+      ## Removes Punctuation Chars from Act_Name ##
+      punct_invalid_list = [".", ",", "&", ":", ";", ",", "(", ")", "[", "]", "•", "!"]
+      punct_invalid_list.each { |inval| act_name&.gsub!(inval, ' ') }
+
+      ## Removes Phone from Act_Name ##
+      act_name = remove_phones_from_text(act_name)
+
+      ## Gsub City Abreviations before running remove_invalids
+      act_name&.gsub!("Sprgs", "Springs")
+      act_name&.gsub!("Mtn", "Mountain")
+      act_name&.gsub!('Ft', 'Fort')
+      act_name&.gsub!('Saint', 'St')
+
+      ## Gets City Name from Act_Name ##
+      found_city_hsh = remove_city_from_act_name(act_name)
+      found_city = found_city_hsh[:found_city]
+      act_name = found_city_hsh[:act_name]
+
+      ## Removes False-Positive State Abrevs from Act_Name ##
+      act_name.split(' ').each do |act_name_part|
+        act_name_part_dwn = act_name_part.downcase
+        ['in', 'co', 'mt', 'me'].each do |inval|
+          if inval.downcase == act_name_part_dwn
+            act_name.gsub!(act_name_part, '')
+          end
+        end
+      end
+
+      ## Gets State from Act_Name ##
+      state_parts = act_name.split(' ')
+      state_hsh = find_states(state_parts)
+      state_long = state_hsh[:state_long]
+      state_short = state_hsh[:state_short]
+
+      city_state_hsh = {act_name: act_name, city: found_city, state: state_short}
+      return city_state_hsh
+    end
+  end
+
+
+  def check_dealer_in_name(act_name)
+    ### Search Act_Name for Proper Dealer Name ###
+    dealer_list = Dealer.select(:dealer_name).order("id ASC").pluck(:dealer_name)
+    temp_act_name = act_name.tr('^A-Za-z0-9', '')&.downcase
+    dealer_names = dealer_list.select do |dealer|
+      temp_dealer = dealer.tr('^A-Za-z0-9', '')&.downcase
+      temp_act_name == temp_dealer || temp_act_name.include?(temp_dealer)
+    end
+    dealer_name = dealer_names&.first
+    return dealer_name
+  end
+
 
   # CALL: Formatter.new.check_brand_in_name(act_name)
   def check_brand_in_name(act_name)
     if act_name.present?
-      brands = %w(CDJR CDJ CJDR BMW FIAT GMC Kia Mclaren Mercedes-Benz MINI Rolls-Royce LLC)
-      act_name_parts = act_name.split(' ')
-      act_name_parts.map do |act|
-        if act.scan(/[a-zA-Z]/).any?
-          brands.each do |brand|
-            if act.downcase.include?(brand.downcase)
-              act_name_parts = act_name_parts&.join(' ')&.gsub(act, brand)&.split(' ')
-            end
-          end
+      act_name.gsub!('-', ' ')
+      act_name.gsub!('/', ' ')
+      act_name.gsub!('|', ' ')
+      act_name.gsub!(',', ' ')
+      act_name.gsub!('&', ' ')
+      act_name.gsub!('.', ' ')
+      temp_act_name_parts = act_name.tr('^A-Za-z', ' ').downcase.split(' ') - ['in']
+
+      brands_found = []
+      brands = Brand.select(:brand_name, :brand_term)
+      temp_act_name_parts.each do |name_part|
+        brands.find do |brand|
+          brands_found << brand.brand_name if brand.brand_term == name_part
         end
       end
-      act_name = act_name_parts.join(' ')
-      return act_name
+
+      brand_string = brands_found&.uniq&.join(' ')
+      return brand_string
     end
   end
+
+
+  # Formatter.new.remove_city_from_act_name('act_name')
+  def remove_city_from_act_name(act_name)
+    if act_name.present?
+      name_parts = act_name.split(' in ')
+      name_parts = act_name.split(' In ') if name_parts.length == 1
+      name_parts = act_name.split(' Near Me ') if name_parts.length == 1
+      name_parts = act_name.split(' near me ') if name_parts.length == 1
+      name_parts = act_name.split(' of ') if name_parts.length == 1
+      name_parts = act_name.split(' Located ') if name_parts.length == 1
+
+      city_list = City.select(:city_name).order("id ASC").pluck(:city_name)
+
+      if name_parts.length > 1
+        found_cities = remove_city_from_act_name_helper(name_parts.last, city_list)
+        (found_cities += remove_city_from_act_name_helper(act_name, city_list))&.uniq!
+      else
+        found_cities = remove_city_from_act_name_helper(act_name, city_list)
+      end
+
+      found_city = found_cities&.first
+      act_name = (act_name.split(' ') - found_cities.join(' ').split(' ')).join(' ') if found_city
+      found_city_hsh = { found_city: found_city, act_name: act_name }
+      return found_city_hsh
+    end
+  end
+
+
+  def remove_city_from_act_name_helper(name_section, city_list)
+    if name_section
+      name_parts = name_section.tr('^ A-Za-z', '')&.split(' ')&.uniq
+      # city_list = City.select(:city_name).order("id ASC").pluck(:city_name)
+
+      found_cities = []
+      name_parts.each_with_index do |name_part, i|
+        sngl_name_part = name_part.downcase
+        dbl_name_part = "#{name_part} #{name_parts[i + 1]}"&.downcase
+        city_list.find do |city|
+          dwn_city = city.downcase
+          found_cities << city if dbl_name_part == dwn_city || sngl_name_part == dwn_city
+        end
+      end
+
+      found_cities&.uniq!
+      found_cities.each_with_index do |item, i|
+        dbl_name_part = found_cities[i + 1]
+        found_cities.delete_at(i + 1) if dbl_name_part && item.include?(dbl_name_part)
+      end
+      return found_cities
+    end
+  end
+
+
+
 
 
 end

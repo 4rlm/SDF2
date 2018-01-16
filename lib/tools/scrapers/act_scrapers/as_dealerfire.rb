@@ -15,8 +15,7 @@ class AsDealerfire
     city: addr_hash[:city],
     state: addr_hash[:state],
     zip: addr_hash[:zip],
-    phone: noko_page&.at_css('.contactWrap .hidden-text')&.text,
-    as_phones: @helper.as_phones_finder(noko_page) }
+    phone: noko_page&.at_css('.contactWrap .hidden-text')&.text }
 
     return act_scrape_hsh
   end

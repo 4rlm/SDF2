@@ -29,8 +29,7 @@ class AsDealeron
       city = street_city_arr[-1] unless street_city_arr[-1] == nil
     end
 
-    act_scrape_hsh = { org: org, street: street, city: city, state: state, zip: zip, phone: phone,
-    as_phones: @helper.as_phones_finder(noko_page) }
+    act_scrape_hsh = { org: org, street: street, city: city, state: state, zip: zip, phone: phone }
 
     return act_scrape_hsh
   end

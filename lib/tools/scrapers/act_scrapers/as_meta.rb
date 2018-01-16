@@ -40,6 +40,7 @@ class AsMeta
 
     rescue
       puts "AS Meta Rescue Error"
+      return
       # binding.pry
       # meta_hsh = { street: nil, city: nil, state: nil, zip: nil }
       # return meta_hsh
@@ -50,8 +51,7 @@ class AsMeta
     city: meta_hsh[:city],
     state: meta_hsh[:state],
     zip: meta_hsh[:zip],
-    phone: as_phones&.first,
-    as_phones: as_phones }
+    phone: as_phones&.first }
 
     return act_scrape_hsh
   end

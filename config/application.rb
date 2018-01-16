@@ -28,6 +28,9 @@ module Sdf2
     config.autoload_paths << Rails.root.join('lib/tools/algos')
     config.autoload_paths += Dir["#{config.root}/lib/tools/algos"]
 
+    config.autoload_paths << Rails.root.join('lib/tools/apis')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/apis"]
+
     config.autoload_paths << Rails.root.join('lib/tools/csv')
     config.autoload_paths += Dir["#{config.root}/lib/tools/csv"]
 

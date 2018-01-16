@@ -25,8 +25,7 @@ class AsDealerInspire
     city:   noko_page&.at_css('.locality')&.text,
     state:  noko_page&.at_css('.region')&.text,
     zip:    noko_page&.at_css('.postal-code')&.text,
-    phone:  phone,
-    as_phones: @helper.as_phones_finder(noko_page) }
+    phone:  phone }
 
     return act_scrape_hsh
   end
