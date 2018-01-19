@@ -17,8 +17,8 @@ class ActScraper
 
 
   def start_act_scraper
-    # query = Web.where(temp_sts: 'valid', acs_sts: nil).order("updated_at ASC").pluck(:id)
-    query = Web.where(temp_sts: 'valid').order("updated_at ASC")[100..120].pluck(:id)
+    query = Web.where(temp_sts: 'valid', acs_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Web.where(temp_sts: 'valid').order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 50
     @query_count = query.count
@@ -74,7 +74,6 @@ class ActScraper
 
   def update_db(web_obj, as_hsh)
     if as_hsh&.values&.compact&.empty?
-      binding.pry
       web_obj.update_attributes(acs_sts: 'invalid:as', acs_date: Time.now)
     else
       formatter = Formatter.new
@@ -82,11 +81,11 @@ class ActScraper
       goog_place = GoogPlace.new
 
       ## Act: Format and Create Obj
-      act_name = as_hsh[:org]
+      act_name = as_hsh[:org] if as_hsh[:org]
       act_name = act_name&.gsub(/\s/, ' ')&.strip
       orig_act_name = act_name
 
-      if act_name.present?
+      if act_name.present? && !act_name.include?("Site Suspended")
         goog_hsh = goog_place.get_spot(act_name, web_obj.url)
         # goog_hsh = nil ## NIL FOR TESTING ONLY !!!
         if goog_hsh&.values&.compact&.present?
@@ -94,9 +93,12 @@ class ActScraper
           adr_hsh = goog_hsh[:adr]
           goog_hsh[:adr_sts].present? ? validity = goog_hsh[:adr_sts] : validity = 'valid:as-gp'
 
-          goog_id = goog_hsh[:goog_id] ## Save these with Web.  Need to add to migration file.
-          place_id = goog_hsh[:place_id] ## Save these with Web.  Need to add to migration file.
-          web_hsh = {goog_id: goog_id, place_id: place_id, acs_sts: validity, acs_date: Time.now}
+          goog_sts_hsh = goog_hsh[:goog_sts_hsh]
+          web_hsh = {acs_sts: validity, acs_date: Time.now}
+          binding.pry
+          # web_hsh = web_hsh.merge(goog_sts_hsh)
+
+          # web_hsh = { place_id: goog_hsh[:place_id], acs_sts: validity, acs_date: Time.now}
         else
           puts "No Result from Google Places"
           act_name = formatter.format_act_name(act_name)
@@ -110,14 +112,15 @@ class ActScraper
         validity = 'invalid:as-gp'
         act_name = 'unidentified' if !act_name.present?
         web_hsh = {acs_sts: validity, acs_date: Time.now}
-        binding.pry
       end
 
       act_hsh = {act_src: 'Bot', act_sts: validity, act_name: act_name}
+      act_hsh.delete_if { |key, value| value.blank? } if !act_hsh.empty?
       act_obj = migrator.save_complex_obj('act', {'act_name' => act_name}, act_hsh)
       migrator.create_obj_parent_assoc('web', web_obj, act_obj) if act_obj.present?
 
       ## Adr: Format and Create Obj
+      adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
       adr_obj = migrator.save_simple_obj('adr', adr_hsh) if adr_hsh && adr_hsh.values.compact.present?
       migrator.create_obj_parent_assoc('adr', adr_obj, act_obj) if adr_obj.present?
 

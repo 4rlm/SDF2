@@ -2,7 +2,7 @@ class CreateUniWebs < ActiveRecord::Migration[5.1]
   def change
     create_table :uni_webs do |t|
 
-      t.boolean :archived
+      t.boolean :archived, default: false
       t.string :web_sts
       t.string :url
       t.string :url_redirect_id

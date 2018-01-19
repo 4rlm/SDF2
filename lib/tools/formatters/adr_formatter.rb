@@ -3,7 +3,6 @@ module AdrFormatter
   #CALL: Formatter.new.format_adr_hsh(adr_hsh)
   def format_adr_hsh(adr_hsh)
     adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
-    adr_hsh&.delete_if { |key, value| value&.downcase&.include?('meta') }
 
     if adr_hsh.values.compact.present?
       street = adr_hsh[:street]
@@ -11,11 +10,18 @@ module AdrFormatter
       state = adr_hsh[:state]
       zip = adr_hsh[:zip]
 
-      adr_hsh[:street] = format_street(street) if street.present?
-      adr_hsh[:city] = format_city(city) if city.present?
-      state_pair = format_state(state)
-      adr_hsh[:state] = state_pair&.last
-      adr_hsh[:zip] = format_zip(zip) if zip.present?
+      street = format_street(street) if street.present?
+      adr_hsh[:street] = street
+
+      city = format_city(city) if city.present?
+      adr_hsh[:city] = city
+
+      (state = format_state(state)&.last) if state.present?
+      adr_hsh[:state] = state
+
+      zip = format_zip(zip) if zip.present?
+      adr_hsh[:zip] = zip
+
       adr_hsh[:adr_pin] = generate_adr_pin(street, zip) if (street.present? && zip.present?)
 
       adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
@@ -34,31 +40,34 @@ module AdrFormatter
   def format_street(street)
     street = street&.gsub(/\s/, ' ')&.strip
     if street.present?
-      street = nil if street&.include?("(")
-      street = nil if street&.include?(")")
-      street = nil if street&.include?("[")
-      street = nil if street&.include?("]")
-      street = nil if street&.downcase&.include?("phone")
-      street = nil if street&.downcase&.include?("sales")
-      street = nil if street&.downcase&.include?("parts")
-      street = nil if street&.downcase&.include?("vin")
-      street = nil if street&.downcase&.include?("terior")
-      street = nil if street&.downcase&.include?("other")
+      # street = nil if street&.include?("(")
+      # street = nil if street&.include?(")")
+      # street = nil if street&.include?("[")
+      # street = nil if street&.include?("]")
+      # street = nil if street&.downcase&.include?("phone")
+      # street = nil if street&.downcase&.include?("sales")
+      # street = nil if street&.downcase&.include?("parts")
+      # street = nil if street&.downcase&.include?("vin")
+      # street = nil if street&.downcase&.include?("terior")
+      # street = nil if street&.downcase&.include?("other")
 
       if street.present?
-        if street.include?("•")
-          street_parts = street.split("•")
-          street = street_parts.first
-        end
-
-        if street.include?('|')
-          street_parts = street.split('|')
-          street = street_parts.first
-        end
+        # if street.include?("•")
+        #   street_parts = street.split("•")
+        #   street = street_parts.first
+        # end
+        #
+        # if street.include?('|')
+        #   street_parts = street.split('|')
+        #   street = street_parts.first
+        # end
 
         street = Formatter.new.letter_case_check(street)
         street = " #{street} " # Adds white space, to match below, then strip.
-        street&.gsub!(".", "")
+        street&.gsub!(".", " ")
+
+        puts street.inspect
+        street&.gsub!(",", " ")
 
         street&.gsub!(" North ", " N ")
         street&.gsub!(" South ", " S ")
@@ -89,22 +98,21 @@ module AdrFormatter
         street&.gsub!("Welcome to", " ")
         street&.gsub!("var address = \"", " ")
 
-        street = nil if street&.downcase&.include?("/")
-        street = nil if street&.downcase&.include?("www")
-        street = nil if street&.downcase&.include?("*")
-        street = nil if street&.downcase&.include?("number")
-        street = nil if street&.downcase&.include?("stock")
-        street = nil if street&.downcase&.include?("shop")
-        street = nil if street&.downcase&.include?("once")
-        street = nil if street&.downcase&.include?(":")
-        street = nil if street&.include?("ID")
+        # street = nil if street&.downcase&.include?("/")
+        # street = nil if street&.downcase&.include?("www")
+        # street = nil if street&.downcase&.include?("*")
+        # street = nil if street&.downcase&.include?("number")
+        # street = nil if street&.downcase&.include?("stock")
+        # street = nil if street&.downcase&.include?("shop")
+        # street = nil if street&.downcase&.include?("once")
+        # street = nil if street&.downcase&.include?(":")
+        # street = nil if street&.include?("ID")
 
         street&.strip!
         street&.squeeze!(" ")
-        street = nil if street.present? && street.length > 50
+        # street = nil if street.present? && street.length > 50
       end
     end
-
     return street
   end
 
@@ -156,10 +164,8 @@ module AdrFormatter
         city&.squeeze!(" ")
         city = nil if city.present? && city.length > 50
         city = nil if city.present? && city.length < 4
-
       end
     end
-
     return city
   end
 
@@ -209,14 +215,18 @@ module AdrFormatter
   ########### FORMAT ZIP ###########
   ##################################
 
+  # zip = zip&.split('-')&.first
+  # zip = nil if zip&.scan(/[A-Za-z]/)&.any?
+
 
   #CALL: Formatter.new.format_zip(zip)
   def format_zip(zip)
+    zip = nil if !zip.scan(/[0-9]/).length.in?([4,5,8,9])
     zip = zip&.gsub(/\s/, ' ')&.strip
+    zip = zip&.split('-')&.first
     zip = nil if zip&.scan(/[A-Za-z]/)&.any?
     (zip = "0#{zip}" if zip.length == 4) if zip.present?
-    (zip = nil if zip.length < 5) if zip.present?
-
+    (zip = nil if zip.length != 5) if zip.present?
     zip&.strip!
     zip&.squeeze!(" ")
     return zip

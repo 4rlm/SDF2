@@ -52,7 +52,7 @@ module Noko
       # if err_msg.include?('TCP')
         # puts "\n\nTCP Sleep Delay: (#{@timeout}) seconds\n\n"
         # sleep(@timeout)
-        # NetVerifier.new.check_internet
+        # InternetChecker.new.check_internet
         # return connection ## See if this works.  Would be lightest option.
         # Process.kill(1, @process_pid)  #=> quits class.
         # Process.kill(17)

@@ -1,3 +1,53 @@
+Short list to-do ...
+- format wards 500 and place in seeds for import.
+- format contacts and place in seeds for import (either clean existing, or get original sfdc files.)
+- check on zip codes (adr_formatter)
+	* ensure last for of 9 digits getting sliced, use zip = zip.split('-')&.first
+	* ensure all zips 5 digits length.
+	* ensure no commas at end of street address.
+
+####### Steps from Scratch #######
+=== COP Import and Process ===
+1) drop/create/migrate
+	$ rails db:drop
+	$ rails db:create
+	$ rails db:migrate
+
+2) Import: COPs to uni_act - then backup
+	:> CsvTool.new.import_uni_seeds('uni_act', '1_acts_cop.csv')
+	:> Start.create_backups
+
+3) Restore: backups (to get brands, cities, dealers, templates, terms)
+	* Important: Restore: cop-backups_bu-18-01-18 [it contains imported copilot, and essential lists-only]
+	:> Start.restore_backups
+
+4) Run: url redirect - then backup
+	:> Start.start_url_verifier
+
+5) Delete: archived webs - then backup
+
+6) Run: GP - then backup
+  :> Start.start_act_goog
+
+7) Run: url redirect (for new GPs) - then backup
+8) Delete: archived acts, and ensure newly created accounts keep COP bool. - then backup
+9!) Skip: Template and page finder till later!!!!
+===============================
+
+=== CRM Import and Process ===
+-- Repeat above.
+-- Ensure CRM act num get updated into COPs when match!!!
+===============================
+
+=== Run: Template Finder ===
+=== Run: Page Finder ===
+=== Run: Act Scraper ===
+
+
+###################################
+
+
+
 ############ HIGHLIGHTS ############
 	$ foreman start
 	$ killall "foreman: master"

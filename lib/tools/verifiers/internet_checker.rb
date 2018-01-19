@@ -7,9 +7,9 @@ require 'timeout'
 require 'net/ping'
 
 
-class NetVerifier
+class InternetChecker
 
-  #CALL: NetVerifier.new.check_internet
+  #CALL: InternetChecker.new.check_internet
   def check_internet
     connection = false
 

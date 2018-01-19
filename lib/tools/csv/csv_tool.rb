@@ -36,9 +36,13 @@ class CsvTool
 
 
   def validate_hsh(cols, hsh)
+    ## Consider switching hash to keys.
     # cols.map!(&:to_sym)
+    # binding.pry
     keys = hsh.keys
     keys.each { |key| hsh.delete(key) if !cols.include?(key) }
+    # binding.pry
+    # adr_hsh.symbolize_keys
     return hsh
   end
 

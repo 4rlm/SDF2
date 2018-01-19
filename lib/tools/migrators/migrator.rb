@@ -59,12 +59,16 @@ class Migrator
 
 
   def validate_hsh(cols, hsh)
+    ## hsh keys must be strings due to cols being strings too.
+    hsh = hsh.stringify_keys
     if cols.present? && hsh.present?
       keys = hsh.keys
       keys.each { |key| hsh.delete(key) if !cols.include?(key) }
+      hsh = hsh.symbolize_keys
       return hsh
     end
   end
+
 
   #Call: Migrator.new.reset_pk_sequence
   def reset_pk_sequence

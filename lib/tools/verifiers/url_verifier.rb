@@ -45,7 +45,12 @@ class UrlVerifier
     # query = Web.where(archived: TRUE).order("updated_at ASC").pluck(:id)
     # query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
     # query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
+
+    ## Primary Query ##
     query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
+
+    ## Clean Up Query for Bad Internet Connections ##
+    # query = Web.where(web_sts: 'Error: Host').order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 50
     @query_count = query.count

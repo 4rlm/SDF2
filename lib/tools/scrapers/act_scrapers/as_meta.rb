@@ -11,14 +11,11 @@ class AsMeta
   def scrape_act(noko_page)
     all_text = noko_page.at_css('body')&.text
     org = noko_page&.at_css('head title') ? noko_page&.at_css('head title')&.text : nil
-    as_phones = @helper.as_phones_finder(noko_page)
+    # as_phones = @helper.as_phones_finder(noko_page)
     state_zip_reg = Regexp.new("([A-Z]{2})[ ]?([0-9]{5})")
 
     begin
-
       state_zip_match_data = state_zip_reg.match(all_text) if state_zip_reg.match(all_text)
-      # state_zip_match_data.any? #<MatchData "MI 48302" 1:"MI" 2:"48302">
-
       if state_zip_match_data.present? #<MatchData "MI 48302" 1:"MI" 2:"48302">
         # Get state and zip
         state_zip = state_zip_match_data[0] # "MI 48302"
@@ -40,10 +37,7 @@ class AsMeta
 
     rescue
       puts "AS Meta Rescue Error"
-      return
-      # binding.pry
-      # meta_hsh = { street: nil, city: nil, state: nil, zip: nil }
-      # return meta_hsh
+      meta_hsh = { street: nil, city: nil, state: nil, zip: nil }
     end
 
     act_scrape_hsh = { org: org,
@@ -51,7 +45,7 @@ class AsMeta
     city: meta_hsh[:city],
     state: meta_hsh[:state],
     zip: meta_hsh[:zip],
-    phone: as_phones&.first }
+    phone: nil }
 
     return act_scrape_hsh
   end

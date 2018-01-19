@@ -5,12 +5,28 @@
 module ActFormatter
 
   #######################################
+  # CALL: Formatter.new.format_act_name_lite(act_name)
+  def format_act_name_lite(act_name)
+    if act_name.present?
+      act_name&.gsub!(/\s/, ' ')&.strip
+      act_name = act_name.split(' ').uniq.join(' ')
+      act_name = remove_phones_from_text(act_name)
+      punct_invalid_list = ["|", "/", ".", ",", "&", ":", ";", ",", "(", ")", "[", "]", "•", "!", "Inc", "INC", "LLC", "Llc", "llc"]
+      punct_invalid_list.each { |inval| act_name&.gsub!(inval, ' ') }
+      act_name = act_name.split(' ').reverse.uniq.reverse.join(' ') if act_name.present?
+      act_name&.strip!
+      act_name&.squeeze!(" ")
+      return act_name
+    end
+  end
+
+  #######################################
   # CALL: Formatter.new.format_act_name('act_name')
   def format_act_name(original_act_name)
     if original_act_name.present?
       original_act_name&.gsub!(/\s/, ' ')&.strip
       act_name = original_act_name
-      last_resort_act_name = process_difficult_act_name(act_name)
+      # last_resort_act_name = process_difficult_act_name(act_name)
 
       city_state_hsh = get_city_state_from_act_name(act_name)
       city = city_state_hsh[:city]
@@ -30,26 +46,19 @@ module ActFormatter
       brand_string = check_brand_in_name(act_name) if act_name.present?
 
       if dealer_name.present? && city_state.present?
-        act_name = "#{dealer_name} #{brand_string} of #{city_state}"
+        act_name = "#{dealer_name} #{brand_string} in #{city_state}"
       elsif dealer_name.present? && !city_state.present?
         act_name = "#{dealer_name} #{brand_string}"
-      elsif !dealer_name.present? && !city_state.present?
-        act_name = "#{brand_string} Dealership"
-      elsif !dealer_name.present? && brand_string.present? && city_state.present?
-        act_name = "#{brand_string} of #{city_state}"
-      elsif brand_string.present?
-        act_name = "#{brand_string} Dealership"
-      elsif city_state.present?
-        act_name = "Dealership in #{city_state}"
       else
-        puts "\n\n============================="
-        binding.pry
+        act_name = "#{act_name} #{city_state}"
       end
+      binding.pry
 
       act_name&.strip!
       act_name&.squeeze!(" ")
       act_name = act_name.split(' ').reverse.uniq.reverse.join(' ') if act_name.present?
       act_name.present? ? final_act_name = act_name : final_act_name = nil
+      binding.pry
       return final_act_name
     end
   end

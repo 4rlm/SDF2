@@ -55,6 +55,7 @@ class Formatter
       invals += sngl_invals += dbl_invals
       found = invals&.first
       inval_hsh = {invals: invals, found: found, act_name: act_name}
+
       return inval_hsh
     end
   end

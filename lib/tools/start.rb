@@ -7,73 +7,72 @@ class Start
   ###### IMPORTS-EXPORTS #######
   ##############################
 
-  # 1) CALL: Start.import_seeds
-  def self.import_seeds
+  # 1) CALL: Start.import_all_seed_files
+  def self.import_all_seed_files
     CsvTool.new.import_all_seed_files
   end
 
-
-  # 2) CALL: Start.create_backups
-  def self.create_backups
+  # 2) CALL: Start.backup_entire_db
+  def self.backup_entire_db
     CsvTool.new.backup_entire_db
   end
 
-
-  # 3) CALL: Start.restore_backups
-  def self.restore_backups
+  # 3) CALL: Start.restore_all_backups
+  def self.restore_all_backups
     CsvTool.new.restore_all_backups
   end
-
 
   ##############################
   ######### VERIFIERS ##########
   ##############################
 
-
-  # 4) CALL: Start.verify_urls
-  def self.verify_urls
+  # 4) CALL: Start.start_url_verifier
+  def self.start_url_verifier
     UrlVerifier.new.start_url_verifier
   end
   ## Use with foreman start
-
 
   ##############################
   ########## FINDERS ###########
   ##############################
 
-
-  # 5) CALL: Start.find_templates
-  def self.find_templates
+  # 5) CALL: Start.start_template_finder
+  def self.start_template_finder
     TemplateFinder.new.start_template_finder
     ### REMEMBER TO RUN TIMEOUT QUERY ###
   end
     ## Use with foreman start
 
-
-  # 6) CALL: Start.find_pages
-  def self.find_pages
+  # 6) CALL: Start.start_page_finder
+  def self.start_page_finder
     PageFinder.new.start_page_finder
   end
     ## Use with foreman start
 
-
   ##############################
-  ########## SCRAPERS ##########
+  ####### Google Places ########
   ##############################
 
+  ## GP FOR ACTS -W/O- SCRAPER
+  # 7) CALL: Start.start_act_goog
+  def self.start_act_goog
+    ActGp.new.start_act_goog
+  end
 
-  # 7) CALL: Start.scrape_acts
-  def self.scrape_acts
+  ## GP FOR ACTS -AND- SCRAPER
+  # 8) CALL: Start.start_act_scraper
+  def self.start_act_scraper
     ActScraper.new.start_act_scraper
   end
-    ## Use with foreman start
 
+  ################################
+  ### CONT-SCRAPER (w/out GP) ####
+  ################################
 
-  # 8) CALL: Start.scrape_conts
-  # def self.scrape_conts
+  # 8) CALL: Start.start_cont_scraper
+  # def self.start_cont_scraper
   #   ContScraper.new.start_cont_scraper
   # end
 
-
-
+  #######################################
 end

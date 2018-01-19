@@ -57,25 +57,30 @@ module Importer
   def import_all_seed_files
     Migrator.new.reset_pk_sequence
 
+    CsvTool.new.import_uni_seeds('uni_act', '1_acts_cop.csv')
+
+
     ########## UNI SEED IMPORT BELOW ##########
-    CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
-    CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
-    CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
-
-    CsvTool.new.import_uni_seeds('uni_act', '4_crm_uni_acts.csv')
-    CsvTool.new.import_uni_seeds('uni_act', '5_indexers_uni_acts.csv')
-    CsvTool.new.import_uni_seeds('uni_act', '6_locations_uni_acts.csv')
-
-    CsvTool.new.import_uni_seeds('uni_cont', '7_uni_conts.csv')
-
-    ########## STANDARD SEED IMPORT BELOW ##########
-    CsvTool.new.import_standard_seeds('who', '8_whos.csv')
-    CsvTool.new.import_standard_seeds('brand', '9_brands.csv')
-    CsvTool.new.import_standard_seeds('term', '10_terms.csv')
+    # CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
+    # CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
+    # CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
+    #
+    # CsvTool.new.import_uni_seeds('uni_act', '4_crm_uni_acts.csv')
+    # CsvTool.new.import_uni_seeds('uni_act', '5_indexers_uni_acts.csv')
+    # CsvTool.new.import_uni_seeds('uni_act', '6_locations_uni_acts.csv')
+    #
+    # CsvTool.new.import_uni_seeds('uni_cont', '7_uni_conts.csv')
+    #
+    # ########## STANDARD SEED IMPORT BELOW ##########
+    # CsvTool.new.import_standard_seeds('who', '8_whos.csv')
+    # CsvTool.new.import_standard_seeds('brand', '9_brands.csv')
+    # CsvTool.new.import_standard_seeds('term', '10_terms.csv')
   end
 
 
   ########## UNI SEED IMPORT BELOW ##########
+  # CsvTool.new.import_uni_seeds('uni_act', '1_cops.csv')
+  # CsvTool.new.import_uni_seeds('uni_act', '03_crm_uni_acts.csv')
 
   def import_uni_seeds(model_name, file_name)
     @file_path = "#{@seeds_dir_path}/#{file_name}"
@@ -84,6 +89,7 @@ module Importer
     custom_migrate_method = "migrate_#{plural_model_name}"
     parse_csv
     objs = []
+    puts @clean_csv_hashes.count
 
     @clean_csv_hashes.each do |clean_csv_hsh|
       clean_csv_hsh = clean_csv_hsh.stringify_keys

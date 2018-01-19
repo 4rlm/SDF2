@@ -34,27 +34,46 @@ ActiveRecord::Schema.define(version: 20180114021526) do
   end
 
   create_table "acts", force: :cascade do |t|
-    t.string "act_src"
-    t.string "act_sts"
-    t.string "crm_act_num"
     t.string "act_name"
+    t.string "crm_act_num"
+    t.string "act_sts"
+    t.string "act_src"
+    t.boolean "cop", default: false
+    t.boolean "act_archived", default: false
+    t.string "act_redirect_id"
+    t.string "act_gp_sts"
+    t.datetime "act_gp_date"
+    t.string "place_id"
+    t.string "industry"
+    t.integer "top_150"
+    t.integer "ward_500"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["act_gp_date"], name: "index_acts_on_act_gp_date"
+    t.index ["act_gp_sts"], name: "index_acts_on_act_gp_sts"
     t.index ["act_name"], name: "index_acts_on_act_name"
+    t.index ["act_redirect_id"], name: "index_acts_on_act_redirect_id"
     t.index ["act_src"], name: "index_acts_on_act_src"
     t.index ["act_sts"], name: "index_acts_on_act_sts"
     t.index ["crm_act_num"], name: "index_acts_on_crm_act_num"
+    t.index ["industry"], name: "index_acts_on_industry"
+    t.index ["place_id"], name: "index_acts_on_place_id"
   end
 
   create_table "adrs", force: :cascade do |t|
-    t.string "adr_sts"
     t.string "street"
     t.string "city"
     t.string "state"
     t.string "zip"
     t.string "adr_pin"
+    t.string "adr_sts"
+    t.boolean "adr_archived", default: false
+    t.string "adr_gp_sts"
+    t.datetime "adr_gp_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["adr_gp_date"], name: "index_adrs_on_adr_gp_date"
+    t.index ["adr_gp_sts"], name: "index_adrs_on_adr_gp_sts"
     t.index ["adr_pin"], name: "index_adrs_on_adr_pin"
     t.index ["adr_sts"], name: "index_adrs_on_adr_sts"
     t.index ["city"], name: "index_adrs_on_city"
@@ -131,9 +150,6 @@ ActiveRecord::Schema.define(version: 20180114021526) do
   create_table "dealers", force: :cascade do |t|
     t.string "dealer_name"
     t.string "dealer_length"
-    t.string "owner"
-    t.string "city"
-    t.string "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -254,30 +270,50 @@ ActiveRecord::Schema.define(version: 20180114021526) do
   end
 
   create_table "uni_acts", force: :cascade do |t|
-    t.integer "act_id"
-    t.string "crm_act_num"
-    t.string "act_src"
-    t.string "act_sts"
     t.string "act_name"
-    t.integer "adr_id"
-    t.string "adr_sts"
+    t.string "crm_act_num"
+    t.string "act_sts"
+    t.string "act_src"
+    t.boolean "cop", default: false
+    t.boolean "act_archived", default: false
+    t.string "act_redirect_id"
+    t.string "act_gp_sts"
+    t.datetime "act_gp_date"
+    t.string "place_id"
+    t.string "industry"
+    t.integer "top_150"
+    t.integer "ward_500"
     t.string "street"
-    t.string "unit"
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.string "full_adr"
     t.string "adr_pin"
-    t.float "latitude"
-    t.float "longitude"
+    t.string "adr_sts"
+    t.boolean "adr_archived", default: false
+    t.string "adr_gp_sts"
+    t.datetime "adr_gp_date"
     t.string "phone"
     t.string "template_name"
-    t.string "archived"
-    t.string "web_sts"
     t.string "url"
+    t.boolean "url_archived", default: false
+    t.string "web_sts"
+    t.string "sts_code"
     t.string "url_redirect_id"
-    t.string "staff_page"
-    t.string "locations_page"
+    t.string "redirect_url"
+    t.datetime "redirect_date"
+    t.string "web_gp_sts"
+    t.datetime "web_gp_date"
+    t.string "temp_sts"
+    t.datetime "temp_date"
+    t.string "staff_link_sts"
+    t.string "loc_link_sts"
+    t.string "staff_text_sts"
+    t.string "loc_text_sts"
+    t.datetime "link_text_date"
+    t.string "acs_sts"
+    t.datetime "acs_date"
+    t.string "cs_sts"
+    t.datetime "cs_date"
     t.string "ip"
     t.string "server1"
     t.string "server2"
@@ -285,6 +321,42 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.string "registrant_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["acs_date"], name: "index_uni_acts_on_acs_date"
+    t.index ["acs_sts"], name: "index_uni_acts_on_acs_sts"
+    t.index ["act_gp_date"], name: "index_uni_acts_on_act_gp_date"
+    t.index ["act_gp_sts"], name: "index_uni_acts_on_act_gp_sts"
+    t.index ["act_name"], name: "index_uni_acts_on_act_name"
+    t.index ["act_redirect_id"], name: "index_uni_acts_on_act_redirect_id"
+    t.index ["act_src"], name: "index_uni_acts_on_act_src"
+    t.index ["act_sts"], name: "index_uni_acts_on_act_sts"
+    t.index ["adr_gp_date"], name: "index_uni_acts_on_adr_gp_date"
+    t.index ["adr_gp_sts"], name: "index_uni_acts_on_adr_gp_sts"
+    t.index ["adr_pin"], name: "index_uni_acts_on_adr_pin"
+    t.index ["adr_sts"], name: "index_uni_acts_on_adr_sts"
+    t.index ["city"], name: "index_uni_acts_on_city"
+    t.index ["crm_act_num"], name: "index_uni_acts_on_crm_act_num"
+    t.index ["cs_date"], name: "index_uni_acts_on_cs_date"
+    t.index ["cs_sts"], name: "index_uni_acts_on_cs_sts"
+    t.index ["industry"], name: "index_uni_acts_on_industry"
+    t.index ["link_text_date"], name: "index_uni_acts_on_link_text_date"
+    t.index ["loc_link_sts"], name: "index_uni_acts_on_loc_link_sts"
+    t.index ["loc_text_sts"], name: "index_uni_acts_on_loc_text_sts"
+    t.index ["place_id"], name: "index_uni_acts_on_place_id"
+    t.index ["redirect_date"], name: "index_uni_acts_on_redirect_date"
+    t.index ["redirect_url"], name: "index_uni_acts_on_redirect_url"
+    t.index ["staff_link_sts"], name: "index_uni_acts_on_staff_link_sts"
+    t.index ["staff_text_sts"], name: "index_uni_acts_on_staff_text_sts"
+    t.index ["state"], name: "index_uni_acts_on_state"
+    t.index ["street"], name: "index_uni_acts_on_street"
+    t.index ["sts_code"], name: "index_uni_acts_on_sts_code"
+    t.index ["temp_date"], name: "index_uni_acts_on_temp_date"
+    t.index ["temp_sts"], name: "index_uni_acts_on_temp_sts"
+    t.index ["url"], name: "index_uni_acts_on_url"
+    t.index ["url_redirect_id"], name: "index_uni_acts_on_url_redirect_id"
+    t.index ["web_gp_date"], name: "index_uni_acts_on_web_gp_date"
+    t.index ["web_gp_sts"], name: "index_uni_acts_on_web_gp_sts"
+    t.index ["web_sts"], name: "index_uni_acts_on_web_sts"
+    t.index ["zip"], name: "index_uni_acts_on_zip"
   end
 
   create_table "uni_conts", force: :cascade do |t|
@@ -311,7 +383,7 @@ ActiveRecord::Schema.define(version: 20180114021526) do
   end
 
   create_table "uni_webs", force: :cascade do |t|
-    t.boolean "archived"
+    t.boolean "archived", default: false
     t.string "web_sts"
     t.string "url"
     t.string "url_redirect_id"
@@ -339,14 +411,14 @@ ActiveRecord::Schema.define(version: 20180114021526) do
 
   create_table "webs", force: :cascade do |t|
     t.string "url"
-    t.boolean "archived"
+    t.boolean "url_archived", default: false
     t.string "web_sts"
     t.string "sts_code"
     t.string "url_redirect_id"
     t.string "redirect_url"
     t.datetime "redirect_date"
-    t.string "goog_id"
-    t.string "place_id"
+    t.string "web_gp_sts"
+    t.datetime "web_gp_date"
     t.string "temp_sts"
     t.datetime "temp_date"
     t.string "staff_link_sts"
@@ -362,14 +434,11 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.datetime "updated_at", null: false
     t.index ["acs_date"], name: "index_webs_on_acs_date"
     t.index ["acs_sts"], name: "index_webs_on_acs_sts"
-    t.index ["archived"], name: "index_webs_on_archived"
     t.index ["cs_date"], name: "index_webs_on_cs_date"
     t.index ["cs_sts"], name: "index_webs_on_cs_sts"
-    t.index ["goog_id"], name: "index_webs_on_goog_id"
     t.index ["link_text_date"], name: "index_webs_on_link_text_date"
     t.index ["loc_link_sts"], name: "index_webs_on_loc_link_sts"
     t.index ["loc_text_sts"], name: "index_webs_on_loc_text_sts"
-    t.index ["place_id"], name: "index_webs_on_place_id"
     t.index ["redirect_date"], name: "index_webs_on_redirect_date"
     t.index ["redirect_url"], name: "index_webs_on_redirect_url"
     t.index ["staff_link_sts"], name: "index_webs_on_staff_link_sts"
@@ -379,6 +448,8 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.index ["temp_sts"], name: "index_webs_on_temp_sts"
     t.index ["url"], name: "index_webs_on_url"
     t.index ["url_redirect_id"], name: "index_webs_on_url_redirect_id"
+    t.index ["web_gp_date"], name: "index_webs_on_web_gp_date"
+    t.index ["web_gp_sts"], name: "index_webs_on_web_gp_sts"
     t.index ["web_sts"], name: "index_webs_on_web_sts"
   end
 
