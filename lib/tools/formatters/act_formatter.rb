@@ -11,7 +11,7 @@ module ActFormatter
       act_name&.gsub!(/\s/, ' ')&.strip
       act_name = act_name.split(' ').uniq.join(' ')
       act_name = remove_phones_from_text(act_name)
-      punct_invalid_list = ["|", "/", ".", ",", "&", ":", ";", ",", "(", ")", "[", "]", "•", "!", "Inc", "INC", "LLC", "Llc", "llc"]
+      punct_invalid_list = ["|", "/", ".", "&", ":", ";", "(", ")", "[", "]", "•", "!", "Inc", "INC", "LLC", "Llc", "llc"]
       punct_invalid_list.each { |inval| act_name&.gsub!(inval, ' ') }
       act_name = act_name.split(' ').reverse.uniq.reverse.join(' ') if act_name.present?
       act_name&.strip!

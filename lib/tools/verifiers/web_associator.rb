@@ -16,7 +16,7 @@ module WebAssociator
   #CALL: WebAssociator.transfer_web_associations(web_obj)
   def self.transfer_web_associations(web_obj)
     redirect_obj = Web.find_by(redirect_url: web_obj.redirect_url)
-    web_obj.update_attributes(archived: TRUE, web_sts: 'redirected', sts_code: nil, url_redirect_id: redirect_obj.id)
+    web_obj.update_attributes(url_archived: TRUE, web_sts: 'redirected', sts_code: nil, url_redirect_id: redirect_obj.id)
 
     models = %w(act template link text who)
     models.each do |model|

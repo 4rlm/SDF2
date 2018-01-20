@@ -57,7 +57,9 @@ module Importer
   def import_all_seed_files
     Migrator.new.reset_pk_sequence
 
+    CsvTool.new.import_uni_seeds('uni_act', '2_acts_top_150.csv')
     CsvTool.new.import_uni_seeds('uni_act', '1_acts_cop.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '3_wards_500.csv')
 
 
     ########## UNI SEED IMPORT BELOW ##########

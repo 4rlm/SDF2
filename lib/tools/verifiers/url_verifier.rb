@@ -28,29 +28,29 @@ class UrlVerifier
   # Call: UrlVerifier.new.start_url_verifier
   def start_url_verifier
     ## Settings for ComplexQueryIterator Module.
-    @timeout = 10
+    @timeout = 30
     @dj_count_limit = 30 #=> Num allowed before releasing next batch.
     @workers = 4 #=> Divide format_query_results into groups of x.
 
-    # query = Web.where.not(archived: TRUE).where.not(web_sts: 'timeout').order("updated_at DESC").pluck(:id)
-    # query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
-    # query = Web.where(archived: TRUE).order("updated_at ASC").pluck(:id)
-    # query = Web.where.not(archived: TRUE, web_sts: '++').order("updated_at ASC").pluck(:id)
+    # query = Web.where.not(url_archived: TRUE).where.not(web_sts: 'timeout').order("updated_at DESC").pluck(:id)
+    # query = Web.where.not(url_archived: TRUE).order("updated_at ASC").pluck(:id)
+    # query = Web.where(url_archived: TRUE).order("updated_at ASC").pluck(:id)
+    # query = Web.where.not(url_archived: TRUE, web_sts: '++').order("updated_at ASC").pluck(:id)
     # query = Web.where("web_sts LIKE '%Error%'").order("updated_at ASC").pluck(:id)
     # query = Web.where("web_sts LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
-    # query = Web.where(archived: nil).where.not("web_sts LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
+    # query = Web.where(url_archived: nil).where.not("web_sts LIKE '%timeout%'").order("updated_at DESC").pluck(:id)
     # query = Web.where.not(web_sts: '++').order("updated_at ASC").pluck(:id)
     # query = Web.all.order("updated_at ASC").pluck(:id)
     # query = Web.where.not(web_sts: 'valid').order("updated_at ASC").pluck(:id)
-    # query = Web.where(archived: TRUE).order("updated_at ASC").pluck(:id)
+    # query = Web.where(url_archived: TRUE).order("updated_at ASC").pluck(:id)
     # query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
-    # query = Web.where.not(archived: TRUE).order("updated_at ASC").pluck(:id)
+    # query = Web.where.not(url_archived: TRUE).order("updated_at ASC").pluck(:id)
 
     ## Primary Query ##
-    query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Web.where(web_sts: nil).order("updated_at ASC").pluck(:id)
 
     ## Clean Up Query for Bad Internet Connections ##
-    # query = Web.where(web_sts: 'Error: Host').order("updated_at ASC").pluck(:id)
+    query = Web.where(web_sts: 'Error: Host').order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 50
     @query_count = query.count
@@ -59,8 +59,10 @@ class UrlVerifier
     iterate_query(query) # via ComplexQueryIterator
     # query.each { |id| template_starter(id) }
 
+    puts "Should run below method as an insurance, to make sure associations got moved to redirected obj."
     ## Should be run after UrlVerifier to link web associations to redirect web obj.
-    # WebAssociator.start_web_associator
+    binding.pry
+    WebAssociator.start_web_associator
   end
 
 
@@ -71,11 +73,11 @@ class UrlVerifier
     formatted_url = Formatter.new.format_url(web_url)
 
     if !formatted_url.present?
-      web_obj.update_attributes(archived: TRUE, web_sts: 'invalid', sts_code: nil, updated_at: Time.now)
+      web_obj.update_attributes(url_archived: TRUE, web_sts: 'invalid', sts_code: nil, redirect_date: Time.now)
     else
       curl_hsh = start_curl(formatted_url) # via Curler.start_curl
       err_msg = curl_hsh[:err_msg]
-      err_msg.present? ? web_obj.update_attributes(archived: TRUE, web_sts: err_msg, sts_code: nil, updated_at: Time.now) : update_db(id, web_obj, web_url, formatted_url, curl_hsh)
+      err_msg.present? ? web_obj.update_attributes(url_archived: TRUE, web_sts: err_msg, sts_code: nil, redirect_date: Time.now) : update_db(id, web_obj, web_url, formatted_url, curl_hsh)
     end
   end
 
@@ -90,24 +92,30 @@ class UrlVerifier
     puts "S: #{sts_code}\n\n\n"
 
     if curl_url == web_url ## Important not to refactor this!
-      web_obj.update_attributes(archived: FALSE, web_sts: 'valid', sts_code: sts_code, updated_at: Time.now)
+      web_obj.update_attributes(url_archived: FALSE, web_sts: 'valid', sts_code: sts_code, redirect_date: Time.now)
       return # Don't remove!  Prevents accidentally running and updating bottom area.
     end
 
     if formatted_url != web_url
-      reformat_full_hsh = {archived: FALSE, web_sts: 'valid', url: formatted_url}
+      reformat_full_hsh = {url_archived: FALSE, web_sts: 'valid', url: formatted_url}
       reformat_url_obj = Web.find_by(url: formatted_url)
       !reformat_url_obj ? reformat_url_obj = Web.create(reformat_full_hsh) : reformat_url_obj.update_attributes(reformat_full_hsh)
-      web_obj.update_attributes(archived: TRUE, web_sts: 'redirect', sts_code: nil, url_redirect_id: reformat_url_obj.id, redirect_url: reformat_url_obj.url, updated_at: Time.now)
+      web_obj.update_attributes(url_archived: TRUE, web_sts: 'redirect', sts_code: nil, url_redirect_id: reformat_url_obj.id, redirect_url: reformat_url_obj.url, redirect_date: Time.now)
       WebAssociator.transfer_web_associations(web_obj)
       web_obj = reformat_url_obj
       web_url = formatted_url
     end
 
-    redirect_full_hsh = {archived: FALSE, web_sts: 'valid', url: curl_url}
+    redirect_full_hsh = {url_archived: FALSE, web_sts: 'valid', url: curl_url}
     redirected_url_obj = Web.find_by(url: curl_url)
-    !redirected_url_obj ? redirected_url_obj = Web.create(redirect_full_hsh) : redirected_url_obj.update_attributes(redirect_full_hsh)
-    web_obj.update_attributes(archived: TRUE, web_sts: 'redirect', sts_code: nil, url_redirect_id: redirected_url_obj.id, redirect_url: redirected_url_obj.url, updated_at: Time.now)
+
+    if !redirected_url_obj
+      redirected_url_obj = Web.create(redirect_full_hsh)
+    else
+      redirected_url_obj.update_attributes(redirect_full_hsh)
+    end
+
+    web_obj.update_attributes(url_archived: TRUE, web_sts: 'redirect', sts_code: nil, url_redirect_id: redirected_url_obj.id, redirect_url: redirected_url_obj.url, redirect_date: Time.now)
     WebAssociator.transfer_web_associations(web_obj)
 
     starter if (id == @last_id) ## Restart, get next batch of ids.

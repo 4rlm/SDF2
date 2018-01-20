@@ -20,9 +20,14 @@ class ActGp
     # Act.select(:act_name).order("updated_at DESC")[0..100]
     # query = Web.where(web_sts: "valid", acs_sts: nil).where.not(temp_sts: 'valid').order("updated_at ASC").pluck(:id)
     # query = Act.where(gp_sts: nil).order("updated_at ASC").pluck(:id)
-    query = Act.where(act_src: 'CRM', gp_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Act.where(act_src: 'CRM', gp_sts: nil).order("updated_at ASC").pluck(:id)
     # query = Act.where(act_src: 'CRM').count
 
+    query = Act.select(:id).where(act_sts: nil, act_archived: false, act_gp_sts: nil).order("updated_at ASC").pluck(:id).count
+    # *** Then grab web url which is not archived.
+
+   ## Edit below to use as format for update or create new act from ActGp
+    #<act_name: "Front Range Honda in Colorado Springs, CO", act_sts: nil, act_src: nil, cop: true, act_archived: false, act_redirect_id: nil, act_gp_sts: nil, act_gp_date: nil, place_id: nil, industry: nil
 
     obj_in_grp = 50
     @query_count = query.count
@@ -42,7 +47,7 @@ class ActGp
   def update_db(cur_act_obj)
     act_name = cur_act_obj.act_name
     cur_act_name = act_name
-    web_obj = cur_act_obj.webs.where(archived: FALSE).order("updated_at DESC")&.first
+    # web_obj = cur_act_obj.webs.where(url_archived: FALSE).order("updated_at DESC")&.first
     url = web_obj&.url
 
     ### KEEP BELOW FOR LATER - IF WEB QUERY USED ###
