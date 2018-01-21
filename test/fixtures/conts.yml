@@ -4,7 +4,7 @@ one:
   source: MyString
   sts: MyString
   act_id: 1
-  crm_cont_num: MyString
+  crmc: MyString
   first_name: MyString
   last_name: MyString
   email: MyString
@@ -14,7 +14,7 @@ two:
   source: MyString
   sts: MyString
   act_id: 1
-  crm_cont_num: MyString
+  crmc: MyString
   first_name: MyString
   last_name: MyString
   email: MyString

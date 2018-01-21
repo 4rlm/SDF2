@@ -221,7 +221,7 @@ module WebFormatter
 
   #### TESTING BELOW ###
 
-  ## CONSIDER USING (similar to): save_complex_obj, OR save_simple_obj via Migrator Class.
+  ## CONSIDER USING (similar to): save_comp_obj, OR save_simp_obj via Migrator Class.
 
   ### BELOW REPLACES save_link ABOVE ###
   def save_link_or_text(web_obj, link, link_type) # Saves Link OR Text.

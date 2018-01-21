@@ -29,8 +29,8 @@ class Cont < ApplicationRecord
   has_many :webs, through: :webings
   accepts_nested_attributes_for :webings, :webs
 
-  validates_uniqueness_of :crm_cont_num, allow_blank: true, allow_nil: true
-  # validates_uniqueness_of :crm_cont_num
+  validates_uniqueness_of :crmc, allow_blank: true, allow_nil: true
+  # validates_uniqueness_of :crmc
 
 
 end

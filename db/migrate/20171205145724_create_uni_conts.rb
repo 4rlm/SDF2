@@ -5,16 +5,15 @@ class CreateUniConts < ActiveRecord::Migration[5.1]
     # CONTACTS
       t.integer :act_id
       t.integer :cont_id
-      t.string :crm_act_num
-      t.string :crm_cont_num
-      t.string :cont_src
+      t.string :crma
+      t.string :crmc
       t.string :cont_sts
       t.string :first_name
       t.string :last_name
       t.string :email
 
     # JOB_DESCRIPTION
-      t.string :job_description
+      t.string :job_desc
 
     # JOB_TITLE
       t.string :job_title
@@ -25,7 +24,7 @@ class CreateUniConts < ActiveRecord::Migration[5.1]
 
     # Webs
       t.integer :web_id
-      t.string :web_sts
+      t.string :url_ver_sts
       t.string :url
       t.string :staff_page
       t.string :locations_page

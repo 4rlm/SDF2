@@ -71,23 +71,23 @@ class ActsController < ApplicationController
     def act_params
 
       # ORIGINAL
-      # params.require(:act).permit(:src, :sts, :crm_act_num, :name)
+      # params.require(:act).permit(:src, :sts, :crma, :name)
 
       # WORKING NESTED ATTRIBUTE - Cont
-      # params.require(:act).permit(:src, :sts, :crm_act_num, :name, conts_attributes: [ :id, :first_name ] )
+      # params.require(:act).permit(:src, :sts, :crma, :name, conts_attributes: [ :id, :first_name ] )
 
       # # WORKING NESTED ATTRIBUTE - Webs
-      # params.require(:act).permit(:src, :sts, :crm_act_num, :name, web_attributes: [:src, :sts, :url, :staff_page, :locations_page, :created_at, :updated_at ])
+      # params.require(:act).permit(:src, :sts, :crma, :name, web_attributes: [:src, :sts, :url, :staff_page, :locations_page, :created_at, :updated_at ])
 
       # # WORKING NESTED ATTRIBUTE - Adrs
-      # params.require(:act).permit(:src, :sts, :crm_act_num, :name, adr_attributes: [:src, :sts, :street, :unit, :city, :state, :zip, :adr_pin, :latitude, :longitude, :created_at, :updated_at ])
+      # params.require(:act).permit(:src, :sts, :crma, :name, adr_attributes: [:src, :sts, :street, :unit, :city, :state, :zip, :pin, :latitude, :longitude, :created_at, :updated_at ])
 
       #######################################
 
       # # WORKING NESTED ATTRIBUTE - Webs && Adrs ???
-      params.require(:act).permit(:id, :src, :sts, :crm_act_num, :name, :created_at, :updated_at,
+      params.require(:act).permit(:id, :src, :sts, :crma, :name, :created_at, :updated_at,
           web_attributes: [:id, :src, :sts, :url, :staff_page, :locations_page, :created_at, :updated_at ],
-          adr_attributes: [:id, :src, :sts, :street, :unit, :city, :state, :zip, :adr_pin, :latitude, :longitude, :created_at, :updated_at ],
+          adr_attributes: [:id, :src, :sts, :street, :unit, :city, :state, :zip, :pin, :latitude, :longitude, :created_at, :updated_at ],
           phone_attributes: [:id, :src, :sts, :phone, :created_at, :updated_at ])
 
 
@@ -96,7 +96,7 @@ class ActsController < ApplicationController
       #######################################
 
       # WORKING NESTED ATTRIBUTE - Phones
-      # params.require(:act).permit(:src, :sts, :crm_act_num, :name, phone_attributes: [:src, :sts, :phone, :created_at, :updated_at ])
+      # params.require(:act).permit(:src, :sts, :crma, :name, phone_attributes: [:src, :sts, :phone, :created_at, :updated_at ])
 
 
     end

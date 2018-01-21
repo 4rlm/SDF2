@@ -35,7 +35,7 @@ class CsvTool
   end
 
 
-  def validate_hsh(cols, hsh)
+  def val_hsh(cols, hsh)
     ## Consider switching hash to keys.
     # cols.map!(&:to_sym)
     # binding.pry

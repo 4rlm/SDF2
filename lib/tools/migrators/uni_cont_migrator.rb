@@ -22,18 +22,18 @@ module UniContMigrator
 
           # CONT HASH: CREATED FROM uni_hsh
           uni_cont_array = uni_hsh.stringify_keys.to_a
-          cont_hsh = validate_hsh(Cont.column_names, uni_cont_array.to_h)
+          cont_hsh = val_hsh(Cont.column_names, uni_cont_array.to_h)
           non_cont_attributes_array = uni_cont_array - cont_hsh.stringify_keys.to_a
 
           # WEB OBJ: FIND, CREATE (saves association after act obj created)
-          web_obj = save_simple_obj('web', {url: uni_hsh[:url]}) if uni_hsh[:url].present?
+          web_obj = save_simp_obj('web', {url: uni_hsh[:url]}) if uni_hsh[:url].present?
 
           # ACCOUNT OBJ: FIND, CREATE, UPDATE
-          ## NEED TO FORMAT crm_act_num IF IT IS AN INDEXER 'ACT_SRC: WEB' URL. ##
-          ## IF USING URL AS crm_act_num, IT NEEDS TO BE FORMATTED WHEN FINDING ACCOUNT WITH SAME URL!! ##
+          ## NEED TO FORMAT crma IF IT IS AN INDEXER 'ACT_SRC: WEB' URL. ##
+          ## IF USING URL AS crma, IT NEEDS TO BE FORMATTED WHEN FINDING ACCOUNT WITH SAME URL!! ##
 
-          act_hsh = validate_hsh(Act.column_names, non_cont_attributes_array.stringify_keys.to_h)
-          act_obj ||= Act.find_by(id: uni_hsh[:act_id]) || Act.find_by(crm_act_num: uni_hsh[:crm_act_num]) || web_obj&.acts&.first
+          act_hsh = val_hsh(Act.column_names, non_cont_attributes_array.stringify_keys.to_h)
+          act_obj ||= Act.find_by(id: uni_hsh[:act_id]) || Act.find_by(crma: uni_hsh[:crma]) || web_obj&.acts&.first
 
           act_obj.present? ? update_obj_if_changed(act_hsh, act_obj) : act_obj = Act.create(act_hsh)
           cont_hsh[:act_id] = act_obj&.id
@@ -46,8 +46,8 @@ module UniContMigrator
 
           if cont_hsh[:id].present?
             cont_obj = Cont.find_by(id: cont_hsh[:id])
-          elsif uni_hsh[:crm_cont_num].present?
-            cont_obj = Cont.find_by(crm_cont_num: uni_hsh[:crm_cont_num])
+          elsif uni_hsh[:crmc].present?
+            cont_obj = Cont.find_by(crmc: uni_hsh[:crmc])
           elsif uni_hsh[:email]
             cont_obj = Cont.find_by(email: uni_hsh[:email])
           end
@@ -58,15 +58,15 @@ module UniContMigrator
 
           # PHONE OBJ: FIND-CREATE, then SAVE ASSOC
           phone = @formatter.validate_phone(uni_hsh[:phone]) if uni_hsh[:phone].present?
-          phone_obj = save_simple_obj('phone', {phone: phone}) if phone.present?
+          phone_obj = save_simp_obj('phone', {phone: phone}) if phone.present?
           create_obj_parent_assoc('phone', phone_obj, cont_obj) if phone_obj && cont_obj
 
           # TITLE OBJ: FIND-CREATE, then SAVE ASSOC
-          title_obj = save_simple_obj('title', {job_title: uni_hsh[:job_title]}) if uni_hsh[:job_title].present?
+          title_obj = save_simp_obj('title', {job_title: uni_hsh[:job_title]}) if uni_hsh[:job_title].present?
           create_obj_parent_assoc('title', title_obj, cont_obj) if title_obj && cont_obj
 
           # DESCRIPTION OBJ: FIND-CREATE, then SAVE ASSOC
-          description_obj = save_simple_obj('description', {job_description: uni_hsh[:job_description]}) if uni_hsh[:job_description].present?
+          description_obj = save_simp_obj('description', {job_desc: uni_hsh[:job_desc]}) if uni_hsh[:job_desc].present?
           create_obj_parent_assoc('description', description_obj, cont_obj) if description_obj && cont_obj
 
         rescue StandardError => error

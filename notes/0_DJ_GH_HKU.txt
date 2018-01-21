@@ -1,3 +1,36 @@
+Web.count
+query = Web.where(url_ver_sts: "valid").count
+query = Web.where("url_ver_sts LIKE '%Error%'").count
+query = Web.where("url_ver_sts LIKE '%Error%'").select(:url_ver_sts).pluck(:url_ver_sts).uniq
+["Error: Host", "Error: Expired Url", "Error: Transfer", "Error: Certificate", "Error: Undefined"]
+query = Web.where(url_ver_sts: 'Error: Host').order("updated_at DESC")[0..10].pluck(:url_ver_sts)
+query = Web.where("url_ver_sts LIKE '%Error%'").count
+adrs = Adr.where("zip LIKE '%-%'").count
+
+query = Web.where(url_ver_sts: 'Error: Host').count
+
+adrs = Adr.where("street LIKE '%,%'").count
+acts = Act.where("act_name LIKE '%,%'").count
+###############
+
+query = Web.where.not(url_ver_sts: nil).order("updated_at DESC")
+query = Web.where(urlx: true, url_ver_sts: "valid").order("updated_at DESC")
+
+urlx: true
+
+
+## Edit below to use as format for ActGp query.
+ query =  Act.select(:id).where(act_sts: nil, actx: false, act_gp_sts: nil).order("updated_at ASC").pluck(:id).count
+ *** Then grab web url which is not archived.
+
+
+
+## Edit below to use as format for update or create new act from ActGp
+ #<Act id: 22367, act_name: "Front Range Honda in Colorado Springs, CO", crma: nil, act_sts: nil, act_src: nil, cop: true, actx: false, act_fwd_id: nil, act_gp_sts: nil, act_gp_date: nil, place_id: nil, act_gp_indus: nil, top: nil, ward: 500,
+
+url_ver_sts: "valid"
+
+########################################
 Short list to-do ...
 - format wards 500 and place in seeds for import.
 - format contacts and place in seeds for import (either clean existing, or get original sfdc files.)
@@ -415,7 +448,7 @@ important - save below
 	alias killall="killall 'foreman: master'"
 
 #############################
-	staffers = Staffer.where(cont_src: "Web", scrape_date: nil).count
+	staffers = Staffer.where(scrape_date: nil).count
 	staffers.each {|staffer| staffer.update_attributes(scrape_date: staffer.created_at) }
 
 

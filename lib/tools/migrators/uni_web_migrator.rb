@@ -16,22 +16,22 @@ module UniWebMigrator
           uni_web_hsh = uni_web.attributes
           uni_web_hsh['url'] = @formatter.format_url(uni_web_hsh['url']) if uni_web_hsh['url'].present?
           uni_web_hsh.delete('id')
-          uni_web_hsh.delete('url_redirect_id')
+          uni_web_hsh.delete('fwd_web_id')
 
-          if uni_web_hsh['redirect_url'].present?
-            uni_web_hsh['redirect_url'] = @formatter.format_url(uni_web_hsh['redirect_url'])
-            redirect_url = uni_web_hsh['redirect_url']
-            redirect_web_obj = save_simple_obj('web', {'url' => redirect_url}) if redirect_url.present?
-            uni_web_hsh['url_redirect_id'] = redirect_web_obj&.id
+          if uni_web_hsh['fwd_url'].present?
+            uni_web_hsh['fwd_url'] = @formatter.format_url(uni_web_hsh['fwd_url'])
+            fwd_url = uni_web_hsh['fwd_url']
+            redirect_web_obj = save_simp_obj('web', {'url' => fwd_url}) if fwd_url.present?
+            uni_web_hsh['fwd_web_id'] = redirect_web_obj&.id
           end
 
 
           # CREATE WEB HASH, AND VALIDATE
           uni_web_hsh.delete_if { |key, value| value.blank? }
           uni_web_array = uni_web_hsh.to_a
-          web_hsh = validate_hsh(Web.column_names, uni_web_array.to_h)
+          web_hsh = val_hsh(Web.column_names, uni_web_array.to_h)
           url = web_hsh['url']
-          web_obj = save_complex_obj('web', {'url' => url}, web_hsh) if url.present?
+          web_obj = save_comp_obj('web', {'url' => url}, web_hsh) if url.present?
 
           non_web_attributes_array = uni_web_array - web_hsh.to_a
           link_text_hsh = non_web_attributes_array.to_h
@@ -49,7 +49,7 @@ module UniWebMigrator
           if staff_link.present?
             staff_link_hsh = {link: staff_link, link_type: 'staff', link_sts: link_text_hsh['link_sts']}
             staff_link_hsh.delete_if { |key, value| value.blank? }
-            staff_link_obj = save_complex_obj('link', {'link' => staff_link}, staff_link_hsh)
+            staff_link_obj = save_comp_obj('link', {'link' => staff_link}, staff_link_hsh)
             create_obj_parent_assoc('link', staff_link_obj, web_obj) if staff_link_obj.present?
           end
 
@@ -62,7 +62,7 @@ module UniWebMigrator
           # FIND OR CREATE locations_link_obj
           if locations_link.present?
             locations_link_hsh = {link: locations_link, link_type: 'locations', link_sts: link_text_hsh['link_sts']}
-            locations_link_obj = save_complex_obj('link', {'link' => locations_link}, locations_link_hsh)
+            locations_link_obj = save_comp_obj('link', {'link' => locations_link}, locations_link_hsh)
             create_obj_parent_assoc('link', locations_link_obj, web_obj) if locations_link_obj.present?
           end
 
@@ -77,9 +77,9 @@ module UniWebMigrator
           staff_text = link_text_hsh['staff_text']
 
           if staff_text.present?
-            staff_text_hsh = {text: staff_text, text_type: 'staff', text_sts: link_text_hsh['staff_link_sts']}
+            staff_text_hsh = {text: staff_text, text_type: 'staff', text_sts: link_text_hsh['slink_sts']}
             staff_text_hsh.delete_if { |key, value| value.blank? }
-            staff_text_obj = save_complex_obj('text', {'text' => staff_text}, staff_text_hsh)
+            staff_text_obj = save_comp_obj('text', {'text' => staff_text}, staff_text_hsh)
             create_obj_parent_assoc('text', staff_text_obj, web_obj) if staff_text_obj.present?
           end
 
@@ -93,7 +93,7 @@ module UniWebMigrator
           if locations_text.present?
             locations_text_hsh = {text: locations_text, text_type: 'locations', text_sts: link_text_hsh['locations_link_sts']}
             locations_text_hsh.delete_if { |key, value| value.blank? }
-            locations_text_obj = save_complex_obj('text', {'text' => locations_text}, locations_text_hsh)
+            locations_text_obj = save_comp_obj('text', {'text' => locations_text}, locations_text_hsh)
             create_obj_parent_assoc('text', locations_text_obj, web_obj) if locations_text_obj.present?
           end
 

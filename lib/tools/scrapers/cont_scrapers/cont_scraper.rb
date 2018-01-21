@@ -21,9 +21,9 @@ class ContScraper
 
   def start_cont_scraper
     # query = Web.where(cs_sts: nil).order("updated_at ASC").pluck(:id)
-    # query = Web.where(staff_link_sts: 'valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
-    query = Web.where(staff_link_sts: 'PF Result').order("updated_at ASC").pluck(:id)
-    # query = Web.where(temp_sts: 'valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Web.where(slink_sts: 'valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
+    query = Web.where(slink_sts: 'PF Result').order("updated_at ASC").pluck(:id)
+    # query = Web.where(tmp_sts: 'valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 30
     @query_count = query.count
@@ -40,7 +40,7 @@ class ContScraper
     staff_link = "#{web_obj.url}#{link_obj.link}" if link_obj&.link_type == "staff"
 
     if staff_link.present?
-      ### Above queries will be simpler in few hours after template and page finder have completed running.  Won't need to have this if/else.  Can just run query at top level based on: query = Web.where(temp_sts: 'valid', staff_link_sts: 'valid').order("updated_at ASC").pluck(:id)
+      ### Above queries will be simpler in few hours after template and page finder have completed running.  Won't need to have this if/else.  Can just run query at top level based on: query = Web.where(tmp_sts: 'valid', slink_sts: 'valid').order("updated_at ASC").pluck(:id)
 
       noko_hsh = start_noko(staff_link)
       noko_page = noko_hsh[:noko_page]
@@ -50,12 +50,12 @@ class ContScraper
       if err_msg.present?
         binding.pry
         puts err_msg
-        web_update_hsh[:acs_sts] = err_msg
+        web_update_hsh[:as_sts] = err_msg
         # web_obj.update_attributes(web_update_hsh)
       elsif noko_page.present?
         binding.pry
 
-        template = web_obj&.templates&.order("updated_at DESC")&.first&.template_name
+        template = web_obj&.templates&.order("updated_at DESC")&.first&.temp_name
         # term = Term.where(response_term: template).where.not(mth_name: nil)&.first&.mth_name
 
         if template.present?

@@ -25,18 +25,18 @@ $ rm public/index.html
 ========================
 
 ==Act==
-$ rails g scaffold Act src sts crm_act_num name
+$ rails g scaffold Act src sts crma name
 
 t.index :name, unique: true
 t.index :act_num, unique: true
 
 ==Cont==
-$ rails g scaffold Cont src sts act_id:integer crm_cont_num first_name last_name email act:references
+$ rails g scaffold Cont src sts act_id:integer crmc first_name last_name email act:references
 
 t.index :email, unique: true
 
 ==Adr==
-$ rails g scaffold Adr src sts street unit city state zip adr_pin latitude:float longitude:float
+$ rails g scaffold Adr src sts street unit city state zip pin latitude:float longitude:float
 
 ==Phone==
 $ rails g scaffold Phone src sts phone
@@ -61,7 +61,7 @@ $ rails g model ContDescription cont_id:integer description_id:integer
 
 $ rails g model Title job_title
 
-$ rails g model Description job_description
+$ rails g model Description job_desc
 
 ====================
 
@@ -127,7 +127,7 @@ MODEL
   has_many :cont_descriptions, dependent: :destroy
   has_many :conts, through: :cont_descriptions
 
-  validates_uniqueness_of :job_description, allow_blank: true, allow_nil: true
+  validates_uniqueness_of :job_desc, allow_blank: true, allow_nil: true
 
 
 == Title ==

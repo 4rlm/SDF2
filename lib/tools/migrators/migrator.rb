@@ -19,7 +19,7 @@ class Migrator
   end
 
   ## Used for Tables where only one Attr matters, like Phone.phone
-  def save_simple_obj(model, attr_hsh)
+  def save_simp_obj(model, attr_hsh)
     obj = model.classify.constantize.find_or_create_by(attr_hsh)
     #Ex: phone_obj = Phone.find_or_create_by(phone: phone)
     return obj
@@ -27,7 +27,7 @@ class Migrator
 
 
   ## Used for Tables where we need to first find by one attribute, then save or update several other attributes like Act or Cont.
-  def save_complex_obj(model, attr_hsh, obj_hsh)
+  def save_comp_obj(model, attr_hsh, obj_hsh)
     obj_hsh.delete_if { |key, value| value.blank? }
     obj = model.classify.constantize.find_by(attr_hsh)
     obj.present? ? update_obj_if_changed(obj_hsh, obj) : obj = model.classify.constantize.create(obj_hsh)
@@ -58,7 +58,7 @@ class Migrator
   end
 
 
-  def validate_hsh(cols, hsh)
+  def val_hsh(cols, hsh)
     ## hsh keys must be strings due to cols being strings too.
     hsh = hsh.stringify_keys
     if cols.present? && hsh.present?

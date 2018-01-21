@@ -36,7 +36,7 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="crm_act_num" null="1" autoincrement="0">
+<row name="crma" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="src" null="1" autoincrement="0">
@@ -60,7 +60,7 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="act" row="id" />
 </row>
-<row name="crm_cont_num" null="1" autoincrement="0">
+<row name="crmc" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="src" null="1" autoincrement="0">
@@ -107,7 +107,7 @@
 <row name="zip" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="adr_pin" null="1" autoincrement="0">
+<row name="pin" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="latitude" null="1" autoincrement="0">
@@ -257,7 +257,7 @@
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="job_description" null="1" autoincrement="0">
+<row name="job_desc" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">

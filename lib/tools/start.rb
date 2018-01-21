@@ -3,6 +3,12 @@
 #Call: Start.method_name
 class Start
 
+  #Call: Start.mega_start
+  def self.mega_start
+    CsvTool.new.import_all_seed_files ## imports all seeds.
+    UrlVerifier.new.start_url_verifier ## verifies urls, redirects.
+  end
+
   ##############################
   ###### IMPORTS-EXPORTS #######
   ##############################

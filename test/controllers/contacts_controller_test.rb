@@ -17,7 +17,7 @@ class ContsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create cont" do
     assert_difference('Cont.count') do
-      post conts_url, params: { cont: { act_id: @cont.act_id, act_id: @cont.act_id, crm_cont_num: @cont.crm_cont_num, email: @cont.email, first_name: @cont.first_name, last_name: @cont.last_name, src: @cont.src, sts: @cont.sts } }
+      post conts_url, params: { cont: { act_id: @cont.act_id, act_id: @cont.act_id, crmc: @cont.crmc, email: @cont.email, first_name: @cont.first_name, last_name: @cont.last_name, src: @cont.src, sts: @cont.sts } }
     end
 
     assert_redirected_to cont_url(Cont.last)
@@ -34,7 +34,7 @@ class ContsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update cont" do
-    patch cont_url(@cont), params: { cont: { act_id: @cont.act_id, act_id: @cont.act_id, crm_cont_num: @cont.crm_cont_num, email: @cont.email, first_name: @cont.first_name, last_name: @cont.last_name, src: @cont.src, sts: @cont.sts } }
+    patch cont_url(@cont), params: { cont: { act_id: @cont.act_id, act_id: @cont.act_id, crmc: @cont.crmc, email: @cont.email, first_name: @cont.first_name, last_name: @cont.last_name, src: @cont.src, sts: @cont.sts } }
     assert_redirected_to cont_url(@cont)
   end
 

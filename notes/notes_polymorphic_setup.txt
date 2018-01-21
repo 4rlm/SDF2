@@ -458,9 +458,9 @@ class ActSaver
   def query_act_hashes
     puts "Querying Act Hash, then Saving to DB..."
     # raw_act_hashes = []
-    # act_hsh = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_adr: 'HERE', adr_pin: 'HERE', phone: 'HERE'}
+    # act_hsh = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_adr: 'HERE', pin: 'HERE', phone: 'HERE'}
 
-    act_hsh = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_adr: '123 Main St., Happytown, AZ, 12345', adr_pin: 's123-z12345', phone: '(123) 456-7890'}
+    act_hsh = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_adr: '123 Main St., Happytown, AZ, 12345', pin: 's123-z12345', phone: '(123) 456-7890'}
 
     parse_act_hsh(act_hsh)
   end
@@ -479,7 +479,7 @@ class ActSaver
     @act_data = { sts: act_hsh[:act_sts], src: act_hsh[:act_src] }
     @url_data = { url: act_hsh[:url], sts: act_hsh[:url_sts] }
     @org_data = { name: act_hsh[:org_name] }
-    @adr_data = { street: act_hsh[:street], city: act_hsh[:city], zip: act_hsh[:zip], state: act_hsh[:state], full_adr: act_hsh[:full_adr], adr_pin: act_hsh[:adr_pin] }
+    @adr_data = { street: act_hsh[:street], city: act_hsh[:city], zip: act_hsh[:zip], state: act_hsh[:state], full_adr: act_hsh[:full_adr], pin: act_hsh[:pin] }
     @phone_data = { phone: act_hsh[:phone] }
 
     save_or_update_db

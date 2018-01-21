@@ -3,11 +3,11 @@
 one:
   source: MyString
   sts: MyString
-  crm_act_num: MyString
+  crma: MyString
   name: MyString
 
 two:
   source: MyString
   sts: MyString
-  crm_act_num: MyString
+  crma: MyString
   name: MyString

@@ -112,12 +112,12 @@ class Formatter
 
       update_hsh = {}
       current_full_adr = adr_obj.full_adr
-      current_adr_pin = adr_obj.adr_pin
+      current_pin = adr_obj.pin
 
       new_full_adr = AdrFormatter.generate_full_adr(adr_obj)
       update_hsh[:full_adr] = new_full_adr if current_full_adr != new_full_adr
-      new_adr_pin = AdrFormatter.generate_adr_pin(adr_obj.street, adr_obj.zip)
-      update_hsh[:adr_pin] = new_adr_pin if current_adr_pin != new_adr_pin
+      new_pin = AdrFormatter.generate_pin(adr_obj.street, adr_obj.zip)
+      update_hsh[:pin] = new_pin if current_pin != new_pin
       !update_hsh.empty? ? adr_obj.update_attributes(update_hsh) : adr_obj.touch
     end
   end

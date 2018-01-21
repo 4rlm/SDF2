@@ -17,7 +17,7 @@ class ActsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create act" do
     assert_difference('Act.count') do
-      post acts_url, params: { act: { crm_act_num: @act.crm_act_num, name: @act.name, src: @act.src, sts: @act.sts } }
+      post acts_url, params: { act: { crma: @act.crma, name: @act.name, src: @act.src, sts: @act.sts } }
     end
 
     assert_redirected_to act_url(Act.last)
@@ -34,7 +34,7 @@ class ActsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update act" do
-    patch act_url(@act), params: { act: { crm_act_num: @act.crm_act_num, name: @act.name, src: @act.src, sts: @act.sts } }
+    patch act_url(@act), params: { act: { crma: @act.crma, name: @act.name, src: @act.src, sts: @act.sts } }
     assert_redirected_to act_url(@act)
   end
 

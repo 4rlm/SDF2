@@ -57,10 +57,9 @@ module Importer
   def import_all_seed_files
     Migrator.new.reset_pk_sequence
 
-    CsvTool.new.import_uni_seeds('uni_act', '2_acts_top_150.csv')
-    CsvTool.new.import_uni_seeds('uni_act', '1_acts_cop.csv')
-    CsvTool.new.import_uni_seeds('uni_act', '3_wards_500.csv')
-
+    CsvTool.new.import_uni_seeds('uni_act', '1_acts_top_150.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '2_wards_500.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '3_acts_cop.csv')
 
     ########## UNI SEED IMPORT BELOW ##########
     # CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
@@ -96,7 +95,7 @@ module Importer
     @clean_csv_hashes.each do |clean_csv_hsh|
       clean_csv_hsh = clean_csv_hsh.stringify_keys
       clean_csv_hsh.delete_if { |key, value| value.blank? } if !clean_csv_hsh.empty?
-      uni_hsh = validate_hsh(model.column_names, clean_csv_hsh)
+      uni_hsh = val_hsh(model.column_names, clean_csv_hsh)
       objs << model.new(uni_hsh)
     end
 
@@ -125,7 +124,7 @@ module Importer
     @clean_csv_hashes.each do |clean_csv_hsh|
       clean_csv_hsh = clean_csv_hsh.stringify_keys
       clean_csv_hsh.delete_if { |key, value| value.blank? } if !clean_csv_hsh.empty?
-      new_hsh = validate_hsh(model.column_names, clean_csv_hsh)
+      new_hsh = val_hsh(model.column_names, clean_csv_hsh)
 
       obj_exists = model.exists?(new_hsh) if new_hsh.present?
       obj = model.new(new_hsh) if !obj_exists

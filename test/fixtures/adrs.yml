@@ -8,7 +8,7 @@ one:
   city: MyString
   state: MyString
   zip: MyString
-  adr_pin: MyString
+  pin: MyString
   latitude: 1.5
   longitude: 1.5
 
@@ -20,6 +20,6 @@ two:
   city: MyString
   state: MyString
   zip: MyString
-  adr_pin: MyString
+  pin: MyString
   latitude: 1.5
   longitude: 1.5

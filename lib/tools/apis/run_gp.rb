@@ -42,7 +42,7 @@ module RunGp
       if spot_adr.present?
         adr_hsh = format_goog_adr(spot_adr)
       else
-        adr_hsh = {adr_sts: 'invalid', street: nil, city: nil, state: nil, zip: nil, adr_pin: nil}
+        adr_hsh = {adr_gp_sts: 'invalid', street: nil, city: nil, state: nil, zip: nil, pin: nil}
       end
 
       ## Reformat Act Name w/ City and State ##
@@ -57,7 +57,7 @@ module RunGp
       ## Process Industry ##
       industries = spot.types ||= []
       industries -= %w(store point_of_interest establishment car_repair)
-      industry = industries.join(' ')
+      indus = industries.join(' ')
 
       ## Get Spot Detail ##
       place_id = spot.place_id
@@ -72,24 +72,24 @@ module RunGp
       phone = @formatter.validate_phone(phone)
 
       ## Create Result Hashes ##
-      goog_sts_hsh = {
+      gp_sts_hsh = {
         place_id: place_id,
-        gp_sts: nil,
-        gp_date: Time.now
+        act_gp_sts: nil,
+        act_gp_date: Time.now
       }
 
-      goog_hsh = {
+      gp_hsh = {
         act_name: act_name,
         adr: adr_hsh,
-        website: website,
+        url: website,
         phone: phone,
-        industry: industry,
-        goog_sts_hsh: goog_sts_hsh
+        indus: indus,
+        gp_sts_hsh: gp_sts_hsh
       }
 
-      goog_hsh.values.compact.present? ? validity = 'valid:gp' : validity = 'invalid'
-      goog_hsh[:goog_sts_hsh][:gp_sts] = validity
-      return goog_hsh
+      gp_hsh.values.compact.present? ? validity = 'valid:gp' : validity = 'invalid'
+      gp_hsh[:gp_sts_hsh][:act_gp_sts] = validity
+      return gp_hsh
     end
   end
 
@@ -107,7 +107,7 @@ module RunGp
       country = adr.split(',').last
       foreign_country = find_foreign_country(country)
       if foreign_country.present?
-        adr_hsh = {adr_sts: 'foreign', street: nil, city: nil, state: nil, zip: nil, adr_pin: nil}
+        adr_hsh = {adr_gp_sts: 'foreign', street: nil, city: nil, state: nil, zip: nil, pin: nil}
         return adr_hsh
       else
         adr.gsub!('United States', '')
@@ -115,7 +115,7 @@ module RunGp
         adr.strip!
 
         adrs = adr.split(',').map{|item| item.strip}
-        street, city, state, zip, adr_pin = nil, nil, nil, nil, nil
+        street, city, state, zip, pin = nil, nil, nil, nil, nil
 
         adrs.each do |adr_part|
           splits = adr_part.split(' ')
@@ -126,7 +126,7 @@ module RunGp
           if splits.length == 2
             state = splits0 if splits0.scan(/[A-Z]/).length == 2
             zip = splits1 if splits1.scan(/[0-9]/).length.in?([5, 9])
-            adr_pin = @formatter.generate_adr_pin(street, zip) if street && zip
+            pin = @formatter.generate_pin(street, zip) if street && zip
           end
 
           ## Get Street and City ##
@@ -145,7 +145,7 @@ module RunGp
           zip&.strip!
           zip&.squeeze!(" ")
         end
-        adr_hsh = {adr_sts: 'valid', street: street, city: city, state: state, zip: zip, adr_pin: adr_pin}
+        adr_hsh = {adr_gp_sts: 'valid', street: street, city: city, state: state, zip: zip, pin: pin}
         return adr_hsh
       end
     end

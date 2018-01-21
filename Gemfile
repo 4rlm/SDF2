@@ -129,4 +129,4 @@ gem 'openssl', '~> 2.0.0.beta.1'
 # gem 'geokit', '~> 1.11'
 
 ## Sample - Testing this gem below:
-# gem 'final_redirect_url', '~> 0.1.0'
+# gem 'final_fwd_url', '~> 0.1.0'

@@ -3,14 +3,14 @@ class CreateUniWebs < ActiveRecord::Migration[5.1]
     create_table :uni_webs do |t|
 
       t.boolean :archived, default: false
-      t.string :web_sts
+      t.string :url_ver_sts
       t.string :url
-      t.string :url_redirect_id
-      t.string :redirect_url
+      t.string :fwd_web_id
+      t.string :fwd_url
 
       t.string :staff_link
       t.string :staff_text
-      t.string :staff_link_sts
+      t.string :slink_sts
 
       t.string :locations_link
       t.string :locations_text

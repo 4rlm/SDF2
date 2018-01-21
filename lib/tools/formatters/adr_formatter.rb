@@ -22,7 +22,7 @@ module AdrFormatter
       zip = format_zip(zip) if zip.present?
       adr_hsh[:zip] = zip
 
-      adr_hsh[:adr_pin] = generate_adr_pin(street, zip) if (street.present? && zip.present?)
+      adr_hsh[:pin] = generate_pin(street, zip) if (street.present? && zip.present?)
 
       adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
       return adr_hsh
@@ -238,17 +238,17 @@ module AdrFormatter
   ##################################
 
 
-  # CALL: Formatter.new.generate_adr_pin(street, zip)
-  def generate_adr_pin(street, zip)
+  # CALL: Formatter.new.generate_pin(street, zip)
+  def generate_pin(street, zip)
     if street && zip
-      adr_pin = nil
+      pin = nil
       street_parts = street.split(" ")
       street_num = street_parts[0]
       street_num = street_num.tr('^0-9', '')
       new_zip = zip.strip
       new_zip = zip[0..4]
-      adr_pin = "z#{new_zip}-s#{street_num}"
-      return adr_pin
+      pin = "z#{new_zip}-s#{street_num}"
+      return pin
     end
   end
 

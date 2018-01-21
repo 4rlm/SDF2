@@ -3,7 +3,7 @@ module WebAssociator
 
   #CALL: WebAssociator.start_web_associator
   def self.start_web_associator
-    query = Web.where.not(redirect_url: nil).order("updated_at DESC").pluck(:id)
+    query = Web.where.not(fwd_url: nil).order("updated_at DESC").pluck(:id)
 
     query.each do |id|
       web_obj = Web.find(id)
@@ -15,8 +15,8 @@ module WebAssociator
   #Gets the associations of the current web obj and saves them to redirected web obj.
   #CALL: WebAssociator.transfer_web_associations(web_obj)
   def self.transfer_web_associations(web_obj)
-    redirect_obj = Web.find_by(redirect_url: web_obj.redirect_url)
-    web_obj.update_attributes(url_archived: TRUE, web_sts: 'redirected', sts_code: nil, url_redirect_id: redirect_obj.id)
+    redirect_obj = Web.find_by(fwd_url: web_obj.fwd_url)
+    web_obj.update_attributes(urlx: TRUE, url_ver_sts: 'redirected', sts_code: nil, fwd_web_id: redirect_obj.id)
 
     models = %w(act template link text who)
     models.each do |model|

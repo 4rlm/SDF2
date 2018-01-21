@@ -6,7 +6,7 @@
 
 # require 'iterators/complex_query_iterator'
 # require 'complex_query_iterator'
-# require 'final_redirect_url'
+# require 'final_fwd_url'
 
 class FranchiseAlgo
   # include Curler #=> concerns/curler.rb

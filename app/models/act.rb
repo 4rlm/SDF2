@@ -24,7 +24,7 @@ class Act < ApplicationRecord
   accepts_nested_attributes_for :brandings, :brands
 
 
-  validates_uniqueness_of :crm_act_num, allow_blank: true, allow_nil: true
-  # validates_uniqueness_of :crm_act_num
+  validates_uniqueness_of :crma, allow_blank: true, allow_nil: true
+  # validates_uniqueness_of :crma
 
 end

@@ -69,11 +69,11 @@ class ContsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cont_params
-      # params.require(:cont).permit(:src, :sts, :act_id, :crm_act_num, :crm_cont_num, :first_name, :last_name, :email)
+      # params.require(:cont).permit(:src, :sts, :act_id, :crma, :crmc, :first_name, :last_name, :email)
 
-      params.require(:cont).permit(:src, :sts, :act_id, :crm_act_num, :crm_cont_num, :first_name, :last_name, :email, :created_at, :updated_at,
+      params.require(:cont).permit(:src, :sts, :act_id, :crma, :crmc, :first_name, :last_name, :email, :created_at, :updated_at,
         title_attributes: [:id, :job_title, :created_at, :updated_at ],
-        description_attributes: [:id, :job_description, :created_at, :updated_at ],
+        description_attributes: [:id, :job_desc, :created_at, :updated_at ],
         phone_attributes: [:src, :sts, :phone, :created_at, :updated_at ])
 
     end
