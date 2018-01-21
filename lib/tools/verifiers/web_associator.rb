@@ -12,11 +12,11 @@ module WebAssociator
   end
 
 
-  #Gets the associations of the current web obj and saves them to redirected web obj.
+  #Gets the associations of the current web obj and saves them to FWD web obj.
   #CALL: WebAssociator.transfer_web_associations(web_obj)
   def self.transfer_web_associations(web_obj)
     redirect_obj = Web.find_by(fwd_url: web_obj.fwd_url)
-    web_obj.update_attributes(urlx: TRUE, url_ver_sts: 'redirected', sts_code: nil, fwd_web_id: redirect_obj.id)
+    web_obj.update_attributes(urlx: TRUE, url_ver_sts: 'FWD', sts_code: nil, fwd_web_id: redirect_obj.id)
 
     models = %w(act template link text who)
     models.each do |model|

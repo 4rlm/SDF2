@@ -30,7 +30,7 @@ module Curler
         end # timeout
 
       rescue Timeout::Error # timeout rescue
-        curl_hsh[:err_msg] = "timeout:#{@timeout}"
+        curl_hsh[:err_msg] = "Error: Timeout"
       end
 
     rescue # LoadError => e  # curl rescue

@@ -1,12 +1,12 @@
 #######################################
 #CALL: ActScraper.new.start_act_scraper
 #######################################
-require 'complex_query_iterator'
+require 'query_iterator'
 require 'noko'
 
 
 class ActScraper
-  include ComplexQueryIterator
+  include QueryIterator
   include Noko
 
   def initialize
@@ -17,14 +17,14 @@ class ActScraper
 
 
   def start_act_scraper
-    query = Web.where(tmp_sts: 'valid', as_sts: nil).order("updated_at ASC").pluck(:id)
-    # query = Web.where(tmp_sts: 'valid').order("updated_at ASC").pluck(:id)
+    query = Web.where(tmp_sts: 'Valid', as_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Web.where(tmp_sts: 'Valid').order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 50
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    # iterate_query(query) # via ComplexQueryIterator
+    # iterate_query(query) # via QueryIterator
     query.each { |id| template_starter(id) }
   end
 
@@ -74,7 +74,7 @@ class ActScraper
 
   def update_db(web_obj, as_hsh)
     if as_hsh&.values&.compact&.empty?
-      web_obj.update_attributes(as_sts: 'invalid:as', as_date: Time.now)
+      web_obj.update_attributes(as_sts: 'Invalid:as', as_date: Time.now)
     else
       formatter = Formatter.new
       migrator = Migrator.new
@@ -91,7 +91,7 @@ class ActScraper
         if gp_hsh&.values&.compact&.present?
           act_name = gp_hsh[:act_name]
           adr_hsh = gp_hsh[:adr]
-          gp_hsh[:adr_gp_sts].present? ? validity = gp_hsh[:adr_gp_sts] : validity = 'valid:as-gp'
+          gp_hsh[:adr_gp_sts].present? ? validity = gp_hsh[:adr_gp_sts] : validity = 'Valid:as-gp'
 
           gp_sts_hsh = gp_hsh[:gp_sts_hsh]
           web_hsh = {as_sts: validity, as_date: Time.now}
@@ -102,14 +102,14 @@ class ActScraper
         else
           puts "No Result from Google Places"
           act_name = formatter.format_act_name(act_name)
-          validity = 'valid:as'
+          validity = 'Valid:as'
           adr_hsh = {street: as_hsh[:street], city: as_hsh[:city], state: as_hsh[:state], zip: as_hsh[:zip]}
           adr_hsh = formatter.format_adr_hsh(adr_hsh) if adr_hsh && adr_hsh.values.compact.present?
           web_hsh = {as_sts: validity, as_date: Time.now}
         end
       else
         puts "No Scraped Account Name"
-        validity = 'invalid:as-gp'
+        validity = 'Invalid:as-gp'
         act_name = 'unidentified' if !act_name.present?
         web_hsh = {as_sts: validity, as_date: Time.now}
       end

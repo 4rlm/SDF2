@@ -1,9 +1,9 @@
 #CALL: PageFinder.new.start_page_finder
-require 'complex_query_iterator'
+require 'query_iterator'
 require 'noko'
 
 class PageFinder
-  include ComplexQueryIterator
+  include QueryIterator
   include Noko
 
   def initialize
@@ -14,13 +14,13 @@ class PageFinder
 
 
   def start_page_finder
-    query = Web.where(tmp_sts: 'valid').order("updated_at ASC").pluck(:id)
+    query = Web.where(tmp_sts: 'Valid').order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 50
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    iterate_query(query) # via ComplexQueryIterator
+    iterate_query(query) # via QueryIterator
     # query.each { |id| template_starter(id) }
   end
 
@@ -40,23 +40,23 @@ class PageFinder
       staff_hsh = parse_page(web_obj, noko_page, "staff")
       staff_link = staff_hsh[:link]
       staff_text = staff_hsh[:text]
-      staff_link.present? ? slink_sts = 'valid' : slink_sts = 'invalid'
+      staff_link.present? ? slink_sts = 'Valid' : slink_sts = 'Invalid'
       staff_link_hsh = {link: staff_link, link_type: 'staff', link_sts: slink_sts}
-      staff_text.present? ? stext_sts = 'valid' : stext_sts = 'invalid'
+      staff_text.present? ? stext_sts = 'Valid' : stext_sts = 'Invalid'
       staff_text_hsh = {text: staff_text, text_type: 'staff', text_sts: stext_sts}
 
       loc_hsh = parse_page(web_obj, noko_page, "location")
       loc_link = loc_hsh[:link]
       loc_text = loc_hsh[:text]
-      loc_link.present? ? llink_sts = 'valid' : llink_sts = 'invalid'
+      loc_link.present? ? llink_sts = 'Valid' : llink_sts = 'Invalid'
       loc_link_hsh = {link: loc_link, link_type: 'loc', link_sts: llink_sts}
-      loc_text.present? ? ltext_sts = 'valid' : ltext_sts = 'invalid'
+      loc_text.present? ? ltext_sts = 'Valid' : ltext_sts = 'Invalid'
       loc_text_hsh = {text: loc_text, text_type: 'loc', text_sts: ltext_sts}
 
       web_update_hsh.merge!({slink_sts: slink_sts, llink_sts: llink_sts, stext_sts: stext_sts, ltext_sts: ltext_sts})
       web_obj.update_attributes(web_update_hsh)
 
-      update_db(id, web_obj, staff_link_hsh, loc_link_hsh, staff_text_hsh, loc_text_hsh) if slink_sts == 'valid' || llink_sts == 'valid' || stext_sts == 'valid' || ltext_sts == 'valid'
+      update_db(id, web_obj, staff_link_hsh, loc_link_hsh, staff_text_hsh, loc_text_hsh) if slink_sts == 'Valid' || llink_sts == 'Valid' || stext_sts == 'Valid' || ltext_sts == 'Valid'
     end
   end
 

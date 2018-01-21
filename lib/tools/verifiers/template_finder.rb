@@ -1,16 +1,16 @@
 # Call: TemplateFinder.new.start_template_finder
 
-require 'complex_query_iterator'
+require 'query_iterator'
 require 'curler'
 require 'noko'
 
 class TemplateFinder
-  include ComplexQueryIterator
+  include QueryIterator
   include Noko
 
   def initialize
     @migrator = Migrator.new
-    ### for ComplexQueryIterator ###
+    ### for QueryIterator ###
     @timeout = 5
     @dj_count_limit = 30 #=> Num allowed before releasing next batch.
     @workers = 4 #=> Divide format_query_results into groups of x.
@@ -26,7 +26,7 @@ class TemplateFinder
   ################################
   def get_primary_query
     # sts_codes = Web.where(sts_code: [200..299]).count
-    primary_query = Web.where(url_ver_sts: 'valid', tmp_sts: nil).order("updated_at ASC").pluck(:id)
+    primary_query = Web.where(url_ver_sts: 'Valid', tmp_sts: nil).order("updated_at ASC").pluck(:id)
   end
 
   def get_tcp_query
@@ -73,7 +73,7 @@ class TemplateFinder
     @query_count = query.count
     (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
 
-    iterate_query(query) # via ComplexQueryIterator
+    iterate_query(query) # via QueryIterator
     # query.each { |id| template_starter(id) }
   end
 
@@ -87,7 +87,7 @@ class TemplateFinder
 
     if page.present?
       new_temp = Term.where(category: "template_finder").where(sub_category: "at_css").select { |term| term.response_term if page&.at_css('html')&.text&.include?(term.criteria_term) }&.first&.response_term
-      new_temp.present? ? tmp_sts = 'valid' : tmp_sts = 'unidentified'
+      new_temp.present? ? tmp_sts = 'Valid' : tmp_sts = 'unidentified'
       cur_temp = web_obj.templates&.order("updated_at DESC")&.first&.temp_name
     end
 

@@ -42,7 +42,7 @@ module RunGp
       if spot_adr.present?
         adr_hsh = format_goog_adr(spot_adr)
       else
-        adr_hsh = {adr_gp_sts: 'invalid', street: nil, city: nil, state: nil, zip: nil, pin: nil}
+        adr_hsh = {adr_gp_sts: 'Invalid', street: nil, city: nil, state: nil, zip: nil, pin: nil}
       end
 
       ## Reformat Act Name w/ City and State ##
@@ -87,7 +87,7 @@ module RunGp
         gp_sts_hsh: gp_sts_hsh
       }
 
-      gp_hsh.values.compact.present? ? validity = 'valid:gp' : validity = 'invalid'
+      gp_hsh.values.compact.present? ? validity = 'Valid:gp' : validity = 'Invalid'
       gp_hsh[:gp_sts_hsh][:act_gp_sts] = validity
       return gp_hsh
     end
@@ -145,7 +145,7 @@ module RunGp
           zip&.strip!
           zip&.squeeze!(" ")
         end
-        adr_hsh = {adr_gp_sts: 'valid', street: street, city: city, state: state, zip: zip, pin: pin}
+        adr_hsh = {adr_gp_sts: 'Valid', street: street, city: city, state: state, zip: zip, pin: pin}
         return adr_hsh
       end
     end

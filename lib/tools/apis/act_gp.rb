@@ -1,10 +1,10 @@
 #######################################
 #CALL: ActGp.new.start_act_goog
 #######################################
-require 'complex_query_iterator'
+require 'query_iterator'
 ``
 class ActGp
-  include ComplexQueryIterator
+  include QueryIterator
 
   def initialize
     @formatter = Formatter.new
@@ -18,7 +18,7 @@ class ActGp
 
   def start_act_goog
     # Act.select(:act_name).order("updated_at DESC")[0..100]
-    # query = Web.where(url_ver_sts: "valid", as_sts: nil).where.not(tmp_sts: 'valid').order("updated_at ASC").pluck(:id)
+    # query = Web.where(url_ver_sts: "Valid", as_sts: nil).where.not(tmp_sts: 'Valid').order("updated_at ASC").pluck(:id)
     # query = Act.where(act_gp_sts: nil).order("updated_at ASC").pluck(:id)
     # query = Act.where(act_src: 'CRM', act_gp_sts: nil).order("updated_at ASC").pluck(:id)
     # query = Act.where(act_src: 'CRM').count
@@ -33,7 +33,7 @@ class ActGp
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    # iterate_query(query) # via ComplexQueryIterator
+    # iterate_query(query) # via QueryIterator
     query.each { |id| template_starter(id) }
   end
 
@@ -75,7 +75,7 @@ class ActGp
       if !gp_hsh&.values&.compact&.present?
         ## NO GOOG RESULTS ##
         puts "No Result from Google Places"
-        cur_act_obj.update_attributes(act_gp_sts: 'invalid', act_gp_date: Time.now)
+        cur_act_obj.update_attributes(act_gp_sts: 'Invalid', act_gp_date: Time.now)
         return
       else
         ## EXTRACT GOOG RESULTS HASH ##
@@ -96,7 +96,7 @@ class ActGp
 
         ## Archive Current Act Obj if New Act Obj Created. ##
         if cur_act_name != new_act_name
-          cur_act_obj.update_attributes(act_fwd_id: new_act_obj.id, act_sts: 'redirected', act_gp_sts: 'redirected', act_gp_date: Time.now)
+          cur_act_obj.update_attributes(act_fwd_id: new_act_obj.id, act_sts: 'FWD', act_gp_sts: 'FWD', act_gp_date: Time.now)
         end
         # new_act_obj
         # cur_act_obj

@@ -1292,7 +1292,7 @@ class ActSaver
     # raw_act_hashes = []
     # act_hsh = {crm_id: 'HERE', crm_id_category: 'HERE', crm_id_src: 'HERE', act_sts: 'HERE', act_src: 'HERE', url: 'HERE', url_sts: 'HERE', org_name: 'HERE', street: 'HERE', city: 'HERE', zip: 'HERE', state: 'HERE', full_adr: 'HERE', pin: 'HERE', phone: 'HERE'}
 
-    act_hsh = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_adr: '123 Main St., Happytown, AZ, 12345', pin: 's123-z12345', phone: '(123) 456-7890'}
+    act_hsh = {crm_id: 'ac_100', crm_id_category: 'act', crm_id_src: 'crm', act_sts: 'imported', act_src: 'crm', url: 'http://www.sample123.com', url_sts: 'Valid', org_name: 'Happy Cars 123', street: '123 Main St.', city: 'Happytown', state: 'AZ', zip: '12345', full_adr: '123 Main St., Happytown, AZ, 12345', pin: 's123-z12345', phone: '(123) 456-7890'}
 
     parse_act_hsh(act_hsh)
   end

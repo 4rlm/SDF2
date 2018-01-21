@@ -1,5 +1,5 @@
 
-module ComplexQueryIterator
+module QueryIterator
 
   def iterate_query(query)
     # Call: UrlVerifier.new.start_url_verifier

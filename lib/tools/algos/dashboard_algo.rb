@@ -4,13 +4,13 @@
 # require 'delayed_job'
 # require 'curb'
 
-# require 'iterators/complex_query_iterator'
-# require 'complex_query_iterator'
+# require 'iterators/query_iterator'
+# require 'query_iterator'
 # require 'final_fwd_url'
 
 class DashboardAlgo
   # include Curler #=> concerns/curler.rb
-  # include ComplexQueryIterator
+  # include QueryIterator
 
   def initialize
     puts "\n== Welcome to the DashboardAlgo Class! ==\nCalculates Totals, Stats and Trends of Data."
@@ -34,7 +34,7 @@ class DashboardAlgo
     # .where.not(archived: TRUE)
     # .order("updated_at DESC")
 
-    # iterate_query(query) # via ComplexQueryIterator
+    # iterate_query(query) # via QueryIterator
   end
 
 

@@ -23,7 +23,7 @@ def url_exist?(url_string)
     req.use_ssl = (url.scheme == 'https')
     res = req.request_head(url || '/')
     if res.kind_of?(Net::HTTPRedirection)
-      url_exist?(res['location']) # Go after any redirect and make sure you can access the redirected URL
+      url_exist?(res['location']) # Go after any redirect and make sure you can access the FWD URL
     else
       res.code[0] != "4" #false if http code starts with 4 - error on your side.
     end

@@ -9,7 +9,7 @@
 
 
 module PhoneFormatter
-  ## Checks every phone number in table to verify that it meets phone criteria, then calls format_phone method to format valid results.  Otherwise destroys invalid phone fields and associations.
+  ## Checks every phone number in table to verify that it meets phone criteria, then calls format_phone method to format Valid results.  Otherwise destroys Invalid phone fields and associations.
 
   # Call: Formatter.new.validate_phone(phone)
 
@@ -24,7 +24,7 @@ module PhoneFormatter
 
   #################################
   ## FORMATS PHONE AS: (000) 000-0000
-  ## Assumes phone is legitimate, then formats.  Not designed to detect valid phone number.
+  ## Assumes phone is legitimate, then formats.  Not designed to detect Valid phone number.
 
   # Call: Formatter.new.format_phone(phone)
   def format_phone(phone)

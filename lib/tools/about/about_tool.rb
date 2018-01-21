@@ -45,7 +45,7 @@ class AboutTool
     msg_1 = "1) CsvToolMod::Import.restore_all_backups: Destroys contents of all tables."
     msg_2 = "2) Re-Imports each CSV backup to restore db"
     msg_3 = "3) Formatters: Formats the db data and parses when necessary."
-    msg_4 = "4) UrlVerifier: Verifies & updates urls valid/redirected."
+    msg_4 = "4) UrlVerifier: Verifies & updates urls Valid/FWD."
     msg_5 = "5) TemplateGrabber: Verifies & updates (Dealer.com, Cobalt, etc.)."
     msg_6 = "6) LinkTextGrabber: Verifies & updates Links/Text (locations and staff pages)."
     msg_7 = "7) ActScraper"

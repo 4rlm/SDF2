@@ -76,12 +76,12 @@
 #     raw_data_1 = noko_page.at_css('body').inner_html
 #     raw_data_2 = noko_page.at_css('body').text
 #     reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
-#     invalid = Regexp.new("[0-9]{5,}")
+#     Invalid = Regexp.new("[0-9]{5,}")
 #     data_1 = raw_data_1.scan(reg)
 #     data_2 = raw_data_2.scan(reg)
 #     phones = data_1.uniq + data_2.uniq
 #     phones = phones.uniq.sort
-#     phones = phones.reject { |x| invalid.match(x) }
+#     phones = phones.reject { |x| Invalid.match(x) }
 #     phones = phones.map { |phone| @formatter.validate_phone(phone) }
 #     return phones
 #   end

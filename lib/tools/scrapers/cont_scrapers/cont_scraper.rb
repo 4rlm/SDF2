@@ -2,13 +2,13 @@
 #CALL: ContScraper.new.start_cont_scraper
 #######################################
 
-require 'complex_query_iterator'
+require 'query_iterator'
 require 'noko'
 
 
 #CALL: ContScraper.new.start_cont_scraper
 class ContScraper
-  include ComplexQueryIterator
+  include QueryIterator
   include Noko
 
 
@@ -21,15 +21,15 @@ class ContScraper
 
   def start_cont_scraper
     # query = Web.where(cs_sts: nil).order("updated_at ASC").pluck(:id)
-    # query = Web.where(slink_sts: 'valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Web.where(slink_sts: 'Valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
     query = Web.where(slink_sts: 'PF Result').order("updated_at ASC").pluck(:id)
-    # query = Web.where(tmp_sts: 'valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Web.where(tmp_sts: 'Valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 30
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    # iterate_query(query) # via ComplexQueryIterator
+    # iterate_query(query) # via QueryIterator
     query.each { |id| template_starter(id) }
   end
 
@@ -40,7 +40,7 @@ class ContScraper
     staff_link = "#{web_obj.url}#{link_obj.link}" if link_obj&.link_type == "staff"
 
     if staff_link.present?
-      ### Above queries will be simpler in few hours after template and page finder have completed running.  Won't need to have this if/else.  Can just run query at top level based on: query = Web.where(tmp_sts: 'valid', slink_sts: 'valid').order("updated_at ASC").pluck(:id)
+      ### Above queries will be simpler in few hours after template and page finder have completed running.  Won't need to have this if/else.  Can just run query at top level based on: query = Web.where(tmp_sts: 'Valid', slink_sts: 'Valid').order("updated_at ASC").pluck(:id)
 
       noko_hsh = start_noko(staff_link)
       noko_page = noko_hsh[:noko_page]
