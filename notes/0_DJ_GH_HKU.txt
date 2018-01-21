@@ -1,5 +1,28 @@
+
+url_ver_date: Time.now
+query = Web.
+  where(urlx: FALSE).
+  where("url_ver_date < date").
+  order("updated_at ASC").
+  pluck(:id)
+
+where(attribute: [value1,value2])
+
+
+Post.
+  where(
+  t[:author].eq("Someone").
+  or(t[:title].matches("%something%"))
+)
+
+
+Post.
+  where(user_id: current_user.id, notetype: p[:note_type]).
+  where("date > ?", p[:date]).
+  order('date ASC, created_at ASC')
+
 Web.count
-query = Web.where(url_ver_sts: "valid").count
+query = Web.where(url_ver_sts: "Valid").count
 query = Web.where("url_ver_sts LIKE '%Error%'").count
 query = Web.where("url_ver_sts LIKE '%Error%'").select(:url_ver_sts).pluck(:url_ver_sts).uniq
 ["Error: Host", "Error: Expired Url", "Error: Transfer", "Error: Certificate", "Error: Undefined"]
@@ -14,7 +37,7 @@ acts = Act.where("act_name LIKE '%,%'").count
 ###############
 
 query = Web.where.not(url_ver_sts: nil).order("updated_at DESC")
-query = Web.where(urlx: true, url_ver_sts: "valid").order("updated_at DESC")
+query = Web.where(urlx: true, url_ver_sts: "Valid").order("updated_at DESC")
 
 urlx: true
 
@@ -28,7 +51,7 @@ urlx: true
 ## Edit below to use as format for update or create new act from ActGp
  #<Act id: 22367, act_name: "Front Range Honda in Colorado Springs, CO", crma: nil, act_sts: nil, act_src: nil, cop: true, actx: false, act_fwd_id: nil, act_gp_sts: nil, act_gp_date: nil, place_id: nil, act_gp_indus: nil, top: nil, ward: 500,
 
-url_ver_sts: "valid"
+url_ver_sts: "Valid"
 
 ########################################
 Short list to-do ...

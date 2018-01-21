@@ -110,7 +110,7 @@ class ActScraper
       else
         puts "No Scraped Account Name"
         validity = 'Invalid:as-gp'
-        act_name = 'unidentified' if !act_name.present?
+        act_name = 'Unidentified' if !act_name.present?
         web_hsh = {as_sts: validity, as_date: Time.now}
       end
 

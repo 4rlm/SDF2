@@ -31,10 +31,11 @@ module Importer
   end
 
 
+  # Call: CsvTool.new.restore_backup(Term, 'Terms.csv')
   # Call: CsvTool.new.restore_backup(City, 'Cities.csv')
   # Call: CsvTool.new.restore_backup(Dealer, 'Dealers.csv')
   # Call: CsvTool.new.restore_backup(Brand, 'Brands.csv')
-
+  # Call: CsvTool.new.restore_backup(Template, 'Templates.csv')
 
   def restore_backup(model, file_name)
     @file_path = "#{@backups_dir_path}/#{file_name}"

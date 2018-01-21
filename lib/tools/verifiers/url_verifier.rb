@@ -1,41 +1,25 @@
 # Call: UrlVerifier.new.start_url_verifier
-
-require 'mechanize'
-require 'nokogiri'
-require 'open-uri'
-require 'delayed_job'
-require 'curb'
-require 'timeout'
-require 'net/ping'
-# require 'final_fwd_url'
-require 'query_iterator'
-require 'web_associator'
-require 'curler'
-require 'net/ping'
-# require 'https'
-require 'openssl'
-require "net/http"
-# %w{query_iterator final_fwd_url}.each { |x| require x }
-
 ######### Delayed Job #########
 # $ rake jobs:clear
 
+require 'query_iterator'
+require 'web_associator'
+require 'curler'
+
 class UrlVerifier
-  include Curler #=> concerns/curler.rb
   include QueryIterator
+  include Curler
   include WebAssociator
 
   def initialize
     @formatter = Formatter.new
     @migrator = Migrator.new
-    ### for QueryIterator ###
     @timeout = 20
-    @dj_count_limit = 30 #=> Num allowed before releasing next batch.
-    @workers = 4 #=> Divide format_query_results into groups of x.
-    ### for UrlVerifier ###
+    @dj_count_limit = 30
+    @workers = 4
     @obj_in_grp = 50
     @cut_off = 6.hours.ago
-    @prior_query_count = 0 ## breaks while loop below.
+    @prior_query_count = 0
   end
 
 
@@ -61,7 +45,7 @@ class UrlVerifier
       break if query_count == get_query.count
       start_url_verifier
     end
-    WebAssociator.start_web_associator
+    # WebAssociator.start_web_associator
   end
 
 
