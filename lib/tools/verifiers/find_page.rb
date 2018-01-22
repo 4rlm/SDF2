@@ -1,9 +1,9 @@
-#CALL: PageFinder.new.start_page_finder
-require 'query_iterator'
+#CALL: FindPage.new.start_find_page
+require 'iter_query'
 require 'noko'
 
-class PageFinder
-  include QueryIterator
+class FindPage
+  include IterQuery
   include Noko
 
   def initialize
@@ -13,14 +13,14 @@ class PageFinder
   end
 
 
-  def start_page_finder
+  def start_find_page
     query = Web.where(tmp_sts: 'Valid').order("updated_at ASC").pluck(:id)
 
     obj_in_grp = 50
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    iterate_query(query) # via QueryIterator
+    iterate_query(query) # via IterQuery
     # query.each { |id| template_starter(id) }
   end
 
@@ -35,7 +35,7 @@ class PageFinder
     if err_msg.present?
       puts err_msg
       web_update_hsh.merge!({slink_sts: err_msg, llink_sts: err_msg, stext_sts: err_msg, ltext_sts: err_msg})
-      web_obj.update_attributes(web_update_hsh)
+      web_obj.update(web_update_hsh)
     elsif noko_page.present?
       staff_hsh = parse_page(web_obj, noko_page, "staff")
       staff_link = staff_hsh[:link]
@@ -54,7 +54,7 @@ class PageFinder
       loc_text_hsh = {text: loc_text, text_type: 'loc', text_sts: ltext_sts}
 
       web_update_hsh.merge!({slink_sts: slink_sts, llink_sts: llink_sts, stext_sts: stext_sts, ltext_sts: ltext_sts})
-      web_obj.update_attributes(web_update_hsh)
+      web_obj.update(web_update_hsh)
 
       update_db(id, web_obj, staff_link_hsh, loc_link_hsh, staff_text_hsh, loc_text_hsh) if slink_sts == 'Valid' || llink_sts == 'Valid' || stext_sts == 'Valid' || ltext_sts == 'Valid'
     end
@@ -63,20 +63,20 @@ class PageFinder
 
   def update_db(id, web_obj, staff_link_hsh, loc_link_hsh, staff_text_hsh, loc_text_hsh)
     staff_link = staff_link_hsh[:link]
-    staff_link_obj = Migrator.new.save_comp_obj('link', {'link' => staff_link}, staff_link_hsh) if staff_link.present?
-    Migrator.new.create_obj_parent_assoc('link', staff_link_obj, web_obj) if staff_link_obj.present?
+    staff_link_obj = Mig.new.save_comp_obj('link', {'link' => staff_link}, staff_link_hsh) if staff_link.present?
+    Mig.new.create_obj_parent_assoc('link', staff_link_obj, web_obj) if staff_link_obj.present?
 
     loc_link = loc_link_hsh[:link]
-    loc_link_obj = Migrator.new.save_comp_obj('link', {'link' => loc_link}, loc_link_hsh) if loc_link.present?
-    Migrator.new.create_obj_parent_assoc('link', loc_link_obj, web_obj) if loc_link_obj.present?
+    loc_link_obj = Mig.new.save_comp_obj('link', {'link' => loc_link}, loc_link_hsh) if loc_link.present?
+    Mig.new.create_obj_parent_assoc('link', loc_link_obj, web_obj) if loc_link_obj.present?
 
     staff_text = staff_text_hsh[:text]
-    staff_text_obj = Migrator.new.save_comp_obj('text', {'text' => staff_text}, staff_text_hsh) if staff_text.present?
-    Migrator.new.create_obj_parent_assoc('text', staff_text_obj, web_obj) if staff_text_obj.present?
+    staff_text_obj = Mig.new.save_comp_obj('text', {'text' => staff_text}, staff_text_hsh) if staff_text.present?
+    Mig.new.create_obj_parent_assoc('text', staff_text_obj, web_obj) if staff_text_obj.present?
 
     loc_text = loc_text_hsh[:text]
-    loc_text_obj = Migrator.new.save_comp_obj('text', {'text' => loc_text}, loc_text_hsh) if loc_text.present?
-    Migrator.new.create_obj_parent_assoc('text', loc_text_obj, web_obj) if loc_text_obj.present?
+    loc_text_obj = Mig.new.save_comp_obj('text', {'text' => loc_text}, loc_text_hsh) if loc_text.present?
+    Mig.new.create_obj_parent_assoc('text', loc_text_obj, web_obj) if loc_text_obj.present?
 
 
     puts staff_link_hsh.to_yaml

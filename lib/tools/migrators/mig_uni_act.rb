@@ -1,8 +1,8 @@
-# Note: Act CSV data uploads to UniAct Table.  Then UniActMigrator parses it and migrates it to proper tables with associations.  Access parent in Migrator class.
+# Note: Act CSV data uploads to UniAct Table.  Then MigUniAct parses it and migrates it to proper tables with associations.  Access parent in Mig class.
 
-module UniActMigrator
+module MigUniAct
 
-  #Call: Migrator.new.migrate_uni_acts
+  #Call: Mig.new.migrate_uni_acts
   def migrate_uni_acts
 
     @rollbacks = []

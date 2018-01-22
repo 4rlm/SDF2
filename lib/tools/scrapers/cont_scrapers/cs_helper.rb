@@ -1,6 +1,6 @@
 class CsHelper # Contact Scraper Helper Method
-  include PhoneFormatter
-  # phone_formatter(phone)
+  include FormatPhone
+  # format_phone(phone)
 
   def initialize
     # @rts_manager = RtsManager.new
@@ -29,7 +29,7 @@ class CsHelper # Contact Scraper Helper Method
 
       # Clean rest
       staff_hash[:job] = staff_hash[:job].strip if staff_hash[:job]
-      staff_hash[:phone] = phone_formatter(staff_hash[:phone].strip) if staff_hash[:phone] #=> via PhoneFormatter
+      staff_hash[:phone] = format_phone(staff_hash[:phone].strip) if staff_hash[:phone] #=> via FormatPhone
 
     end
     create_staffer(indexer, staff_hash_array)
@@ -61,7 +61,7 @@ class CsHelper # Contact Scraper Helper Method
         staffer.zip            = indexer.zip
       end
 
-      staff.update_attributes(scrape_date: DateTime.now) if staff
+      staff.update(scrape_date: DateTime.now) if staff
 
       ph = staff_hash[:phone]
       phones << ph if ph && !ph.blank? && !phones.include?(ph)
@@ -97,9 +97,9 @@ class CsHelper # Contact Scraper Helper Method
 
     if count > 0
       new_phones = @rts_manager.clean_phones_arr(indexer_phones)
-      indexer.update_attributes(indexer_status: "ContactScraper", contact_status: "CS Result", web_staff_count: count, phones: new_phones, scrape_date: DateTime.now)
+      indexer.update(indexer_status: "ContactScraper", contact_status: "CS Result", web_staff_count: count, phones: new_phones, scrape_date: DateTime.now)
     else
-      indexer.update_attributes(indexer_status: "ContactScraper", contact_status: "CS None", scrape_date: DateTime.now)
+      indexer.update(indexer_status: "ContactScraper", contact_status: "CS None", scrape_date: DateTime.now)
     end
 
   end
@@ -172,7 +172,7 @@ class CsHelper # Contact Scraper Helper Method
           elsif name_bool && !job_bool && !phone_bool
             staff_hash[:full_name] = info
           elsif phone_bool
-            staff_hash[:phone] = phone_formatter(info) #=> via PhoneFormatter
+            staff_hash[:phone] = format_phone(info) #=> via FormatPhone
           end
         end
 

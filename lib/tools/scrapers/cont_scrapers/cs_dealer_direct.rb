@@ -1,5 +1,5 @@
 class CsDealerDirect
-  # include PhoneFormatter
+  # include FormatPhone
 
   def initialize
     @helper = CsHelper.new
@@ -40,7 +40,7 @@ class CsDealerDirect
           elsif name_bool && !job_bool && !phone_bool
             staff_hash[:full_name] = info
           elsif phone_bool
-            staff_hash[:phone] = phone_formatter(info) #=> via PhoneFormatter
+            staff_hash[:phone] = format_phone(info) #=> via FormatPhone
           end
         end
 

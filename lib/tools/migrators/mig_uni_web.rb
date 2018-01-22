@@ -1,8 +1,8 @@
-# Note: Web CSV data uploads to UniWeb Table.  Then UniWebMigrator parses it and migrates it to proper tables with associations (Web, Link, Text).  Access parent in Migrator class.
+# Note: Web CSV data uploads to UniWeb Table.  Then MigUniWeb parses it and migrates it to proper tables with associations (Web, Link, Text).  Access parent in Mig class.
 
-module UniWebMigrator
+module MigUniWeb
 
-  #Call: Migrator.new.migrate_uni_webs
+  #Call: Mig.new.migrate_uni_webs
   def migrate_uni_webs
 
     @rollbacks = []

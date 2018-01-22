@@ -15,16 +15,8 @@ class Act < ApplicationRecord
   has_many :webs, through: :webings
   accepts_nested_attributes_for :webings, :webs
 
-  # has_many :templatings, as: :templatable
-  # has_many :templates, through: :templatings
-  # accepts_nested_attributes_for :templatings, :templates
-
   has_many :brandings, as: :brandable
   has_many :brands, through: :brandings
   accepts_nested_attributes_for :brandings, :brands
-
-
-  validates_uniqueness_of :crma, allow_blank: true, allow_nil: true
-  # validates_uniqueness_of :crma
 
 end

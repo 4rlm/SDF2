@@ -8,20 +8,28 @@
 # require 'curb' #=> for curler
 
 # %w{open-uri mechanize uri nokogiri socket httparty delayed_job curb}.each { |x| require x }
-# require 'adr_formatter'
-# require 'act_formatter'
-# require 'phone_formatter'
-# require 'web_formatter'
-%w{adr_formatter act_formatter cross_ref phone_formatter web_formatter}.each { |x| require x }
+# require 'format_adr'
+# require 'format_act'
+# require 'format_phone'
+# require 'format_web'
+%w{format_adr format_act cross_ref format_phone format_web}.each { |x| require x }
 
 
 ## CLASS METHOD TO START, EXPLAIN, OR TEST OTHER FORMATTER CLASSES AND METHODS.
 class Formatter
-  include ActFormatter
-  include AdrFormatter
+  include FormatAct
+  include FormatAdr
   include CrossRef
-  include PhoneFormatter
-  include WebFormatter
+  include FormatPhone
+  include FormatWeb
+
+  # def initialize
+  #   @format_act = FormatAct
+  #   @format_adr = FormatAdr
+  #   @cross_ref = CrossRef
+  #   @format_phone = FormatPhone
+  #   @format_web = FormatWeb
+  # end
 
   #######################################
   #CALL: ActScraper.new.start_act_scraper
@@ -93,7 +101,7 @@ class Formatter
 
     web_ids.each do |id|
       web_obj = Web.find(id)
-      migrate_web_and_links(web_obj) # via WebFormatter
+      migrate_web_and_links(web_obj) # via FormatWeb
     end
 
   end
@@ -107,18 +115,18 @@ class Formatter
     adr_ids.each do |id|
       adr_obj = Adr.find(id)
       current_zip = adr_obj.zip
-      new_zip = AdrFormatter.format_zip(current_zip)
-      adr_obj.update_attributes(zip: new_zip) if current_zip != new_zip
+      new_zip = FormatAdr.format_zip(current_zip)
+      adr_obj.update(zip: new_zip) if current_zip != new_zip
 
       update_hsh = {}
       current_full_adr = adr_obj.full_adr
       current_pin = adr_obj.pin
 
-      new_full_adr = AdrFormatter.generate_full_adr(adr_obj)
+      new_full_adr = FormatAdr.generate_full_adr(adr_obj)
       update_hsh[:full_adr] = new_full_adr if current_full_adr != new_full_adr
-      new_pin = AdrFormatter.generate_pin(adr_obj.street, adr_obj.zip)
+      new_pin = FormatAdr.generate_pin(adr_obj.street, adr_obj.zip)
       update_hsh[:pin] = new_pin if current_pin != new_pin
-      !update_hsh.empty? ? adr_obj.update_attributes(update_hsh) : adr_obj.touch
+      !update_hsh.empty? ? adr_obj.update(update_hsh) : adr_obj.touch
     end
   end
 
@@ -131,12 +139,12 @@ class Formatter
       phone = phone_obj.phone
 
       if phone.present?
-        valid_phone = PhoneFormatter.validate_phone(phone)
+        valid_phone = FormatPhone.validate_phone(phone)
 
         if valid_phone.nil?
           phone_obj.destroy
         elsif valid_phone && valid_phone != phone
-          phone_obj.update_attributes(phone: valid_phone)
+          phone_obj.update(phone: valid_phone)
         else
           phone_obj.touch
         end
@@ -146,7 +154,7 @@ class Formatter
   end
 
 
-  #Call: Migrator.new.migrate_uni_acts
+  #Call: Mig.new.migrate_uni_acts
 
   #CALL: Formatter.new.letter_case_check(street)
   def letter_case_check(str)

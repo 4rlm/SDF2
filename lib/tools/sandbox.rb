@@ -19,7 +19,7 @@ class Sandbox
       puts zip_orig
       puts zip_formatted
 
-      adr.update_attributes(zip: zip_formatted)
+      adr.update(zip: zip_formatted)
     end
 
 

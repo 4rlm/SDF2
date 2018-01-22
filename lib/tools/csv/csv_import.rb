@@ -1,4 +1,4 @@
-module Importer
+module CsvImport
 
   ############## BEST CSV IMPORT METHOD #####################
   # RESTORE BACKUP METHODS BELOW - VERY QUICK PROCESS !!!
@@ -56,7 +56,7 @@ module Importer
 
   #CALL: CsvTool.new.import_all_seed_files
   def import_all_seed_files
-    Migrator.new.reset_pk_sequence
+    Mig.new.reset_pk_sequence
 
     CsvTool.new.import_uni_seeds('uni_act', '1_acts_top_150.csv')
     CsvTool.new.import_uni_seeds('uni_act', '2_wards_500.csv')
@@ -104,8 +104,8 @@ module Importer
     puts "\nSleep(3) - Complete: model.import(objs)\n#{model_name}, #{file_name}"
     sleep(3)
 
-    Migrator.new.send(custom_migrate_method)  ### NEED TO WORK ON THIS!!!
-    puts "\nSleep(3) - Complete: Migrator.new.#{custom_migrate_method}\n#{file_name}"
+    Mig.new.send(custom_migrate_method)  ### NEED TO WORK ON THIS!!!
+    puts "\nSleep(3) - Complete: Mig.new.#{custom_migrate_method}\n#{file_name}"
     sleep(3)
 
     completion_msg(model, file_name)

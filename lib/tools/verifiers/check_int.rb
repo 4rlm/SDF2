@@ -7,10 +7,10 @@ require 'timeout'
 require 'net/ping'
 
 
-class InternetChecker
+class CheckInt
 
-  #CALL: InternetChecker.new.check_internet
-  def check_internet
+  #CALL: CheckInt.new.check_int
+  def check_int
     connection = false
 
     if !test_internet_connection
@@ -39,7 +39,7 @@ class InternetChecker
         end
 
       end
-      check_internet
+      check_int
     else
       connection = true
     end

@@ -1,8 +1,8 @@
 
-module QueryIterator
+module IterQuery
 
   def iterate_query(query)
-    # Call: UrlVerifier.new.start_url_verifier
+    # Call: VerUrl.new.start_ver_url
     # Delayed::Worker.max_run_time = 2.seconds
     query.in_groups(@group_count).each do |batch_of_ids|
       @query_count -= batch_of_ids&.count

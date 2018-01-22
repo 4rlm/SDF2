@@ -8,7 +8,7 @@
 
 
 ## Temporary Call:
-#Call: Migrator.new.migrate_uni_acts
+#Call: Mig.new.migrate_uni_acts
 #Call: Formatter.new.cross_ref_all("Ed Hicks")
 
 module CrossRef

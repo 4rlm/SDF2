@@ -1,15 +1,15 @@
 #######################################
-#CALL: ActGp.new.start_act_goog
+#CALL: GpAct.new.start_act_goog
 #######################################
-require 'query_iterator'
-``
-class ActGp
-  include QueryIterator
+require 'iter_query'
+
+class GpAct
+  include IterQuery
 
   def initialize
     @formatter = Formatter.new
-    @migrator = Migrator.new
-    @goog_place = GoogPlace.new
+    @mig = Mig.new
+    @gp = GpApi.new
     @timeout = 10
     @dj_count_limit = 30 #=> Num allowed before releasing next batch.
     @workers = 5 #=> Divide format_query_results into groups of x.
@@ -26,14 +26,14 @@ class ActGp
     query = Act.select(:id).where(act_sts: nil, actx: false, act_gp_sts: nil).order("updated_at ASC").pluck(:id).count
     # *** Then grab web url which is not archived.
 
-   ## Edit below to use as format for update or create new act from ActGp
+   ## Edit below to use as format for update or create new act from GpAct
     #<act_name: "Front Range Honda in Colorado Springs, CO", act_sts: nil, act_src: nil, cop: true, actx: false, act_fwd_id: nil, act_gp_sts: nil, act_gp_date: nil, act_gp_id: nil, act_gp_indus: nil
 
     obj_in_grp = 50
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    # iterate_query(query) # via QueryIterator
+    # iterate_query(query) # via IterQuery
     query.each { |id| template_starter(id) }
   end
 
@@ -70,12 +70,12 @@ class ActGp
       act_name = inval_hsh[:act_name]
 
       ### GET GOOG RESULTS ###
-      gp_hsh = @goog_place.get_spot(act_name, url)
+      gp_hsh = @gp.get_spot(act_name, url)
 
       if !gp_hsh&.values&.compact&.present?
         ## NO GOOG RESULTS ##
         puts "No Result from Google Places"
-        cur_act_obj.update_attributes(act_gp_sts: 'Invalid', act_gp_date: Time.now)
+        cur_act_obj.update(act_gp_sts: 'Invalid', act_gp_date: Time.now)
         return
       else
         ## EXTRACT GOOG RESULTS HASH ##
@@ -91,12 +91,12 @@ class ActGp
         new_act_hsh = {act_gp_indus: indus, act_sts: validity, act_name: new_act_name}
         new_act_hsh[:act_src] = 'Bot' if !Act.exists?(act_name: new_act_name)
         new_act_hsh = new_act_hsh.merge(gp_sts_hsh) if gp_hsh&.values&.compact&.present?
-        new_act_obj = @migrator.save_comp_obj('act', {'act_name' => new_act_name}, new_act_hsh)
-        # @migrator.create_obj_parent_assoc('web', web_obj, new_act_obj) if new_act_obj.present? && web_obj.present?
+        new_act_obj = @mig.save_comp_obj('act', {'act_name' => new_act_name}, new_act_hsh)
+        # @mig.create_obj_parent_assoc('web', web_obj, new_act_obj) if new_act_obj.present? && web_obj.present?
 
         ## Archive Current Act Obj if New Act Obj Created. ##
         if cur_act_name != new_act_name
-          cur_act_obj.update_attributes(act_fwd_id: new_act_obj.id, act_sts: 'FWD', act_gp_sts: 'FWD', act_gp_date: Time.now)
+          cur_act_obj.update(act_fwd_id: new_act_obj.id, act_sts: 'FWD', act_gp_sts: 'FWD', act_gp_date: Time.now)
         end
         # new_act_obj
         # cur_act_obj
@@ -104,22 +104,22 @@ class ActGp
 
         ## Adr: Format and Create Obj
         basic_adr_hsh = adr_hsh.except(:adr_gp_sts)
-        adr_obj = @migrator.save_comp_obj('adr', basic_adr_hsh, adr_hsh) if adr_hsh&.values&.compact.present?
-        @migrator.create_obj_parent_assoc('adr', adr_obj, new_act_obj) if adr_obj.present?
+        adr_obj = @mig.save_comp_obj('adr', basic_adr_hsh, adr_hsh) if adr_hsh&.values&.compact.present?
+        @mig.create_obj_parent_assoc('adr', adr_obj, new_act_obj) if adr_obj.present?
 
         ## Phones: Format and Create Obj
-        phone_obj = @migrator.save_simp_obj('phone', {'phone' => phone}) if phone.present?
-        @migrator.create_obj_parent_assoc('phone', phone_obj, new_act_obj) if phone_obj.present?
+        phone_obj = @mig.save_simp_obj('phone', {'phone' => phone}) if phone.present?
+        @mig.create_obj_parent_assoc('phone', phone_obj, new_act_obj) if phone_obj.present?
 
         ## Website: Format and Create Obj
         web_hsh = {as_sts: validity, as_date: Time.now}
-        new_web_obj = @migrator.save_comp_obj('web', {'url' => website}, web_hsh) if website.present?
-        @migrator.create_obj_parent_assoc('web', new_web_obj, new_act_obj) if new_web_obj.present?
+        new_web_obj = @mig.save_comp_obj('web', {'url' => website}, web_hsh) if website.present?
+        @mig.create_obj_parent_assoc('web', new_web_obj, new_act_obj) if new_web_obj.present?
 
         ## Update Existing Web Obj ##
         cur_act_urls = cur_act_obj.webs.map(&:url)
         contains_url = cur_act_urls.any? {|url| url == website } if web_obj && cur_act_urls.any?
-        web_obj&.update_attributes(web_hsh) if contains_url
+        web_obj&.update(web_hsh) if contains_url
 
 
 

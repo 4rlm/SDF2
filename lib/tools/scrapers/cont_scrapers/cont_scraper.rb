@@ -2,13 +2,13 @@
 #CALL: ContScraper.new.start_cont_scraper
 #######################################
 
-require 'query_iterator'
+require 'iter_query'
 require 'noko'
 
 
 #CALL: ContScraper.new.start_cont_scraper
 class ContScraper
-  include QueryIterator
+  include IterQuery
   include Noko
 
 
@@ -29,7 +29,7 @@ class ContScraper
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    # iterate_query(query) # via QueryIterator
+    # iterate_query(query) # via IterQuery
     query.each { |id| template_starter(id) }
   end
 
@@ -51,7 +51,7 @@ class ContScraper
         binding.pry
         puts err_msg
         web_update_hsh[:as_sts] = err_msg
-        # web_obj.update_attributes(web_update_hsh)
+        # web_obj.update(web_update_hsh)
       elsif noko_page.present?
         binding.pry
 

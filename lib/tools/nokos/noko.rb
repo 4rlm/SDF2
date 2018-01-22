@@ -1,4 +1,4 @@
-# Call: TemplateFinder.new.start_template_finder
+# Call: FindTemp.new.start_find_temp
 
 require 'mechanize'
 require 'nokogiri'
@@ -52,7 +52,7 @@ module Noko
       # if err_msg.include?('TCP')
         # puts "\n\nTCP Sleep Delay: (#{@timeout}) seconds\n\n"
         # sleep(@timeout)
-        # InternetChecker.new.check_internet
+        # CheckInt.new.check_int
         # return connection ## See if this works.  Would be lightest option.
         # Process.kill(1, @process_pid)  #=> quits class.
         # Process.kill(17)

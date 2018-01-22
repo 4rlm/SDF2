@@ -1,12 +1,12 @@
 #######################################
 #CALL: ActScraper.new.start_act_scraper
 #######################################
-require 'query_iterator'
+require 'iter_query'
 require 'noko'
 
 
 class ActScraper
-  include QueryIterator
+  include IterQuery
   include Noko
 
   def initialize
@@ -24,7 +24,7 @@ class ActScraper
     @query_count = query.count
     (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    # iterate_query(query) # via QueryIterator
+    # iterate_query(query) # via IterQuery
     query.each { |id| template_starter(id) }
   end
 
@@ -37,7 +37,7 @@ class ActScraper
 
     if err_msg.present?
       puts err_msg
-      web_obj.update_attributes(as_sts: err_msg, as_date: Time.now)
+      web_obj.update(as_sts: err_msg, as_date: Time.now)
     elsif noko_page.present?
       template = web_obj&.templates&.order("updated_at DESC")&.first&.temp_name
       term = Term.where(response_term: template).where.not(mth_name: nil)&.first&.mth_name
@@ -74,11 +74,11 @@ class ActScraper
 
   def update_db(web_obj, as_hsh)
     if as_hsh&.values&.compact&.empty?
-      web_obj.update_attributes(as_sts: 'Invalid:as', as_date: Time.now)
+      web_obj.update(as_sts: 'Invalid:as', as_date: Time.now)
     else
       formatter = Formatter.new
-      migrator = Migrator.new
-      goog_place = GoogPlace.new
+      mig = Mig.new
+      gp = GpApi.new
 
       ## Act: Format and Create Obj
       act_name = as_hsh[:org] if as_hsh[:org]
@@ -86,7 +86,7 @@ class ActScraper
       orig_act_name = act_name
 
       if act_name.present? && !act_name.include?("Site Suspended")
-        gp_hsh = goog_place.get_spot(act_name, web_obj.url)
+        gp_hsh = gp.get_spot(act_name, web_obj.url)
         # gp_hsh = nil ## NIL FOR TESTING ONLY !!!
         if gp_hsh&.values&.compact&.present?
           act_name = gp_hsh[:act_name]
@@ -115,20 +115,20 @@ class ActScraper
       end
 
       act_hsh = {act_src: 'Bot', act_sts: validity, act_name: act_name}
-      act_obj = migrator.save_comp_obj('act', {'act_name' => act_name}, act_hsh)
-      migrator.create_obj_parent_assoc('web', web_obj, act_obj) if act_obj.present?
+      act_obj = mig.save_comp_obj('act', {'act_name' => act_name}, act_hsh)
+      mig.create_obj_parent_assoc('web', web_obj, act_obj) if act_obj.present?
 
       ## Adr: Format and Create Obj
       adr_hsh.delete_if { |key, value| value.blank? } if !adr_hsh.empty?
-      adr_obj = migrator.save_simp_obj('adr', adr_hsh) if adr_hsh && adr_hsh.values.compact.present?
-      migrator.create_obj_parent_assoc('adr', adr_obj, act_obj) if adr_obj.present?
+      adr_obj = mig.save_simp_obj('adr', adr_hsh) if adr_hsh && adr_hsh.values.compact.present?
+      mig.create_obj_parent_assoc('adr', adr_obj, act_obj) if adr_obj.present?
 
       ## Phones: Format and Create Obj
       phone = as_hsh[:phone]
-      phone_obj = migrator.save_simp_obj('phone', {'phone' => phone}) if phone.present?
-      migrator.create_obj_parent_assoc('phone', phone_obj, act_obj) if phone_obj.present?
+      phone_obj = mig.save_simp_obj('phone', {'phone' => phone}) if phone.present?
+      mig.create_obj_parent_assoc('phone', phone_obj, act_obj) if phone_obj.present?
 
-      web_obj.update_attributes(web_hsh)
+      web_obj.update(web_hsh)
 
       puts "\n\n\n================="
       puts orig_act_name

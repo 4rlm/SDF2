@@ -1,16 +1,16 @@
-%w{uni_act_migrator uni_cont_migrator uni_web_migrator}.each { |x| require x }
+%w{mig_uni_act mig_uni_cont mig_uni_web}.each { |x| require x }
 
-class Migrator
+class Mig
   # extend ActiveSupport::Concern
-  include UniActMigrator
-  include UniContMigrator
-  include UniWebMigrator
-  # include WebMigrator
+  include MigUniAct
+  include MigUniCont
+  include MigUniWeb
+  # include WebMig
 
-  ### To call any of the three UniMigrator Modules ###
-  #Call: Migrator.new.migrate_uni_acts
-  #Call: Migrator.new.migrate_uni_conts
-  #Call: Migrator.new.migrate_uni_webs
+  ### To call any of the three UniMig Modules ###
+  #Call: Mig.new.migrate_uni_acts
+  #Call: Mig.new.migrate_uni_conts
+  #Call: Mig.new.migrate_uni_webs
 
   ### CAREFUL!!! BELOW METHODS BEING USED IN EACH UNI_MIGRATOR MODULE ###
 
@@ -54,7 +54,7 @@ class Migrator
     end
 
     updated_attributes = (hsh.values) - (obj.attributes.values)
-    obj.update_attributes(hsh) if !updated_attributes.empty?
+    obj.update(hsh) if !updated_attributes.empty?
   end
 
 
@@ -70,7 +70,7 @@ class Migrator
   end
 
 
-  #Call: Migrator.new.reset_pk_sequence
+  #Call: Mig.new.reset_pk_sequence
   def reset_pk_sequence
     ActiveRecord::Base.connection.tables.each do |t|
       ActiveRecord::Base.connection.reset_pk_sequence!(t)

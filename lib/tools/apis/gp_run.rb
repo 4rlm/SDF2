@@ -1,8 +1,8 @@
 #######################################
-#CALL: ActGp.new.start_act_goog
+#CALL: GpAct.new.start_act_goog
 #######################################
 
-module RunGp
+module GpRun
 
   def get_spot(act_name, url)
     act_name = act_name&.gsub(/\s/, ' ')&.strip if act_name.present?
@@ -101,7 +101,7 @@ module RunGp
   ####################################
 
 
-  #CALL: GoogPlace.new.format_goog_adr('adr')
+  #CALL: GpApi.new.format_goog_adr('adr')
   def format_goog_adr(adr)
     if adr.present?
       country = adr.split(',').last
@@ -153,7 +153,7 @@ module RunGp
 
 
   #######################################
-  # CALL: GoogPlace.new.find_country('string')
+  # CALL: GpApi.new.find_country('string')
   #######################################
   def find_foreign_country(act_name)
     if act_name.present?

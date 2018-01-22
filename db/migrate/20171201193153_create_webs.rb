@@ -5,16 +5,17 @@ class CreateWebs < ActiveRecord::Migration[5.1]
       ### url (url address) is Heart of Webs ##
       t.string   :url, index: true, unique: true
       t.boolean  :urlx, default: false
-      ### UrlVerifier related Attrs  ##
+      ### VerUrl related Attrs  ##
       t.string   :fwd_web_id, index: true
       t.string   :fwd_url, index: true
       t.string   :url_ver_sts, index: true
       t.string   :sts_code, index: true
       t.datetime :url_ver_date, index: true
-      ### TemplateFinder related Attrs ##
+      ### FindTemp related Attrs ##
       t.string   :tmp_sts, index: true
+      t.string   :temp_name, index: true
       t.datetime :tmp_date, index: true
-      ### PageFinder related Attrs ##
+      ### FindPage related Attrs ##
       t.string   :slink_sts, index: true
       t.string   :llink_sts, index: true
       t.string   :stext_sts, index: true

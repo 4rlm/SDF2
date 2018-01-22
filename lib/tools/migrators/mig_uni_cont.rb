@@ -1,8 +1,8 @@
-# Note: Cont CSV data uploads to UniCont Table.  Then UniContMigrator parses it and migrates it to proper tables with associations.  Access parent in Migrator class.
+# Note: Cont CSV data uploads to UniCont Table.  Then MigUniCont parses it and migrates it to proper tables with associations.  Access parent in Mig class.
 
-module UniContMigrator
+module MigUniCont
 
-  #Call: Migrator.new.migrate_uni_conts
+  #Call: Mig.new.migrate_uni_conts
   def migrate_uni_conts
 
     @rollbacks = []

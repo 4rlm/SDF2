@@ -1,4 +1,4 @@
-module AdrFormatter
+module FormatAdr
 
   #CALL: Formatter.new.format_adr_hsh(adr_hsh)
   def format_adr_hsh(adr_hsh)

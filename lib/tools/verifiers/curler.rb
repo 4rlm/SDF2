@@ -1,5 +1,5 @@
 require 'timeout'
-# require 'internet_checker'
+# require 'check_int'
 require 'net/ping'
 
 
@@ -35,7 +35,7 @@ module Curler
 
     rescue # LoadError => e  # curl rescue
       err_msg = error_parser("Error: #{$!.message}")
-      # InternetChecker.new.check_internet if err_msg.include?('TCP')
+      # CheckInt.new.check_int if err_msg.include?('TCP')
       curl_hsh[:err_msg] = err_msg
     end
 

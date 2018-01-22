@@ -1,4 +1,4 @@
-module Exporter
+module CsvExport
 
   ################ !!! CAUTION !!! #########################
   # THESE METHODS WILL OVER-WRITE PRIOR CSV BACKUPS !!
@@ -22,7 +22,8 @@ module Exporter
 
   #CALL: CsvTool.new.backup_csv(City, 'Cities.csv')
   #CALL: CsvTool.new.backup_csv(Dealer, 'Dealers.csv')
-  #CALL: CsvTool.new.backup_csv(model, file_name)
+  #CALL: CsvTool.new.backup_csv(Crma, 'Crmas.csv')
+  #CALL: CsvTool.new.backup_csv(Crmc, 'Crmcs.csv')
   def backup_csv(model, file_name)
     backups_file_path = "#{@backups_dir_path}/#{file_name}"
     CSV.open(backups_file_path, "wb") do |csv|

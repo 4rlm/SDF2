@@ -1,5 +1,5 @@
 class AsHelper # RoofTop Scraper Helper Method
-  # include PhoneFormatter
+  # include FormatPhone
   # PARSES OUT THE ADDRESS FROM:  noko_page.at_css('.dealer-info').text when address contains "\n"
 
   def initialize
@@ -164,7 +164,7 @@ class AsHelper # RoofTop Scraper Helper Method
         result = city_qualifier(el, negs) if option == "city"
         result = state_qualifier(el, negs) if option == "state"
         result = zip_qualifier(el, negs) if option == "zip"
-        # result = phone_formatter(el) if option == "phone" #=> via PhoneFormatter
+        # result = format_phone(el) if option == "phone" #=> via FormatPhone
         break if result
       end
     end

@@ -4,13 +4,13 @@
 # require 'delayed_job'
 # require 'curb'
 
-# require 'iterators/query_iterator'
-# require 'query_iterator'
+# require 'iterators/iter_query'
+# require 'iter_query'
 # require 'final_fwd_url'
 
 class FranchiseAlgo
   # include Curler #=> concerns/curler.rb
-  # include QueryIterator
+  # include IterQuery
 
   def initialize
     puts "\n== Welcome to the FranchiseAlgo Class! ==\nDetermines Franchise Type & Brand."
@@ -34,7 +34,7 @@ class FranchiseAlgo
     # .where.not(archived: TRUE)
     # .order("updated_at DESC")
 
-    # iterate_query(query) # via QueryIterator
+    # iterate_query(query) # via IterQuery
   end
 
 

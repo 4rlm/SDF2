@@ -1,6 +1,6 @@
 # # class RtsManager # Update database with the result of RoofTop Scraper
 # class AsManager # Update database with the result of RoofTop Scraper
-#   # include PhoneFormatter
+#   # include FormatPhone
 #
 #   def initialize
 #     @formatter = Formatter.new
@@ -60,13 +60,13 @@
 #   # def results_processor(org, street, city, state, zip, phone, as_phones, full_addr, web_obj)
 #   #   binding.pry
 #   #
-#   #   phone = phone_formatter(phone) if phone
+#   #   phone = format_phone(phone) if phone
 #   #   phones = clean_phones_arr(as_phones)
 #   #
 #   #   if org || street || city || state || zip || phone || full_addr
-#   #     # web_obj.update_attributes(indexer_status: "AccountScraper", acct_name: org, rt_sts: "AS Result", full_addr: full_addr, street: street, city: city, state: state, zip: zip, phone: phone, phones: phones, account_scrape_date: DateTime.now)
+#   #     # web_obj.update(indexer_status: "AccountScraper", acct_name: org, rt_sts: "AS Result", full_addr: full_addr, street: street, city: city, state: state, zip: zip, phone: phone, phones: phones, account_scrape_date: DateTime.now)
 #   #   else
-#   #     # web_obj.update_attributes(indexer_status: "AccountScraper", acct_name: org, rt_sts: "AS No-Result", account_scrape_date: DateTime.now)
+#   #     # web_obj.update(indexer_status: "AccountScraper", acct_name: org, rt_sts: "AS No-Result", account_scrape_date: DateTime.now)
 #   #   end
 #   # end
 #

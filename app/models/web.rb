@@ -13,12 +13,7 @@ class Web < ApplicationRecord
   has_many :links, through: :linkings
   accepts_nested_attributes_for :linkings, :links
 
-  has_many :templatings, as: :templatable
-  has_many :templates, through: :templatings
-  accepts_nested_attributes_for :templatings, :templates
-
-
-  validates_uniqueness_of :url, allow_blank: true, allow_nil: true
+  validates_uniqueness_of :url, allow_blank: false, allow_nil: false
   # validates :url, uniqueness: true
   # accepts_nested_attributes_for :phone
 

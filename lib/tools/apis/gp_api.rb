@@ -1,14 +1,14 @@
 #######################################
 # CALL: Formatter.new.format_act_name('act_name')
-# CALL: GoogPlace.new.welcome_gp
-# CALL: GoogPlace.new.welcome2
+# CALL: GpApi.new.welcome_gp
+# CALL: GpApi.new.welcome2
 #######################################
 
 
-%w{run_gp}.each { |x| require x }
+%w{gp_run}.each { |x| require x }
 
-class GoogPlace
-  include RunGp
+class GpApi
+  include GpRun
 
   def initialize
     # @client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])

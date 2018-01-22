@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180114021526) do
+ActiveRecord::Schema.define(version: 20180121153846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 20180114021526) do
   create_table "acts", force: :cascade do |t|
     t.string "act_name"
     t.boolean "actx", default: false
-    t.string "crma"
     t.boolean "cop", default: false
     t.string "top"
     t.string "ward"
@@ -53,7 +52,6 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.index ["act_gp_indus"], name: "index_acts_on_act_gp_indus"
     t.index ["act_gp_sts"], name: "index_acts_on_act_gp_sts"
     t.index ["act_name"], name: "index_acts_on_act_name"
-    t.index ["crma"], name: "index_acts_on_crma"
   end
 
   create_table "adrs", force: :cascade do |t|
@@ -110,27 +108,7 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "cont_descriptions", force: :cascade do |t|
-    t.integer "cont_id"
-    t.integer "description_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cont_id"], name: "index_cont_descriptions_on_cont_id"
-    t.index ["description_id"], name: "index_cont_descriptions_on_description_id"
-  end
-
-  create_table "cont_titles", force: :cascade do |t|
-    t.integer "cont_id"
-    t.integer "title_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cont_id"], name: "index_cont_titles_on_cont_id"
-    t.index ["title_id"], name: "index_cont_titles_on_title_id"
-  end
-
   create_table "conts", force: :cascade do |t|
-    t.string "crmc"
-    t.string "crma"
     t.integer "act_id"
     t.string "cont_sts"
     t.string "first_name"
@@ -142,13 +120,27 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.datetime "updated_at", null: false
     t.index ["act_id"], name: "index_conts_on_act_id"
     t.index ["cont_sts"], name: "index_conts_on_cont_sts"
-    t.index ["crma"], name: "index_conts_on_crma"
-    t.index ["crmc"], name: "index_conts_on_crmc"
     t.index ["email"], name: "index_conts_on_email"
     t.index ["first_name"], name: "index_conts_on_first_name"
     t.index ["job_desc"], name: "index_conts_on_job_desc"
     t.index ["job_title"], name: "index_conts_on_job_title"
     t.index ["last_name"], name: "index_conts_on_last_name"
+  end
+
+  create_table "crmas", force: :cascade do |t|
+    t.string "crma"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crma"], name: "index_crmas_on_crma"
+  end
+
+  create_table "crmcs", force: :cascade do |t|
+    t.string "crmc"
+    t.integer "crma_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crma_id"], name: "index_crmcs_on_crma_id"
+    t.index ["crmc"], name: "index_crmcs_on_crmc"
   end
 
   create_table "dealers", force: :cascade do |t|
@@ -171,13 +163,6 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
-  end
-
-  create_table "descriptions", force: :cascade do |t|
-    t.string "job_desc"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["job_desc"], name: "index_descriptions_on_job_desc"
   end
 
   create_table "linkings", force: :cascade do |t|
@@ -218,24 +203,6 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.index ["phone_id"], name: "index_phonings_on_phone_id"
   end
 
-  create_table "templates", force: :cascade do |t|
-    t.string "temp_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["temp_name"], name: "index_templates_on_temp_name"
-  end
-
-  create_table "templatings", force: :cascade do |t|
-    t.string "templatable_type"
-    t.integer "template_id"
-    t.integer "templatable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["templatable_id"], name: "index_templatings_on_templatable_id"
-    t.index ["templatable_type"], name: "index_templatings_on_templatable_type"
-    t.index ["template_id"], name: "index_templatings_on_template_id"
-  end
-
   create_table "terms", force: :cascade do |t|
     t.string "category"
     t.string "sub_category"
@@ -264,13 +231,6 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["text"], name: "index_texts_on_text"
-  end
-
-  create_table "titles", force: :cascade do |t|
-    t.string "job_title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["job_title"], name: "index_titles_on_job_title"
   end
 
   create_table "uni_acts", force: :cascade do |t|
@@ -417,6 +377,7 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.string "sts_code"
     t.datetime "url_ver_date"
     t.string "tmp_sts"
+    t.string "temp_name"
     t.datetime "tmp_date"
     t.string "slink_sts"
     t.string "llink_sts"
@@ -441,6 +402,7 @@ ActiveRecord::Schema.define(version: 20180114021526) do
     t.index ["slink_sts"], name: "index_webs_on_slink_sts"
     t.index ["stext_sts"], name: "index_webs_on_stext_sts"
     t.index ["sts_code"], name: "index_webs_on_sts_code"
+    t.index ["temp_name"], name: "index_webs_on_temp_name"
     t.index ["tmp_date"], name: "index_webs_on_tmp_date"
     t.index ["tmp_sts"], name: "index_webs_on_tmp_sts"
     t.index ["url"], name: "index_webs_on_url"

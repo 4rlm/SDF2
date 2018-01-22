@@ -1,7 +1,7 @@
-module WebFormatter
-  ## IMPORTANT: web_formatter_orig.rb is combining everything, but needs to strictly be FORMATTER!!, which can be used generally by other unrelated processes.  Will take RAW DATA, NOT OBJECTS.  AND WILL RETURN FORMATTED DATA TO BE USED WITH MIGRATOR.
+module FormatWeb
+  ## IMPORTANT: format_web_orig.rb is combining everything, but needs to strictly be FORMATTER!!, which can be used generally by other unrelated processes.  Will take RAW DATA, NOT OBJECTS.  AND WILL RETURN FORMATTED DATA TO BE USED WITH MIGRATOR.
 
-  ## Migrator should send raw url here, then receive formatted url before sending it to be used in format_link_text.
+  ## Mig should send raw url here, then receive formatted url before sending it to be used in format_link_text.
 
   #CALL: Formatter.new.format_url(url)
   def format_url(url)
@@ -173,7 +173,7 @@ module WebFormatter
 
 
 
-  ## Should get pre-formatted url from Migrator.  Assumes url is already formatted.
+  ## Should get pre-formatted url from Mig.  Assumes url is already formatted.
   def format_link_or_text(url)
     return url
   end
@@ -187,7 +187,7 @@ module WebFormatter
 
   # Call: Formatter.new.migrate_web_and_links(web_obj)
 
-  # IMPORTANT: MIGHT NEED TO ADAPT AND INTEGRATE THIS WITH Migrator.new.migrate_uni_acts via lib/tools/migrators/uni_migrator.rb
+  # IMPORTANT: MIGHT NEED TO ADAPT AND INTEGRATE THIS WITH Mig.new.migrate_uni_acts via lib/tools/migs/uni_mig.rb
   ## MIGHT NOT NEED LOGIC BELOW, BECAUSE STAFF_PAGE AND LOCATIONS_PAGE COLUMNS WILL BE REMOVED. ##
   ## CONSIDER ADAPTING THIS FOR UniActs MIGRATOR TO PARSE UP WEB URL FIELDS INTO ASSOCIATIONS.
   ## 2 conditionals below format staff and locations page, then find or create Link object in links table, then save associations to web_obj.  Then remove staff and locations page link from Web object.
@@ -205,7 +205,7 @@ module WebFormatter
     locations_link = format_link(url, locations_link) if locations_link
     locations_link_obj = save_link(web_obj, locations_link, 'locations') if locations_link
 
-    web_obj.update_attributes(updated_web_hsh)
+    web_obj.update(updated_web_hsh)
   end
 
 
@@ -221,7 +221,7 @@ module WebFormatter
 
   #### TESTING BELOW ###
 
-  ## CONSIDER USING (similar to): save_comp_obj, OR save_simp_obj via Migrator Class.
+  ## CONSIDER USING (similar to): save_comp_obj, OR save_simp_obj via Mig Class.
 
   ### BELOW REPLACES save_link ABOVE ###
   def save_link_or_text(web_obj, link, link_type) # Saves Link OR Text.

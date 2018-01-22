@@ -2,7 +2,7 @@
 #CALL: ActScraper.new.start_act_scraper
 #######################################
 
-module ActFormatter
+module FormatAct
 
   #######################################
   # CALL: Formatter.new.format_act_name_lite(act_name)

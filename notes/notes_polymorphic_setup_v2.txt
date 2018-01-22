@@ -289,7 +289,7 @@ job_title_raw = 'Job 303'
 phone_raw = '303-303-3030'
 
 cont_num = Cont.find_or_create_by(cont_num: cont_num_raw)
-cont_num.update_attributes(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont_num.update(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 
 cont = Cont.find_or_create_by(cont_num: cont_num_raw, full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 cont.phones << Phone.find_or_create_by(phone: phone_raw)
@@ -823,7 +823,7 @@ job_title_raw = 'Job 303'
 phone_raw = '303-303-3030'
 
 cont_num = Cont.find_or_create_by(cont_num: cont_num_raw)
-cont_num.update_attributes(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
+cont_num.update(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 
 cont = Cont.find_or_create_by(full_name: full_name_raw, email: email_raw, job_title: job_title_raw)
 cont.phones << Phone.find_or_create_by(phone: phone_raw)

@@ -11,7 +11,7 @@ class CreateUniActs < ActiveRecord::Migration[5.1]
       t.boolean  :cop, default: false
       t.string   :top
       t.string   :ward
-      ### GoogPlace related Attrs ##
+      ### GpApi related Attrs ##
       t.string   :act_fwd_id, index: true
       t.string   :act_gp_sts, index: true
       t.datetime :act_gp_date, index: true
@@ -27,7 +27,7 @@ class CreateUniActs < ActiveRecord::Migration[5.1]
       t.string  :state, index: true
       t.string  :zip, index: true
       t.string  :pin, index: true
-      ### GoogPlace related Attrs ##
+      ### GpApi related Attrs ##
       t.boolean  :adrx, default: false
       t.string   :adr_fwd_id, index: true
       t.string   :adr_gp_sts, index: true
@@ -41,16 +41,16 @@ class CreateUniActs < ActiveRecord::Migration[5.1]
       ### url (website url) is Heart of Webs ##
       t.string   :url, index: true, unique: true
       t.boolean  :urlx, default: false
-      ### UrlVerifier related Attrs  ##
+      ### VerUrl related Attrs  ##
       t.string   :fwd_web_id, index: true
       t.string   :fwd_url, index: true
       t.string   :url_ver_sts, index: true
       t.string   :sts_code, index: true
       t.datetime :url_ver_date, index: true
-      ### TemplateFinder related Attrs ##
+      ### FindTemp related Attrs ##
       t.string   :tmp_sts, index: true
       t.datetime :tmp_date, index: true
-      ### PageFinder related Attrs ##
+      ### FindPage related Attrs ##
       t.string   :slink_sts, index: true
       t.string   :llink_sts, index: true
       t.string   :stext_sts, index: true

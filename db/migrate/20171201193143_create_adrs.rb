@@ -8,7 +8,7 @@ class CreateAdrs < ActiveRecord::Migration[5.1]
       t.string  :state, index: true
       t.string  :zip, index: true
       t.string  :pin, index: true
-      ### GoogPlace related Attrs ##
+      ### GpApi related Attrs ##
       t.boolean  :adrx, default: false
       t.string   :adr_fwd_id, index: true
       t.string   :adr_gp_sts, index: true

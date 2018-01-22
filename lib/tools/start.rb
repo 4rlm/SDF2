@@ -6,7 +6,7 @@ class Start
   #Call: Start.mega_start
   def self.mega_start
     CsvTool.new.import_all_seed_files ## imports all seeds.
-    UrlVerifier.new.start_url_verifier ## verifies urls, redirects.
+    VerUrl.new.start_ver_url ## verifies urls, redirects.
   end
 
   ##############################
@@ -32,9 +32,9 @@ class Start
   ######### VERIFIERS ##########
   ##############################
 
-  # 4) CALL: Start.start_url_verifier
-  def self.start_url_verifier
-    UrlVerifier.new.start_url_verifier
+  # 4) CALL: Start.start_ver_url
+  def self.start_ver_url
+    VerUrl.new.start_ver_url
   end
   ## Use with foreman start
 
@@ -42,16 +42,16 @@ class Start
   ########## FINDERS ###########
   ##############################
 
-  # 5) CALL: Start.start_template_finder
-  def self.start_template_finder
-    TemplateFinder.new.start_template_finder
+  # 5) CALL: Start.start_find_temp
+  def self.start_find_temp
+    FindTemp.new.start_find_temp
     ### REMEMBER TO RUN TIMEOUT QUERY ###
   end
     ## Use with foreman start
 
-  # 6) CALL: Start.start_page_finder
-  def self.start_page_finder
-    PageFinder.new.start_page_finder
+  # 6) CALL: Start.start_find_page
+  def self.start_find_page
+    FindPage.new.start_find_page
   end
     ## Use with foreman start
 
@@ -62,7 +62,7 @@ class Start
   ## GP FOR ACTS -W/O- SCRAPER
   # 7) CALL: Start.start_act_goog
   def self.start_act_goog
-    ActGp.new.start_act_goog
+    GpAct.new.start_act_goog
   end
 
   ## GP FOR ACTS -AND- SCRAPER

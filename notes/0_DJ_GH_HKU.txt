@@ -1,4 +1,43 @@
+############ GOOD TIPS ############
+  rails callback functions
+  obj.errors
+  obj.reload
 
+  Find Duplicates:
+  webs = Web.select(:url).group(:url).having("count(*) > 1").size
+  acts = Act.select(:act_name).group(:act_name).having("count(*) > 1").size
+#############
+{"https://www.maticktoyota.com"=>2, "https://www.lakelandtoyota.com"=>2, "https://www.flemingtondodgechryslerjeep.com"=>2, "https://www.billionauto.com"=>2, "https://www.leithtoyota.com"=>2, "https://www.kennyrosstoyota.com"=>2, "https://www.rickmcgillairporttoyota.com"=>2, "https://www.cherokeecountytoyota.com"=>2, "https://www.hoseltontoyota.com"=>2}
+########################################
+
+== CRMA ==
+rails g model Crma
+t.string   :crma, index: true, unique: true, allow_nil: false
+
+== CRMC ==
+rails g model Crmc
+t.string   :crmc, index: true, unique: true, allow_nil: false
+t.integer   :crma_id
+
+======================
+
+CRMA Class Model:
+belongs to: act
+has_many: crmc
+
+CRMC Class Model:
+belongs to: crma
+
+
+ACT Class Model:
+has_many: crma
+has_many: crmc through crma
+///////////////////////////////
+
+
+
+
+==============================
 url_ver_date: Time.now
 query = Web.
   where(urlx: FALSE).
@@ -42,13 +81,13 @@ query = Web.where(urlx: true, url_ver_sts: "Valid").order("updated_at DESC")
 urlx: true
 
 
-## Edit below to use as format for ActGp query.
+## Edit below to use as format for GpAct query.
  query =  Act.select(:id).where(act_sts: nil, actx: false, act_gp_sts: nil).order("updated_at ASC").pluck(:id).count
  *** Then grab web url which is not archived.
 
 
 
-## Edit below to use as format for update or create new act from ActGp
+## Edit below to use as format for update or create new act from GpAct
  #<Act id: 22367, act_name: "Front Range Honda in Colorado Springs, CO", crma: nil, act_sts: nil, act_src: nil, cop: true, actx: false, act_fwd_id: nil, act_gp_sts: nil, act_gp_date: nil, place_id: nil, act_gp_indus: nil, top: nil, ward: 500,
 
 url_ver_sts: "Valid"
@@ -57,7 +96,7 @@ url_ver_sts: "Valid"
 Short list to-do ...
 - format wards 500 and place in seeds for import.
 - format contacts and place in seeds for import (either clean existing, or get original sfdc files.)
-- check on zip codes (adr_formatter)
+- check on zip codes (format_adr)
 	* ensure last for of 9 digits getting sliced, use zip = zip.split('-')&.first
 	* ensure all zips 5 digits length.
 	* ensure no commas at end of street address.
@@ -78,7 +117,7 @@ Short list to-do ...
 	:> Start.restore_backups
 
 4) Run: url redirect - then backup
-	:> Start.start_url_verifier
+	:> Start.start_ver_url
 
 5) Delete: archived webs - then backup
 
@@ -100,8 +139,14 @@ Short list to-do ...
 === Run: Act Scraper ===
 
 
-###################################
+########### Advanced Schema ###########
 
+  has_many :cont_descriptions, dependent: :destroy
+  has_many :descriptions, through: :cont_descriptions
+  accepts_nested_attributes_for :cont_descriptions, :descriptions
+
+  validates_uniqueness_of :crmc, allow_blank: true, allow_nil: true
+  validates_uniqueness_of :crmc
 
 
 ############ HIGHLIGHTS ############
@@ -125,12 +170,12 @@ Short list to-do ...
 	# Process.kill("QUIT", Process.pid)
 
 ############ Runner Scripts ############
-	# $ rails runner db/scripts/staffer_adr_migrator.rb
-	# $ heroku run rails runner db/scripts/staffer_adr_migrator.rb --app bds-max
+	# $ rails runner db/scripts/staffer_adr_mig.rb
+	# $ heroku run rails runner db/scripts/staffer_adr_mig.rb --app bds-max
 
 ############
-	# $ rails runner db/scripts/staffer_scrape_date_migrator.rb
-	# $ heroku run rails runner db/scripts/staffer_scrape_date_migrator.rb --app bds-max
+	# $ rails runner db/scripts/staffer_scrape_date_mig.rb
+	# $ heroku run rails runner db/scripts/staffer_scrape_date_mig.rb --app bds-max
 
 
 #######################################
@@ -335,14 +380,14 @@ Short list to-do ...
 	# bds_max/app/jobs/sample_job.rb
 
 	$ rails generate job sample #=> app/jobs/sample_job.rb
-	$ rails generate job StafferScrapeDateMigrator #=> app/jobs/staffer_scrape_date_migrator_job.rb
+	$ rails generate job StafferScrapeDateMig #=> app/jobs/staffer_scrape_date_mig_job.rb
 
-	$ rails runner "StafferScrapeDateMigratorJob.perform_later"
+	$ rails runner "StafferScrapeDateMigJob.perform_later"
 	$ rails runner "GuestsCleanupJob"
 
 	$ rails runner "GuestsCleanupJob"
-	rails runner db/scripts/staffer_scrape_date_migrator.rb
-	rails runner app/jobs/staffer_scrape_date_migrator_job.rb
+	rails runner db/scripts/staffer_scrape_date_mig.rb
+	rails runner app/jobs/staffer_scrape_date_mig_job.rb
 
 ############
 	$ rails runner "NewsletterJob.perform_later"
@@ -354,10 +399,10 @@ Short list to-do ...
 
 ############
 	RAILS_ENV=production script/delayed_job restart
-	app/jobs/staffer_scrape_date_migrator_job.rb
+	app/jobs/staffer_scrape_date_mig_job.rb
 	RAILS_ENV=development script/delayed_job start
-	RAILS_ENV=development app/jobs/staffer_scrape_date_migrator_job.rb/delayed_job start
-	app/jobs/staffer_scrape_date_migrator_job.rb/delayed_job: Not a directory
+	RAILS_ENV=development app/jobs/staffer_scrape_date_mig_job.rb/delayed_job start
+	app/jobs/staffer_scrape_date_mig_job.rb/delayed_job: Not a directory
 	bin/delayed_job
 
 important - save below
@@ -472,7 +517,7 @@ important - save below
 
 #############################
 	staffers = Staffer.where(scrape_date: nil).count
-	staffers.each {|staffer| staffer.update_attributes(scrape_date: staffer.created_at) }
+	staffers.each {|staffer| staffer.update(scrape_date: staffer.created_at) }
 
 
 ############################

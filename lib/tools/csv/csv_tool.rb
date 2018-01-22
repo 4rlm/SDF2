@@ -1,14 +1,14 @@
 # require 'csv'
 # require 'pry'
-# require 'exporter'
-# require 'importer'
+# require 'csv_export'
+# require 'csv_import'
 
-# %w{csv pry exporter importer}.each { |x| require x }
+# %w{csv pry csv_export csv_import}.each { |x| require x }
 
 class CsvTool
   extend ActiveSupport::Concern
-  include Exporter
-  include Importer
+  include CsvExport
+  include CsvImport
   attr_reader :file_name, :file_path
 
   def initialize
