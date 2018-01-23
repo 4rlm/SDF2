@@ -16,12 +16,10 @@ module AssocWeb
   #CALL: AssocWeb.transfer_web_associations(web_obj)
   def self.transfer_web_associations(web_obj, fwd_web_obj)
     web_obj.update(urlx: TRUE, url_ver_sts: 'FWD', sts_code: nil, fwd_web_id: fwd_web_obj.id, fwd_url: fwd_web_obj.url)
-
     models = %w(act link text)
     models.each do |model|
       associations = web_obj.send(model.pluralize)
       associations.each { |obj| Mig.new.create_obj_parent_assoc(model, obj, fwd_web_obj) } if associations.present?
     end
-    return fwd_web_obj
   end
 end

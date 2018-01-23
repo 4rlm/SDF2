@@ -12,37 +12,43 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false ## If true, use '$ foreman start'
-    @formatter = Formatter.new
-    @mig = Mig.new
-    @timeout = 20
+    @dj_on = true ## If true, use '$ foreman start'
     @dj_count_limit = 30
     @workers = 4
     @obj_in_grp = 50
-    @cut_off = 48.hours.ago
+    @timeout = 10
+    @count = 0
+    @cut_off = 55.hours.ago
     @prior_query_count = 0
+
+    @formatter = Formatter.new
+    @mig = Mig.new
   end
 
+
   def get_query
+    @count += 1
+    @timeout *= @count
+    puts "\n\n===================="
+    delete_fwd_web_dups ## Removes duplicates
+    puts "@count: #{@count}"
+    puts "@timeout: #{@timeout}\n\n"
+
     val_sts_arr = ['Valid', nil]
-    query = Web.select(:id).
+    val_query = Web.select(:id).
       where(url_ver_sts: val_sts_arr).
       where('url_ver_date < ? OR url_ver_date IS NULL', @cut_off).
       order("updated_at ASC").
       pluck(:id)
 
-    if query.empty?
-      err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
-      query = Web.select(:id).
+    err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
+    err_query = Web.select(:id).
       where(url_ver_sts: err_sts_arr).
       order("updated_at ASC").
       pluck(:id)
-      @timeout *= 3
-      puts "\n\nQ2-Count: #{query.count}"
-    else
-      puts "\n\nQ1-Count: #{query.count}"
-    end
 
+    query = (val_query + err_query)&.uniq
+    puts "\n\nQ1-Count: #{query.count}"
     return query
   end
 
@@ -53,49 +59,43 @@ class VerUrl
     while query_count != @prior_query_count
       setup_iterator(query)
       @prior_query_count = query_count
-      break if query_count == get_query.count
+      break if (query_count == get_query.count) || @count > 4
       start_ver_url
     end
   end
 
   def setup_iterator(query)
-    # @query_count = query.count
-    # (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
-    # @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
-
-    # query.each { |id| delay.template_starter(id) }
-    query.each { |id| template_starter(id) }
+    @query_count = query.count
+    (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
+    @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
 
   def template_starter(id)
+    # delete_fwd_web_dups ## Removes duplicates
     web_obj = Web.find(id)
-    binding.pry
-    # web_obj = Web.lock.find(id)
 
-    web_url = web_obj.url
-    formatted_url = @formatter.format_url(web_url)
+    if web_obj.present?
+      web_url = web_obj.url
+      formatted_url = @formatter.format_url(web_url)
 
-    if !formatted_url.present?
-      invalid_hsh = {urlx: TRUE, sts_code: nil, url_ver_sts: 'Invalid', url_ver_date: Time.now}
-      web_obj.update(invalid_hsh)
-      return ## PROCESS STOPS HERE IF FORMATTED URL IS NIL - NEVER GOES TO CURL!
-    elsif formatted_url != web_url
-      fwd_web_obj = save_fwd_web_obj(web_obj, formatted_url)
-      ## Important - Switch, before going to CURL!!!
-      web_obj = fwd_web_obj
-      web_url = fwd_web_obj.url
-    end
+      if !formatted_url.present? ## If nil, url is bad, and ends current process.
+        invalid_hsh = {urlx: TRUE, sts_code: nil, url_ver_sts: 'Invalid', url_ver_date: Time.now}
+        web_obj.update(invalid_hsh)
+      elsif formatted_url != web_url ## Creates fwd_web_obj, which goes to end of next queue.
+        fwd_web_obj = Web.find_or_create_by(url: formatted_url)
+        AssocWeb.transfer_web_associations(web_obj, fwd_web_obj)
+      else  ####### CURL-BEGINS - FORMATTED URLS ONLY!! #######
+        curl_hsh = start_curl(formatted_url)
+        err_msg = curl_hsh[:err_msg]
 
-    ####### CURL-BEGINS - FORMATTED URLS ONLY!! #######
-    curl_hsh = start_curl(formatted_url)
-    err_msg = curl_hsh[:err_msg]
-
-    if !err_msg.present?
-      update_db(web_obj, curl_hsh)
-    elsif err_msg == "Error: Timeout" || err_msg == "Error: Host"
-      web_obj.update(urlx: FALSE, url_ver_sts: err_msg, url_ver_date: Time.now)
-    else
-      web_obj.update(urlx: TRUE, sts_code: nil, url_ver_sts: err_msg, url_ver_date: Time.now)
+        if !err_msg.present?
+          update_db(web_obj, curl_hsh)
+        elsif err_msg == "Error: Timeout" || err_msg == "Error: Host"
+          web_obj.update(urlx: FALSE, url_ver_sts: err_msg, url_ver_date: Time.now)
+        else
+          web_obj.update(urlx: TRUE, sts_code: nil, url_ver_sts: err_msg, url_ver_date: Time.now)
+        end
+      end
     end
   end
 
@@ -113,10 +113,25 @@ class VerUrl
 
   def save_fwd_web_obj(web_obj, fwd_url)
     fwd_web_obj = Web.find_or_create_by(url: fwd_url)
-    # fwd_web_obj = @mig.save_simp_obj('web', {url: fwd_url})
-    fwd_web_obj = AssocWeb.transfer_web_associations(web_obj, fwd_web_obj)
-    return fwd_web_obj
+    AssocWeb.transfer_web_associations(web_obj, fwd_web_obj)
   end
+
+
+  def delete_fwd_web_dups
+    # web_dup_count = Web.select(:url).group(:url).having("count(*) > 1").size
+    dup_fwd_urls = Web.select(:url).group(:url).having("count(*) > 1").pluck(:url)
+    web_hsh = {urlx: FALSE, url_ver_sts: nil, sts_code: nil, url_ver_date: nil}
+    if dup_fwd_urls.present?
+      puts "\n\nFound Duplicates!"
+      dup_fwd_urls.each do |fwd_url|
+        Web.where(fwd_url: fwd_url).each { |web_obj| web_obj.update(web_hsh) }
+        Web.where(url: fwd_url).destroy_all
+      end
+    else
+      puts "\n\nNo Duplicates!  - All Clear!\n\n"
+    end
+  end
+
 
   def print_curl_results(web_url, curl_url, sts_code)
     puts "=================================="
