@@ -12,7 +12,7 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = true ## If true, use '$ foreman start'
+    @dj_on = true 
     @dj_count_limit = 30
     @workers = 4
     @obj_in_grp = 50
