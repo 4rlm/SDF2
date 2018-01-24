@@ -12,55 +12,70 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = true 
-    @dj_count_limit = 30
+    @dj_on = false
+    @dj_count_limit = 10
     @workers = 4
-    @obj_in_grp = 50
-    @timeout = 10
-    @count = 0
-    @cut_off = 55.hours.ago
-    @prior_query_count = 0
-
+    @obj_in_grp = 20
+    @timeout = 10 ## below
+    @err_id_count = 0
+    @cut_off = 90.hours.ago
     @formatter = Formatter.new
     @mig = Mig.new
+
+    @make_urlx = FALSE
   end
 
 
   def get_query
-    @count += 1
-    @timeout *= @count
-    puts "\n\n===================="
-    delete_fwd_web_dups ## Removes duplicates
-    puts "@count: #{@count}"
-    puts "@timeout: #{@timeout}\n\n"
 
-    val_sts_arr = ['Valid', nil]
-    val_query = Web.select(:id).
-      where(url_ver_sts: val_sts_arr).
-      where('url_ver_date < ? OR url_ver_date IS NULL', @cut_off).
-      order("updated_at ASC").
-      pluck(:id)
+    ## Nil Sts Query ##
+    query = Web.select(:id).where(url_ver_sts: nil).order("updated_at ASC").pluck(:id)
 
-    err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
-    err_query = Web.select(:id).
-      where(url_ver_sts: err_sts_arr).
-      order("updated_at ASC").
-      pluck(:id)
+    ## Valid Sts Query ##
+    val_sts_arr = ['Valid']
+    query = Web.select(:id).where(url_ver_sts: val_sts_arr).where('url_ver_date < ? OR url_ver_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
 
-    query = (val_query + err_query)&.uniq
-    puts "\n\nQ1-Count: #{query.count}"
+    ## Error Sts Query ##
+    if !query.any?
+      err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+      query = Web.select(:id).where(urlx: FALSE, url_ver_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
+      @timeout = 60
+
+      if query.any? && @make_urlx
+        binding.pry
+        ## Kill Query by updating: urlx: TRUE
+        query.each { |id| web_obj = Web.find(id).update(urlx: TRUE) }
+        query = [] ## reset
+        @make_urlx = FALSE
+      elsif query.any?
+        binding.pry
+        @make_urlx = TRUE
+      end
+    end
+
+    print_query_stats(query)
+    binding.pry
     return query
   end
 
+  def print_query_stats(query)
+    puts "\n\n===================="
+    puts "@timeout: #{@timeout}\n\n"
+    puts "\n\nQuery Count: #{query.count}"
+  end
 
+
+  ###############################################################<<<<<<<<<<<<<<<<
   def start_ver_url
     query = get_query
-    query_count = query.count
-    while query_count != @prior_query_count
+    # while query.any? && !@exit_program
+    while query.any?
       setup_iterator(query)
-      @prior_query_count = query_count
-      break if (query_count == get_query.count) || @count > 4
-      start_ver_url
+      delete_fwd_web_dups ## Removes duplicates
+      query = get_query
+      break if !query.any?
+      binding.pry
+      # start_ver_url
     end
   end
 
@@ -71,13 +86,10 @@ class VerUrl
   end
 
   def template_starter(id)
-    # delete_fwd_web_dups ## Removes duplicates
     web_obj = Web.find(id)
-
     if web_obj.present?
       web_url = web_obj.url
       formatted_url = @formatter.format_url(web_url)
-
       if !formatted_url.present? ## If nil, url is bad, and ends current process.
         invalid_hsh = {urlx: TRUE, sts_code: nil, url_ver_sts: 'Invalid', url_ver_date: Time.now}
         web_obj.update(invalid_hsh)
@@ -87,10 +99,10 @@ class VerUrl
       else  ####### CURL-BEGINS - FORMATTED URLS ONLY!! #######
         curl_hsh = start_curl(formatted_url)
         err_msg = curl_hsh[:err_msg]
-
         if !err_msg.present?
           update_db(web_obj, curl_hsh)
         elsif err_msg == "Error: Timeout" || err_msg == "Error: Host"
+          puts "err_msg: #{err_msg}"
           web_obj.update(urlx: FALSE, url_ver_sts: err_msg, url_ver_date: Time.now)
         else
           web_obj.update(urlx: TRUE, sts_code: nil, url_ver_sts: err_msg, url_ver_date: Time.now)

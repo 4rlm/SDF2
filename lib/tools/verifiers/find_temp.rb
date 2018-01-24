@@ -31,14 +31,12 @@ class FindTemp
     puts "@count: #{@count}"
     puts "@timeout: #{@timeout}\n\n"
 
-
     val_sts_arr = ['Valid', nil]
     val_query = Web.select(:id).
       where(url_ver_sts: 'Valid', tmp_sts: val_sts_arr).
       where('tmp_date < ? OR tmp_date IS NULL', @cut_off).
       order("updated_at ASC").
       pluck(:id)
-
 
     err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
     err_query = Web.select(:id).

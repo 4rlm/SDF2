@@ -1,5 +1,5 @@
 #######################################
-#CALL: GpAct.new.start_act_goog
+#CALL: GpAct.new.start_gp_act
 #######################################
 require 'iter_query'
 
@@ -7,34 +7,87 @@ class GpAct
   include IterQuery
 
   def initialize
+    @dj_on = true
+    @dj_count_limit = 30
+    @workers = 4
+    @obj_in_grp = 50
+    @timeout = 10
+    @count = 0
+    @cut_off = 55.hours.ago
+    @prior_query_count = 0
+
+    @gp = GpApi.new
     @formatter = Formatter.new
     @mig = Mig.new
-    @gp = GpApi.new
-    @timeout = 10
-    @dj_count_limit = 30 #=> Num allowed before releasing next batch.
-    @workers = 5 #=> Divide format_query_results into groups of x.
+  end
+
+  def get_query
+    @count += 1
+    @timeout *= @count
+    puts "\n\n===================="
+    # delete_fwd_web_dups ## Removes duplicates
+    puts "@count: #{@count}"
+    puts "@timeout: #{@timeout}\n\n"
+    ####################################
+    # act_name: "AutoNation in Fort Lauderdale, FL", actx: false, cop: true, top: nil, ward: nil, act_fwd_id: nil, act_gp_sts: nil, act_gp_date: nil, act_gp_id: nil, act_gp_indus: nil
+
+    val_sts_arr = ['Valid', nil]
+    query = Act.select(:id).
+      where(actx: FALSE, act_gp_sts: val_sts_arr).
+      where('act_gp_date < ? OR act_gp_date IS NULL', @cut_off).
+      order("updated_at ASC").
+      pluck(:id)
+
+    puts "\n\nQ1-Count: #{query.count}"
+    return query
+  end
+
+  def start_gp_act
+    query = get_query
+    query_count = query.count
+    while query_count != @prior_query_count
+      setup_iterator(query)
+      @prior_query_count = query_count
+      break if (query_count == get_query.count) || @count > 4
+      start_gp_act
+    end
+  end
+
+  def setup_iterator(query)
+    @query_count = query.count
+    (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
+    @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
 
 
-  def start_act_goog
-    # Act.select(:act_name).order("updated_at DESC")[0..100]
-    # query = Web.where(url_ver_sts: "Valid", as_sts: nil).where.not(tmp_sts: 'Valid').order("updated_at ASC").pluck(:id)
-    # query = Act.where(act_gp_sts: nil).order("updated_at ASC").pluck(:id)
-    # query = Act.where(act_src: 'CRM', act_gp_sts: nil).order("updated_at ASC").pluck(:id)
-    # query = Act.where(act_src: 'CRM').count
 
-    query = Act.select(:id).where(act_sts: nil, actx: false, act_gp_sts: nil).order("updated_at ASC").pluck(:id).count
-    # *** Then grab web url which is not archived.
+  ##### CONTINUE WORKING BELOW #####
 
-   ## Edit below to use as format for update or create new act from GpAct
-    #<act_name: "Front Range Honda in Colorado Springs, CO", act_sts: nil, act_src: nil, cop: true, actx: false, act_fwd_id: nil, act_gp_sts: nil, act_gp_date: nil, act_gp_id: nil, act_gp_indus: nil
 
-    obj_in_grp = 50
-    @query_count = query.count
-    (@query_count & @query_count > obj_in_grp) ? @group_count = (@query_count / obj_in_grp) : @group_count = 2
 
-    # iterate_query(query) # via IterQuery
-    query.each { |id| template_starter(id) }
+  def template_starter(id)
+    cur_act_obj = Act.find(id)
+    update_db(cur_act_obj)
+
+    if act_obj.present?
+      # web_url = web_obj.url
+      # noko_hsh = start_noko(web_url)
+      # page = noko_hsh[:noko_page]
+      # err_msg = noko_hsh[:err_msg]
+      #
+      # if err_msg.present?
+      #   puts err_msg
+      #   tmp_sts = err_msg
+      #   new_temp = 'Error: Search'
+      # end
+      #
+      # if page.present?
+      #   new_temp = Term.where(category: "find_temp").where(sub_category: "at_css").select { |term| term.response_term if page&.at_css('html')&.text&.include?(term.criteria_term) }&.first&.response_term
+      #   new_temp.present? ? tmp_sts = 'Valid' : tmp_sts = 'Unidentified'
+      # end
+
+      update_db(id, web_obj, new_temp, tmp_sts)
+    end
   end
 
 
