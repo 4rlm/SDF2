@@ -12,59 +12,63 @@ class FindTemp
 
   def initialize
     @dj_on = false
-    @dj_count_limit = 30
+    @dj_count_limit = 0
     @workers = 4
-    @obj_in_grp = 50
+    @obj_in_grp = 40
     @timeout = 10
-    @count = 0
-    @cut_off = 48.hours.ago
-    @prior_query_count = 0
-
+    @cut_off = 4.hours.ago
+    @make_urlx = FALSE
     @mig = Mig.new
   end
 
   def get_query
-    @count += 1
-    @timeout *= @count
-    puts "\n\n===================="
-    # delete_fwd_web_dups ## Removes duplicates
-    puts "@count: #{@count}"
-    puts "@timeout: #{@timeout}\n\n"
-
+    ## Valid Sts Query ##
     val_sts_arr = ['Valid', nil]
-    val_query = Web.select(:id).
-      where(url_ver_sts: 'Valid', tmp_sts: val_sts_arr).
-      where('tmp_date < ? OR tmp_date IS NULL', @cut_off).
-      order("updated_at ASC").
-      pluck(:id)
+    query = Web.select(:id).where(url_ver_sts: 'Valid', tmp_sts: val_sts_arr).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id)
 
-    err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
-    err_query = Web.select(:id).
-      where(url_ver_sts: 'Valid', tmp_sts: err_sts_arr).
-      order("updated_at ASC").
-      pluck(:id)
+    ## Error Sts Query ##
+    if !query.any?
+      err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
+      query = Web.select(:id).where(url_ver_sts: 'Valid', tmp_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
+      @timeout = 60
 
-    query = (val_query + err_query)&.uniq
-    puts "\n\nQ1-Count: #{query.count}"
+      if query.any? && @make_urlx
+        query.each { |id| web_obj = Web.find(id).update(urlx: TRUE) }
+        query = [] ## reset
+        @make_urlx = FALSE
+      elsif query.any?
+        @make_urlx = TRUE
+      end
+    end
+
+    print_query_stats(query)
     return query
   end
 
+
+  def print_query_stats(query)
+    puts "\n\n===================="
+    puts "@timeout: #{@timeout}\n\n"
+    puts "\n\nQuery Count: #{query.count}"
+  end
+
+
   def start_find_temp
     query = get_query
-    query_count = query.count
-    while query_count != @prior_query_count
+    while query.any?
       setup_iterator(query)
-      @prior_query_count = query_count
-      break if (query_count == get_query.count) || @count > 4
-      start_find_temp
+      query = get_query
+      break if !query.any?
     end
   end
+
 
   def setup_iterator(query)
     @query_count = query.count
     (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
     @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
+
 
   def template_starter(id)
     web_obj = Web.find(id)

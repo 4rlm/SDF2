@@ -12,22 +12,20 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false
-    @dj_count_limit = 10
+    @dj_on = true
+    @dj_count_limit = 0
     @workers = 4
-    @obj_in_grp = 20
+    @obj_in_grp = 40
     @timeout = 10 ## below
-    @err_id_count = 0
-    @cut_off = 90.hours.ago
+    @cut_off = 24.hours.ago
+    @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
-
-    @make_urlx = FALSE
   end
 
 
   def get_query
-
+    delete_fwd_web_dups ## Removes duplicates
     ## Nil Sts Query ##
     query = Web.select(:id).where(url_ver_sts: nil).order("updated_at ASC").pluck(:id)
 
@@ -42,21 +40,18 @@ class VerUrl
       @timeout = 60
 
       if query.any? && @make_urlx
-        binding.pry
-        ## Kill Query by updating: urlx: TRUE
         query.each { |id| web_obj = Web.find(id).update(urlx: TRUE) }
         query = [] ## reset
         @make_urlx = FALSE
       elsif query.any?
-        binding.pry
         @make_urlx = TRUE
       end
     end
 
     print_query_stats(query)
-    binding.pry
     return query
   end
+
 
   def print_query_stats(query)
     puts "\n\n===================="
@@ -65,25 +60,22 @@ class VerUrl
   end
 
 
-  ###############################################################<<<<<<<<<<<<<<<<
   def start_ver_url
     query = get_query
-    # while query.any? && !@exit_program
     while query.any?
       setup_iterator(query)
-      delete_fwd_web_dups ## Removes duplicates
       query = get_query
       break if !query.any?
-      binding.pry
-      # start_ver_url
     end
   end
+
 
   def setup_iterator(query)
     @query_count = query.count
     (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
     @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
+
 
   def template_starter(id)
     web_obj = Web.find(id)

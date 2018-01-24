@@ -47,7 +47,7 @@ class FindPage
       pluck(:id)
 
     query = (val_query + err_query)&.uniq
-    puts "\n\nQ1-Count: #{query.count}"
+    puts "\n\nQuery Count: #{query.count}"
     return query
   end
 
