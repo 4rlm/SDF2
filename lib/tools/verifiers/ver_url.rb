@@ -12,7 +12,7 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = true
+    @dj_on = false
     @dj_count_limit = 0
     @workers = 4
     @obj_in_grp = 40
@@ -27,11 +27,11 @@ class VerUrl
   def get_query
     delete_fwd_web_dups ## Removes duplicates
     ## Nil Sts Query ##
-    query = Web.select(:id).where(url_ver_sts: nil).order("updated_at ASC").pluck(:id)
+    query = Web.select(:id).where(urlx: FALSE, url_ver_sts: nil).order("updated_at ASC").pluck(:id)
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid']
-    query = Web.select(:id).where(url_ver_sts: val_sts_arr).where('url_ver_date < ? OR url_ver_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
+    query = Web.select(:id).where(urlx: FALSE, url_ver_sts: val_sts_arr).where('url_ver_date < ? OR url_ver_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
     if !query.any?

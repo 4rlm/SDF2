@@ -24,12 +24,12 @@ class FindTemp
   def get_query
     ## Valid Sts Query ##
     val_sts_arr = ['Valid', nil]
-    query = Web.select(:id).where(url_ver_sts: 'Valid', tmp_sts: val_sts_arr).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id)
+    query = Web.select(:id).where(urlx: FALSE, url_ver_sts: 'Valid', tmp_sts: val_sts_arr).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id)
 
     ## Error Sts Query ##
     if !query.any?
       err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
-      query = Web.select(:id).where(url_ver_sts: 'Valid', tmp_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
+      query = Web.select(:id).where(urlx: FALSE, url_ver_sts: 'Valid', tmp_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
       @timeout = 60
 
       if query.any? && @make_urlx
