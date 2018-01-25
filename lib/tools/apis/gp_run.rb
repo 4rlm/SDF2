@@ -73,7 +73,7 @@ module GpRun
 
       ## Create Result Hashes ##
       gp_sts_hsh = {
-        place_id: place_id,
+        act_gp_id: place_id,
         act_gp_sts: nil,
         act_gp_date: Time.now
       }
