@@ -88,7 +88,8 @@ gem 'hirb', '~> 0.7.3'
 
 gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
 gem 'will_paginate', '~> 3.1', '>= 3.1.6'
-gem 'will_paginate-bootstrap', '~> 1.0', '>= 1.0.1'
+gem 'will_paginate-bootstrap4'
+
 gem 'daemons', '~> 1.2', '>= 1.2.5'
 gem 'delayed_job_active_record', '~> 4.1', '>= 4.1.2'
 gem 'delayed_job_web', '~> 1.4'

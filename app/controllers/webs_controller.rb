@@ -5,7 +5,8 @@ class WebsController < ApplicationController
   # GET /webs.json
   def index
     # @webs = Web.all[0..100]
-    @webs = Web.where(urlx: FALSE).order("url_ver_date DESC")[0..100]
+    # @webs = Web.where(urlx: FALSE).where.not(url_ver_date: nil).order("url_ver_date DESC")[0..100]
+    @webs = Web.where(urlx: FALSE).where.not(url_ver_date: nil).order("url_ver_date DESC").paginate(:page => params[:page], :per_page => 20)
   end
 
   # GET /webs/1
@@ -70,6 +71,6 @@ class WebsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def web_params
-      params.require(:web).permit(:url, :urlx, :fwd_web_id, :fwd_url, :url_ver_sts, :sts_code, :url_ver_date, :tmp_sts, :temp_name, :tmp_date, :slink_sts, :llink_sts, :stext_sts, :ltext_sts, :pge_date, :as_sts, :as_date, :cs_sts, :cs_date, :created_at, :updated_at)
+      params.require(:web).permit(:url, :url_ver_sts, :sts_code, :url_ver_date, :tmp_sts, :temp_name, :tmp_date, :slink_sts, :llink_sts, :stext_sts, :ltext_sts, :pge_date, :as_sts, :as_date, :cs_sts, :cs_date, :created_at, :updated_at)
     end
 end

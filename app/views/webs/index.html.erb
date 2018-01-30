@@ -6,9 +6,6 @@
   <thead>
     <tr>
       <th>url</th>
-      <th>urlx</th>
-      <th>fwd_web_id</th>
-      <th>fwd_url</th>
       <th>url_ver_sts</th>
       <th>sts_code</th>
       <th>url_ver_date</th>
@@ -33,9 +30,6 @@
     <% @webs.each do |web| %>
       <tr>
         <td><%= link_to web.url, web %></td>
-        <td><%= web.urlx %></td>
-        <td><%= web.fwd_web_id %></td>
-        <td><%= web.fwd_url %></td>
         <td><%= web.url_ver_sts %></td>
         <td><%= web.sts_code %></td>
         <td><%= web.url_ver_date&.strftime('%x') %></td>
@@ -59,5 +53,6 @@
 </table>
 
 <br>
-
-<%= link_to 'New Web', new_web_path %>
+<%= will_paginate @webs %>
+<br>
+<br>
