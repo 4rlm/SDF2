@@ -14,7 +14,7 @@ class GpAct
     @obj_in_grp = 40
     @timeout = 10
     @count = 0
-    @cut_off = 24.hours.ago
+    @cut_off = 30.days.ago
     # @prior_query_count = 0
     # @make_urlx = FALSE
 
@@ -26,7 +26,9 @@ class GpAct
 
   def get_query
     ## Valid Sts Query ##
-    val_sts_arr = ['Valid', nil]
+    # val_sts_arr = ['Invalid', 'Valid', nil]
+    # val_sts_arr = ['Valid', nil]
+    val_sts_arr = [nil]
     query = Act.select(:id).where(actx: FALSE, act_gp_sts: val_sts_arr).where('act_gp_date < ? OR act_gp_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id)
 
     print_query_stats(query)
@@ -65,7 +67,7 @@ class GpAct
     if current_web_objs.count <= 1
       web_obj = current_web_objs&.first
     else
-      web_obj = current_web_objs.where(urlx: FALSE).order("updated_at ASC")&.first
+      web_obj = current_web_objs.where(urlx: FALSE).order("updated_at DESC")&.first
     end
     url = web_obj&.url
 
@@ -161,7 +163,6 @@ class GpAct
       end
 
       puts "=================\n\n\n"
-      binding.pry
     end
 
 
