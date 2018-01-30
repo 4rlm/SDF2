@@ -1,3 +1,7 @@
+rails g scaffold Web --migration=false --skip
+
+
+
 ############ GOOD TIPS ############
   rails callback functions
   obj.errors

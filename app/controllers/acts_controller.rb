@@ -5,7 +5,7 @@ class ActsController < ApplicationController
   # GET /acts.json
   def index
     # @acts = Act.all[0..100]
-    @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp')[0..100]
+    @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').order("act_gp_date DESC")[0..100]
 
   end
 
