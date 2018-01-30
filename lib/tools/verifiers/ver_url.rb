@@ -12,12 +12,12 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false
-    @dj_count_limit = 0
+    @dj_on = true
+    @dj_count_limit = 5
     @workers = 4
-    @obj_in_grp = 40
+    @obj_in_grp = 20
     @timeout = 10 ## below
-    @cut_off = 24.hours.ago
+    @cut_off = 30.days.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new

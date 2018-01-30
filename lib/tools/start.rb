@@ -3,6 +3,11 @@
 #Call: Start.method_name
 class Start
 
+  #Call: Start.sampler
+  def self.sampler
+    puts "Hi!  I'm the sampler!"
+  end
+
   #Call: Start.mega_start
   def self.mega_start
     CsvTool.new.import_all_seed_files ## imports all seeds.

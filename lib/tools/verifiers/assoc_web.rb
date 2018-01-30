@@ -15,7 +15,6 @@ module AssocWeb
   #Gets the associations of the current web obj and saves them to FWD web obj.
   #CALL: AssocWeb.transfer_web_associations(web_obj)
   def self.transfer_web_associations(web_obj, fwd_web_obj)
-    binding.pry
     web_obj.update(urlx: TRUE, url_ver_sts: 'FWD', sts_code: nil, fwd_web_id: fwd_web_obj.id, fwd_url: fwd_web_obj.url)
     models = %w(act link text)
     models.each do |model|

@@ -107,6 +107,7 @@ gem 'curb', '~> 0.9.4'
 gem 'whois', '~> 4.0', '>= 4.0.5'
 gem 'chartkick', '~> 2.2', '>= 2.2.5'
 gem 'foreman', '~> 0.84.0'
+# gem 'whenever', require: false
 ###############
 
 ## Adam's DBC Gems ##
