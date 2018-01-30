@@ -4,7 +4,9 @@ class ActsController < ApplicationController
   # GET /acts
   # GET /acts.json
   def index
-    @acts = Act.all
+    # @acts = Act.all[0..100]
+    @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp')[0..100]
+
   end
 
   # GET /acts/1
@@ -29,10 +31,10 @@ class ActsController < ApplicationController
     respond_to do |format|
       if @act.save
         format.html { redirect_to @act, notice: 'Act was successfully created.' }
-        format.json { render :show, sts: :created, location: @act }
+        format.json { render :show, status: :created, location: @act }
       else
         format.html { render :new }
-        format.json { render json: @act.errors, sts: :unprocessable_entity }
+        format.json { render json: @act.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -43,10 +45,10 @@ class ActsController < ApplicationController
     respond_to do |format|
       if @act.update(act_params)
         format.html { redirect_to @act, notice: 'Act was successfully updated.' }
-        format.json { render :show, sts: :ok, location: @act }
+        format.json { render :show, status: :ok, location: @act }
       else
         format.html { render :edit }
-        format.json { render json: @act.errors, sts: :unprocessable_entity }
+        format.json { render json: @act.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -71,7 +73,7 @@ class ActsController < ApplicationController
     def act_params
 
       # ORIGINAL
-      # params.require(:act).permit(:src, :sts, :crma, :name)
+      params.require(:act).permit(:act_name, :act_gp_date, :updated_at)
 
       # WORKING NESTED ATTRIBUTE - Cont
       # params.require(:act).permit(:src, :sts, :crma, :name, conts_attributes: [ :id, :first_name ] )
@@ -85,13 +87,10 @@ class ActsController < ApplicationController
       #######################################
 
       # # WORKING NESTED ATTRIBUTE - Webs && Adrs ???
-      params.require(:act).permit(:id, :src, :sts, :crma, :name, :created_at, :updated_at,
-          web_attributes: [:id, :src, :sts, :url, :staff_page, :locations_page, :created_at, :updated_at ],
-          adr_attributes: [:id, :src, :sts, :street, :unit, :city, :state, :zip, :pin, :latitude, :longitude, :created_at, :updated_at ],
-          phone_attributes: [:id, :src, :sts, :phone, :created_at, :updated_at ])
-
-
-
+      # params.require(:act).permit(:id, :src, :sts, :crma, :name, :created_at, :updated_at,
+      #     web_attributes: [:id, :src, :sts, :url, :staff_page, :locations_page, :created_at, :updated_at ],
+      #     adr_attributes: [:id, :src, :sts, :street, :unit, :city, :state, :zip, :pin, :latitude, :longitude, :created_at, :updated_at ],
+      #     phone_attributes: [:id, :src, :sts, :phone, :created_at, :updated_at ])
 
       #######################################
 

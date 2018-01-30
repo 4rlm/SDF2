@@ -1,24 +1,23 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Source:</strong>
-  <%= @act.src %>
-</p>
+<table class="table table-bordered table-hover table-striped text-nowrap">
+  <thead>
+    <tr>
+      <th>act_name</th>
+      <th>act_gp_date</th>
+      <th>updated_at</th>
+    </tr>
+  </thead>
 
-<p>
-  <strong>sts:</strong>
-  <%= @act.sts %>
-</p>
+  <tbody>
+    <tr>
+      <td><%= @act.act_name %></td>
+      <td><%= @act.act_gp_date %></td>
+      <td><%= @act.updated_at %></td>
+    </tr>
+  </tbody>
+</table>
 
-<p>
-  <strong>Crm act num:</strong>
-  <%= @act.crma %>
-</p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @act.name %>
-</p>
 
 <%= link_to 'Edit', edit_act_path(@act) %> |
 <%= link_to 'Back', acts_path %>

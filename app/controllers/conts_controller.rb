@@ -29,10 +29,10 @@ class ContsController < ApplicationController
     respond_to do |format|
       if @cont.save
         format.html { redirect_to @cont, notice: 'Cont was successfully created.' }
-        format.json { render :show, sts: :created, location: @cont }
+        format.json { render :show, status: :created, location: @cont }
       else
         format.html { render :new }
-        format.json { render json: @cont.errors, sts: :unprocessable_entity }
+        format.json { render json: @cont.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -43,10 +43,10 @@ class ContsController < ApplicationController
     respond_to do |format|
       if @cont.update(cont_params)
         format.html { redirect_to @cont, notice: 'Cont was successfully updated.' }
-        format.json { render :show, sts: :ok, location: @cont }
+        format.json { render :show, status: :ok, location: @cont }
       else
         format.html { render :edit }
-        format.json { render json: @cont.errors, sts: :unprocessable_entity }
+        format.json { render json: @cont.errors, status: :unprocessable_entity }
       end
     end
   end
