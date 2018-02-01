@@ -1,17 +1,50 @@
 class ActsController < ApplicationController
   before_action :set_act, only: [:show, :edit, :update, :destroy]
+  helper_method :sort_column, :sort_direction
 
   # GET /acts
   # GET /acts.json
   def index
+    # @users = User.filter(:params => params)
+    # @acts = Act.filter(:act_name, :updated_at)
+
     # @acts = Act.all[0..100]
-    @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').order("act_gp_date DESC")[0..100]
+    # @acts = ActsDatatable.new(view_context)
+    # @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').order("act_gp_date DESC")[0..500]
+    # @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').order("act_gp_date DESC").paginate(:page => params[:page], :per_page => 50)
+
+    @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').
+      order(sort_column + ' ' + sort_direction).
+      paginate(:page => params[:page], :per_page => 50)
+
+    respond_to do |format|
+      format.html
+      # format.json { render json: ActsDatatable.new(view_context) }
+      format.js
+    end
+
+    # respond_to do |format|
+    #   format.html
+    #   format.json do
+    #   render :json=>{
+    #     "iTotalRecords"=>@acts.count,
+    #     "iTotalDisplayRecords"=>@acts.count,
+    #     "aaData"=>@acts.as_json(
+    #       :only=>[:act_name]
+    #     )
+    #   }
+    #   end
+    # end
 
   end
 
   # GET /acts/1
   # GET /acts/1.json
   def show
+    # respond_to do |format|
+    #   format.html
+    #   format.js
+    # end
   end
 
   # GET /acts/new
@@ -64,6 +97,16 @@ class ActsController < ApplicationController
   end
 
   private
+
+    def sort_column
+      Act.column_names.include?(params[:sort]) ? params[:sort] : "act_name"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
+    end
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_act
       @act = Act.find(params[:id])

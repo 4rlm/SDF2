@@ -9,21 +9,16 @@
   </head>
 
   <body>
-
     <%= render partial: 'shared/nav' %>
-    <div class="container">
 
-      <div class="row"> <!-- FLASH NOTICE -->
-        <%= render partial: 'shared/flash' %>
-      </div>
-
+    <div class="container-fluid">
+      <%= render partial: 'shared/flash' %>
       <div class="row" id="main-wrapper">
         <%= yield %>
       </div>
 
       <footer id="footer">
       </footer>
-
     </div>
 
   </body>

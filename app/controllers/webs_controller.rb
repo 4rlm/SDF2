@@ -1,17 +1,37 @@
 class WebsController < ApplicationController
   before_action :set_web, only: [:show, :edit, :update, :destroy]
+  helper_method :sort_column, :sort_direction
 
   # GET /webs
   # GET /webs.json
   def index
     # @webs = Web.all[0..100]
     # @webs = Web.where(urlx: FALSE).where.not(url_ver_date: nil).order("url_ver_date DESC")[0..100]
-    @webs = Web.where(urlx: FALSE).where.not(url_ver_date: nil).order("url_ver_date DESC").paginate(:page => params[:page], :per_page => 20)
+    # @webs = Web.where(urlx: FALSE).
+    # where.not(url_ver_date: nil).
+    # order("url_ver_date DESC").
+    # paginate(:page => params[:page], :per_page => 20)
+
+    @webs = Web.where(urlx: FALSE).
+    where.not(url_ver_date: nil).
+    order(sort_column + ' ' + sort_direction).
+    paginate(:page => params[:page], :per_page => 50)
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+
+
   end
 
   # GET /webs/1
   # GET /webs/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   # GET /webs/new
@@ -64,6 +84,16 @@ class WebsController < ApplicationController
   end
 
   private
+
+    def sort_column
+      Web.column_names.include?(params[:sort]) ? params[:sort] : "url"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
+    end
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_web
       @web = Web.find(params[:id])

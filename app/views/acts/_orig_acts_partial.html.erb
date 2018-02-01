@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Rooftops</h1>
+
+<table id="acts" class="display table table-bordered table-hover table-striped text-nowrap">
+  <thead>
+    <tr>
+      <th>RT Name</th>
+      <th>RT Scrape Date</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @acts.each do |act| %>
+      <tr>
+        <td><%= link_to act.act_name, act %></td>
+        <td><%= act.act_gp_date&.strftime('%x') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<%= will_paginate @acts %>
+<br>

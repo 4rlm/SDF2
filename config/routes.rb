@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount WillFilter::Engine => "/will_filter"
   resources :webs
   get 'home/index'
   root :to => "home#index"
