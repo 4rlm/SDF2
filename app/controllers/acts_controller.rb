@@ -10,8 +10,8 @@ class ActsController < ApplicationController
     #   order(sort_column + ' ' + sort_direction).
     #   paginate(:page => params[:page], :per_page => 50)
 
-    @query = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
-    @acts = @query.result.paginate(:page => params[:page], :per_page => 50)
+    @search = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
+    @acts = @search.result.paginate(:page => params[:page], :per_page => 50)
 
     respond_to do |format|
       format.html

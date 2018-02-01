@@ -10,17 +10,14 @@
 
   <body>
     <%= render partial: 'shared/nav' %>
-
-    <div class="container-fluid">
+    <div id="main-wrapper" class="container-fluid outer-container" style="margin:5px;">
       <%= render partial: 'shared/flash' %>
-      <div class="row" id="main-wrapper">
-        <%= yield %>
-      </div>
-
-      <footer id="footer">
-      </footer>
+      <%#= render partial: 'shared/main/main_index' %>
+      <%= yield %>
     </div>
 
+    <footer id="footer">
+    </footer>
   </body>
 
 </html>

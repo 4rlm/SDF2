@@ -1,18 +1,34 @@
 <p id="notice"><%= notice %></p>
 
-<br>
-<h1>Rooftops</h1>
-<h3><%= @acts.count %></h3>
-<br>
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="text-center">Rooftops</h1>
+  </div>
+</div>
 
 
-<%= search_form_for @query do |f| %>
-  <%= f.label :act_name_cont %>
-  <%= f.search_field :act_name_cont %>
-  <%= f.submit %>
-<% end %>
 
-<br>
+<div class="row">
+  <div class="col-md-12">
+
+      <%= search_form_for @search do |f| %>
+        <div class="field">
+          <%= f.label :act_name_cont, "Name contains" %>
+          <%= f.text_field :act_name_cont %>
+        </div>
+        <div class="actions"><%= f.submit "Search" %></div>
+      <% end %>
+
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <h5>Search Results: <%= @acts.count %></h5>
+  </div>
+</div>
+
 
 <table id="acts" class="display table table-bordered table-hover table-striped text-nowrap">
   <thead>
@@ -33,5 +49,5 @@
 </table>
 
 <br>
-<%#= will_paginate @acts %>
+<%= will_paginate @acts %>
 <br>
