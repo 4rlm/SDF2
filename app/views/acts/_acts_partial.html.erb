@@ -11,20 +11,13 @@
 <div class="row">
   <div class="col-md-12">
 
-    <%= search_form_for @search, :html => {:class => "form"} do |f| %>
-      <%= f.condition_fields do |c| %>
-        <div class="field form-group">
-          <%= c.attribute_fields do |a| %>
-            <%= a.attribute_select associations: [:adrs, :webs, :phones, :conts] %>
-          <% end %>
-          <%= c.predicate_select %>
-          <%= c.value_fields do |v| %>
-          <%= v.text_field :value %>
-          <% end %>
-        </div>
-      <% end %>
-      <div class="actions"><%= f.submit "Search" %></div>
+  <%= search_form_for @search, class: "form" do |f| %>
+    <%= f.condition_fields do |c| %>
+      <%= render "condition_fields", f: c%>
     <% end %>
+    <p><%= link_to_add_fields "Add Conditions", f, :condition %>
+    <div class="actions"><%= f.submit "Search" %></div>
+  <% end %>
 
   </div>
 </div>
@@ -42,8 +35,7 @@
     <tr>
       <th><%= sort_link(@search, :act_name, "RT Name") %></th>
       <th><%= sort_link(@search, :act_gp_date, "RT Scrape Date") %></th>
-      <th><%= sort_link(@search, :state, "State") %></th>
-
+      <th><%= sort_link(@search, "act.adrs&.first&.state", "State") %></th>
     </tr>
   </thead>
 

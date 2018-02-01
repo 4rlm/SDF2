@@ -11,14 +11,9 @@ class ActsController < ApplicationController
     #   paginate(:page => params[:page], :per_page => 50)
 
     @search = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
-    @acts = @search.result.includes(:adrs, :webs).paginate(:page => params[:page], :per_page => 50)
-    @search.build_condition
-
-    # select(:id, :act_name, :act_gp_date)
-
-    # @people = @q.result(distinct: true)
-    #         .select('people.*, articles.name, articles.description')
-    #         .page(params[:page])
+    @acts = @search.result.includes(:adrs, :webs, :phones, :conts).paginate(:page => params[:page], :per_page => 50)
+    @search.build_condition if @search.conditions.empty?
+    # @search.build_sort
 
 
     respond_to do |format|
@@ -109,7 +104,7 @@ class ActsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_act
-      @act = Act.find(params[:id])
+      @act = Act&.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
