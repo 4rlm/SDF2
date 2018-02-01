@@ -5,36 +5,28 @@ class ActsController < ApplicationController
   # GET /acts
   # GET /acts.json
   def index
-    # @users = User.filter(:params => params)
-    # @acts = Act.filter(:act_name, :updated_at)
-
-    # @acts = Act.all[0..100]
     # @acts = ActsDatatable.new(view_context)
-    # @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').order("act_gp_date DESC")[0..500]
-    # @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').order("act_gp_date DESC").paginate(:page => params[:page], :per_page => 50)
+    # @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').
+    #   order(sort_column + ' ' + sort_direction).
+    #   paginate(:page => params[:page], :per_page => 50)
 
-    @acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').
-      order(sort_column + ' ' + sort_direction).
-      paginate(:page => params[:page], :per_page => 50)
+    @query = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
+    @acts = @query.result.paginate(:page => params[:page], :per_page => 50)
 
     respond_to do |format|
       format.html
-      # format.json { render json: ActsDatatable.new(view_context) }
       format.js
     end
+    ###################
 
-    # respond_to do |format|
-    #   format.html
-    #   format.json do
-    #   render :json=>{
-    #     "iTotalRecords"=>@acts.count,
-    #     "iTotalDisplayRecords"=>@acts.count,
-    #     "aaData"=>@acts.as_json(
-    #       :only=>[:act_name]
-    #     )
-    #   }
-    #   end
-    # end
+    # @search = Space.search(params[:q])
+    # @spaces = @search.result
+    # @q = Space.ransack(params[:q])
+    # @spaces = @q.result.includes(:addresses)
+    # @spaces = @q.result(distinct: true).includes(:address)
+    # @q.build_condition
+    # or use `to_a.uniq` to remove duplicates (can also be done in the view):
+    # @people = @q.result.includes(:articles).page(params[:page]).to_a.uniq
 
   end
 
