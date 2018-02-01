@@ -17,4 +17,10 @@ class Web < ApplicationRecord
   # validates :url, uniqueness: true
   # accepts_nested_attributes_for :phone
 
+  UNRANSACKABLE_ATTRIBUTES = %w(id urlx false fwd_web_id fwd_url url_ver_sts sts_code url_ver_date tmp_sts temp_name tmp_date slink_sts llink_sts stext_sts ltext_sts pge_date as_sts as_date cs_sts cs_date created_at updated_at)
+  def self.ransackable_attributes auth_object = nil
+    (column_names - UNRANSACKABLE_ATTRIBUTES) + _ransackers.keys
+  end
+
+
 end

@@ -11,7 +11,15 @@ class ActsController < ApplicationController
     #   paginate(:page => params[:page], :per_page => 50)
 
     @search = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
-    @acts = @search.result.paginate(:page => params[:page], :per_page => 50)
+    @acts = @search.result.includes(:adrs, :webs).paginate(:page => params[:page], :per_page => 50)
+    @search.build_condition
+
+    # select(:id, :act_name, :act_gp_date)
+
+    # @people = @q.result(distinct: true)
+    #         .select('people.*, articles.name, articles.description')
+    #         .page(params[:page])
+
 
     respond_to do |format|
       format.html

@@ -21,4 +21,11 @@ class Cont < ApplicationRecord
   has_many :webs, through: :webings
   accepts_nested_attributes_for :webings, :webs
 
+
+  UNRANSACKABLE_ATTRIBUTES = %w(id act_id cont_sts created_at updated_at)
+  def self.ransackable_attributes auth_object = nil
+    (column_names - UNRANSACKABLE_ATTRIBUTES) + _ransackers.keys
+  end
+
+
 end
