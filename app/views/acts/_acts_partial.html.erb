@@ -7,19 +7,8 @@
 </div>
 
 
-
 <div class="row">
-  <div class="col-md-12">
-
-  <%= search_form_for @search, class: "form" do |f| %>
-    <%= f.condition_fields do |c| %>
-      <%= render "condition_fields", f: c%>
-    <% end %>
-    <p><%= link_to_add_fields "Add Conditions", f, :condition %>
-    <div class="actions"><%= f.submit "Search" %></div>
-  <% end %>
-
-  </div>
+  <%= render 'acts/acts_search_partial', search: @search %>
 </div>
 
 
@@ -34,8 +23,10 @@
   <thead>
     <tr>
       <th><%= sort_link(@search, :act_name, "RT Name") %></th>
+      <th><%= sort_link(@search, "act.adrs&.last&.state", "State") %></th>
+      <th><%= sort_link(@search, "act.phones&.last&.phone", "Phone") %></th>
+      <th><%= sort_link(@search, "act.webs&.last&.url", "Url") %></th>
       <th><%= sort_link(@search, :act_gp_date, "RT Scrape Date") %></th>
-      <th><%= sort_link(@search, "act.adrs&.first&.state", "State") %></th>
     </tr>
   </thead>
 
@@ -43,9 +34,10 @@
     <% @acts.each do |act| %>
       <tr>
         <td><%= link_to act.act_name, act %></td>
-        <td><%= act.act_gp_date&.strftime('%x') %></td>
         <td><%= act.adrs&.last&.state %></td>
-
+        <td><%= act.phones&.last&.phone %></td>
+        <td><%= act.webs&.last&.url %></td>
+        <td><%= act.act_gp_date&.strftime('%x') %></td>
       </tr>
     <% end %>
   </tbody>

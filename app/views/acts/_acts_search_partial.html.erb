@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <%= search_form_for(@search) do |f| %>
+      <div class="field">
+        <%= f.label :act_name_cont_any, "Name: " %>
+        <%= f.search_field :act_name_cont_any %>
+      </div>
+
+      <div class="class="field"">
+        <%= f.label :adrs_state_cont_any, "State: " %>
+        <%= f.search_field :adrs_state_cont_any %>
+      </div>
+
+      <div class="class="field"">
+        <%= f.label :phones_phone_cont_any, "Phone: " %>
+        <%= f.search_field :phones_phone_cont_any %>
+      </div>
+
+      <div class="class="field"">
+        <%= f.label :webs_url_cont_any, "Url: " %>
+        <%= f.search_field :webs_url_cont_any %>
+      </div>
+
+      <div class="actions"><%= f.submit "Search" %></div>
+    <% end %>
+
+  </div>
+</div>

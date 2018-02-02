@@ -1,5 +1,6 @@
 class ActsController < ApplicationController
   before_action :set_act, only: [:show, :edit, :update, :destroy]
+  respond_to :html, :json
   helper_method :sort_column, :sort_direction
 
   # GET /acts
@@ -10,27 +11,20 @@ class ActsController < ApplicationController
     #   order(sort_column + ' ' + sort_direction).
     #   paginate(:page => params[:page], :per_page => 50)
 
-    @search = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
-    @acts = @search.result.includes(:adrs, :webs, :phones, :conts).paginate(:page => params[:page], :per_page => 50)
-    @search.build_condition if @search.conditions.empty?
-    # @search.build_sort
 
-
-    respond_to do |format|
-      format.html
-      format.js
+    ## Splits 'cont_any' strings into array, if string and has ','
+    if !params[:q].nil?
+      acts_helper = Object.new.extend(ActsHelper)
+      params[:q] = acts_helper.split_ransack_params(params[:q])
     end
-    ###################
 
-    # @search = Space.search(params[:q])
-    # @spaces = @search.result
-    # @q = Space.ransack(params[:q])
-    # @spaces = @q.result.includes(:addresses)
-    # @spaces = @q.result(distinct: true).includes(:address)
-    # @q.build_condition
-    # or use `to_a.uniq` to remove duplicates (can also be done in the view):
-    # @people = @q.result.includes(:articles).page(params[:page]).to_a.uniq
+    @search = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
+    @acts = @search
+      .result(distinct: true)
+      .includes(:adrs, :webs, :phones)
+      .paginate(:page => params[:page], :per_page => 50)
 
+    respond_with(@acts)
   end
 
   # GET /acts/1
@@ -111,7 +105,9 @@ class ActsController < ApplicationController
     def act_params
 
       # ORIGINAL
-      params.require(:act).permit(:act_name, :act_gp_date, :updated_at)
+      # params.require(:act).permit(:id, :act_name, :act_gp_date, :updated_at)
+      params.require(:act).permit(:id, :act_name, :act_gp_date, :updated_at, adrs_attributes: [ :id, :street, :city, :state, :zip ] )
+
 
       # WORKING NESTED ATTRIBUTE - Cont
       # params.require(:act).permit(:src, :sts, :crma, :name, conts_attributes: [ :id, :first_name ] )
