@@ -18,11 +18,22 @@ class ActsController < ApplicationController
       params[:q] = acts_helper.split_ransack_params(params[:q])
     end
 
-    @search = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
+    ## New Query Below - Works well!
+    # acts = Act.includes(:adrs, :webs).where(acts: {actx: FALSE, act_gp_sts: 'Valid:gp'}).where(webs: {urlx: FALSE}).where(adrs: {adrx: FALSE}).count
+
+    ## ORIGINAL BELOW
+    # @search = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').ransack(params[:q])
+
+    @search = Act.includes(:adrs, :webs)
+      .where(acts: {actx: FALSE, act_gp_sts: 'Valid:gp'})
+      .where(webs: {urlx: FALSE, url_ver_sts: 'Valid'})
+      .where(adrs: {adrx: FALSE, adr_gp_sts: 'Valid'})
+      .ransack(params[:q])
+
     @acts = @search
       .result(distinct: true)
-      .includes(:adrs, :webs, :phones)
       .paginate(:page => params[:page], :per_page => 50)
+      # .includes(:adrs, :webs, :phones)
 
     respond_with(@acts)
   end
