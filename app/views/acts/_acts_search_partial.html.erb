@@ -8,8 +8,18 @@
       </div>
 
       <div class="class="field"">
+        <%= f.label :adrs_city_matches_any, "City: " %>
+        <%= f.search_field :adrs_city_matches_any %>
+      </div>
+
+      <div class="class="field"">
         <%= f.label :adrs_state_cont_any, "State: " %>
         <%= f.search_field :adrs_state_cont_any %>
+      </div>
+
+      <div class="class="field"">
+        <%= f.label :adrs_zip_cont_any, "Zip: " %>
+        <%= f.search_field :adrs_zip_cont_any %>
       </div>
 
       <div class="class="field"">

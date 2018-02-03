@@ -20,9 +20,9 @@ class Act < ApplicationRecord
   accepts_nested_attributes_for :brandings, :brands
 
 
-  UNRANSACKABLE_ATTRIBUTES = %w(actx cop top ward act_fwd_id act_gp_sts act_gp_id act_gp_indus created_at)
-  def self.ransackable_attributes auth_object = nil
-    (column_names - UNRANSACKABLE_ATTRIBUTES) + _ransackers.keys
-  end
+  # UNRANSACKABLE_ATTRIBUTES = %w(actx cop top ward act_fwd_id act_gp_sts act_gp_id act_gp_indus created_at)
+  # def self.ransackable_attributes auth_object = nil
+  #   (column_names - UNRANSACKABLE_ATTRIBUTES) + _ransackers.keys
+  # end
 
 end

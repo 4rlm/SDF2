@@ -30,9 +30,9 @@ class ActsController < ApplicationController
       .where(adrs: {adrx: FALSE, adr_gp_sts: 'Valid'})
       .ransack(params[:q])
 
-    @acts = @search
-      .result(distinct: true)
+    @acts = @search.result
       .paginate(:page => params[:page], :per_page => 50)
+      # .result(distinct: true)
       # .includes(:adrs, :webs, :phones)
 
     respond_with(@acts)
