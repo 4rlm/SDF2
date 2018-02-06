@@ -58,10 +58,10 @@ module CsvImport
   def import_all_seed_files
     Mig.new.reset_pk_sequence
 
-    # CsvTool.new.import_uni_seeds('uni_act', '1_acts_top_150.csv')
-    # CsvTool.new.import_uni_seeds('uni_act', '2_wards_500.csv')
-    # CsvTool.new.import_uni_seeds('uni_act', '3_acts_cop.csv')
-    # CsvTool.new.import_uni_seeds('uni_act', '4_acts_sfdc.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '1_acts_top_150.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '2_wards_500.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '3_acts_cop.csv')
+    CsvTool.new.import_uni_seeds('uni_act', '4_acts_sfdc.csv')
     CsvTool.new.import_uni_seeds('uni_act', '5_acts_scraped.csv')
     CsvTool.new.import_uni_seeds('uni_act', '6_acts_geo_locations.csv')
 

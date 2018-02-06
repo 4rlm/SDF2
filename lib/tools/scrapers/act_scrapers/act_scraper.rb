@@ -93,10 +93,10 @@ class ActScraper
           adr_hsh = gp_hsh[:adr]
           gp_hsh[:adr_gp_sts].present? ? validity = gp_hsh[:adr_gp_sts] : validity = 'Valid:as-gp'
 
-          gp_sts_hsh = gp_hsh[:gp_sts_hsh]
+          gp_sts = gp_hsh[:gp_sts]
           web_hsh = {as_sts: validity, as_date: Time.now}
           binding.pry
-          # web_hsh = web_hsh.merge(gp_sts_hsh)
+          # web_hsh = web_hsh.merge(gp_sts)
 
           # web_hsh = { place_id: gp_hsh[:place_id], as_sts: validity, as_date: Time.now}
         else

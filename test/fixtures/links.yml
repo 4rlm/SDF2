@@ -1,9 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  link: MyString
-  link_type: MyString
-
-two:
-  link: MyString
-  link_type: MyString

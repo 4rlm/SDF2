@@ -7,7 +7,7 @@ module Curler
 
 
   def start_curl(web_url)
-    curl_hsh = { sts_code: nil, curl_url: nil, err_msg: nil }
+    curl_hsh = { url_sts_code: nil, curl_url: nil, err_msg: nil }
     result = nil
 
     begin
@@ -24,7 +24,7 @@ module Curler
               curl.head = true #testing - new
             end # result
 
-            curl_hsh[:sts_code] = result&.response_code.to_s
+            curl_hsh[:url_sts_code] = result&.response_code.to_s
             curl_hsh[:curl_url] = Formatter.new.format_url(result&.last_effective_url)
           end # conditional
         end # timeout

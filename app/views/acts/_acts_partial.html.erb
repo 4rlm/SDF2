@@ -23,13 +23,13 @@
   <thead>
     <tr>
       <th><%= sort_link(@search, :act_name, "RT Name") %></th>
-      <th><%= sort_link(@search, :adrs_street) %></th>
-      <th><%= sort_link(@search, :adrs_city) %></th>
-      <th><%= sort_link(@search, :adrs_state) %></th>
-      <th><%= sort_link(@search, :adrs_zip) %></th>
-      <th><%= sort_link(@search, :phones_phone) %></th>
-      <th><%= sort_link(@search, :webs_url) %></th>
-      <th><%= sort_link(@search, :act_gp_date, "RT Scrape Date") %></th>
+      <th><%= sort_link(@search, :street) %></th>
+      <th><%= sort_link(@search, :city) %></th>
+      <th><%= sort_link(@search, :state) %></th>
+      <th><%= sort_link(@search, :zip) %></th>
+      <th><%= sort_link(@search, :phone) %></th>
+      <th><%= sort_link(@search, :url) %></th>
+      <th><%= sort_link(@search, :gp_date, "RT Scrape Date") %></th>
     </tr>
   </thead>
 
@@ -37,13 +37,13 @@
     <% @acts.each do |act| %>
       <tr>
         <td><%= link_to act.act_name, act %></td>
-        <td><%= act.adrs.last&.street %></td>
-        <td><%= act.adrs.last&.city %></td>
-        <td><%= act.adrs.last&.state %></td>
-        <td><%= act.adrs.last&.zip %></td>
-        <td><%= act.phones.last&.phone %></td>
-        <td><%= act.webs.last&.url %></td>
-        <td><%= act.act_gp_date&.strftime('%x') %></td>
+        <td><%= act.street %></td>
+        <td><%= act.city %></td>
+        <td><%= act.state %></td>
+        <td><%= act.zip %></td>
+        <td><%= act.phone %></td>
+        <td><%= act.url %></td>
+        <td><%= act.gp_date&.strftime('%x') %></td>
       </tr>
     <% end %>
   </tbody>

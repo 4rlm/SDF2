@@ -37,13 +37,13 @@ module Noko
           end
 
           page.respond_to?('at_css') ? noko_hsh[:noko_page] = page : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
-            
+
           #### ORIGINAL ####
           # page = Mechanize.new.get(web_url)
           # page.respond_to?('at_css') ? noko_hsh[:noko_page] = Mechanize.new.get(web_url) : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
         end
       rescue Timeout::Error # timeout rescue
-        noko_hsh[:err_msg] = "timeout:#{@timeout}"
+        noko_hsh[:err_msg] = 'Error: Timeout'
       end
     rescue # LoadError => e  # noko rescue
       err_msg = error_parser("Error: #{$!.message}")

@@ -30,50 +30,23 @@ module FormatAdr
 
   end
 
-
-  ##################################
   ######### FORMAT STREET ##########
-  ##################################
-
 
   # CALL: Formatter.new.format_street(street)
   def format_street(street)
     street = street&.gsub(/\s/, ' ')&.strip
     if street.present?
-      # street = nil if street&.include?("(")
-      # street = nil if street&.include?(")")
-      # street = nil if street&.include?("[")
-      # street = nil if street&.include?("]")
-      # street = nil if street&.downcase&.include?("phone")
-      # street = nil if street&.downcase&.include?("sales")
-      # street = nil if street&.downcase&.include?("parts")
-      # street = nil if street&.downcase&.include?("vin")
-      # street = nil if street&.downcase&.include?("terior")
-      # street = nil if street&.downcase&.include?("other")
 
       if street.present?
-        # if street.include?("•")
-        #   street_parts = street.split("•")
-        #   street = street_parts.first
-        # end
-        #
-        # if street.include?('|')
-        #   street_parts = street.split('|')
-        #   street = street_parts.first
-        # end
-
         street = Formatter.new.letter_case_check(street)
         street = " #{street} " # Adds white space, to match below, then strip.
         street&.gsub!(".", " ")
-
-        puts street.inspect
         street&.gsub!(",", " ")
 
         street&.gsub!(" North ", " N ")
         street&.gsub!(" South ", " S ")
         street&.gsub!(" East ", " E ")
         street&.gsub!(" West ", " W ")
-
         street&.gsub!(" Ne ", " NE ")
         street&.gsub!(" Nw ", " NW ")
         street&.gsub!(" Se ", " SE ")
@@ -98,29 +71,14 @@ module FormatAdr
         street&.gsub!("Welcome to", " ")
         street&.gsub!("var address = \"", " ")
 
-        # street = nil if street&.downcase&.include?("/")
-        # street = nil if street&.downcase&.include?("www")
-        # street = nil if street&.downcase&.include?("*")
-        # street = nil if street&.downcase&.include?("number")
-        # street = nil if street&.downcase&.include?("stock")
-        # street = nil if street&.downcase&.include?("shop")
-        # street = nil if street&.downcase&.include?("once")
-        # street = nil if street&.downcase&.include?(":")
-        # street = nil if street&.include?("ID")
-
         street&.strip!
         street&.squeeze!(" ")
-        # street = nil if street.present? && street.length > 50
       end
     end
     return street
   end
 
-
-  ##################################
   ########## FORMAT CITY ###########
-  ##################################
-
 
   def format_city(city)
     city = city&.gsub(/\s/, ' ')&.strip
@@ -169,10 +127,7 @@ module FormatAdr
     return city
   end
 
-
-  ##################################
   ########## FORMAT STATE ##########
-  ##################################
 
   def find_states(states)
     nested_states = []
@@ -204,20 +159,13 @@ module FormatAdr
       if state.present?
         state.upcase!
         valid_state = states_hsh.find { |k,v| state == v }
-        # state = nil if !valid_state.present?
-        return valid_state
+        state_code = valid_state&.last
+        return state_code
       end
     end
   end
 
-
-  ##################################
   ########### FORMAT ZIP ###########
-  ##################################
-
-  # zip = zip&.split('-')&.first
-  # zip = nil if zip&.scan(/[A-Za-z]/)&.any?
-
 
   #CALL: Formatter.new.format_zip(zip)
   def format_zip(zip)
@@ -232,25 +180,21 @@ module FormatAdr
     return zip
   end
 
-
-  ##################################
   ############# ADR PIN ############
-  ##################################
-
 
   # CALL: Formatter.new.generate_pin(street, zip)
-  def generate_pin(street, zip)
-    if street && zip
-      pin = nil
-      street_parts = street.split(" ")
-      street_num = street_parts[0]
-      street_num = street_num.tr('^0-9', '')
-      new_zip = zip.strip
-      new_zip = zip[0..4]
-      pin = "z#{new_zip}-s#{street_num}"
-      return pin
-    end
-  end
+  # def generate_pin(street, zip)
+  #   if street && zip
+  #     pin = nil
+  #     street_parts = street.split(" ")
+  #     street_num = street_parts[0]
+  #     street_num = street_num.tr('^0-9', '')
+  #     new_zip = zip.strip
+  #     new_zip = zip[0..4]
+  #     pin = "z#{new_zip}-s#{street_num}"
+  #     return pin
+  #   end
+  # end
 
 
 end

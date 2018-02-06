@@ -18,6 +18,7 @@ class VerUrl
     @obj_in_grp = 20
     @timeout = 10 ## below
     @cut_off = 30.days.ago
+    # @cut_off = 1.minute.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
@@ -25,22 +26,21 @@ class VerUrl
 
 
   def get_query
-    delete_fwd_web_dups ## Removes duplicates
     ## Nil Sts Query ##
-    query = Web.select(:id).where(urlx: FALSE, url_ver_sts: nil).order("updated_at ASC").pluck(:id)
+    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: nil).order("updated_at ASC").pluck(:id)
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid']
-    query = Web.select(:id).where(urlx: FALSE, url_ver_sts: val_sts_arr).where('url_ver_date < ? OR url_ver_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
+    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: val_sts_arr).where('url_date < ? OR url_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
     if !query.any?
       err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-      query = Web.select(:id).where(urlx: FALSE, url_ver_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
+      query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
       @timeout = 60
 
       if query.any? && @make_urlx
-        query.each { |id| web_obj = Web.find(id).update(urlx: TRUE) }
+        query.each { |id| act_obj = Act.find(id).update(urlx: TRUE) }
         query = [] ## reset
         @make_urlx = FALSE
       elsif query.any?
@@ -78,71 +78,49 @@ class VerUrl
 
 
   def template_starter(id)
-    web_obj = Web.find(id)
-    if web_obj.present?
-      web_url = web_obj.url
-      formatted_url = @formatter.format_url(web_url)
-      if !formatted_url.present? ## If nil, url is bad, and ends current process.
-        invalid_hsh = {urlx: TRUE, sts_code: nil, url_ver_sts: 'Invalid', url_ver_date: Time.now}
-        web_obj.update(invalid_hsh)
-      elsif formatted_url != web_url ## Creates fwd_web_obj, which goes to end of next queue.
-        fwd_web_obj = Web.find_or_create_by(url: formatted_url)
-        AssocWeb.transfer_web_associations(web_obj, fwd_web_obj)
-      else  ####### CURL-BEGINS - FORMATTED URLS ONLY!! #######
-        curl_hsh = start_curl(formatted_url)
-        err_msg = curl_hsh[:err_msg]
-        if !err_msg.present?
-          update_db(web_obj, curl_hsh)
-        elsif err_msg == "Error: Timeout" || err_msg == "Error: Host"
-          puts "err_msg: #{err_msg}"
-          web_obj.update(urlx: FALSE, url_ver_sts: err_msg, url_ver_date: Time.now)
-        else
-          web_obj.update(urlx: TRUE, sts_code: nil, url_ver_sts: err_msg, url_ver_date: Time.now)
-        end
+    act_obj = Act.find(id)
+    web_url = act_obj.url
+    formatted_url = @formatter.format_url(web_url)
+    if !formatted_url.present?
+      ## If nil, url is bad, and ends current process.
+      invalid_hsh = {urlx: TRUE, url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now}
+      act_obj.update(invalid_hsh)
+      return ## Stop Here.  Don't run Curl Below.
+    elsif formatted_url != web_url
+      ## These may continue to run Curl.
+      act_obj.update(url: formatted_url)
+    end
+
+    ####### CURL-BEGINS - FORMATTED URLS ONLY!! #######
+    if formatted_url.present?
+      curl_hsh = start_curl(formatted_url)
+      err_msg = curl_hsh[:err_msg]
+      if !err_msg.present?
+        update_db(act_obj, curl_hsh)
+      elsif err_msg == "Error: Timeout" || err_msg == "Error: Host"
+        puts "err_msg: #{err_msg}"
+        act_obj.update(urlx: FALSE, url_sts: err_msg, url_date: Time.now)
+      else
+        act_obj.update(urlx: TRUE, url_sts_code: nil, url_sts: err_msg, url_date: Time.now)
       end
     end
   end
 
 
-  def update_db(web_obj, curl_hsh)
-    web_url = web_obj.url
-    sts_code = curl_hsh[:sts_code]
+  def update_db(act_obj, curl_hsh)
+    web_url = act_obj.url
+    url_sts_code = curl_hsh[:url_sts_code]
     curl_url = curl_hsh[:curl_url]
-    print_curl_results(web_url, curl_url, sts_code)
-    web_hsh = {urlx: FALSE, url_ver_sts: 'Valid', sts_code: sts_code, url_ver_date: Time.now}
-    curl_url == web_url ? web_obj.update(web_hsh) : save_fwd_web_obj(web_obj, curl_url)
-    # starter if (id == @last_id) ## Restart, get next batch of ids.
+    print_curl_results(web_url, curl_url, url_sts_code)
+    web_hsh = {urlx: FALSE, url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now}
+    act_obj.update(web_hsh)
   end
 
-
-  def save_fwd_web_obj(web_obj, fwd_url)
-    fwd_web_obj = Web.find_or_create_by(url: fwd_url)
-    AssocWeb.transfer_web_associations(web_obj, fwd_web_obj)
-  end
-
-
-  def delete_fwd_web_dups
-    # web_dup_count = Web.select(:url).group(:url).having("count(*) > 1").size
-    dup_fwd_urls = Web.select(:url).group(:url).having("count(*) > 1").pluck(:url)
-    web_hsh = {urlx: FALSE, url_ver_sts: nil, sts_code: nil, url_ver_date: nil}
-    if dup_fwd_urls.present?
-      puts "\n\nFound Duplicates!"
-      dup_fwd_urls.each do |fwd_url|
-        Web.where(fwd_url: fwd_url).each { |web_obj| web_obj.update(web_hsh) }
-        Web.where(url: fwd_url).destroy_all
-      end
-    else
-      puts "\n\nNo Duplicates!  - All Clear!\n\n"
-    end
-  end
-
-
-  def print_curl_results(web_url, curl_url, sts_code)
+  def print_curl_results(web_url, curl_url, url_sts_code)
     puts "=================================="
     puts "W: #{web_url}"
     puts "C: #{curl_url}"
-    puts "S: #{sts_code}\n\n\n"
+    puts "S: #{url_sts_code}\n\n\n"
   end
-
 
 end

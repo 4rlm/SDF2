@@ -1,12 +1,10 @@
-#######################################
-#CALL: GpAct.new.start_act_goog
-#######################################
+#CALL: GpAct.new.start_gp_act
+######### Delayed Job #########
+# $ rake jobs:clear
 
 module GpRun
 
   def get_spot(act_name, url)
-    act_name = act_name&.gsub(/\s/, ' ')&.strip if act_name.present?
-
     if url.present?
       uri = URI(url)
       host = uri.host
@@ -18,19 +16,21 @@ module GpRun
       query2 = act_name if act_name.present?
       query3 = host if host.present?
 
-      # spots = client.spots_by_query(crm_acct, types: ["car_dealer"])
       spot = @client.spots_by_query(query1, types: ["car_dealer"])&.first if !spot.present? && query1
       spot = @client.spots_by_query(query2, types: ["car_dealer"])&.first if !spot.present? && query2
       spot = @client.spots_by_query(query3, types: ["car_dealer"])&.first if !spot.present? && query3
     rescue
       puts "Google Places Error"
+      binding.pry
       return nil
     end
-
 
     if spot.present?
       ## Process Act Name ##
       act_name = spot.name
+      act_name&.gsub!('.com', ' ')
+      act_name&.gsub!('.net', ' ')
+      act_name&.gsub!('.co', ' ')
       act_name&.gsub!('.', ' ')
       act_name&.gsub!(' Of ', ' of ')
       act_name&.gsub!('Saint', 'St')
@@ -42,64 +42,43 @@ module GpRun
       if spot_adr.present?
         adr_hsh = format_goog_adr(spot_adr)
       else
-        adr_hsh = {adr_gp_sts: 'Invalid', street: nil, city: nil, state: nil, zip: nil, pin: nil}
+        adr_hsh = {street: nil, city: nil, state: nil, zip: nil}
       end
-
-      ## Reformat Act Name w/ City and State ##
-      city = adr_hsh[:city]
-      state = adr_hsh[:state]
-      act_name = "#{act_name} in #{city}" if city.present? && !act_name.include?(city)
-      act_name = "#{act_name}, #{state}" if state.present? && !act_name.include?(state)
-      act_name&.strip!
-      act_name&.squeeze!(" ")
-
 
       ## Process Industry ##
       industries = spot.types ||= []
       industries -= %w(store point_of_interest establishment car_repair)
-      indus = industries.join(' ')
+      gp_indus = industries.join(' ')
 
       ## Get Spot Detail ##
       place_id = spot.place_id
       detail = @client.spot(spot.place_id)
 
-      ## Process Website ##
       website = detail&.website
-      website = @formatter.format_url(website) if website.present?
-
-      ## Process Phone ##
       phone = detail&.formatted_phone_number
+      website = @formatter.format_url(website) if website.present?
       phone = @formatter.validate_phone(phone)
 
       ## Create Result Hashes ##
-      gp_sts_hsh = {
-        act_gp_id: place_id,
-        act_gp_sts: nil,
-        act_gp_date: Time.now
-      }
-
-      gp_hsh = {
-        act_name: act_name,
-        adr: adr_hsh,
+      gp_hsh = { act_name: act_name,
+        street: adr_hsh[:street],
+        city: adr_hsh[:city],
+        state: adr_hsh[:state],
+        zip: adr_hsh[:zip],
+        gp_sts: adr_hsh[:gp_sts],
         url: website,
         phone: phone,
-        indus: indus,
-        gp_sts_hsh: gp_sts_hsh
-      }
+        gp_indus: gp_indus,
+        gp_id: place_id,
+        gp_date: Time.now }
 
-      gp_hsh.values.compact.present? ? validity = 'Valid:gp' : validity = 'Invalid'
-      gp_hsh[:gp_sts_hsh][:act_gp_sts] = validity
+      gp_hsh.values.compact.present? ? validity = 'Valid' : validity = 'Invalid'
+      gp_hsh[:gp_sts] = validity
       return gp_hsh
     end
   end
 
-
-
-
-  ####################################
   ########## HELPER METHODS ##########
-  ####################################
-
 
   #CALL: GpApi.new.format_goog_adr('adr')
   def format_goog_adr(adr)
@@ -107,15 +86,16 @@ module GpRun
       country = adr.split(',').last
       foreign_country = find_foreign_country(country)
       if foreign_country.present?
-        adr_hsh = {adr_gp_sts: 'foreign', street: nil, city: nil, state: nil, zip: nil, pin: nil}
+        adr_hsh = {gp_sts: 'Invalid', street: nil, city: nil, state: nil, zip: nil}
         return adr_hsh
       else
         adr.gsub!('United States', '')
+        adr.gsub!('USA', '')
         adr.squeeze(' ')
         adr.strip!
 
         adrs = adr.split(',').map{|item| item.strip}
-        street, city, state, zip, pin = nil, nil, nil, nil, nil
+        street, city, state, zip = nil, nil, nil, nil
 
         adrs.each do |adr_part|
           splits = adr_part.split(' ')
@@ -126,7 +106,6 @@ module GpRun
           if splits.length == 2
             state = splits0 if splits0.scan(/[A-Z]/).length == 2
             zip = splits1 if splits1.scan(/[0-9]/).length.in?([5, 9])
-            pin = @formatter.generate_pin(street, zip) if street && zip
           end
 
           ## Get Street and City ##
@@ -145,16 +124,13 @@ module GpRun
           zip&.strip!
           zip&.squeeze!(" ")
         end
-        adr_hsh = {adr_gp_sts: 'Valid', street: street, city: city, state: state, zip: zip, pin: pin}
+
+        adr_hsh = {gp_sts: nil, street: street, city: city, state: state, zip: zip}
         return adr_hsh
       end
     end
   end
 
-
-  #######################################
-  # CALL: GpApi.new.find_country('string')
-  #######################################
   def find_foreign_country(act_name)
     if act_name.present?
       countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czechia", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Holy See", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestinian Territories", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"]
@@ -168,14 +144,7 @@ module GpRun
     end
   end
 
-
-
-
-
-  #######################################
   ######### HELPER METHODS BELOW ########
-  #######################################
-
 
   def capitalize_string(string)
     if string.present?
@@ -198,8 +167,6 @@ module GpRun
       return string
     end
   end
-
-
 
 
 end

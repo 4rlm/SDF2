@@ -32,7 +32,7 @@ private
 
   def fetch_acts
     # acts = Act.order("#{sort_column} #{sort_direction}")
-    acts = Act.where(actx: FALSE, act_gp_sts: 'Valid:gp').order("#{sort_column} #{sort_direction}")
+    acts = Act.where(actx: FALSE, gp_sts: 'Valid').order("#{sort_column} #{sort_direction}")
 
     acts = acts.page(page).per_page(per_page)
     if params[:sSearch].present?

@@ -86,13 +86,13 @@ urlx: true
 
 
 ## Edit below to use as format for GpAct query.
- query =  Act.select(:id).where(act_sts: nil, actx: false, act_gp_sts: nil).order("updated_at ASC").pluck(:id).count
+ query =  Act.select(:id).where(act_sts: nil, actx: false, gp_sts: nil).order("updated_at ASC").pluck(:id).count
  *** Then grab web url which is not archived.
 
 
 
 ## Edit below to use as format for update or create new act from GpAct
- #<Act id: 22367, act_name: "Front Range Honda in Colorado Springs, CO", crma: nil, act_sts: nil, act_src: nil, cop: true, actx: false, act_fwd_id: nil, act_gp_sts: nil, act_gp_date: nil, place_id: nil, act_gp_indus: nil, top: nil, ward: 500,
+ #<Act id: 22367, act_name: "Front Range Honda in Colorado Springs, CO", crma: nil, act_sts: nil, act_src: nil, cop: true, actx: false, act_fwd_id: nil, gp_sts: nil, act_gp_date: nil, place_id: nil, act_gp_indus: nil, top: nil, ward: 500,
 
 url_ver_sts: "Valid"
 

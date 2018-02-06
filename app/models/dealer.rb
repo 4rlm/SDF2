@@ -1,2 +1,0 @@
-class Dealer < ApplicationRecord
-end

@@ -3,77 +3,43 @@ class CreateUniActs < ActiveRecord::Migration[5.1]
     create_table :uni_acts do |t|
 
       #### MIGRATES TO: ACT TABLE ####
-      ### act_name is Heart of Acts ##
-      t.string   :act_name, index: true, unique: true, allow_nil: true
-      t.boolean  :actx, default: false
-      ### ActSource related Attrs ##
-      t.string   :crma, index: true, unique: true, allow_nil: true
-      t.boolean  :cop, default: false
-      t.string   :top
-      t.string   :ward
-      ### GpApi related Attrs ##
-      t.string   :act_fwd_id, index: true
-      t.string   :act_gp_sts, index: true
-      t.datetime :act_gp_date, index: true
-      t.string   :act_gp_id, index: true
-      t.string   :act_gp_indus, index: true
-      #####################################
+      ## Account Name
+      t.string  :act_name
+      t.string  :gp_id
 
+      ## Address Info
+      t.string  :street
+      t.string  :city
+      t.string  :state
+      t.string  :zip
 
-      #### MIGRATES TO: ADR TABLE ####
-      ### address fields are Heart of Acts ##
-      t.string  :street, index: true
-      t.string  :city, index: true
-      t.string  :state, index: true
-      t.string  :zip, index: true
-      t.string  :pin, index: true
-      ### GpApi related Attrs ##
-      t.boolean  :adrx, default: false
-      t.string   :adr_fwd_id, index: true
-      t.string   :adr_gp_sts, index: true
-      t.datetime :adr_gp_date, index: true
-      t.string   :adr_gp_id, index: true
-      t.string   :adr_gp_indus, index: true
-      #####################################
-
-
-      #### MIGRATES TO: WEBS TABLE ####
-      ### url (website url) is Heart of Webs ##
-      t.string   :url, index: true, unique: true
-      t.boolean  :urlx, default: false
-      ### VerUrl related Attrs  ##
-      t.string   :fwd_web_id, index: true
-      t.string   :fwd_url, index: true
-      t.string   :url_ver_sts, index: true
-      t.string   :sts_code, index: true
-      t.datetime :url_ver_date, index: true
-      ### FindTemp related Attrs ##
-      t.string   :tmp_sts, index: true
-      t.datetime :tmp_date, index: true
-      ### FindPage related Attrs ##
-      t.string   :slink_sts, index: true
-      t.string   :llink_sts, index: true
-      t.string   :stext_sts, index: true
-      t.string   :ltext_sts, index: true
-      t.datetime :pge_date, index: true
-      ### ActScraper related Attrs ##
-      t.string   :as_sts, index: true
-      t.datetime :as_date, index: true
-      ### ContScraper related Attrs ##
-      t.string   :cs_sts, index: true
-      t.datetime :cs_date, index: true
-      #####################################
-
-
-      #### MIGRATES TO: PHONE TABLE ####
+      ## Extra Info
       t.string  :phone
-      #####################################
-
-
-      #### MIGRATES TO: DEALER TABLE ####
+      t.string  :url
+      t.string  :sts_code
       t.string  :temp_name
-      #####################################
+      t.string  :staff_link
+      t.string  :loc_link
 
+      ## Deprecated
+      t.boolean :actx
+      t.boolean :urlx
+
+      ## Statuses
+      t.string  :gp_sts
+      t.string  :url_sts
+      t.string  :temp_sts
+      t.string  :page_sts
+      t.string  :cs_sts
+      t.string  :gp_indus
+
+      ## Dates
+      t.datetime :tmp_date
+      t.datetime :gp_date
+      t.datetime :page_date
+      t.datetime :url_date
+      t.datetime :cs_date
+      #####################################
 
       #### MIGRATES TO: WHO TABLE ####
       t.string  :ip
