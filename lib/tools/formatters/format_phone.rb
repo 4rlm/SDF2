@@ -12,7 +12,6 @@ module FormatPhone
   ## Checks every phone number in table to verify that it meets phone criteria, then calls format_phone method to format Valid results.  Otherwise destroys Invalid phone fields and associations.
 
   # Call: Formatter.new.validate_phone(phone)
-
   def validate_phone(phone)
     if phone.present?
       phone = phone&.gsub(/\s/, ' ')&.strip

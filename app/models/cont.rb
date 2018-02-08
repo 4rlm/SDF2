@@ -1,4 +1,5 @@
 class Cont < ApplicationRecord
+  validates :full_name, :uniqueness => { :scope => [:act_id] } #=> ALSO IN MIGRATION!
 
   # attribute :full_name, :string
   # before_validation :full_name

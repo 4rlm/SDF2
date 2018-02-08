@@ -1,30 +1,47 @@
+#CALL: ContScraper.new.start_cont_scraper
+
 class CsDealeron
   def initialize
-    @helper = CsHelper.new
+    @cs_helper = CsHelper.new
   end
 
-  def scrape_cont(html, url, indexer)
-    staff_hash_array = []
+  def scrape_cont(noko_page)
+    cs_hsh_arr = []
 
-    if html.css('.staff-row .staff-title')
-      staff_count = html.css('.staff-row .staff-title').count
+    if noko_page.css('.staff-row .staff-title')
+      staff_count = noko_page.css('.staff-row .staff-title').count
       puts "staff_count: #{staff_count}"
-      staffs = html.css(".staff-contact")
+      staffs = noko_page.css(".staff-contact")
 
       for i in 0...staff_count
         staff_hash = {}
-        staff_hash[:full_name] = html.css('.staff-row .staff-title')[i].text.strip
-        staff_hash[:job] = html.css('.staff-desc')[i] ? html.css('.staff-desc')[i].text.strip : ""
+        staff_hash[:full_name] = noko_page.css('.staff-row .staff-title')[i].text.strip
+        staff_hash[:job_desc] = noko_page.css('.staff-desc')[i] ? noko_page.css('.staff-desc')[i].text.strip : ""
 
-        ph_email_hash = @helper.ph_email_scraper(staffs[i])
-        staff_hash[:phone] = ph_email_hash[:phone]
-        staff_hash[:email] = @helper.email_cleaner(ph_email_hash[:email])
-
-        staff_hash_array << staff_hash
+        ph_email_hash = ph_email_scraper(staffs[i])
+        # staff_hash[:phone] = ph_email_hash[:phone]
+        staff_hash[:phone] = Formatter.new.validate_phone(ph_email_hash[:phone])
+        staff_hash[:email] = @cs_helper.email_cleaner(ph_email_hash[:email])
+        cs_hsh_arr << staff_hash
       end
     end
 
-    # @helper.print_result(indexer, url, staff_hash_array)
-    @helper.prep_create_staffer(indexer, staff_hash_array)
+    return cs_hsh_arr
   end
+
+  def ph_email_scraper(staff)
+    if staff&.children&.any?
+      info = {}
+      value_1 = staff&.children[1]&.attributes["href"]&.value if staff.children[1]&.any?
+      value_3 = staff&.children[3]&.attributes["href"]&.value if staff.children[3]&.any?
+
+      info[:phone] = value_1 if value_1&.include?("tel:")
+      info[:email] = value_1 if value_1&.include?("mailto:")
+      info[:phone] = value_3 if value_3&.include?("tel:")
+      info[:email] = value_3 if value_3&.include?("mailto:")
+      return info
+    end
+  end
+
+
 end

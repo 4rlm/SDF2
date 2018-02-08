@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20180121153846) do
     t.string "city"
     t.string "state"
     t.string "zip"
+    t.string "full_address"
     t.string "phone"
     t.string "url"
     t.string "url_sts_code"
@@ -47,6 +48,7 @@ ActiveRecord::Schema.define(version: 20180121153846) do
     t.index ["city"], name: "index_acts_on_city"
     t.index ["cs_date"], name: "index_acts_on_cs_date"
     t.index ["cs_sts"], name: "index_acts_on_cs_sts"
+    t.index ["full_address"], name: "index_acts_on_full_address"
     t.index ["gp_date"], name: "index_acts_on_gp_date"
     t.index ["gp_id"], name: "index_acts_on_gp_id"
     t.index ["gp_indus"], name: "index_acts_on_gp_indus"
@@ -90,21 +92,24 @@ ActiveRecord::Schema.define(version: 20180121153846) do
 
   create_table "conts", force: :cascade do |t|
     t.integer "act_id"
-    t.string "cont_sts"
     t.string "first_name"
     t.string "last_name"
-    t.string "email"
+    t.string "full_name"
     t.string "job_title"
     t.string "job_desc"
+    t.string "email"
+    t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["act_id", "full_name"], name: "index_conts_on_act_id_and_full_name", unique: true
     t.index ["act_id"], name: "index_conts_on_act_id"
-    t.index ["cont_sts"], name: "index_conts_on_cont_sts"
     t.index ["email"], name: "index_conts_on_email"
     t.index ["first_name"], name: "index_conts_on_first_name"
+    t.index ["full_name"], name: "index_conts_on_full_name"
     t.index ["job_desc"], name: "index_conts_on_job_desc"
     t.index ["job_title"], name: "index_conts_on_job_title"
     t.index ["last_name"], name: "index_conts_on_last_name"
+    t.index ["phone"], name: "index_conts_on_phone"
   end
 
   create_table "crmas", force: :cascade do |t|

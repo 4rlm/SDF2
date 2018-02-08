@@ -11,6 +11,7 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.string  :city, index: true
       t.string  :state, index: true
       t.string  :zip, index: true
+      t.string  :full_address, index: true
 
       ## Extra Info
       t.string  :phone, index: true

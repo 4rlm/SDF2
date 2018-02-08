@@ -3,9 +3,10 @@ class CsDealerfire
     @helper = CsHelper.new
   end
 
-  def scrape_cont(html, url, indexer)
-    staffs = html.xpath("//div[@class='staffs-list']/div[@itemprop='employees']")
-    staff_hash_array = []
+  def scrape_cont(noko_page)
+    binding.pry
+    staffs = noko_page.xpath("//div[@class='staffs-list']/div[@itemprop='employees']")
+    cs_hsh_arr = []
 
     staffs.each do |staff|
       staff_hash = {}
@@ -13,8 +14,8 @@ class CsDealerfire
       info_ori = staff.text.split("\n").map {|el| el.delete("\t") }
       infos = info_ori.delete_if {|el| el.blank?}
 
-      jobs = html.css("[@itemprop='jobTitle']").text
-      names = html.css("[@itemprop='name']").text
+      jobs = noko_page.css("[@itemprop='jobTitle']").text
+      names = noko_page.css("[@itemprop='name']").text
 
       infos.each do |info|
         num_reg = Regexp.new("[0-9]+")
@@ -33,10 +34,9 @@ class CsDealerfire
       email_reg = regex.match(data)
       staff_hash[:email] = email_reg.to_s if email_reg
 
-      staff_hash_array << staff_hash
+      cs_hsh_arr << staff_hash
     end
 
-    # @helper.print_result(indexer, url, staff_hash_array)
-    @helper.prep_create_staffer(indexer, staff_hash_array)
+    return cs_hsh_arr
   end
 end
