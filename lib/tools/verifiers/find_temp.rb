@@ -15,7 +15,7 @@ class FindTemp
     @dj_count_limit = 5
     @workers = 4
     @obj_in_grp = 40
-    @timeout = 5
+    @timeout = 10
     @cut_off = 30.days.ago
     @make_urlx = FALSE
     @mig = Mig.new

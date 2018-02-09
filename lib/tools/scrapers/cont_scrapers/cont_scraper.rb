@@ -25,7 +25,7 @@ class ContScraper
 
   def get_query
     ## Nil Sts Query ##
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', temp_name: 'Dealer Inspire', cs_sts: nil).order("updated_at ASC").pluck(:id)
+    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', temp_name: 'Cobalt', cs_sts: nil).order("updated_at ASC").pluck(:id)
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid']
@@ -108,19 +108,19 @@ class ContScraper
 
         if template.present?
           case template
-          when "Dealer.com"
+          when "Dealer.com" ## Good
             cs_hsh_arr = CsDealerCom.new.scrape_cont(noko_page)
-          when "Cobalt"
+          when "Cobalt" ## Good - alpha
             cs_hsh_arr = CsCobalt.new.scrape_cont(noko_page)
-          when "DealerOn"
+          when "DealerOn" ## Good - alpha
             cs_hsh_arr = CsDealeron.new.scrape_cont(noko_page)
-          when "Dealer Direct"
+          when "Dealer Direct" ## Good - alpha
             cs_hsh_arr = CsDealerDirect.new.scrape_cont(noko_page)
-          when "Dealer Inspire"
+          when "Dealer Inspire" ## Good - alpha
             cs_hsh_arr = CsDealerInspire.new.scrape_cont(noko_page)
-          when "DealerFire"
+          when "DealerFire" ## Good - alpha
             cs_hsh_arr = CsDealerfire.new.scrape_cont(noko_page)
-          when "DEALER eProcess"
+          when "DEALER eProcess" ## Good - alpha
             cs_hsh_arr = CsDealerEprocess.new.scrape_cont(noko_page)
           else
             cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page)
@@ -139,7 +139,7 @@ class ContScraper
 
   #CALL: ContScraper.new.start_cont_scraper
   def update_db(act_obj, cs_hsh_arr)
-    cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
+    # cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
     puts cs_hsh_arr
 
     if !cs_hsh_arr.any?
@@ -156,6 +156,5 @@ class ContScraper
       act_obj.update(cs_sts: 'Valid', cs_date: Time.now)
     end
   end
-
 
 end

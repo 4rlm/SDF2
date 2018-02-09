@@ -5,6 +5,7 @@ class CsDealeron
     @cs_helper = CsHelper.new
   end
 
+
   def scrape_cont(noko_page)
     cs_hsh_arr = []
 
@@ -26,8 +27,24 @@ class CsDealeron
       end
     end
 
+    if !cs_hsh_arr.any?
+      staffs_arr = []
+      staffs_arr << noko_page.css('.staff-row .staff-title')
+      staffs_arr << noko_page.css('.staff-contact')
+      staffs_arr << noko_page.css('#staffList .staff')
+      staffs_arr << noko_page.css('#myTabContent .container_div')
+      staffs_arr << noko_page.css('.teamSection .teamMember')
+
+      # staffs_arr << noko_page.css('#content-main .employee_info') ## Close, but needs work.
+      cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
+    end
+
+    # binding.pry if !cs_hsh_arr.any?
+
+    puts cs_hsh_arr
     return cs_hsh_arr
   end
+
 
   def ph_email_scraper(staff)
     if staff&.children&.any?
