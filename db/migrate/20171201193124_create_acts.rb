@@ -19,7 +19,7 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.string  :url_sts_code, index: true
       t.string  :temp_name, index: true
       t.string  :staff_link, index: true
-      t.string  :loc_link, index: true
+      t.string  :staff_text, index: true
 
       ## Deprecated
       t.boolean :actx, default: false

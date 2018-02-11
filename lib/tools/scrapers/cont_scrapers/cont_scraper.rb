@@ -14,16 +14,39 @@ class ContScraper
     @dj_count_limit = 5
     @workers = 4
     @obj_in_grp = 40
-    @timeout = 5
+    @timeout = 10
     @count = 0
-    @cut_off = 30.days.ago
+    @cut_off = 6.hours.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
     @cs_helper = CsHelper.new
+    @valid_text_ids = []
   end
 
   def get_query
+
+    # staff_links = %w(/meetourdepartments /aboutus.aspx /dealership/staff.htm /about-us /aboutus /about-us.htm /dealerprofile.aspx /about-us.html /lcertified /about-us/ /welcome)
+    #
+    # staff_links.each do |staff_link|
+    #   @valid_text_ids << staff_link
+    #   puts @valid_text_ids
+    #   query = Act.select(:id).where(staff_link: staff_link).order("updated_at ASC").pluck(:id)
+    #   puts query.count
+    #   binding.pry
+    #   print_query_stats(query)
+    #   return query
+    # end
+
+    ## FOLLOW UP WITH BELOW QUERY.  CHECK IF IT GOT ANY ##
+    # texts = Act.where(staff_link: staff_link).pluck(:staff_text).sort
+    # acts = Act.where(staff_link: staff_link, cs_sts: 'Invalid').count
+    # binding.pry
+    # return
+    ######### SPECIAL TESTING ABOVE ########
+
+
+
     ## Nil Sts Query ##
     query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', temp_name: 'Cobalt', cs_sts: nil).order("updated_at ASC").pluck(:id)
 
@@ -63,6 +86,9 @@ class ContScraper
       query = get_query
       break if !query.any?
     end
+
+    puts @valid_text_ids
+    binding.pry
   end
 
   def setup_iterator(query)
@@ -79,18 +105,6 @@ class ContScraper
 
     if staff_link.present?
 
-      if staff_link.include?('card')
-        staff_link = '/MeetOurDepartments'
-        act_obj.update(staff_link: staff_link)
-        binding.pry
-      end
-
-      # if staff_link.include?('miscpage')
-      #   staff_link = '/Staff'
-      #   act_obj.update(staff_link: staff_link)
-      #   binding.pry
-      # end
-
       full_staff_link = "#{act_obj.url}#{staff_link}"
       puts "full_staff_link: #{full_staff_link}"
 
@@ -100,6 +114,7 @@ class ContScraper
       act_update_hsh = { cs_date: Time.now }
 
       if err_msg.present?
+        # binding.pry
         puts err_msg
         act_update_hsh[:cs_sts] = err_msg
         act_obj.update(act_update_hsh)
@@ -122,13 +137,13 @@ class ContScraper
             cs_hsh_arr = CsDealerfire.new.scrape_cont(noko_page)
           when "DEALER eProcess" ## Good - alpha
             cs_hsh_arr = CsDealerEprocess.new.scrape_cont(noko_page)
-          else
-            cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page)
+          # else
+          #   cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page)
           end
           update_db(act_obj, cs_hsh_arr)
-        else
-          cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page)
-          update_db(act_obj, cs_hsh_arr)
+        # else
+        #   cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page)
+        #   update_db(act_obj, cs_hsh_arr)
         end
       end
     else
@@ -142,12 +157,13 @@ class ContScraper
     # cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
     puts cs_hsh_arr
 
-    if !cs_hsh_arr.any?
-      binding.pry
+    if !cs_hsh_arr&.any?
       act_obj.update(cs_sts: 'Invalid', cs_date: Time.now)
       return
     else
       act_id = act_obj.id
+      @valid_text_ids << act_id
+
       cs_hsh_arr.each do |cs_hsh|
         cs_hsh[:act_id] = act_id
         cont_obj = Cont.find_by(act_id: act_id, full_name: cs_hsh[:full_name], email: cs_hsh[:email])

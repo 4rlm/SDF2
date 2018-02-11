@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180121153846) do
+ActiveRecord::Schema.define(version: 20180210050614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20180121153846) do
     t.string "url_sts_code"
     t.string "temp_name"
     t.string "staff_link"
-    t.string "loc_link"
+    t.string "staff_text"
     t.boolean "actx", default: false
     t.boolean "urlx", default: false
     t.string "gp_sts"
@@ -53,11 +53,11 @@ ActiveRecord::Schema.define(version: 20180121153846) do
     t.index ["gp_id"], name: "index_acts_on_gp_id"
     t.index ["gp_indus"], name: "index_acts_on_gp_indus"
     t.index ["gp_sts"], name: "index_acts_on_gp_sts"
-    t.index ["loc_link"], name: "index_acts_on_loc_link"
     t.index ["page_date"], name: "index_acts_on_page_date"
     t.index ["page_sts"], name: "index_acts_on_page_sts"
     t.index ["phone"], name: "index_acts_on_phone"
     t.index ["staff_link"], name: "index_acts_on_staff_link"
+    t.index ["staff_text"], name: "index_acts_on_staff_text"
     t.index ["state"], name: "index_acts_on_state"
     t.index ["street"], name: "index_acts_on_street"
     t.index ["temp_name"], name: "index_acts_on_temp_name"
@@ -143,6 +143,13 @@ ActiveRecord::Schema.define(version: 20180121153846) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "links", force: :cascade do |t|
+    t.integer "count"
+    t.string "temp_name"
+    t.string "staff_link"
+    t.index ["staff_link"], name: "index_links_on_staff_link"
+  end
+
   create_table "terms", force: :cascade do |t|
     t.string "category"
     t.string "sub_category"
@@ -151,6 +158,13 @@ ActiveRecord::Schema.define(version: 20180121153846) do
     t.string "mth_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "texts", force: :cascade do |t|
+    t.integer "count"
+    t.string "temp_name"
+    t.string "staff_text"
+    t.index ["staff_text"], name: "index_texts_on_staff_text"
   end
 
   create_table "uni_acts", force: :cascade do |t|

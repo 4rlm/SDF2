@@ -14,7 +14,7 @@ class GpAct
     @obj_in_grp = 40
     @timeout = 10
     @count = 0
-    @cut_off = 30.days.ago
+    @cut_off = 5.days.ago
     # @prior_query_count = 0
     # @make_urlx = FALSE
     @gp = GpApi.new
@@ -24,10 +24,13 @@ class GpAct
 
   def get_query
     ## Nil Query
-    query = Act.select(:id).where(actx: FALSE, gp_sts: nil, gp_id: nil).order("updated_at ASC").pluck(:id)
+    query = Act.select(:id).where(actx: FALSE, gp_sts: nil, gp_id: nil).order("id ASC").pluck(:id)
+
     ## Valid Sts Query ##
-    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid').order("updated_at ASC").pluck(:id) if !query.present?
+    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid').where('gp_date < ? OR gp_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.present?
+
     print_query_stats(query)
+    sleep(1)
     return query
   end
 
@@ -61,8 +64,8 @@ class GpAct
     url = cur_act_obj.url
 
     ## Remove Undesirable Words from Act Name before sending to Goog ##
-    invalid_list = ["service", "services", "contract", "parts", "collision", "repairs", "repair", "credit", "loan", "department", "dept", "and", "safety", "safe", "equipment"]
-    invalid_list += ["equip", "body", "shop", "wash", "detailing", "detail", "finance", "financial"]
+    invalid_list = %w(service services contract parts collision repairs repair credit loan department dept and safety safe equipment equip body shop wash detailing detail finance financial mobile rv motorsports mobility)
+
     inval_hsh = @formatter.remove_invalids(act_name, invalid_list)
     act_name = inval_hsh[:act_name]
 
@@ -80,8 +83,6 @@ class GpAct
   end
 
 
-
-
   #CALL: GpAct.new.start_gp_act
   def update_db(cur_act_obj, gp_hsh)
     act_name = cur_act_obj.act_name
@@ -89,6 +90,7 @@ class GpAct
     url = cur_act_obj.url
 
     if gp_hsh&.values&.compact&.present?
+      ## Destroys acts based on duplicate gp_id.
       if !cur_act_obj.gp_id.present?
         objs = [Act.find_by(gp_id: gp_hsh[:gp_id])].compact
         if objs.any?
@@ -98,22 +100,67 @@ class GpAct
           objs[1..-1].each {|act| act.destroy}
         end
       end
-      cur_act_obj.update(gp_hsh)
+      # valid_name = destroy_invalid_act_names(cur_act_obj, gp_hsh[:act_name], gp_hsh[:url])
+      # return if !valid_name
     else
-      cur_act_obj.update(gp_sts: 'Invalid', gp_date: Time.now)
+      gp_hsh = {gp_sts: 'Invalid', gp_date: Time.now}
     end
+
+    cur_act_obj.update(gp_hsh)
+
+    # if gp_hsh&.values&.compact&.present?
+    #   if !cur_act_obj.gp_id.present?
+    #     objs = [Act.find_by(gp_id: gp_hsh[:gp_id])].compact
+    #     if objs.any?
+    #       objs << cur_act_obj
+    #       objs = objs.sort_by(&:id)
+    #       cur_act_obj = objs.first
+    #       objs[1..-1].each {|act| act.destroy}
+    #     end
+    #   end
+    #   cur_act_obj.update(gp_hsh)
+    # else
+    #   cur_act_obj.update(gp_sts: 'Invalid', gp_date: Time.now)
+    # end
   end
 
-
-  ##Call: GpAct.new.delete_dups
-  # def delete_dups
-  #   dup_gp_ids = Act.select(:gp_id).group(:gp_id).having("count(*) > 1")&.pluck(:gp_id)&.compact
-  #   if dup_gp_ids.present?
-  #     dup_gp_ids.each do |gp_id|
-  #       Act.where(gp_id: gp_id).order("created_at DESC")&.first&.destroy
-  #     end
+  # CALL: GpAct.new.runner_to_destroy
+  # def runner_to_destroy
+  #   acts = Act.where(gp_sts: 'Valid').where.not(url: nil).each do |act|
+  #     valid_name = destroy_invalid_act_names(act, act.act_name, act.url)
   #   end
   # end
+
+  # def destroy_invalid_act_names(act_obj, act_name, url)
+    ## Destroys acts based on invalid act_name or url
+    # invalid_act_names = ['alarm', 'audio', ' tow ', 'contract', 'parts', 'collisi', 'credit', 'equip', 'body ', 'detail', 'finan', ' loan', 'mobile home', 'motorsport', 'system', 'repair', ' rv ', 'safe', ' wash ']
+    # invalid_act_names += ['insur', ' bank', 'home ', ' auction', ' oil ', 'lube', 'quick', 'express ', 'extreme', 'speed' ]
+
+    # invalid_act_names = %w(finan alarm credit mobility mobilehome repair motorsport insur auction lube quick tire atv 4x4 harley)
+    # invalid_act_names = %w(mobility mobilehome motorsport insur auction tire atv 4x4)
+    # invalid_act_names = %w(mobility mobilehome motorsport insur atv 4x4)
+
+
+
+    # act_name = " #{act_name&.downcase} " if act_name.present?
+    # url = " #{url&.downcase} " if url.present?
+
+    # invalid_act_names.each do |inval|
+    #   # if act_name&.include?(inval) || url&.include?(inval)
+    #   if url&.include?(inval)
+    #     puts "\n\n=======\ninval: #{inval}"
+    #     puts "url: #{url}"
+    #     puts "act_name: #{act_name}"
+    #     # binding.pry
+    #
+    #     act_obj.destroy
+    #     return false ## not valid
+    #   end
+    # end
+
+    # return true ## valid
+  # end
+
 
 
 end

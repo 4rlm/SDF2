@@ -37,7 +37,7 @@ class VerUrl
     if !query.any?
       err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
       query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
-      @timeout = 60
+      @timeout = 30
 
       if query.any? && @make_urlx
         query.each { |id| act_obj = Act.find(id).update(urlx: TRUE) }

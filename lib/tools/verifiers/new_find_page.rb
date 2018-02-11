@@ -14,9 +14,9 @@ class FindPage
     @dj_count_limit = 5
     @workers = 4
     @obj_in_grp = 50
-    @timeout = 5
+    @timeout = 10
     @count = 0
-    @cut_off = 3.hour.ago
+    @cut_off = 7.hours.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
@@ -34,14 +34,14 @@ class FindPage
     # @tally_staff_texts = Text.order("count DESC").pluck(:staff_text)
 
     ## Nil Sts Query ##
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: nil).order("id ASC").pluck(:id)
+    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: nil).order("updated_at ASC").pluck(:id)
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid']
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: val_sts_arr).where('page_date < ? OR page_date IS NULL', @cut_off).order("page_date ASC").pluck(:id) if !query.any?
+    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: val_sts_arr).where('page_date < ? OR page_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
 
     ## Invalid Sts Query ##
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: "Invalid").where('page_date < ? OR page_date IS NULL', @cut_off).order("page_date ASC").pluck(:id) if !query.any?
+    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: "Invalid").where('page_date < ? OR page_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
     if !query.any?
@@ -83,7 +83,6 @@ class FindPage
     @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
 
-
   def template_starter(id)
     act_obj = Act.find(id)
     url = act_obj.url
@@ -96,71 +95,68 @@ class FindPage
       if err_msg.present?
         act_obj.update(page_sts: err_msg, page_date: Time.now)
       elsif noko_page.present?
-        parsed_hsh = parse_page(noko_page, url, act_obj.temp_name)
-        staff_link = parsed_hsh[:staff_link]
-        staff_text = parsed_hsh[:staff_text]
-        puts parsed_hsh
+        parsed_hsh = parse_page(noko_page, url)
 
-        staff_link.present? ? page_sts = 'Valid' : page_sts = 'Invalid'
-        act_obj.update(staff_link: staff_link, staff_text: staff_text, page_sts: page_sts, page_date: Time.now)
+        if !parsed_hsh.values.compact.empty?
+          staff_text = parsed_hsh[:staff_text]
+          staff_link = parsed_hsh[:staff_link]
+          staff_link = '/meetourdepartments' if staff_link&.include?('card')
+          puts staff_link
+          puts staff_text
+
+          act_obj.update(staff_link: staff_link, staff_text: staff_text, page_sts: 'Valid', page_date: Time.now)
+        else
+          act_obj.update(staff_link: nil, staff_text: nil, page_sts: 'Invalid', page_date: Time.now)
+        end
+
         puts act_obj
       end
     end
   end
 
 
+
+
+
   #CALL: FindPage.new.start_find_page
-  def parse_page(noko_page, url, temp_name)
-    stock_hsh = get_stocks(temp_name)
-    stock_texts = stock_hsh[:stock_texts]
-    parsed_hsh = {}
+  def parse_page(noko_page, url)
+    if noko_page.present?
+      parsed_hsh = {}
+      noko_page.links.each do |noko_link|
+        # staff_link = noko_link&.href&.downcase&.strip
+        staff_link = @formatter.format_link(url, noko_link&.href)
+        staff_text = noko_link.text&.downcase&.gsub!(/\W/,'')
 
-    stock_texts.each do |stock_text|
-      # stock_text = stock_text.downcase&.strip
-      binding.pry
-      stock_text = stock_text.downcase&.gsub(/\W/,'')
+        if is_banned(staff_link, staff_text) != true
 
-      if stock_text.present?
-        noko_page.links.each do |noko_text_link|
-          # noko_text = noko_text_link.text&.downcase&.strip
-          binding.pry
-          noko_text = noko_text_link.text&.downcase&.gsub(/\W/,'')
-
-          if noko_text&.include?(stock_text)
-            noko_link = noko_text_link&.href&.downcase&.strip
-            parsed_hsh[:staff_text] = noko_text
-            parsed_hsh[:staff_link] = @formatter.format_link(url, noko_link)
-            return parsed_hsh
+          if parsed_hsh.values.compact.empty?
+            @tally_staff_links.each do |tally_staff_link|
+              if tally_staff_link.downcase == staff_link
+                parsed_hsh[:staff_link] = staff_link
+                parsed_hsh[:staff_text] = staff_text
+                puts parsed_hsh
+                return parsed_hsh
+              end
+            end
           end
+
+          if parsed_hsh.values.compact.empty?
+            @tally_staff_texts.each do |tally_staff_text|
+              if tally_staff_text == staff_text
+                parsed_hsh[:staff_link] = staff_link
+                parsed_hsh[:staff_text] = staff_text
+                puts parsed_hsh
+                return parsed_hsh
+              end
+            end
+          end
+
         end
       end
+
+      return parsed_hsh
     end
-
-    if parsed_hsh.values.compact.empty?
-      stock_links = stock_hsh[:stock_links]
-      stock_links.each do |stock_link|
-        stock_link = stock_link.downcase&.strip
-
-         noko_page.links.each do |noko_text_link|
-          noko_link = noko_text_link&.href&.downcase&.strip
-          noko_link = @formatter.format_link(url, noko_link)
-
-          if noko_link&.include?(stock_link)
-            # noko_text = noko_text_link.text&.downcase&.strip
-            binding.pry
-            noko_text = noko_text_link.text&.downcase&.gsub(/\W/,'')
-
-            parsed_hsh[:staff_text] = noko_text
-            parsed_hsh[:staff_link] = noko_link
-            return parsed_hsh
-          end
-        end
-      end
-    end
-    return parsed_hsh
   end
-
-
 
   #CALL: FindPage.new.start_find_page
   def is_banned(staff_link, staff_text)
@@ -180,30 +176,19 @@ class FindPage
   ############ HELPER METHODS BELOW ################
 
   def format_href_list(arr)
-    # arr.map! { |str| format_href(str) }.uniq!
+    arr.map! { |str| format_href(str) }.uniq!
     arr.delete("meetourdepartments")
     arr << "meetourdepartments" ## Should be last in arr.
     return arr
   end
 
-  # def format_href(href)
-  #   if href.present?
-  #     href = href.downcase
-  #     href = href.gsub(/[^A-Za-z0-9]/, '')
-  #     return href if href.present?
-  #   end
-  # end
-
-
-  def get_stocks(temp_name)
-    special_templates = ["Cobalt", "Dealer Inspire", "DealerFire"]
-    temp_name = 'general' if !special_templates.include?(temp_name)
-
-    stock_texts = Term.where(sub_category: "staff_text").where(criteria_term: temp_name).map(&:response_term)
-    stock_links = format_href_list(Term.where(sub_category: "staff_href").where(criteria_term: temp_name).map(&:response_term))
-    return {stock_texts: stock_texts, stock_links: stock_links}
+  def format_href(href)
+    if href.present?
+      href = href.downcase
+      href = href.gsub(/[^A-Za-z0-9]/, '')
+      return href if href.present?
+    end
   end
-
 
 
 end

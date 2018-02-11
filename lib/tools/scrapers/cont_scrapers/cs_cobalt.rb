@@ -32,11 +32,8 @@ class CsCobalt
 
     cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
     puts cs_hsh_arr
-    binding.pry
-
 
     if !cs_hsh_arr.any?
-      binding.pry
       staffs_arr = []
       staffs_arr << noko_page.css('.staffList .staff')
       staffs_arr << noko_page.css(".deck [@itemprop='employee']")
@@ -49,7 +46,7 @@ class CsCobalt
       cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
     end
 
-    binding.pry if !cs_hsh_arr.any?
+    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
 
 

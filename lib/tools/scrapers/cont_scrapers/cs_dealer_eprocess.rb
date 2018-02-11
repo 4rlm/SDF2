@@ -41,11 +41,8 @@ class CsDealerEprocess
 
     cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
     puts cs_hsh_arr
-    binding.pry
-
 
     if !cs_hsh_arr.any?
-      binding.pry
       staffs_arr = []
       staffs_arr << noko_page.css('.employee_wrap')
       staffs_arr << noko_page.css('.employee_wrapper .employee_wrap_staff')
@@ -53,7 +50,7 @@ class CsDealerEprocess
       cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
     end
 
-    binding.pry if !cs_hsh_arr.any?
+    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
   end
 end
