@@ -25,6 +25,12 @@ class GpAct
   def get_query
     ## Nil Query
     query = Act.select(:id).where(actx: FALSE, gp_sts: nil, gp_id: nil).order("id ASC").pluck(:id)
+    query = Act.select(:id).where(gp_id: nil).where('gp_date < ? OR gp_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.present?
+
+    puts query.count
+    sleep(1)
+
+
 
     ## Valid Sts Query ##
     query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid').where('gp_date < ? OR gp_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.present?

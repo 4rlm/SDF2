@@ -13,11 +13,6 @@ module Reporter
 
 
 
-  ## IMPORTANT!
-  # conts = Act.where("staff_link LIKE '%card%'").each { |cont| cont.update(staff_link: '/MeetOurDepartments') }
-
-  # acts = Act.where.not(staff_link: nil).count
-
   #CALL: Reporter.get_both_tallies
   def self.get_both_tallies
     prep_tally
@@ -28,20 +23,43 @@ module Reporter
   #CALL: Reporter.prep_tally
   def self.prep_tally
 
-    # Downcase and Compacts staff_text
-    acts = Act.where.not(staff_text: nil).map do |act|
-      staff_text = act.staff_text.downcase&.gsub(/\W/,'')
-      act.update(staff_text: staff_text)
+    ## Format Term Texts
+    terms = Term.where(sub_category: "staff_text").map do |term|
+      staff_text = term.response_term.downcase&.gsub(/\W/,'')
+      staff_text = staff_text.strip
+      term.update(response_term: staff_text)
     end
 
-    ## DELETE ACTS
+    ## Format Term Hrefs
+    terms = Term.where(sub_category: "staff_href").map do |term|
+      staff_href = term.response_term.downcase
+      staff_href = "/#{staff_href}" if staff_href[0] != "/"
+      staff_href = staff_href.strip
+      term.update(response_term: staff_href)
+    end
+
+    ######## SPECIAL-RARE ABOVE ####
+
+    # Downcase and Compacts staff_text
+    formatter = Formatter.new
+    acts = Act.where.not(staff_text: nil).map do |act|
+      staff_text = act.staff_text.downcase&.gsub(/\W/,'')
+      staff_link = formatter.format_link(act.url, act.staff_link)
+      staff_link = nil if staff_link == "/about-us"
+      act.update(staff_text: staff_text, staff_link: staff_link)
+    end
+
+    ## ACTS - Make Nil
     make_nil_hsh = {page_sts: 'Invalid', staff_text: nil, staff_link: nil }
-    Act.where(staff_link: "/#").each {|act| act.update(make_nil_hsh)}
-    Act.where(page_sts: 'Valid', staff_link: nil ).each {|act| act.update(make_nil_hsh)}
+    Act.where(staff_link: nil).each {|act| act.update(make_nil_hsh)}
+    Act.where("staff_link LIKE '%card%'").each {|act| act.update(staff_link: '/meetourdepartments')}
 
-    banned = %w(404 appl approve body career center click collision contact coupon credit customer demo direction discl drive employ espaol fact finan get google guarantee habla history home hour inventory javascript job join lease legal locat lube mail map match offers oil open opportunit part phone place pre price quick rating review schedule search service special story survey tel test text tour trade value vehicle video virtual website welcome what why)
+    strict_ban = %w(/about-us /about.htm /departments.aspx /index.htm /meetourdepartments)
+    strict_ban.each { |ban| Act.where(staff_link: ban).each {|act| act.update(make_nil_hsh)} }
 
-    banned.each do |ban|
+    light_ban = %w(404 appl approve body career center click collision contact customer demo direction discl drive employ espaol finan get google guarantee habla history home hour inventory javascript job join lease legal lube mail map match offers oil open opportunit parts phone place price quick rating review sales_tab schedule search service special survey tel test text trade value vehicle video virtual websiteby welcome why)
+
+    light_ban.each do |ban|
       acts = Act.where("staff_link LIKE '%#{ban}%'").each {|act| act.update(make_nil_hsh)}
       acts = Act.where("staff_text LIKE '%#{ban}%'").each {|act| act.update(make_nil_hsh)}
     end
@@ -52,7 +70,8 @@ module Reporter
     Link.destroy_all
     reset_primary_ids
 
-    staff_links = Act.where.not(staff_link: nil).map { |act| act.staff_link }
+    # staff_links = Act.where.not(staff_link: nil).map { |act| act.staff_link }
+    staff_links = Act.where(cs_sts: 'Valid').map { |act| act.staff_link }
     ranked_links = Hash[staff_links.group_by {|x| x}.map {|k,v| [k,v.count]}]
     sorted_links = ranked_links.sort_by{|k,v| v}.reverse.to_h
 
@@ -60,7 +79,7 @@ module Reporter
       link_name = link_arr.first
       count = link_arr.last
 
-      if count > 1
+      if count > 5
         link_hsh = {staff_link: link_name, count: count}
         link_obj = Link.find_by(staff_link: link_name)&.update(link_hsh)
         link_obj = Link.create(link_hsh) if !link_obj.present?
@@ -79,7 +98,8 @@ module Reporter
     Text.destroy_all
     reset_primary_ids
 
-    staff_texts = Act.where.not(staff_text: nil).map { |act| act.staff_text }
+    # staff_texts = Act.where.not(staff_text: nil).map { |act| act.staff_text }
+    staff_texts = Act.where(cs_sts: 'Valid').map { |act| act.staff_text }
     ranked_texts = Hash[staff_texts.group_by {|x| x}.map {|k,v| [k,v.count]}]
     sorted_texts = ranked_texts.sort_by{|k,v| v}.reverse.to_h
 
@@ -87,7 +107,7 @@ module Reporter
       text_name = text_arr.first
       count = text_arr.last
 
-      if count > 1
+      if count > 5
         text_hsh = {staff_text: text_name, count: count}
         text_obj = Text.find_by(staff_text: text_name)&.update(text_hsh)
         text_obj = Text.create(text_hsh) if !text_obj.present?

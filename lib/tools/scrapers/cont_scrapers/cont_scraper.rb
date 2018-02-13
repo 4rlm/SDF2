@@ -10,7 +10,7 @@ class ContScraper
   include Noko
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 5
     @workers = 4
     @obj_in_grp = 40
@@ -48,7 +48,9 @@ class ContScraper
 
 
     ## Nil Sts Query ##
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', temp_name: 'Cobalt', cs_sts: nil).order("updated_at ASC").pluck(:id)
+    # query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', temp_name: 'Cobalt', cs_sts: nil).order("updated_at ASC").pluck(:id)
+
+    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid']

@@ -16,34 +16,36 @@ class FindTemp
     @workers = 4
     @obj_in_grp = 40
     @timeout = 10
-    @cut_off = 30.days.ago
+    @cut_off = 10.days.ago
     @make_urlx = FALSE
     @mig = Mig.new
   end
 
   def get_query
     ## Nil Sts Query ##
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: nil).order("updated_at ASC").pluck(:id)
+    query = Act.select(:id).where(url_sts: 'Valid', temp_sts: nil).order("id ASC").pluck(:id)
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid']
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: val_sts_arr).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
+    query = Act.select(:id).where(url_sts: 'Valid', temp_sts: val_sts_arr).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
     if !query.any?
       err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
-      query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
+      query = Act.select(:id).where(url_sts: 'Valid', temp_sts: err_sts_arr).order("id ASC").pluck(:id)
       @timeout = 60
 
       if query.any? && @make_urlx
-        query.each { |id| act_obj = Act.find(id).update(urlx: TRUE) }
+        query.each { |id| act_obj = Act.find(id).update(temp_sts: 'Invalid') }
         query = [] ## reset
         @make_urlx = FALSE
       elsif query.any?
         @make_urlx = TRUE
       end
     end
+
     print_query_stats(query)
+    sleep(1)
     return query
   end
 

@@ -17,7 +17,7 @@ class VerUrl
     @workers = 4
     @obj_in_grp = 20
     @timeout = 10 ## below
-    @cut_off = 30.days.ago
+    @cut_off = 7.days.ago
     # @cut_off = 1.minute.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
@@ -27,16 +27,16 @@ class VerUrl
 
   def get_query
     ## Nil Sts Query ##
-    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: nil).order("updated_at ASC").pluck(:id)
+    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: nil).order("id ASC").pluck(:id)
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid']
-    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: val_sts_arr).where('url_date < ? OR url_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
+    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: val_sts_arr).where('url_date < ? OR url_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
     if !query.any?
       err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-      query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
+      query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: err_sts_arr).order("id ASC").pluck(:id)
       @timeout = 30
 
       if query.any? && @make_urlx
@@ -49,6 +49,7 @@ class VerUrl
     end
 
     print_query_stats(query)
+    sleep(1)
     return query
   end
 

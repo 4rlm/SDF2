@@ -87,19 +87,18 @@ module FormatWeb
 
   #CALL: Formatter.new.format_link(url, link)
   def format_link(url, link)
-    if url.present? && link.present?
+    if url.present? && link.present? && link.length > 3
       url = strip_down_url(url)
       link = strip_down_url(link)
-      link.slice!(url)
+      # link.slice!(url)
+      link.gsub!(url, '')
 
-      if link&.include?(url) && !link.include?('@')# sometimes url is listed twice in link.
-        link.slice!(url)
-        link = link.gsub("///", '')
+      if link.present?
+        link = link.split('.net').last
+        link = link.split('.com').last
+        link = link.split('.org').last
+        link = "/#{link.split("/").reject(&:empty?).join("/")}"
       end
-
-      link = remove_invalid_links(link) if link.present?
-      link.insert(0, '/') if (link.present? && link[0] != '/')  # link&.send('[]', 0).send('!=')
-      link = link[0..-2] if (link.present? && link[-1] == '/')
       return link
     end
   end
