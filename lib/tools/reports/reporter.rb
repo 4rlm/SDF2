@@ -24,19 +24,19 @@ module Reporter
   def self.prep_tally
 
     ## Format Term Texts
-    terms = Term.where(sub_category: "staff_text").map do |term|
-      staff_text = term.response_term.downcase&.gsub(/\W/,'')
-      staff_text = staff_text.strip
-      term.update(response_term: staff_text)
-    end
+    # terms = Term.where(sub_category: "staff_text").map do |term|
+    #   staff_text = term.response_term.downcase&.gsub(/\W/,'')
+    #   staff_text = staff_text.strip
+    #   term.update(response_term: staff_text)
+    # end
 
     ## Format Term Hrefs
-    terms = Term.where(sub_category: "staff_href").map do |term|
-      staff_href = term.response_term.downcase
-      staff_href = "/#{staff_href}" if staff_href[0] != "/"
-      staff_href = staff_href.strip
-      term.update(response_term: staff_href)
-    end
+    # terms = Term.where(sub_category: "staff_href").map do |term|
+    #   staff_href = term.response_term.downcase
+    #   staff_href = "/#{staff_href}" if staff_href[0] != "/"
+    #   staff_href = staff_href.strip
+    #   term.update(response_term: staff_href)
+    # end
 
     ######## SPECIAL-RARE ABOVE ####
 
@@ -45,19 +45,22 @@ module Reporter
     acts = Act.where.not(staff_text: nil).map do |act|
       staff_text = act.staff_text.downcase&.gsub(/\W/,'')
       staff_link = formatter.format_link(act.url, act.staff_link)
-      staff_link = nil if staff_link == "/about-us"
       act.update(staff_text: staff_text, staff_link: staff_link)
     end
 
     ## ACTS - Make Nil
-    make_nil_hsh = {page_sts: 'Invalid', staff_text: nil, staff_link: nil }
+    make_nil_hsh = {cs_sts: nil, page_sts: nil, staff_text: nil, staff_link: nil }
     Act.where(staff_link: nil).each {|act| act.update(make_nil_hsh)}
-    Act.where("staff_link LIKE '%card%'").each {|act| act.update(staff_link: '/meetourdepartments')}
+    # Act.where("staff_link LIKE '%card%'").each {|act| act.update(staff_link: '/meetourdepartments')}
 
-    strict_ban = %w(/about-us /about.htm /departments.aspx /index.htm /meetourdepartments)
-    strict_ban.each { |ban| Act.where(staff_link: ban).each {|act| act.update(make_nil_hsh)} }
+    text_strict_ban = %w(porsche)
+    text_strict_ban.each { |ban| Act.where(staff_text: ban).each {|act| act.update(make_nil_hsh)} }
+    Act.where(temp_name: "Cobalt", staff_text: "sales").each {|act| act.update(make_nil_hsh)}
 
-    light_ban = %w(404 appl approve body career center click collision contact customer demo direction discl drive employ espaol finan get google guarantee habla history home hour inventory javascript job join lease legal lube mail map match offers oil open opportunit parts phone place price quick rating review sales_tab schedule search service special survey tel test text trade value vehicle video virtual websiteby welcome why)
+    link_strict_ban = %w(/about /about-us /about-us.htm /about.htm /about.html /dealership/about.htm /dealership/department.htm /dealership/news.htm /departments.aspx /index.htm /meetourdepartments /sales.aspx /#tab-sales)
+    link_strict_ban.each { |ban| Act.where(staff_link: ban).each {|act| act.update(make_nil_hsh)} }
+
+    light_ban = %w(404 appl approve body career center click collision contact customer demo direction discl drive employ espanol espaol finan get google guarantee habla history home hour inventory javascript job join lease legal lube mail map match multilingual offers oil open opportunit parts phone place price quick rating review sales_tab schedule search service special survey tel test text trade value vehicle video virtual websiteby welcome why)
 
     light_ban.each do |ban|
       acts = Act.where("staff_link LIKE '%#{ban}%'").each {|act| act.update(make_nil_hsh)}
@@ -79,7 +82,7 @@ module Reporter
       link_name = link_arr.first
       count = link_arr.last
 
-      if count > 5
+      if count > 3
         link_hsh = {staff_link: link_name, count: count}
         link_obj = Link.find_by(staff_link: link_name)&.update(link_hsh)
         link_obj = Link.create(link_hsh) if !link_obj.present?
@@ -107,7 +110,7 @@ module Reporter
       text_name = text_arr.first
       count = text_arr.last
 
-      if count > 5
+      if count > 3
         text_hsh = {staff_text: text_name, count: count}
         text_obj = Text.find_by(staff_text: text_name)&.update(text_hsh)
         text_obj = Text.create(text_hsh) if !text_obj.present?

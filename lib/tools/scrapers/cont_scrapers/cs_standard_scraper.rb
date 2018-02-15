@@ -1,13 +1,41 @@
+#CALL: ContScraper.new.start_cont_scraper
 class CsStandardScraper
   def initialize
-    @helper = CsHelper.new
+    @cs_helper = CsHelper.new
   end
 
-  def scrape_cont(html, url, indexer)
-    staffs = html.css('.staffList .staff')
-    staff_hash_array = staffs.any? ? @helper.standard_scraper(staffs) : []
+  def scrape_cont(noko_page, full_staff_link, act_obj)
+    puts full_staff_link
+    puts act_obj.temp_name
+    cs_hsh_arr = []
 
-    # @helper.print_result(indexer, url, staff_hash_array)
-    @helper.prep_create_staffer(indexer, staff_hash_array)
+    staffs_arr = []
+    binding.pry
+    staffs_arr << noko_page.css(".ResponsiveStaff .row.gutter")
+    staffs_arr << noko_page.css(".row.gutter")
+
+    cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
+
+    # staffs_arr << noko_page.css('section.acc_cont.gen_bg')
+    # staffs_arr << noko_page.css('div.wpb_column.vc_column_container div.vc_row.wpb_row')
+    # staffs_arr << noko_page.css('.team')
+
+    puts cs_hsh_arr.inspect
+    binding.pry
+
+    cs_hsh_arr&.uniq!
+    # binding.pry if !cs_hsh_arr.any?
+    return cs_hsh_arr
+
+    ##################################################
+    # cs_hsh_arr << CsDealerCom.new.scrape_cont(noko_page)
+    # cs_hsh_arr << CsCobalt.new.scrape_cont(noko_page)
+    # cs_hsh_arr << CsDealeron.new.scrape_cont(noko_page)
+    # cs_hsh_arr << CsDealerDirect.new.scrape_cont(noko_page)
+    # cs_hsh_arr << CsDealerInspire.new.scrape_cont(noko_page)
+    # cs_hsh_arr << CsDealerfire.new.scrape_cont(noko_page)
+    # cs_hsh_arr << CsDealerEprocess.new.scrape_cont(noko_page)
+    # cs_hsh_arr = cs_hsh_arr.flatten
   end
+
 end

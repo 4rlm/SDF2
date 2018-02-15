@@ -91,14 +91,11 @@ module FormatWeb
       url = strip_down_url(url)
       link = strip_down_url(link)
       # link.slice!(url)
-      link.gsub!(url, '')
-
-      if link.present?
-        link = link.split('.net').last
-        link = link.split('.com').last
-        link = link.split('.org').last
-        link = "/#{link.split("/").reject(&:empty?).join("/")}"
-      end
+      link&.gsub!(url, '')
+      link = link&.split('.net')&.last
+      link = link&.split('.com')&.last
+      link = link&.split('.org')&.last
+      link = "/#{link.split("/").reject(&:empty?).join("/")}" if link.present?
       return link
     end
   end

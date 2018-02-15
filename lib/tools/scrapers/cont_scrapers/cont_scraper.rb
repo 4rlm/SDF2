@@ -10,60 +10,56 @@ class ContScraper
   include Noko
 
   def initialize
-    @dj_on = true
-    @dj_count_limit = 5
+    @dj_on = false
+    @dj_count_limit = 0
     @workers = 4
     @obj_in_grp = 40
-    @timeout = 10
+    @timeout = 60
     @count = 0
-    @cut_off = 6.hours.ago
+    @cut_off = 4.hours.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
     @cs_helper = CsHelper.new
-    @valid_text_ids = []
   end
 
   def get_query
+    # Dominion, eBizAutos, Dealer Spike, DealerPeak
 
-    # staff_links = %w(/meetourdepartments /aboutus.aspx /dealership/staff.htm /about-us /aboutus /about-us.htm /dealerprofile.aspx /about-us.html /lcertified /about-us/ /welcome)
-    #
-    # staff_links.each do |staff_link|
-    #   @valid_text_ids << staff_link
-    #   puts @valid_text_ids
-    #   query = Act.select(:id).where(staff_link: staff_link).order("updated_at ASC").pluck(:id)
-    #   puts query.count
-    #   binding.pry
-    #   print_query_stats(query)
-    #   return query
-    # end
+    ########## SPECIAL BELOW ############
+    ## TRYING TO GET TEMPS OF NON-MAJOR ONES, GENERAL SCRAPERS!
+    ## Invalid Sts Query ##
+    @cut_off = 4.hours.ago
+    # query = Act.select(:id).where(url: 'https://www.salvadorejeep.net').pluck(:id)
+    # query = Act.select(:id).where(cs_sts: 'Invalid').
+    query = Act.select(:id).where(temp_name: 'Dealer.com', page_sts: 'Valid').
+      where('cs_date < ? OR cs_date IS NULL', @cut_off).
+      order("updated_at ASC").pluck(:id)
 
-    ## FOLLOW UP WITH BELOW QUERY.  CHECK IF IT GOT ANY ##
-    # texts = Act.where(staff_link: staff_link).pluck(:staff_text).sort
-    # acts = Act.where(staff_link: staff_link, cs_sts: 'Invalid').count
+    print_query_stats(query)
     # binding.pry
-    # return
-    ######### SPECIAL TESTING ABOVE ########
-
-
+    return query
+    ########## SPECIAL ABOVE ############
 
     ## Nil Sts Query ##
-    # query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', temp_name: 'Cobalt', cs_sts: nil).order("updated_at ASC").pluck(:id)
-
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', cs_sts: nil).order("updated_at ASC").pluck(:id)
+    query = Act.select(:id).where(page_sts: 'Valid', cs_sts: nil).
+      order("updated_at ASC").pluck(:id)
 
     ## Valid Sts Query ##
-    val_sts_arr = ['Valid']
-    query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', cs_sts: val_sts_arr).where('cs_date < ? OR cs_date IS NULL', @cut_off).order("updated_at ASC").pluck(:id) if !query.any?
+    query = Act.select(:id).where(cs_sts: 'Valid').
+      where('cs_date < ? OR cs_date IS NULL', @cut_off).
+      order("updated_at ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
     if !query.any?
       err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
-      query = Act.select(:id).where(urlx: FALSE, url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid', cs_sts: err_sts_arr).order("updated_at ASC").pluck(:id)
+      query = Act.select(:id).where(cs_sts: err_sts_arr).
+      order("updated_at ASC").pluck(:id)
+
       @timeout = 60
 
       if query.any? && @make_urlx
-        query.each { |id| act_obj = Act.find(id).update(urlx: TRUE) }
+        query.each { |id| act_obj = Act.find(id).update(cs_sts: 'Invalid') }
         query = [] ## reset
         @make_urlx = FALSE
       elsif query.any?
@@ -88,9 +84,6 @@ class ContScraper
       query = get_query
       break if !query.any?
     end
-
-    puts @valid_text_ids
-    binding.pry
   end
 
   def setup_iterator(query)
@@ -103,10 +96,12 @@ class ContScraper
   #CALL: ContScraper.new.start_cont_scraper
   def template_starter(id)
     act_obj = Act.find(id)
+    puts act_obj.temp_name
     staff_link = act_obj.staff_link
 
-    if staff_link.present?
-
+    if !staff_link.present?
+      act_obj.update(cs_sts: nil, page_sts: nil, staff_text: nil, staff_link: nil)
+    else
       full_staff_link = "#{act_obj.url}#{staff_link}"
       puts "full_staff_link: #{full_staff_link}"
 
@@ -139,17 +134,19 @@ class ContScraper
             cs_hsh_arr = CsDealerfire.new.scrape_cont(noko_page)
           when "DEALER eProcess" ## Good - alpha
             cs_hsh_arr = CsDealerEprocess.new.scrape_cont(noko_page)
+          when "Search Optics"
+            cs_hsh_arr = CsSearchOptics.new.scrape_cont(noko_page, full_staff_link, act_obj)
+          when "fusionZONE"
+            cs_hsh_arr = CsFusionZone.new.scrape_cont(noko_page, full_staff_link, act_obj)
           # else
-          #   cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page)
+          #   cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page, full_staff_link, act_obj)
           end
           update_db(act_obj, cs_hsh_arr)
         # else
-        #   cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page)
-        #   update_db(act_obj, cs_hsh_arr)
+          # cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page, full_staff_link, act_obj)
+          # update_db(act_obj, cs_hsh_arr)
         end
       end
-    else
-      ## If No Staff Link Exists ##
     end
 
   end
@@ -164,11 +161,9 @@ class ContScraper
       return
     else
       act_id = act_obj.id
-      @valid_text_ids << act_id
-
       cs_hsh_arr.each do |cs_hsh|
         cs_hsh[:act_id] = act_id
-        cont_obj = Cont.find_by(act_id: act_id, full_name: cs_hsh[:full_name], email: cs_hsh[:email])
+        cont_obj = act_obj.conts.find_by("LOWER(full_name) LIKE LOWER('%#{cs_hsh[:full_name]}%')")
         cont_obj.present? ? cont_obj.update(cs_hsh) : cont_obj = Cont.create(cs_hsh)
       end
       act_obj.update(cs_sts: 'Valid', cs_date: Time.now)
