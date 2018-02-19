@@ -1,19 +1,24 @@
 class CreateConts < ActiveRecord::Migration[5.1]
   def change
+    enable_extension 'citext'
     create_table :conts do |t|
 
       t.integer :act_id, index: true
-      t.string :first_name, index: true
-      t.string :last_name, index: true
-      t.string :full_name, index: true, allow_nil: false
-      t.string :job_title, index: true
-      t.string :job_desc, index: true
-      t.string :email, index: true, unique: true, allow_nil: true
+      t.citext :first_name, index: true
+      t.citext :last_name, index: true
+      t.citext :full_name, index: true, null: false
+      t.citext :job_title, index: true
+      t.citext :job_desc, index: true
+      t.citext :email, index: true
       t.string :phone, index: true
+
+      t.string  :cs_sts, index: true
+      t.datetime :cs_date, index: true
 
       t.timestamps
     end
     # add_index :conts, [:act_id, :full_name], unique: true, name: 'full_name_index' #=> And in Model!
     add_index :conts, [:act_id, :full_name], unique: true
+    # add_index :conts, [:act_id, :email], unique: true
   end
 end

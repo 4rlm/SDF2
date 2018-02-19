@@ -1,25 +1,26 @@
 class CreateActs < ActiveRecord::Migration[5.1]
   def change
+    enable_extension 'citext'
     create_table :acts do |t|
 
       ## Account Name
-      t.string  :act_name, index: true, unique: true, allow_nil: true
+      t.citext  :act_name, index: true, unique: true, allow_nil: true
       t.string  :gp_id, index: true, unique: true, allow_nil: true
 
       ## Address Info
-      t.string  :street, index: true
-      t.string  :city, index: true
+      t.citext  :street, index: true
+      t.citext  :city, index: true
       t.string  :state, index: true
       t.string  :zip, index: true
-      t.string  :full_address, index: true
+      t.citext  :full_address, index: true
 
       ## Extra Info
       t.string  :phone, index: true
-      t.string  :url, index: true
+      t.citext  :url, index: true
       t.string  :url_sts_code, index: true
       t.string  :temp_name, index: true
-      t.string  :staff_link, index: true
-      t.string  :staff_text, index: true
+      t.citext  :staff_link, index: true
+      t.citext  :staff_text, index: true
 
       ## Deprecated
       t.boolean :actx, default: false

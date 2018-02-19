@@ -6,17 +6,50 @@ class CsHelper # Contact Scraper Helper Method
 
   def initialize
     @formatter = Formatter.new
-    # @rts_manager = RtsManager.new
-    # @as_manager = AsManager.new  ## Deprecated.  Should use Formatter or AsHelper.new
   end
 
 
-  def consolidate_cs_hsh_arr(staffs_arr)
-    cs_hsh_arr = []
-    staffs_arr.each do |staffs|
-      temp_cs_hsh_arr = standard_scraper(staffs)
-      temp_cs_hsh_arr.each { |temp_cs_hsh| cs_hsh_arr << temp_cs_hsh.sort.to_h }
+  def extract_noko(raw_css)
+    if raw_css.present?
+      formatted_css = []
+      raw_css.map do |inner|
+        nodes = []
+        # inner.traverse {|node| nodes << node.text }
+        inner.traverse {|node| nodes << node.text }
+        nodes.reject!(&:blank?)
+        nodes.uniq!
+        nodes = nodes.join(", ").split(' - ').join(", ").split(', ')
+
+        nodes.map! do |nod|
+          nod = nod.delete("^\u{0000}-\u{007F}")&.strip
+
+          if nod.present?
+            nod_nums = nod.scan(/[0-9]/)
+            nod = nil if nod_nums.any? && (nod_nums.count > 11 || nod_nums.count < 10)
+          end
+
+          nod = nil if (nod.length < 3 || nod.length > 30) if nod
+          nod = nil if junk_detector(nod) if nod
+          nod
+        end
+
+        nodes.map! {|nod| nod&.strip}
+        nodes.reject!(&:blank?)
+        nodes.uniq!
+        formatted_css << nodes
+      end
+
+      formatted_css.reject!(&:blank?)
+      # puts formatted_css.inspect
+      # binding.pry if !formatted_css.any?
+      return formatted_css
     end
+  end
+
+
+  def consolidate_cs_hsh_arr(ez_staffs)
+    cs_hsh_arr = standard_scraper(ez_staffs)
+    cs_hsh_arr.map! { |temp_cs_hsh| temp_cs_hsh.sort.to_h }
 
     cs_hsh_arr.delete_if(&:empty?)&.uniq!
     cs_hsh_arr = prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
@@ -27,195 +60,194 @@ class CsHelper # Contact Scraper Helper Method
   # In case, template scraper wants to use this way.
   # Just add this line: `cs_hsh_arr = @helper.standard_scraper(staffs)`
   #CALL: ContScraper.new.start_cont_scraper
-  def standard_scraper(staffs)
+  def standard_scraper(staff_arrs)
     cs_hsh_arr = []
 
-    if staffs.any?
-      staffs.each do |staff|
-        begin
-          staff_texts = staff.text
-          # puts staff_texts
-          staff_texts.gsub!("\n", '  ')
-          staff_texts = force_utf_encoding(staff_texts) ## Removes non-utf8 chars.
-          # puts staff_texts.inspect
-
-          ##########################
-          # Get name, job_desc, phone
-          # info_ori = staff.text.split("\n").map do |el|
-          #   el = el.delete("\t")
-          #   el = el.delete("\r")
-          # end
-
-          # infos = info_ori.delete_if {|el| el.blank?}
-          # infos = infos.uniq
-          # infos.each { |info| infos -= junk_detector(info) }
-
-          ## Structured to prevent job_desc going to full_name
-          staff_hash = {}
-          staff_texts.each do |staff_text|
-            staff_text.squeeze!(' ')
-            staff_text.strip!
+    if staff_arrs.any?
+      staff_arrs.each do |staff_arr|
+        staff = staff_arr.join('')
+        ## Structured to prevent job_desc going to full_name
+        staff_hash = {}
+        # staff_arr = staff.split(", ")
+        staff_arr.each do |staff_text|
+          if !staff_text&.scan(/[0-9]/).any? && staff_text.length < 30 && staff_text.split(' ').count < 6 && !staff_text.include?('@')
             job_desc = job_detector(staff_text)
+            full_name = name_detector(staff_text)
 
-            if job_desc.present?
+            if job_desc.present? && !staff_hash[:job_desc]&.present?
               staff_hash[:job_desc] = job_desc
-            else
-              full_name = name_detector(staff_text)
-              staff_hash[:full_name] = full_name if full_name.present?
-            end
-
-            phone_hsh = phone_detector(staff_text)
-            if phone_hsh.present?
-              phone = phone_hsh[:phone]
-              phone = @formatter.validate_phone(phone) if phone.present?
-              staff_hash[:phone] = phone
-            end
-            # puts staff_hash.inspect
-          end
-
-          ## Get email
-          data = staff.inner_html
-          regex = Regexp.new("[a-z]+[@][a-z]+[.][a-z]+")
-          email_reg = regex.match(data)
-          staff_hash[:email] = email_reg.to_s if email_reg
-
-          if staff_hash[:job_desc] && !staff_hash[:full_name]
-            temp_infos = staff_hash[:job_desc]&.split(' ')
-
-            temp_infos.each do |info|
-              info_parts = info.split(' ')
-              info_parts.each do |info_part|
-                if info_part.length > 7 && !info.include?('Mc')
-                  if (info_part.scan(/[A-Z]/).count > 1) && (info_part.scan(/[a-z]/).count > 1)
-                    name_and_job = info_part.split(/(?=[A-Z])/)
-                    temp_infos = temp_infos.map {|el| el.gsub(info_part, name_and_job.join(' '))}.join(' ').split(' ')
-                    name = name_and_job.first
-                    div1 = temp_infos.index(name)
-
-                    name_arr = temp_infos[0..div1]
-                    name_str = name_arr.join(' ').squeeze(' ').strip
-                    job_str = (temp_infos - name_arr).join(' ').squeeze(' ').strip
-                    staff_hash[:job_desc] = job_str if job_str.present?
-                    staff_hash[:full_name] = name_str if name_str.present?
-
-                    # puts staff_hash.inspect
-                  end
-                end
-              end
+            elsif full_name.present? && !staff_hash[:full_name]&.present? && !job_desc.present?
+              staff_hash[:full_name] = full_name
             end
           end
 
-          #CALL: ContScraper.new.start_cont_scraper
-          if staff_hash[:job_desc] && !staff_hash[:full_name]
-            orig_job_desc = staff_hash[:job_desc]
-
-            orig_job_desc&.gsub!(/\W/,' ')&.squeeze!(' ')
-            name_desc_parts = orig_job_desc&.split(' ')
-            name_desc_parts&.delete_if {|x| x.length < 3}
-
-            staff_hash[:full_name] = name_desc_parts[0..1]&.join(' ')
-            staff_hash[:job_desc] = name_desc_parts[2..-1]&.join(' ')
-            # puts staff_hash.inspect
-            # binding.pry
-
-            ## Might need to write code to swap full_name and job_desc is full_name includes below....
-            # titles = %w(and asst consultant director finance general internet manager marketing of parts pre-owned president sales service special vice)
+          phone_hsh = phone_detector(staff_text)
+          if phone_hsh.present?
+            phone = phone_hsh[:phone]
+            phone = @formatter.validate_phone(phone) if phone.present?
+            staff_hash[:phone] = phone
           end
-
-          cs_hsh_arr << staff_hash
-        rescue
-          # return {}
         end
+
+        ## Get email
+        if staff.include?('@') && !staff_hash[:email]&.present?
+          regex = Regexp.new("[a-z]+[@][a-z]+[.][a-z]+")
+          email_reg = regex.match(staff)
+          staff_hash[:email] = email_reg.to_s if email_reg
+        end
+
+        ## Consider deleting below.
+        ## Might not need this anymore.  This is for when noko_page scraped node.text with name and job title merged together, but now have a better way of scraping, which should avoid this type of stuff.
+        # if staff_hash[:job_desc].present? && !staff_hash[:full_name].present?
+        #   temp_infos = staff_hash[:job_desc]&.split(' ')
+        #
+        #   temp_infos.each do |info|
+        #     info_parts = info.split(' ')
+        #     info_parts.each do |info_part|
+        #       if info_part.length > 7 && !info.include?('Mc')
+        #         if (info_part.scan(/[A-Z]/).count > 1) && (info_part.scan(/[a-z]/).count > 1)
+        #           name_and_job = info_part.split(/(?=[A-Z])/)
+        #           temp_infos = temp_infos.map {|el| el.gsub(info_part, name_and_job.join(' '))}.join(' ').split(' ')
+        #           name = name_and_job.first
+        #           div1 = temp_infos.index(name)
+        #
+        #           name_arr = temp_infos[0..div1]
+        #           name_str = name_arr.join(' ').squeeze(' ').strip
+        #           job_str = (temp_infos - name_arr).join(' ').squeeze(' ').strip
+        #           if name_str.present? || job_str.present?
+        #             puts "name_str: #{name_str}"
+        #             puts "job_str: #{job_str}"
+        #             binding.pry
+        #
+        #             staff_hash[:job_desc] = job_str if job_str.present?
+        #             staff_hash[:full_name] = name_str if name_str.present?
+        #           end
+        #         end
+        #       end
+        #     end
+        #   end
+        # end
+
+        #CALL: ContScraper.new.start_cont_scraper
+        ## Consider deleting below.
+        ## Might not need this anymore.  This is for when noko_page scraped node.text with name and job title merged together, but now have a better way of scraping, which should avoid this type of stuff.
+        # if staff_hash[:job_desc] && !staff_hash[:full_name]
+        #   binding.pry
+        #   orig_job_desc = staff_hash[:job_desc]
+        #
+        #   orig_job_desc&.gsub!(/\W/,' ')&.squeeze!(' ')
+        #   name_desc_parts = orig_job_desc&.split(' ')
+        #   name_desc_parts&.delete_if {|x| x.length < 3}
+        #   binding.pry
+        #
+        #   staff_hash[:full_name] = name_desc_parts[0..1]&.join(' ')
+        #   staff_hash[:job_desc] = name_desc_parts[2..-1]&.join(' ')
+        # end
+
+        cs_hsh_arr << staff_hash
       end
     end
-
-    # puts cs_hsh_arr
     return cs_hsh_arr
   end
 
 
   ##################################
-  def force_utf_encoding(text)
-    if text.present?
-      step1 = text.delete("^\u{0000}-\u{007F}")&.strip
-      step1.gsub!('Phone', ',')
-      step1.gsub!('phone', ',')
-      step2 = step1&.split(',')
-      step3 = step2&.map! {|str| str.split('  ') }
-      step4 = step3&.flatten
-      step5 = step4&.reject(&:blank?)
-      # puts step5.inspect
-      return step5
-    end
-  end
+  ## WORKS VERY WELL, BUT NOT NEEDED NOW
+  # def force_utf_encoding(text)
+  #   if text.present?
+  #     step1 = text.delete("^\u{0000}-\u{007F}")&.strip
+  #     step1.gsub!('Phone', ',')
+  #     step1.gsub!('phone', ',')
+  #     step2 = step1&.split(',')
+  #     step3 = step2&.map! {|str| str.split('  ') }
+  #     step4 = step3&.flatten
+  #     step5 = step4&.reject(&:blank?)
+  #     # puts step5.inspect
+  #     return step5
+  #   end
+  # end
   ##################################
 
+
+
+
+
   def job_detector(str)
-    if str.length > 48 || str.include?('@') || str&.scan(/[0-9]/).any?
-      return nil
-    else
-      jobs = %w(account admin advis agent assist associ attend bdc brand busin car cashier center ceo certified chief clerk consultant coordinat cto customer dealer detail develop direct driver engineer estimator executive finan fleet general gm intern inventory leasing license mainten manage market new office online operat own part pres principal professional receiv reception recruit represent sales scheduler service shipping shop shuttle special superv support tech trainer transmission transportation ucm used varia vice vp warranty write)
+    return nil if !str.present? || str&.scan(/[0-9]/).any? || str.length > 30 || str.split(' ').count > 5 || str.include?('@')
 
-      parts = str.split(' ')
-      clean_str = []
-      parts.each do |part|
-        part = part.tr('^A-Za-z', '')
-        clean_str << part if part&.length > 1
-      end
-      str = clean_str.join(' ')
+    jobs = %w(account admin advis agent assist associ attend bdc brand busin car cashier center ceo certified chief clerk consultant coordinat cto customer dealer detail develop direct driver engineer estimator executive finan fleet general gm intern inventory leasing license mainten manage market new office online operat own part pres principal professional receiv reception recruit represent sales scheduler service shipping shop shuttle special superv support tech trainer transmission transportation ucm used varia vice vp warranty write)
 
-      down_str = str.downcase
-      res = jobs.find { |job| down_str.include?(job) }
-      return str if res.present?
+    parts = str.split(' ')
+    clean_str = []
+    parts.each do |part|
+      part = part.tr('^-A-Za-z', ' ')
+      clean_str << part if part&.length > 2
     end
+    str = clean_str.join(' ')
+
+    down_str = str.downcase
+    res = jobs.find { |job| down_str.include?(job) }
+    return str if res.present?
   end
 
-
+  #CALL: ContScraper.new.start_cont_scraper
   def name_detector(str)
-    banned = ['contact', ' me', ' by', 'phone', ' and', 'mail']
-    binding.pry
-    return nil if banned.find { |ban| str.include?(ban) }.present?
+    return nil if str&.scan(/[0-9]/).any? || str.length > 30 || str.split(' ').count > 5 || str.include?('@')
+    # str.gsub!(/\W/,' ')
+    parts = str.split(' ')
+    name_reg = Regexp.new("[@./0-9]")
+    return nil if str.scan(name_reg).any? || (parts.length > 3 || parts.length < 2)
 
-    if str.length > 48 || str.include?('@') || str.include?(' and') || str&.scan(/[0-9]/).any?
-      return nil
-    else
-      str.gsub!(/\W/,' ')
-      parts = str.split(' ')
-      name_reg = Regexp.new("[@./0-9]")
-      return nil if str.scan(name_reg).any? || (parts.length > 3 || parts.length < 2)
-
-      clean_str = []
-      parts.each do |part|
-        part = part.tr('^A-Za-z', '')
-        clean_str << part if part&.length > 1
-      end
-      str = clean_str.join(' ')
-
-      return str
+    clean_str = []
+    parts.each do |part|
+      part = part.tr('^-A-Za-z', ' ')
+      clean_str << part if part&.length > 2
     end
-  end
 
-
-  def phone_detector(str)
-    if str&.length < 48
-      str = str.split('ext')&.first&.strip
-      return nil if !str&.scan(/[0-9]/)&.length.in?([10, 11])
-      phone = @formatter.format_phone(str)
-      return {phone: phone, str: str} if phone.present?
+    if clean_str.length > 1 && clean_str.length < 3
+      str = clean_str.join(' ')
+      return str
+      # job = job_detector(str)
+      # return str if !job.present?
     end
     return nil
   end
 
-  def junk_detector(str)
-    junks = %w(= [ ] : ; @ ! ? { } about account address analyt box call change chat check choice click comment contact country custom direction display email float form give google great hide hour info input load meet more name none our phone policy priva question quick quote rate ready saving src staff strict title today type use)
-    down_str = str.downcase
-    junks.each { |junk| return [str] if down_str.include?(junk) }
-    return []
+
+
+
+
+
+  def phone_detector(str)
+    return nil if str.length > 30
+    str = str.split('ext')&.first&.strip
+    return nil if !str&.scan(/[0-9]/)&.length.in?([10, 11])
+
+    phone = @formatter.format_phone(str)
+    phone.present? ? {phone: phone, str: str} : nil
   end
 
+  def junk_detector(str)
+    junks = %w(# = [ ] : ; @ ! ? { } about account address analyt apply back box call change chat check choice click color comment contact content country custom direction display email financing float font form give google great ground hide hover hour info input load margin meet more name nav none our phone policy priva question quick quote rate ready saving size src staff strict tab title today type use width employ dealer contact phone mail make inquir first last name zip code have question search blog popular tag open close mond tues wedn thur frid saturd sunday model year battery jump tire roadside access reward play gof family outside work star showroom link social media youtube twitter facebook critic review rating inventory holiday save saving money shop yelp page yellow blue red green white black pink brown qualif quality bing local friend lounge equip wifi shop motor keep site map)
+    junks += [' our', ' me ', ' by ', ' an ', ' and ', ' a ', ' with ', ' the ', ' for ', ' from ', ' to ', ' come ', ' now ', ' your ']
+
+    down_str = str.downcase
+    junks.each { |junk| return true if down_str.include?(junk) }
+    return false
+    # junks.each { |junk| return [str] if down_str.include?(junk) }
+    # return []
+  end
+
+  #CALL: ContScraper.new.start_cont_scraper
   def prep_create_staffer(cs_hsh_arr)
     cs_hsh_arr.each do |staff_hash|
+
       # Clean & Divide full name
+      if staff_hash[:full_name]
+        name_parts = staff_hash[:full_name].split(" ")
+        staff_hash[:full_name] = name_parts.reject {|x| x.first == x.last}.join(' ')
+      end
+
       if staff_hash[:full_name]
         name_parts = staff_hash[:full_name].split(" ").each { |name| name&.strip&.capitalize! }
         staff_hash[:first_name] = name_parts&.first&.strip
@@ -242,9 +274,6 @@ class CsHelper # Contact Scraper Helper Method
         job_desc = nil if job_desc.scan(/[0-9]/)&.any?
         staff_hash[:job_desc] = job_desc
         staff_hash[:job_title] = get_job_title(job_desc) if job_desc
-        # puts "job_desc: #{job_desc}"
-        # puts "job_title: #{staff_hash[:job_title]}"
-        # binding.pry if staff_hash[:job_title].present?
       end
 
       # Clean Phone

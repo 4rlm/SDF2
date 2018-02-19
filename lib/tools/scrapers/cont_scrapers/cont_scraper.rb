@@ -16,7 +16,7 @@ class ContScraper
     @obj_in_grp = 40
     @timeout = 60
     @count = 0
-    @cut_off = 4.hours.ago
+    @cut_off = 8.hours.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
@@ -29,15 +29,16 @@ class ContScraper
     ########## SPECIAL BELOW ############
     ## TRYING TO GET TEMPS OF NON-MAJOR ONES, GENERAL SCRAPERS!
     ## Invalid Sts Query ##
-    @cut_off = 4.hours.ago
-    # query = Act.select(:id).where(url: 'https://www.salvadorejeep.net').pluck(:id)
-    # query = Act.select(:id).where(cs_sts: 'Invalid').
-    query = Act.select(:id).where(temp_name: 'Dealer.com', page_sts: 'Valid').
+    # @cut_off = 8.hours.ago
+
+    # query = Act.select(:id).where(url: 'https://www.hewlettvw.com').pluck(:id)
+
+    query = Act.select(:id).where(temp_name: 'Cobalt', cs_sts: 'Invalid').
       where('cs_date < ? OR cs_date IS NULL', @cut_off).
       order("updated_at ASC").pluck(:id)
 
     print_query_stats(query)
-    # binding.pry
+    sleep(1)
     return query
     ########## SPECIAL ABOVE ############
 
@@ -96,12 +97,18 @@ class ContScraper
   #CALL: ContScraper.new.start_cont_scraper
   def template_starter(id)
     act_obj = Act.find(id)
-    puts act_obj.temp_name
+    template = act_obj.temp_name
+    puts template
     staff_link = act_obj.staff_link
 
     if !staff_link.present?
       act_obj.update(cs_sts: nil, page_sts: nil, staff_text: nil, staff_link: nil)
     else
+
+      # if template = 'Cobalt' && staff_link.include?('landingpage')
+      #   staff_link = "/meet-our-staff"
+      # end
+
       full_staff_link = "#{act_obj.url}#{staff_link}"
       puts "full_staff_link: #{full_staff_link}"
 
@@ -111,13 +118,10 @@ class ContScraper
       act_update_hsh = { cs_date: Time.now }
 
       if err_msg.present?
-        # binding.pry
         puts err_msg
         act_update_hsh[:cs_sts] = err_msg
         act_obj.update(act_update_hsh)
       elsif noko_page.present?
-        template = act_obj.temp_name
-
         if template.present?
           case template
           when "Dealer.com" ## Good
@@ -153,17 +157,21 @@ class ContScraper
 
   #CALL: ContScraper.new.start_cont_scraper
   def update_db(act_obj, cs_hsh_arr)
+    cs_hsh_arr.flatten! if cs_hsh_arr.present?
     # cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
     puts cs_hsh_arr
 
     if !cs_hsh_arr&.any?
+      puts "No results - check css classes on website."
+      binding.pry
       act_obj.update(cs_sts: 'Invalid', cs_date: Time.now)
       return
     else
       act_id = act_obj.id
       cs_hsh_arr.each do |cs_hsh|
         cs_hsh[:act_id] = act_id
-        cont_obj = act_obj.conts.find_by("LOWER(full_name) LIKE LOWER('%#{cs_hsh[:full_name]}%')")
+        # cont_obj = act_obj.conts.find_by("LOWER(full_name) LIKE LOWER('%#{cs_hsh[:full_name]}%')")
+        cont_obj = act_obj.conts.find_by(full_name: cs_hsh[:full_name])
         cont_obj.present? ? cont_obj.update(cs_hsh) : cont_obj = Cont.create(cs_hsh)
       end
       act_obj.update(cs_sts: 'Valid', cs_date: Time.now)

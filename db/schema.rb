@@ -14,21 +14,22 @@ ActiveRecord::Schema.define(version: 20180210050614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "citext"
 
   create_table "acts", force: :cascade do |t|
-    t.string "act_name"
+    t.citext "act_name"
     t.string "gp_id"
-    t.string "street"
-    t.string "city"
+    t.citext "street"
+    t.citext "city"
     t.string "state"
     t.string "zip"
-    t.string "full_address"
+    t.citext "full_address"
     t.string "phone"
-    t.string "url"
+    t.citext "url"
     t.string "url_sts_code"
     t.string "temp_name"
-    t.string "staff_link"
-    t.string "staff_text"
+    t.citext "staff_link"
+    t.citext "staff_text"
     t.boolean "actx", default: false
     t.boolean "urlx", default: false
     t.string "gp_sts"
@@ -92,17 +93,21 @@ ActiveRecord::Schema.define(version: 20180210050614) do
 
   create_table "conts", force: :cascade do |t|
     t.integer "act_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "full_name"
-    t.string "job_title"
-    t.string "job_desc"
-    t.string "email"
+    t.citext "first_name"
+    t.citext "last_name"
+    t.citext "full_name", null: false
+    t.citext "job_title"
+    t.citext "job_desc"
+    t.citext "email"
     t.string "phone"
+    t.string "cs_sts"
+    t.datetime "cs_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["act_id", "full_name"], name: "index_conts_on_act_id_and_full_name", unique: true
     t.index ["act_id"], name: "index_conts_on_act_id"
+    t.index ["cs_date"], name: "index_conts_on_cs_date"
+    t.index ["cs_sts"], name: "index_conts_on_cs_sts"
     t.index ["email"], name: "index_conts_on_email"
     t.index ["first_name"], name: "index_conts_on_first_name"
     t.index ["full_name"], name: "index_conts_on_full_name"
