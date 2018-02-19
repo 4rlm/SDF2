@@ -14,14 +14,16 @@ class FindPage
     @dj_count_limit = 5
     @workers = 4
     @obj_in_grp = 50
-    @timeout = 5
+    @timeout = 60
     @count = 0
     @cut_off = 5.hour.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
-    @tally_staff_links = Link.order("count DESC").pluck(:staff_link)
-    @tally_staff_texts = Text.order("count DESC").pluck(:staff_text)
+    # @tally_staff_links = Link.order("count DESC").pluck(:staff_link)
+    # @tally_staff_texts = Text.order("count DESC").pluck(:staff_text)
+    @tally_staff_links = Tally.where(category: 'staff_link').order("count DESC").pluck(:focus)
+    @tally_staff_texts = Tally.where(category: 'staff_text').order("count DESC").pluck(:focus)
   end
 
 
@@ -33,7 +35,7 @@ class FindPage
       .order("id ASC").pluck(:id)
 
     print_query_stats(query)
-    sleep(2)
+    sleep(1)
     # binding.pry
     return query
 
@@ -98,7 +100,7 @@ class FindPage
     @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
 
-  #CALL: FindPage.new.start_find_page
+
   def template_starter(id)
     act_obj = Act.find(id)
     url = act_obj.url
@@ -109,46 +111,24 @@ class FindPage
       err_msg = noko_hsh[:err_msg]
 
       if err_msg.present?
-        binding.pry
         act_obj.update(page_sts: err_msg, page_date: Time.now)
       elsif noko_page.present?
-        # parsed_hsh = parse_page(noko_page, act_obj)
         link_text_results = parse_page(noko_page, act_obj)
-
         if !link_text_results.any?
-          binding.pry
           act_obj.update(page_sts: 'Invalid', page_date: Time.now)
         else
           link_text_results.each do |link_text_hsh|
-            puts link_text_hsh
-            binding.pry
             link_obj = Link.find_or_create_by(link_text_hsh)
-            act_obj.link << link_obj
+            act_link = act_obj.links.where(id: link_obj).exists?
+            act_obj.links << link_obj if !act_link.present?
             act_obj.update(page_sts: 'Valid', page_date: Time.now)
           end
         end
-
-        ### REFACTORING - BELOW NEEDS TO BE REFACTORED.  RETURN link_text_results TO GO TO db_update method WHERE ARRAY OF HASHES WILL FIND OR CREATE NEW LINK OBJ THEN ASSOCIATED WITH ACT_OBJ.
-
-        ### ORIGINAL BELOW.  WILL BE REFACTORED ABOVE ###
-        # staff_link = parsed_hsh[:staff_link]
-        # # staff_link = '/meetourdepartments' if staff_link&.include?('card')
-        # staff_text = parsed_hsh[:staff_text]
-        #
-        # if !parsed_hsh.values.compact.empty?
-        #   puts "\n\n\n\n==================\n\n"
-        #   puts url
-        #   puts parsed_hsh.inspect
-        #   puts "\n\n==================\n\n\n\n"
-        # end
-        #
-        # staff_link.present? ? page_sts = 'Valid' : page_sts = 'Invalid'
-        # act_obj.update(staff_link: staff_link, staff_text: staff_text, page_sts: page_sts, page_date: Time.now)
       end
     end
   end
 
-  #CALL: FindPage.new.start_find_page
+
   def parse_page(noko_page, act_obj)
     url = act_obj.url
     temp_name = act_obj.temp_name
@@ -181,40 +161,25 @@ class FindPage
     end
 
 
-    ### REFACTORING - IMPORTANT!
-    link_text_results = [] ## All results shoveled into here as hashes, then iterate through at final stage to find_or_create then assign link_obj to act_obj.
+    link_text_results = []
     noko_page.links.each do |noko_text_link|
       noko_text = noko_text_link.text&.downcase&.gsub(/\W/,'')
       pre_noko_link = noko_text_link&.href&.downcase&.strip
       noko_link = @formatter.format_link(url, pre_noko_link)
 
       if (noko_text && noko_link) && (noko_text.length > 3 && noko_link.length > 3) && (is_banned(noko_link, noko_text, temp_name) != true)
-
-      #### BEGIN REFACTORING HERE ####
-      ## Save all valid Text and Link to join table, rather than only saving one link and one text in Act.  Keep page_sts, page_date in Act, but move staff_link and staff_text to Link (will save both link and text in same table, as is in Act currently.  As for the current Link and Text tables, those will be droped and replaced with Tally table. - be sure back up first!)
-      # - Change each return below to shovel into an array of hashes.  After all noko links checked, create method to find_or_create corresponding text and link (pair) in Link table, then shovel each object into the act_obj for joined.
-      ##### IMPORTANT ABOVE #######
-
         ## If No Matching Texts or Links find any that include 'team' or 'staff'
         if noko_text.include?('staff') || noko_link.include?('staff')
-          # return {staff_text: noko_text, staff_link: noko_link}
-
           link_text_hsh = {staff_text: noko_text, staff_link: noko_link}
           link_text_results << link_text_hsh
-          puts link_text_hsh.inspect
-          binding.pry
         end
 
         ## Links 2nd Priorty Order: Only Runs if ALL Texts above are nil
         stock_links.each do |stock_link|
           stock_link = stock_link.downcase&.strip
           if noko_link.include?(stock_link) || stock_link.include?(noko_link)
-            # return {staff_text: noko_text, staff_link: noko_link}
-
             link_text_hsh = {staff_text: noko_text, staff_link: noko_link}
             link_text_results << link_text_hsh
-            puts link_text_hsh.inspect
-            binding.pry
           end
         end
 
@@ -222,28 +187,20 @@ class FindPage
         stock_texts.each do |stock_text|
           stock_text = stock_text.downcase&.gsub(/\W/,'')
           if noko_text.include?(stock_text) || stock_text.include?(noko_text)
-            # return {staff_text: noko_text, staff_link: noko_link}
-
             link_text_hsh = {staff_text: noko_text, staff_link: noko_link}
             link_text_results << link_text_hsh
-            puts link_text_hsh.inspect
-            binding.pry
           end
         end
 
       end
     end
 
-    #CALL: FindPage.new.start_find_page
-    puts "\n\n===================="
-    puts "RAW RESULTS: #{link_text_results.count}"
-    puts link_text_results.inspect
 
-    link_text_results = link_text_results.uniq
+    link_text_results.uniq!
     puts "\n\n===================="
     puts "UNIQ RESULTS: #{link_text_results.count}"
     puts link_text_results.inspect
-    binding.pry
+    binding.pry if !link_text_results.any?
 
     return link_text_results
     # return {} ## Avoids errors if nil.
