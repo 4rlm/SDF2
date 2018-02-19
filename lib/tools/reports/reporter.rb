@@ -121,6 +121,26 @@ module Reporter
     Text.where(staff_text: nil).destroy_all
   end
 
+
+  #CALL: Reporter.tally_templates
+  def self.tally_templates
+    templates = Act.where.not(temp_name: nil).map { |act| act.temp_name }
+    ranked_temps = Hash[templates.group_by {|x| x}.map {|k,v| [k,v.count]}]
+    sorted_temps = ranked_temps.sort_by{|k,v| v}.reverse.to_h
+
+    sorted_temps.each do |temp_arr|
+      temp_name = temp_arr.first
+      count = temp_arr.last
+
+      if count > 3
+        temp_hsh = {temp_name: temp_name, count: count}
+        puts temp_hsh
+      end
+
+    end
+  end
+
+
   def self.reset_primary_ids
     ActiveRecord::Base.connection.tables.each do |t|
       ActiveRecord::Base.connection.reset_pk_sequence!(t)

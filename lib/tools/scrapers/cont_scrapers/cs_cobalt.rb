@@ -10,7 +10,6 @@ class CsCobalt
 
     #### ORIGINAL BELOW ####
     staffs = noko_page.css("[@itemprop='employee']")
-    # binding.pry if staffs.present?
 
     cs_hsh_arr = []
     for i in 0...staffs.count

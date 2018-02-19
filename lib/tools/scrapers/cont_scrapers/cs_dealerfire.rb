@@ -6,12 +6,14 @@ class CsDealerfire
   end
 
   def scrape_cont(noko_page)
+    noko_page.css('br').each{ |br| br.replace(", ") }
+
+    #### ORIGINAL BELOW ####
     staffs = noko_page.xpath("//div[@class='staffs-list']/div[@itemprop='employees']")
     cs_hsh_arr = []
-
     staffs.each do |staff|
       staff_hash = {}
-      # Get name, job_desc, phone
+
       info_ori = staff.text.split("\n").map {|el| el.delete("\t") }
       infos = info_ori.delete_if {|el| el.blank?}
 
@@ -29,7 +31,6 @@ class CsDealerfire
         end
       end
 
-      # Get email
       data = staff.inner_html
       regex = Regexp.new("[a-z]+[@][a-z]+[.][a-z]+")
       email_reg = regex.match(data)
@@ -37,15 +38,29 @@ class CsDealerfire
 
       cs_hsh_arr << staff_hash
     end
+
     cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
 
     if !cs_hsh_arr.any?
-      staffs_arr = []
-      staffs_arr << noko_page.css('.com-our-team-responsive2__staff-group .com-our-team-responsive2__employee')
-      cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
+      raw_staffs_arr = []
+      ez_staffs = []
+
+      raw_staffs_arr << noko_page.css('.com-our-team-responsive2__staff-group .com-our-team-responsive2__employee')
+
+      raw_staffs_arr.map do |raw_staffs|
+        ez_staffs += @cs_helper.extract_noko(raw_staffs) if raw_staffs.any?
+      end
+
+      cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
+
+      puts cs_hsh_arr
+      binding.pry if !cs_hsh_arr.any?
+      return cs_hsh_arr
+      # cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(raw_staffs_arr)
     end
 
-    # binding.pry if !cs_hsh_arr.any?
+    # puts cs_hsh_arr.inspect
+    binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
   end
 end

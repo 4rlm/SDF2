@@ -18,10 +18,11 @@ class CsHelper # Contact Scraper Helper Method
         inner.traverse {|node| nodes << node.text }
         nodes.reject!(&:blank?)
         nodes.uniq!
-        nodes = nodes.join(", ").split(' - ').join(", ").split(', ')
 
+        nodes = nodes.join(", ").split(' - ').join(", ").split(', ')
         nodes.map! do |nod|
-          nod = nod.delete("^\u{0000}-\u{007F}")&.strip
+          # nod = nod.delete("^\u{0000}-\u{007F}")&.strip
+          nod = nod.gsub("^\u{0000}-\u{007F}", " ")&.strip
 
           if nod.present?
             nod_nums = nod.scan(/[0-9]/)
@@ -79,6 +80,7 @@ class CsHelper # Contact Scraper Helper Method
             elsif full_name.present? && !staff_hash[:full_name]&.present? && !job_desc.present?
               staff_hash[:full_name] = full_name
             end
+
           end
 
           phone_hsh = phone_detector(staff_text)
@@ -96,60 +98,12 @@ class CsHelper # Contact Scraper Helper Method
           staff_hash[:email] = email_reg.to_s if email_reg
         end
 
-        ## Consider deleting below.
-        ## Might not need this anymore.  This is for when noko_page scraped node.text with name and job title merged together, but now have a better way of scraping, which should avoid this type of stuff.
-        # if staff_hash[:job_desc].present? && !staff_hash[:full_name].present?
-        #   temp_infos = staff_hash[:job_desc]&.split(' ')
-        #
-        #   temp_infos.each do |info|
-        #     info_parts = info.split(' ')
-        #     info_parts.each do |info_part|
-        #       if info_part.length > 7 && !info.include?('Mc')
-        #         if (info_part.scan(/[A-Z]/).count > 1) && (info_part.scan(/[a-z]/).count > 1)
-        #           name_and_job = info_part.split(/(?=[A-Z])/)
-        #           temp_infos = temp_infos.map {|el| el.gsub(info_part, name_and_job.join(' '))}.join(' ').split(' ')
-        #           name = name_and_job.first
-        #           div1 = temp_infos.index(name)
-        #
-        #           name_arr = temp_infos[0..div1]
-        #           name_str = name_arr.join(' ').squeeze(' ').strip
-        #           job_str = (temp_infos - name_arr).join(' ').squeeze(' ').strip
-        #           if name_str.present? || job_str.present?
-        #             puts "name_str: #{name_str}"
-        #             puts "job_str: #{job_str}"
-        #             binding.pry
-        #
-        #             staff_hash[:job_desc] = job_str if job_str.present?
-        #             staff_hash[:full_name] = name_str if name_str.present?
-        #           end
-        #         end
-        #       end
-        #     end
-        #   end
-        # end
-
-        #CALL: ContScraper.new.start_cont_scraper
-        ## Consider deleting below.
-        ## Might not need this anymore.  This is for when noko_page scraped node.text with name and job title merged together, but now have a better way of scraping, which should avoid this type of stuff.
-        # if staff_hash[:job_desc] && !staff_hash[:full_name]
-        #   binding.pry
-        #   orig_job_desc = staff_hash[:job_desc]
-        #
-        #   orig_job_desc&.gsub!(/\W/,' ')&.squeeze!(' ')
-        #   name_desc_parts = orig_job_desc&.split(' ')
-        #   name_desc_parts&.delete_if {|x| x.length < 3}
-        #   binding.pry
-        #
-        #   staff_hash[:full_name] = name_desc_parts[0..1]&.join(' ')
-        #   staff_hash[:job_desc] = name_desc_parts[2..-1]&.join(' ')
-        # end
-
         cs_hsh_arr << staff_hash
+        puts staff_hash.inspect
       end
     end
     return cs_hsh_arr
   end
-
 
   ##################################
   ## WORKS VERY WELL, BUT NOT NEEDED NOW
@@ -167,10 +121,6 @@ class CsHelper # Contact Scraper Helper Method
   #   end
   # end
   ##################################
-
-
-
-
 
   def job_detector(str)
     return nil if !str.present? || str&.scan(/[0-9]/).any? || str.length > 30 || str.split(' ').count > 5 || str.include?('@')
@@ -190,32 +140,28 @@ class CsHelper # Contact Scraper Helper Method
     return str if res.present?
   end
 
+
   #CALL: ContScraper.new.start_cont_scraper
   def name_detector(str)
     return nil if str&.scan(/[0-9]/).any? || str.length > 30 || str.split(' ').count > 5 || str.include?('@')
-    # str.gsub!(/\W/,' ')
-    parts = str.split(' ')
+    str.gsub!(/\W/," ")
+    parts = str.split(" ")
     name_reg = Regexp.new("[@./0-9]")
     return nil if str.scan(name_reg).any? || (parts.length > 3 || parts.length < 2)
 
     clean_str = []
     parts.each do |part|
-      part = part.tr('^-A-Za-z', ' ')
+      part = part.tr('^-A-Za-z', " ")
       clean_str << part if part&.length > 2
     end
 
     if clean_str.length > 1 && clean_str.length < 3
       str = clean_str.join(' ')
       return str
-      # job = job_detector(str)
-      # return str if !job.present?
     end
+
     return nil
   end
-
-
-
-
 
 
   def phone_detector(str)
@@ -227,6 +173,7 @@ class CsHelper # Contact Scraper Helper Method
     phone.present? ? {phone: phone, str: str} : nil
   end
 
+
   def junk_detector(str)
     junks = %w(# = [ ] : ; @ ! ? { } about account address analyt apply back box call change chat check choice click color comment contact content country custom direction display email financing float font form give google great ground hide hover hour info input load margin meet more name nav none our phone policy priva question quick quote rate ready saving size src staff strict tab title today type use width employ dealer contact phone mail make inquir first last name zip code have question search blog popular tag open close mond tues wedn thur frid saturd sunday model year battery jump tire roadside access reward play gof family outside work star showroom link social media youtube twitter facebook critic review rating inventory holiday save saving money shop yelp page yellow blue red green white black pink brown qualif quality bing local friend lounge equip wifi shop motor keep site map)
     junks += [' our', ' me ', ' by ', ' an ', ' and ', ' a ', ' with ', ' the ', ' for ', ' from ', ' to ', ' come ', ' now ', ' your ']
@@ -237,6 +184,7 @@ class CsHelper # Contact Scraper Helper Method
     # junks.each { |junk| return [str] if down_str.include?(junk) }
     # return []
   end
+
 
   #CALL: ContScraper.new.start_cont_scraper
   def prep_create_staffer(cs_hsh_arr)
@@ -292,6 +240,7 @@ class CsHelper # Contact Scraper Helper Method
     return cs_hsh_arr
   end
 
+
   ## Reformats all Cont DB job_desc to job_title
   # #CALL: CsHelper.new.temper_get_job_title
   # def temper_get_job_title
@@ -303,6 +252,7 @@ class CsHelper # Contact Scraper Helper Method
   #     cont.update(job_title: job_title)
   #   end
   # end
+
 
   def get_job_title(job_desc)
     if job_desc.present?

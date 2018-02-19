@@ -31,14 +31,21 @@ class ContScraper
     ## Invalid Sts Query ##
     # @cut_off = 8.hours.ago
 
-    # query = Act.select(:id).where(url: 'https://www.hewlettvw.com').pluck(:id)
+    # query = Act.select(:id).where(url: 'http://www.elmerhareford.com').pluck(:id)
 
-    query = Act.select(:id).where(temp_name: 'Cobalt', cs_sts: 'Invalid').
+    # temp_name = 'Dealer Inspire'
+    # temp_name = 'DealerOn'
+    # temp_name = 'DealerFire'
+    # temp_name = 'DEALER eProcess'
+    temp_name = 'Dealer Direct'
+    # temp_name = 'DealerCar Search'
+
+    query = Act.select(:id).where(temp_name: temp_name, cs_sts: 'Valid').
       where('cs_date < ? OR cs_date IS NULL', @cut_off).
       order("updated_at ASC").pluck(:id)
 
     print_query_stats(query)
-    sleep(1)
+    binding.pry
     return query
     ########## SPECIAL ABOVE ############
 
@@ -162,14 +169,15 @@ class ContScraper
     puts cs_hsh_arr
 
     if !cs_hsh_arr&.any?
-      puts "No results - check css classes on website."
-      binding.pry
+      puts "\n\nNo results - check css classes on website.\n\n"
       act_obj.update(cs_sts: 'Invalid', cs_date: Time.now)
       return
     else
       act_id = act_obj.id
       cs_hsh_arr.each do |cs_hsh|
         cs_hsh[:act_id] = act_id
+        cs_hsh[:cs_date] = Time.now
+
         # cont_obj = act_obj.conts.find_by("LOWER(full_name) LIKE LOWER('%#{cs_hsh[:full_name]}%')")
         cont_obj = act_obj.conts.find_by(full_name: cs_hsh[:full_name])
         cont_obj.present? ? cont_obj.update(cs_hsh) : cont_obj = Cont.create(cs_hsh)

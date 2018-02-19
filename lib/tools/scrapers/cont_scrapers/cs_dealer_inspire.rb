@@ -20,38 +20,49 @@ class CsDealerInspire
 
   ##### Original ###
   def scrape_cont(noko_page)
-    if noko_page.css('.staff-bio h3')
-      staff_count = noko_page.css('.staff-bio h3').count
-      cs_hsh_arr = []
+    noko_page.css('br').each{ |br| br.replace(", ") }
 
-      for i in 0...staff_count
-        staff_hash = {}
-        # staff_hash[:full_name] = noko_page.xpath("//a[starts-with(@href, 'mailto:')]/@data-staff-name")[i].value
-        # staff_hash[:job] = noko_page.xpath("//a[starts-with(@href, 'mailto:')]/@data-staff-title") ? noko_page.xpath("//a[starts-with(@href, 'mailto:')]/@data-staff-title")[i].value : ""
-        staff_hash[:full_name] = noko_page.css('.staff-bio h3')[i] ? noko_page.css('.staff-bio h3')[i].text.strip : ""
-        staff_hash[:job_desc] = noko_page.css('.staff-bio h4')[i] ? noko_page.css('.staff-bio h4')[i].text.strip : ""
+    #### ORIGINAL BELOW ####
+    staffs = noko_page.css('.staff-bio h3')
 
-        staff_hash[:email] = noko_page.css('.staff-email-button')[i] ? noko_page.css('.staff-email-button')[i].attributes["href"].text.gsub(/^mailto:/, '') : ""
+    cs_hsh_arr = []
+    for i in 0...staffs.count
+      staff_hash = {}
+      # staff_hash[:full_name] = noko_page.xpath("//a[starts-with(@href, 'mailto:')]/@data-staff-name")[i].value
+      # staff_hash[:job] = noko_page.xpath("//a[starts-with(@href, 'mailto:')]/@data-staff-title") ? noko_page.xpath("//a[starts-with(@href, 'mailto:')]/@data-staff-title")[i].value : ""
+      staff_hash[:full_name] = noko_page.css('.staff-bio h3')[i] ? noko_page.css('.staff-bio h3')[i].text.strip : ""
+      staff_hash[:job_desc] = noko_page.css('.staff-bio h4')[i] ? noko_page.css('.staff-bio h4')[i].text.strip : ""
 
-        # staff_hash[:email] = noko_page.css('.staff-email-button')[i].attributes["href"] ? noko_page.css('.staff-email-button')[i].attributes["href"].text : ""
+      staff_hash[:email] = noko_page.css('.staff-email-button')[i] ? noko_page.css('.staff-email-button')[i].attributes["href"].text.gsub(/^mailto:/, '') : ""
+      # staff_hash[:email] = noko_page.css('.staff-email-button')[i].attributes["href"] ? noko_page.css('.staff-email-button')[i].attributes["href"].text : ""
+      staff_hash[:phone] = noko_page.css('.staffphone')[i] ? noko_page.css('.staffphone')[i].text.strip : ""
 
-        staff_hash[:phone] = noko_page.css('.staffphone')[i] ? noko_page.css('.staffphone')[i].text.strip : ""
-
-        cs_hsh_arr << staff_hash
-      end
-      cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
+      cs_hsh_arr << staff_hash
     end
 
+    cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
 
     if !cs_hsh_arr.any?
-      staffs_arr = []
-      staffs_arr << noko_page.css('.staff .staff-item')
-      staffs_arr << noko_page.css('.staff-bio h3')
-      staffs_arr << noko_page.css('.ict_content_cl .team-member')
-      cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
+      raw_staffs_arr = []
+      ez_staffs = []
+
+      raw_staffs_arr << noko_page.css('.staff .staff-item')
+      raw_staffs_arr << noko_page.css('.staff-bio h3')
+      raw_staffs_arr << noko_page.css('.ict_content_cl .team-member')
+
+      raw_staffs_arr.map do |raw_staffs|
+        ez_staffs += @cs_helper.extract_noko(raw_staffs) if raw_staffs.any?
+      end
+
+      cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
+
+      puts cs_hsh_arr
+      binding.pry if !cs_hsh_arr.any?
+      return cs_hsh_arr
     end
 
-    # binding.pry if !cs_hsh_arr.any?
+    # puts cs_hsh_arr.inspect
+    binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
   end
 end
