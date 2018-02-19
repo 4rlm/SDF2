@@ -5,8 +5,11 @@ class Act < ApplicationRecord
   has_many :conts
   accepts_nested_attributes_for :conts
 
+  has_many :act_links, dependent: :destroy
+  has_many :links, through: :act_links
+  accepts_nested_attributes_for :act_links, :links
+
   has_many :brandings, as: :brandable
   has_many :brands, through: :brandings
   accepts_nested_attributes_for :brandings, :brands
-
 end

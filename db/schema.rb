@@ -10,11 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180210050614) do
+ActiveRecord::Schema.define(version: 20180219161959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "citext"
+
+  create_table "act_links", force: :cascade do |t|
+    t.integer "act_id", null: false
+    t.integer "link_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["act_id", "link_id"], name: "index_act_links_on_act_id_and_link_id", unique: true
+    t.index ["act_id"], name: "index_act_links_on_act_id"
+    t.index ["link_id"], name: "index_act_links_on_link_id"
+  end
 
   create_table "acts", force: :cascade do |t|
     t.citext "act_name"
@@ -149,10 +159,18 @@ ActiveRecord::Schema.define(version: 20180210050614) do
   end
 
   create_table "links", force: :cascade do |t|
-    t.integer "count"
+    t.citext "staff_link", null: false
+    t.citext "staff_text"
+    t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
+  end
+
+  create_table "tallies", force: :cascade do |t|
+    t.integer "link_text_count"
+    t.citext "staff_link"
+    t.citext "staff_text"
     t.string "temp_name"
-    t.string "staff_link"
-    t.index ["staff_link"], name: "index_links_on_staff_link"
+    t.index ["staff_link"], name: "index_tallies_on_staff_link"
+    t.index ["staff_text"], name: "index_tallies_on_staff_text"
   end
 
   create_table "terms", force: :cascade do |t|
@@ -163,13 +181,6 @@ ActiveRecord::Schema.define(version: 20180210050614) do
     t.string "mth_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "texts", force: :cascade do |t|
-    t.integer "count"
-    t.string "temp_name"
-    t.string "staff_text"
-    t.index ["staff_text"], name: "index_texts_on_staff_text"
   end
 
   create_table "uni_acts", force: :cascade do |t|
