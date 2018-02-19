@@ -49,6 +49,8 @@ class CsHelper # Contact Scraper Helper Method
 
 
   def consolidate_cs_hsh_arr(ez_staffs)
+
+
     cs_hsh_arr = standard_scraper(ez_staffs)
     cs_hsh_arr.map! { |temp_cs_hsh| temp_cs_hsh.sort.to_h }
 

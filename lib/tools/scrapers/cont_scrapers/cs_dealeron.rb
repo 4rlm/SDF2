@@ -21,9 +21,12 @@ class CsDealeron
       staff_hash[:job_desc] = noko_page.css('.staff-desc')[i] ? noko_page.css('.staff-desc')[i].text.strip : ""
 
       ph_email_hash = ph_email_scraper(staffs[i])
-      # staff_hash[:phone] = ph_email_hash[:phone]
-      staff_hash[:phone] = Formatter.new.validate_phone(ph_email_hash[:phone])
-      staff_hash[:email] = @cs_helper.email_cleaner(ph_email_hash[:email])
+
+      if ph_email_hash
+        staff_hash[:phone] = Formatter.new.validate_phone(ph_email_hash[:phone])
+        staff_hash[:email] = @cs_helper.email_cleaner(ph_email_hash[:email])
+      end
+
       cs_hsh_arr << staff_hash
     end
 
@@ -45,13 +48,13 @@ class CsDealeron
 
       cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
 
-      puts cs_hsh_arr
-      binding.pry if !cs_hsh_arr.any?
+      # puts cs_hsh_arr
+      # binding.pry if !cs_hsh_arr.any?
       return cs_hsh_arr
     end
 
     # puts cs_hsh_arr.inspect
-    binding.pry if !cs_hsh_arr.any?
+    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
   end
 

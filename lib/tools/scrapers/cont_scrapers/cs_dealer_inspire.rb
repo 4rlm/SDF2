@@ -56,13 +56,13 @@ class CsDealerInspire
 
       cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
 
-      puts cs_hsh_arr
-      binding.pry if !cs_hsh_arr.any?
+      # puts cs_hsh_arr
+      # binding.pry if !cs_hsh_arr.any?
       return cs_hsh_arr
     end
 
     # puts cs_hsh_arr.inspect
-    binding.pry if !cs_hsh_arr.any?
+    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
   end
 end

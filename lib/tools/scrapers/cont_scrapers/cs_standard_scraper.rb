@@ -5,12 +5,8 @@ class CsStandardScraper
   end
 
   def scrape_cont(noko_page, full_staff_link, act_obj)
-    puts full_staff_link
-    puts act_obj.temp_name
     cs_hsh_arr = []
-
     staffs_arr = []
-    binding.pry
     staffs_arr << noko_page.css(".ResponsiveStaff .row.gutter")
     staffs_arr << noko_page.css(".row.gutter")
 
@@ -20,8 +16,8 @@ class CsStandardScraper
     # staffs_arr << noko_page.css('div.wpb_column.vc_column_container div.vc_row.wpb_row')
     # staffs_arr << noko_page.css('.team')
 
-    puts cs_hsh_arr.inspect
-    binding.pry
+    # puts cs_hsh_arr.inspect
+    # binding.pry
 
     cs_hsh_arr&.uniq!
     # binding.pry if !cs_hsh_arr.any?

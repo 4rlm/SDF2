@@ -157,6 +157,11 @@ class FindPage
 
       if (noko_text && noko_link) && (noko_text.length > 3 && noko_link.length > 3) && (is_banned(noko_link, noko_text, temp_name) != true)
 
+      #### BEGIN REFACTORING HERE ####
+      ## Save all valid Text and Link to join table, rather than only saving one link and one text in Act.  Keep page_sts, page_date in Act, but move staff_link and staff_text to Link (will save both link and text in same table, as is in Act currently.  As for the current Link and Text tables, those will be droped and replaced with Tally table. - be sure back up first!)
+      # - Change each return below to shovel into an array of hashes.  After all noko links checked, create method to find_or_create corresponding text and link (pair) in Link table, then shovel each object into the act_obj for joined.
+      ##### IMPORTANT ABOVE #######
+
         ## If No Matching Texts or Links find any that include 'team' or 'staff'
         if noko_text.include?('staff') || noko_link.include?('staff')
           puts "noko_text: #{noko_text}"
@@ -185,6 +190,9 @@ class FindPage
     return {} ## Avoids errors if nil.
   end
 
+
+  ############ HELPER METHODS BELOW ################
+
   #CALL: FindPage.new.start_find_page
   def is_banned(staff_link, staff_text, temp_name)
     return true if !staff_link.present? || !staff_text.present? || staff_link.length < 4
@@ -202,7 +210,6 @@ class FindPage
     light_ban.each { |ban| return true if staff_link.include?(ban) || staff_text.include?(ban) }
   end
 
-  ############ HELPER METHODS BELOW ################
 
   #CALL: FindPage.new.start_find_page
   def format_href_list(arr)

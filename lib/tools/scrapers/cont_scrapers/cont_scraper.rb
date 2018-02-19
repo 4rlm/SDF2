@@ -16,7 +16,7 @@ class ContScraper
     @obj_in_grp = 40
     @timeout = 60
     @count = 0
-    @cut_off = 8.hours.ago
+    @cut_off = 4.hours.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
@@ -31,27 +31,33 @@ class ContScraper
     ## Invalid Sts Query ##
     # @cut_off = 8.hours.ago
 
-    # query = Act.select(:id).where(url: 'http://www.elmerhareford.com').pluck(:id)
 
+    # temp_name = 'Dealer.com'
+    # temp_name = 'Cobalt'
     # temp_name = 'Dealer Inspire'
     # temp_name = 'DealerOn'
     # temp_name = 'DealerFire'
     # temp_name = 'DEALER eProcess'
-    temp_name = 'Dealer Direct'
-    # temp_name = 'DealerCar Search'
+    # temp_name = 'Dealer Direct'
 
-    query = Act.select(:id).where(temp_name: temp_name, cs_sts: 'Valid').
-      where('cs_date < ? OR cs_date IS NULL', @cut_off).
+    # query = Act.select(:id).where(url: 'http://www.elmerhareford.com').pluck(:id)
+    # query = Act.select(:id).where(temp_name: temp_name, cs_sts: 'Valid').
+    #   where('cs_date < ? OR cs_date IS NULL', @cut_off).
+    #   order("updated_at ASC").pluck(:id)
+    #
+    # print_query_stats(query)
+    # binding.pry
+    # return query
+    ########## SPECIAL ABOVE ############
+    temp_names = ['Dealer.com', 'Cobalt', 'Dealer Inspire', 'DealerOn', 'DealerFire', 'DEALER eProcess', 'Dealer Direct']
+
+    ## Nil Sts Query ##
+    query = Act.select(:id).where(temp_name: temp_names, page_sts: 'Valid', cs_sts: nil).
       order("updated_at ASC").pluck(:id)
 
     print_query_stats(query)
     binding.pry
     return query
-    ########## SPECIAL ABOVE ############
-
-    ## Nil Sts Query ##
-    query = Act.select(:id).where(page_sts: 'Valid', cs_sts: nil).
-      order("updated_at ASC").pluck(:id)
 
     ## Valid Sts Query ##
     query = Act.select(:id).where(cs_sts: 'Valid').
