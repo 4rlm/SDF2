@@ -117,10 +117,14 @@ class FindPage
 
         if !link_text_results.any?
           binding.pry
+          act_obj.update(page_sts: 'Invalid', page_date: Time.now)
         else
           link_text_results.each do |link_text_hsh|
             puts link_text_hsh
             binding.pry
+            link_obj = Link.find_or_create_by(link_text_hsh)
+            act_obj.link << link_obj
+            act_obj.update(page_sts: 'Valid', page_date: Time.now)
           end
         end
 

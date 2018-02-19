@@ -20,7 +20,7 @@ module CsvExport
   end
 
 
-  #CALL: CsvTool.new.backup_csv(Link, 'Links.csv')
+  #CALL: CsvTool.new.backup_csv(Tally, 'Tallies.csv')
   #CALL: CsvTool.new.backup_csv(Dealer, 'Dealers.csv')
   #CALL: CsvTool.new.backup_csv(Crma, 'Crmas.csv')
   #CALL: CsvTool.new.backup_csv(Crmc, 'Crmcs.csv')

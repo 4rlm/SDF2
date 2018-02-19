@@ -165,12 +165,11 @@ ActiveRecord::Schema.define(version: 20180219161959) do
   end
 
   create_table "tallies", force: :cascade do |t|
-    t.integer "link_text_count"
-    t.citext "staff_link"
-    t.citext "staff_text"
-    t.string "temp_name"
-    t.index ["staff_link"], name: "index_tallies_on_staff_link"
-    t.index ["staff_text"], name: "index_tallies_on_staff_text"
+    t.integer "count"
+    t.string "category"
+    t.citext "focus"
+    t.index ["category"], name: "index_tallies_on_category"
+    t.index ["focus"], name: "index_tallies_on_focus"
   end
 
   create_table "terms", force: :cascade do |t|
