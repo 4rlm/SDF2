@@ -3,8 +3,9 @@ class CreateLinks < ActiveRecord::Migration[5.1]
     enable_extension 'citext'
     create_table :links do |t|
 
-      t.citext :staff_link, null: false
-      t.citext :staff_text, null: true
+      t.citext  :staff_link, null: false
+      t.citext  :staff_text, null: true
+      t.integer :cs_count, default: 0
 
     end
     add_index :links, [:staff_link, :staff_text], unique: true

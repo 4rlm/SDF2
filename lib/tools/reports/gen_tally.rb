@@ -1,5 +1,18 @@
 module GenTally
 
+  ## Tallies total scraped contacts per link/text combo.  Currently stored in Acts, but will later be moved to Link after fully migrated.  So will need to change Act to Link later.
+  #CALL: GenTally.tally_link_cs_count
+  def self.tally_link_cs_count
+    ## Started setting up, but not finished.  Need to wait will scrape contacts uder new system because act cs_sts not reliable.
+    # binding.pry
+    # acts = Act.where(cs_sts: 'Valid').pluck(:id)
+    # acts = Act.where(cs_sts: 'Valid').pluck(:id)
+    # Cont.includes(:act).where(acts: {id: 1}, conts: {id: 1}).first
+    # t.citext  :staff_link, null: false
+    # t.citext  :staff_text, null: true
+    # t.integer :cs_count, default: 0
+  end
+
   ## One time use to migrate from Act to Link, so Tally can be generated, so FindPage can be done - CHAIN REACTION!!
   #CALL: GenTally.migrate_to_link
   def self.migrate_to_link

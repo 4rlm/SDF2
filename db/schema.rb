@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 20180219161959) do
   create_table "links", force: :cascade do |t|
     t.citext "staff_link", null: false
     t.citext "staff_text"
+    t.integer "cs_count", default: 0
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
   end
 

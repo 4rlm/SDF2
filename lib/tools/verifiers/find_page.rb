@@ -10,13 +10,13 @@ class FindPage
   include Noko
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 5
     @workers = 4
     @obj_in_grp = 50
-    @timeout = 60
+    @timeout = 15
     @count = 0
-    @cut_off = 5.hour.ago
+    @cut_off = 12.hour.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
@@ -29,15 +29,13 @@ class FindPage
 
   def get_query
     ### TESTING QUERIES BELOW - WILL DELETE AFTER REFACTORING SCHEMA AND PROCESS FOR FindPage, Link, ActLink, Tally.
-
     query = Act.select(:id).where(page_sts: 'Valid')
       .where('page_date < ? OR page_date IS NULL', @cut_off)
       .order("id ASC").pluck(:id)
 
     print_query_stats(query)
-    sleep(1)
-    # binding.pry
-    return query
+    binding.pry
+    # return query
 
 
     ### REAL QUERIES BELOW - MIGHT NEED TO MODIFY, BUT GENERALLY GOOD.
@@ -45,18 +43,23 @@ class FindPage
     ## Invalid Sts Query ##
     query = Act.select(:id).where(page_sts: "Invalid")
       .where('page_date < ? OR page_date IS NULL', @cut_off)
-      .order("page_date ASC").pluck(:id)
+      .order("page_date ASC").pluck(:id) if !query.any?
+
+    print_query_stats(query)
+    binding.pry
 
       ## Nil Sts Query ##
       query = Act.select(:id).where(temp_sts: 'Valid', page_sts: nil)
         .order("id ASC").pluck(:id) if !query.any?
 
     if !query.any?
-      # @cut_off = 15.hour.ago
       ## Valid Sts Query ##
       query = Act.select(:id).where(page_sts: 'Valid')
         .where('page_date < ? OR page_date IS NULL', @cut_off)
         .order("id ASC").pluck(:id)
+
+      print_query_stats(query)
+      binding.pry
     end
 
     ## Error Sts Query ##
@@ -64,6 +67,9 @@ class FindPage
       err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
       query = Act.select(:id).where(page_sts: err_sts_arr)
         .order("id ASC").pluck(:id)
+
+      print_query_stats(query)
+      binding.pry
 
       @timeout = 60
       if query.any? && @make_urlx
@@ -76,6 +82,7 @@ class FindPage
     end
 
     print_query_stats(query)
+    binding.pry
     return query
   end
 
@@ -200,7 +207,7 @@ class FindPage
     puts "\n\n===================="
     puts "UNIQ RESULTS: #{link_text_results.count}"
     puts link_text_results.inspect
-    binding.pry if !link_text_results.any?
+    # binding.pry if !link_text_results.any?
 
     return link_text_results
     # return {} ## Avoids errors if nil.
