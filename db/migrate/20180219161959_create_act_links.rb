@@ -4,6 +4,8 @@ class CreateActLinks < ActiveRecord::Migration[5.1]
 
       t.integer :act_id, index: true, null: false
       t.integer :link_id, index: true, null: false
+      t.string  :link_sts, index: true
+      t.integer :cs_count, default: 0
 
       t.timestamps
     end

@@ -19,11 +19,14 @@ ActiveRecord::Schema.define(version: 20180219161959) do
   create_table "act_links", force: :cascade do |t|
     t.integer "act_id", null: false
     t.integer "link_id", null: false
+    t.string "link_sts"
+    t.integer "cs_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["act_id", "link_id"], name: "index_act_links_on_act_id_and_link_id", unique: true
     t.index ["act_id"], name: "index_act_links_on_act_id"
     t.index ["link_id"], name: "index_act_links_on_link_id"
+    t.index ["link_sts"], name: "index_act_links_on_link_sts"
   end
 
   create_table "acts", force: :cascade do |t|
@@ -161,7 +164,6 @@ ActiveRecord::Schema.define(version: 20180219161959) do
   create_table "links", force: :cascade do |t|
     t.citext "staff_link", null: false
     t.citext "staff_text"
-    t.integer "cs_count", default: 0
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
   end
 

@@ -56,7 +56,6 @@ class ContScraper
       order("updated_at ASC").pluck(:id)
 
     print_query_stats(query)
-    binding.pry
     return query
 
     ## Valid Sts Query ##
@@ -73,7 +72,7 @@ class ContScraper
       @timeout = 60
 
       if query.any? && @make_urlx
-        query.each { |id| act_obj = Act.find(id).update(cs_sts: 'Invalid') }
+        query.each { |id| act = Act.find(id).update(cs_sts: 'Invalid') }
         query = [] ## reset
         @make_urlx = FALSE
       elsif query.any?
@@ -107,89 +106,113 @@ class ContScraper
   end
 
 
+
+  ### WORK BEGINS HERE !!!! ####
+
+
   #CALL: ContScraper.new.start_cont_scraper
   def template_starter(id)
-    act_obj = Act.find(id)
-    template = act_obj.temp_name
-    puts template
-    staff_link = act_obj.staff_link
+    act = Act.find(id)
+    template = act.temp_name
+    link_objs = act.links
 
-    if !staff_link.present?
-      act_obj.update(cs_sts: nil, page_sts: nil, staff_text: nil, staff_link: nil)
-    else
 
-      # if template = 'Cobalt' && staff_link.include?('landingpage')
-      #   staff_link = "/meet-our-staff"
-      # end
+    link_objs.each do |link_obj|
+      act_link_obj = act.act_links.find_by(link_id: link_obj)
+      staff_link = link_obj.staff_link
+      cs_hsh_arr = []
 
-      full_staff_link = "#{act_obj.url}#{staff_link}"
-      puts "full_staff_link: #{full_staff_link}"
+      if !staff_link.present?
+        puts "\n\nNo Staff Link!!\n\n"
+        ## Makes Act cs_sts: nil, but can change back to 'Valid' if more links behind.
+        act.update(cs_sts: err_msg, cs_date: Time.now)
+        act_link_obj.update(link_sts: nil, cs_count: 0)
+      else
+        full_staff_link = "#{act.url}#{staff_link}"
+        puts "full_staff_link: #{full_staff_link}"
 
-      noko_hsh = start_noko(full_staff_link)
-      noko_page = noko_hsh[:noko_page]
-      err_msg = noko_hsh[:err_msg]
-      act_update_hsh = { cs_date: Time.now }
+        noko_hsh = start_noko(full_staff_link)
+        noko_page = noko_hsh[:noko_page]
+        err_msg = noko_hsh[:err_msg]
+        act_update_hsh = { cs_date: Time.now }
 
-      if err_msg.present?
-        puts err_msg
-        act_update_hsh[:cs_sts] = err_msg
-        act_obj.update(act_update_hsh)
-      elsif noko_page.present?
-        if template.present?
-          case template
-          when "Dealer.com" ## Good
-            cs_hsh_arr = CsDealerCom.new.scrape_cont(noko_page)
-          when "Cobalt" ## Good - alpha
-            cs_hsh_arr = CsCobalt.new.scrape_cont(noko_page)
-          when "DealerOn" ## Good - alpha
-            cs_hsh_arr = CsDealeron.new.scrape_cont(noko_page)
-          when "Dealer Direct" ## Good - alpha
-            cs_hsh_arr = CsDealerDirect.new.scrape_cont(noko_page)
-          when "Dealer Inspire" ## Good - alpha
-            cs_hsh_arr = CsDealerInspire.new.scrape_cont(noko_page)
-          when "DealerFire" ## Good - alpha
-            cs_hsh_arr = CsDealerfire.new.scrape_cont(noko_page)
-          when "DEALER eProcess" ## Good - alpha
-            cs_hsh_arr = CsDealerEprocess.new.scrape_cont(noko_page)
-          when "Search Optics"
-            cs_hsh_arr = CsSearchOptics.new.scrape_cont(noko_page, full_staff_link, act_obj)
-          when "fusionZONE"
-            cs_hsh_arr = CsFusionZone.new.scrape_cont(noko_page, full_staff_link, act_obj)
+        if err_msg.present?
+          puts err_msg
+          ## Makes Act cs_sts: error, but can change back to 'Valid' if more links behind.
+          act.update(cs_sts: err_msg, cs_date: Time.now)
+          act_link_obj.update(link_sts: err_msg, cs_count: 0)
+        elsif noko_page.present?
+          if template.present?
+            case template
+            when "Dealer.com" ## Good
+              cs_hsh_arr = CsDealerCom.new.scrape_cont(noko_page)
+            when "Cobalt" ## Good - alpha
+              cs_hsh_arr = CsCobalt.new.scrape_cont(noko_page)
+            when "DealerOn" ## Good - alpha
+              cs_hsh_arr = CsDealeron.new.scrape_cont(noko_page)
+            when "Dealer Direct" ## Good - alpha
+              cs_hsh_arr = CsDealerDirect.new.scrape_cont(noko_page)
+            when "Dealer Inspire" ## Good - alpha
+              cs_hsh_arr = CsDealerInspire.new.scrape_cont(noko_page)
+            when "DealerFire" ## Good - alpha
+              cs_hsh_arr = CsDealerfire.new.scrape_cont(noko_page)
+            when "DEALER eProcess" ## Good - alpha
+              cs_hsh_arr = CsDealerEprocess.new.scrape_cont(noko_page)
+            when "Search Optics"
+              cs_hsh_arr = CsSearchOptics.new.scrape_cont(noko_page, full_staff_link, act)
+            when "fusionZONE"
+              cs_hsh_arr = CsFusionZone.new.scrape_cont(noko_page, full_staff_link, act)
+            # else
+            #   cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page, full_staff_link, act)
+            end
+            update_db(act, cs_hsh_arr, link_obj, act_link_obj)
           # else
-          #   cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page, full_staff_link, act_obj)
+            # cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page, full_staff_link, act)
+            # update_db(act, cs_hsh_arr, link_obj, act_link_obj)
           end
-          update_db(act_obj, cs_hsh_arr)
-        # else
-          # cs_hsh_arr = CsStandardScraper.new.scrape_cont(noko_page, full_staff_link, act_obj)
-          # update_db(act_obj, cs_hsh_arr)
         end
       end
     end
-
   end
 
   #CALL: ContScraper.new.start_cont_scraper
-  def update_db(act_obj, cs_hsh_arr)
+  def update_db(act, cs_hsh_arr, link_obj, act_link_obj)
     cs_hsh_arr.flatten! if cs_hsh_arr.present?
-    # cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
+    cs_count_arr = []
+    cs_total_arr = []
     puts cs_hsh_arr
 
     if !cs_hsh_arr&.any?
-      puts "\n\nNo results - check css classes on website.\n\n"
-      act_obj.update(cs_sts: 'Invalid', cs_date: Time.now)
-      return
+      puts "\n\nVALID LINK, BUT NO SCRAPED CONTACTS.\n\n"
+      act_link_obj.update(link_sts: 'Valid', cs_count: 0)
     else
-      act_id = act_obj.id
+      puts "\n\nVALID LINK AND SCRAPED CONTACTS!!\n\n"
+      act_id = act.id
+
       cs_hsh_arr.each do |cs_hsh|
+        puts cs_hsh.inspect
         cs_hsh[:act_id] = act_id
         cs_hsh[:cs_date] = Time.now
 
-        # cont_obj = act_obj.conts.find_by("LOWER(full_name) LIKE LOWER('%#{cs_hsh[:full_name]}%')")
-        cont_obj = act_obj.conts.find_by(full_name: cs_hsh[:full_name])
+        cont_obj = act.conts.find_by(full_name: cs_hsh[:full_name])
         cont_obj.present? ? cont_obj.update(cs_hsh) : cont_obj = Cont.create(cs_hsh)
+        cs_count_arr << cont_obj.id
       end
-      act_obj.update(cs_sts: 'Valid', cs_date: Time.now)
+
+      ## Calculate Scraped Contacts Count from each link.
+      cs_total_arr.flatten!
+      cs_count_arr&.uniq!
+      cs_count = cs_count_arr.count
+      cs_total_arr << cs_count_arr
+      act_link_obj.update(link_sts: 'Valid', cs_count: cs_count)
     end
+
+    ## Final Update Act
+    cs_total_arr.flatten!
+    cs_total_arr&.uniq!
+    cs_total = cs_total_arr.count
+    cs_total > 0 ? cs_sts = 'Valid' : cs_sts = 'Invalid'
+    act.update(cs_sts: cs_sts, cs_date: Time.now)
   end
 
 end
