@@ -16,7 +16,7 @@ class ContScraper
     @obj_in_grp = 40
     @timeout = 60
     @count = 0
-    @cut_off = 4.hours.ago
+    @cut_off = 12.hours.ago
     @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
