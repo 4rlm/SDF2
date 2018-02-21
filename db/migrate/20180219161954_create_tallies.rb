@@ -1,13 +1,16 @@
 class CreateTallies < ActiveRecord::Migration[5.1]
   def change
-    enable_extension 'citext'
     create_table :tallies do |t|
 
-      t.integer :count, allow_nil: false
-      t.string  :category, index: true, unique: true, allow_nil: false
-      t.citext  :focus, index: true, unique: true, allow_nil: false
+      t.jsonb :acts, null: false, default: '{}'
+      t.jsonb :links, null: false, default: '{}'
+      t.jsonb :act_links, null: false, default: '{}'
 
+      t.timestamps
     end
-    # add_index :tallies, [:staff_link, :staff_text], unique: true
+
+    add_index  :tallies, :acts, using: :gin
+    add_index  :tallies, :links, using: :gin
+    add_index  :tallies, :act_links, using: :gin
   end
 end

@@ -22,13 +22,13 @@ class FindPage
     @mig = Mig.new
     # @tally_staff_links = Link.order("count DESC").pluck(:staff_link)
     # @tally_staff_texts = Text.order("count DESC").pluck(:staff_text)
-    @tally_staff_links = Tally.where(category: 'staff_link').order("count DESC").pluck(:focus)
-    @tally_staff_texts = Tally.where(category: 'staff_text').order("count DESC").pluck(:focus)
+    @tally_staff_links = Dash.where(category: 'staff_link').order("count DESC").pluck(:focus)
+    @tally_staff_texts = Dash.where(category: 'staff_text').order("count DESC").pluck(:focus)
   end
 
 
   def get_query
-    ### TESTING QUERIES BELOW - WILL DELETE AFTER REFACTORING SCHEMA AND PROCESS FOR FindPage, Link, ActLink, Tally.
+    ### TESTING QUERIES BELOW - WILL DELETE AFTER REFACTORING SCHEMA AND PROCESS FOR FindPage, Link, ActLink, Dash.
     # query = Act.select(:id).where(page_sts: 'Valid')
     #   .where('page_date < ? OR page_date IS NULL', @cut_off)
     #   .order("id ASC").pluck(:id)

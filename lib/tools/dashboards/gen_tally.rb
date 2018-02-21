@@ -1,5 +1,17 @@
 module GenTally
 
+  ### Notes on JSON QUERYING:
+  # acts = Tally.last.acts
+  # links = Tally.last.links
+  # act_links = Tally.last.act_links
+
+  # temp_names = acts['temp_name']
+  # staff_links = links['staff_link']
+  # cs_counts = act_links['cs_count']
+
+  # staff_links = Tally.last.links['staff_link'][0..20]
+  # staff_texts = Tally.last.links['staff_text'][0..20]
+  # cs_counts = Tally.last.act_links['cs_count'][0..20]
 
   #CALL: GenTally.start_tally
   def self.start_tally
@@ -8,47 +20,66 @@ module GenTally
     {mod: 'link', cols: ['staff_link', 'staff_text']},
     {mod: 'act_link', cols: ['link_sts', 'cs_count']}]
 
-    db_tallies = mod_cols.map do |mod_col|
-      mod_tallies = cols.map { |col| get_col_tally(mod_col[:mod], mod_col[:cols]) }
-      mod_tally_hsh = {mod: mod, mod_tallies: mod_tallies}
-      binding.pry
-      return mod_tally_hsh
+    db_tallies = {}
+    mod_cols.each do |mod_col|
+      mod = mod_col[:mod]
+      cols = mod_col[:cols]
+
+      # mod_tallies = cols.map { |col| get_col_tally(mod, col) }
+      mod_tallies = {}
+       cols.each do |col|
+        # col_tallies = get_col_tally(mod, col)
+        # binding.pry
+        # col_tallies_hsh = get_col_tally(mod, col)
+        # col_tallies_hsh = get_col_tally(mod, col)
+        # binding.pry ### Merge both.
+        mod_tallies.merge!(get_col_tally(mod, col))
+
+        # mod_tallies.merge({"#{mod.pluralize.to_sym}"=> mod_tallies})
+        # mod_tallies["#{col.to_sym}"] = col_tallies_arr
+        # mod_tallies[col.to_sym] = col_tallies_arr
+
+        # col_tallies = get_col_tally(mod, col)
+        # binding.pry
+        # mod_tallies['col'] =
+        # binding.pry
+      end
+
+      # db_tallies.merge!({"#{mod.pluralize.to_sym}"=> mod_tallies})
+      db_tallies.merge!({"#{mod.pluralize}"=> mod_tallies})
     end
 
-    ## Should save this to db - Dash or Tally
-    ### IMPORTANT - SCHEMA CHANGE: Drop Tally, then create new Tally to save these tallies in.
-    ### It will only have one col: db_tallies, plus timestamps.
-    ### Current 'Tally' will be changed to 'Dash'.
-    ### First create Dash migration exactly same as current Tally.
-    ### Then create and migrate schema.
-    ### Then create migration file for NEW Tally, then drop, create, migrate.
-    ### NOTE: When restoring back_ups change name of 'tallies.csv' to 'dashes.csv', then create backup csv ONLY for NEW Tally., then restore all backups.
-    ### Then create new back_up and save to desktop.
-
-    binding.pry
-    return db_tallies
+    tally = Tally.create!(db_tallies)
   end
 
 
   #CALL: GenTally.start_tally
   def self.get_col_tally(mod_name, col)
     mod = mod_name.classify.constantize
-
     selected_fields = mod.select(col.to_sym).pluck(col.to_sym)
     field_groups_hsh = Hash[selected_fields.group_by {|x| x}.map {|k,v| [k,v.count]}]
     ranked_field_groups = field_groups_hsh.sort_by{|k,v| v}.reverse.to_h
 
-    col_tallies = ranked_field_groups.map do |field_group_arr|
+    col_tallies_arr = ranked_field_groups.map do |field_group_arr|
       field_name = field_group_arr.first
       count = field_group_arr.last
-      # tallied_field_hsh = {col: col, item: field_name, count: count}
-      tallied_field_hsh = {item: field_name, count: count}
+      tallied_field_hsh = {"item"=> field_name, "count"=> count}
     end
 
-    col_tally_hsh = {col: col, col_tallies: col_tallies}
-    binding.pry
-    return col_tally_hsh
+    col_tallies_hsh = {"#{col}"=> col_tallies_arr}
+    return col_tallies_hsh
   end
+
+
+
+
+
+
+
+
+
+
+
 
 
   # # SAVE: Works well, but not needed now.
@@ -94,7 +125,7 @@ module GenTally
     # t.integer :cs_count, default: 0
   end
 
-  ## One time use to migrate from Act to Link, so Tally can be generated, so FindPage can be done - CHAIN REACTION!!
+  ## One time use to migrate from Act to Link, so Dash can be generated, so FindPage can be done - CHAIN REACTION!!
   #CALL: GenTally.migrate_to_link
   def self.migrate_to_link
     acts = Act.where.not(staff_link: nil, staff_text: nil)
@@ -164,7 +195,7 @@ module GenTally
 
   #CALL: GenTally.tally_links
   def self.tally_links
-    Tally.where(category: 'staff_link').destroy_all
+    Dash.where(category: 'staff_link').destroy_all
     reset_primary_ids
 
     staff_links = Link.where.not(staff_link: nil).map { |link| link.staff_link }
@@ -177,20 +208,20 @@ module GenTally
 
       if count > 1
         link_hsh = {category: 'staff_link', focus: staff_link, count: count}
-        tally_obj = Tally.find_by(category: 'staff_link', focus: staff_link)&.update(link_hsh)
-        tally_obj = Tally.create(link_hsh) if !tally_obj.present?
+        tally_obj = Dash.find_by(category: 'staff_link', focus: staff_link)&.update(link_hsh)
+        tally_obj = Dash.create(link_hsh) if !tally_obj.present?
       end
     end
 
     ## Delete Bad links
-    Tally.where(category: 'staff_link').where("focus like '%landing%'").destroy_all
-    Tally.where(category: 'staff_link').where("focus like '%miscpage%'").destroy_all
+    Dash.where(category: 'staff_link').where("focus like '%landing%'").destroy_all
+    Dash.where(category: 'staff_link').where("focus like '%miscpage%'").destroy_all
   end
 
 
   #CALL: GenTally.tally_texts
   def self.tally_texts
-    Tally.where(category: 'staff_text').destroy_all
+    Dash.where(category: 'staff_text').destroy_all
     reset_primary_ids
 
     staff_texts = Link.where.not(staff_text: nil).map { |link| link.staff_text }
@@ -203,8 +234,8 @@ module GenTally
 
       if count > 1
         text_hsh = {category: 'staff_text', focus: staff_text, count: count}
-        text_obj = Tally.find_by(category: 'staff_text', focus: staff_text)&.update(text_hsh)
-        text_obj = Tally.create(text_hsh) if !text_obj.present?
+        text_obj = Dash.find_by(category: 'staff_text', focus: staff_text)&.update(text_hsh)
+        text_obj = Dash.create(text_hsh) if !text_obj.present?
       end
     end
   end

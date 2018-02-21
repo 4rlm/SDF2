@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180219161959) do
+ActiveRecord::Schema.define(version: 20180220204553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,16 @@ ActiveRecord::Schema.define(version: 20180219161959) do
     t.index ["crmc"], name: "index_crmcs_on_crmc"
   end
 
+  create_table "dashes", force: :cascade do |t|
+    t.integer "count"
+    t.string "category"
+    t.citext "focus"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_dashes_on_category"
+    t.index ["focus"], name: "index_dashes_on_focus"
+  end
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
@@ -168,11 +178,14 @@ ActiveRecord::Schema.define(version: 20180219161959) do
   end
 
   create_table "tallies", force: :cascade do |t|
-    t.integer "count"
-    t.string "category"
-    t.citext "focus"
-    t.index ["category"], name: "index_tallies_on_category"
-    t.index ["focus"], name: "index_tallies_on_focus"
+    t.jsonb "acts", default: "{}", null: false
+    t.jsonb "links", default: "{}", null: false
+    t.jsonb "act_links", default: "{}", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["act_links"], name: "index_tallies_on_act_links", using: :gin
+    t.index ["acts"], name: "index_tallies_on_acts", using: :gin
+    t.index ["links"], name: "index_tallies_on_links", using: :gin
   end
 
   create_table "terms", force: :cascade do |t|

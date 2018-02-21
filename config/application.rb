@@ -57,6 +57,9 @@ module Sdf2
     config.autoload_paths << Rails.root.join('lib/tools/scrapers')
     config.autoload_paths += Dir["#{config.root}/lib/tools/scrapers"]
 
+    config.autoload_paths << Rails.root.join('lib/tools/serializers')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/serializers"]
+
     config.autoload_paths << Rails.root.join('lib/tools/scrapers/act_scrapers')
     config.autoload_paths += Dir["#{config.root}/lib/tools/scrapers/act_scrapers"]
 
