@@ -9,10 +9,11 @@ module GenTally
   # staff_links = links['staff_link']
   # cs_counts = act_links['cs_count']
 
-  # staff_links = Tally.last.links['staff_link'][0..20]
   # staff_texts = Tally.last.links['staff_text'][0..20]
+  # staff_links = Tally.last.links['staff_link'][0..20]
   # cs_counts = Tally.last.act_links['cs_count'][0..20]
 
+  ## Tallies total counts of each uniq item from each of the models and cols below, then saves them to jsonb in Tally model.
   #CALL: GenTally.start_tally
   def self.start_tally
     mod_cols = [
@@ -25,27 +26,11 @@ module GenTally
       mod = mod_col[:mod]
       cols = mod_col[:cols]
 
-      # mod_tallies = cols.map { |col| get_col_tally(mod, col) }
       mod_tallies = {}
        cols.each do |col|
-        # col_tallies = get_col_tally(mod, col)
-        # binding.pry
-        # col_tallies_hsh = get_col_tally(mod, col)
-        # col_tallies_hsh = get_col_tally(mod, col)
-        # binding.pry ### Merge both.
         mod_tallies.merge!(get_col_tally(mod, col))
-
-        # mod_tallies.merge({"#{mod.pluralize.to_sym}"=> mod_tallies})
-        # mod_tallies["#{col.to_sym}"] = col_tallies_arr
-        # mod_tallies[col.to_sym] = col_tallies_arr
-
-        # col_tallies = get_col_tally(mod, col)
-        # binding.pry
-        # mod_tallies['col'] =
-        # binding.pry
       end
 
-      # db_tallies.merge!({"#{mod.pluralize.to_sym}"=> mod_tallies})
       db_tallies.merge!({"#{mod.pluralize}"=> mod_tallies})
     end
 
@@ -53,7 +38,7 @@ module GenTally
   end
 
 
-  #CALL: GenTally.start_tally
+  ## Helper method for start_tally method.
   def self.get_col_tally(mod_name, col)
     mod = mod_name.classify.constantize
     selected_fields = mod.select(col.to_sym).pluck(col.to_sym)
@@ -71,17 +56,6 @@ module GenTally
   end
 
 
-
-
-
-
-
-
-
-
-
-
-
   # # SAVE: Works well, but not needed now.
   # def self.get_mod_cols(mod_name)
   #   mod = mod_name.classify.constantize
@@ -93,60 +67,29 @@ module GenTally
 
   ####### ORIGINAL BELOW - ABOVE REFACTORED VERSION. ######
 
-  #CALL: GenTally.tally_templates
-  def self.tally_templates
-    templates = Link.where.not(temp_name: nil).map { |link| link.temp_name }
-    ranked_temps = Hash[templates.group_by {|x| x}.map {|k,v| [k,v.count]}]
-    sorted_temps = ranked_temps.sort_by{|k,v| v}.reverse.to_h
-
-    sorted_temps.each do |temp_arr|
-      temp_name = temp_arr.first
-      count = temp_arr.last
-
-      if count > 3
-        temp_hsh = {temp_name: temp_name, count: count}
-        puts temp_hsh
-      end
-
-    end
-  end
-
-
-  ## Tallies total scraped contacts per link/text combo.  Currently stored in Acts, but will later be moved to Link after fully migrated.  So will need to change Act to Link later.
-  #CALL: GenTally.tally_link_cs_count
-  def self.tally_link_cs_count
-    ## Started setting up, but not finished.  Need to wait will scrape contacts uder new system because act cs_sts not reliable.
-    # binding.pry
-    # acts = Act.where(cs_sts: 'Valid').pluck(:id)
-    # acts = Act.where(cs_sts: 'Valid').pluck(:id)
-    # Cont.includes(:act).where(acts: {id: 1}, conts: {id: 1}).first
-    # t.citext  :staff_link, null: false
-    # t.citext  :staff_text, null: true
-    # t.integer :cs_count, default: 0
-  end
 
   ## One time use to migrate from Act to Link, so Dash can be generated, so FindPage can be done - CHAIN REACTION!!
   #CALL: GenTally.migrate_to_link
-  def self.migrate_to_link
-    acts = Act.where.not(staff_link: nil, staff_text: nil)
-    acts.each do |act|
-      link_obj = Link.find_or_create_by(staff_link: act.staff_link, staff_text: act.staff_text)
-      act_link = act.links.where(id: link_obj).exists?
-      act.links << link_obj if !act_link.present?
-    end
-  end
+  # def self.migrate_to_link
+  #   acts = Act.where.not(staff_link: nil, staff_text: nil)
+  #   acts.each do |act|
+  #     link_obj = Link.find_or_create_by(staff_link: act.staff_link, staff_text: act.staff_text)
+  #     act_link = act.links.where(id: link_obj).exists?
+  #     act.links << link_obj if !act_link.present?
+  #   end
+  # end
 
 
   #CALL: GenTally.combo_tally
-  def self.combo_tally
-    # prep_tally
-    tally_links
-    tally_texts
-  end
+  # def self.combo_tally
+  #   # prep_tally
+  #   tally_links
+  #   tally_texts
+  # end
 
   ## prep_tally needs to be refactored, but method might not be necessary any more.
   #CALL: GenTally.prep_tally
-  def self.prep_tally
+  # def self.prep_tally
 
     ## Format Term Texts
     # terms = Term.where(sub_category: "staff_text").map do |term|
@@ -191,61 +134,61 @@ module GenTally
       # acts = Link.where("staff_link LIKE '%#{ban}%'").each {|link| link.update(make_nil_hsh)}
       # acts = Link.where("staff_text LIKE '%#{ban}%'").each {|link| link.update(make_nil_hsh)}
     # end
-  end
+  # end
 
   #CALL: GenTally.tally_links
-  def self.tally_links
-    Dash.where(category: 'staff_link').destroy_all
-    reset_primary_ids
-
-    staff_links = Link.where.not(staff_link: nil).map { |link| link.staff_link }
-    ranked_links = Hash[staff_links.group_by {|x| x}.map {|k,v| [k,v.count]}]
-    sorted_links = ranked_links.sort_by{|k,v| v}.reverse.to_h
-
-    sorted_links.each do |link_arr|
-      staff_link = link_arr.first
-      count = link_arr.last
-
-      if count > 1
-        link_hsh = {category: 'staff_link', focus: staff_link, count: count}
-        tally_obj = Dash.find_by(category: 'staff_link', focus: staff_link)&.update(link_hsh)
-        tally_obj = Dash.create(link_hsh) if !tally_obj.present?
-      end
-    end
-
-    ## Delete Bad links
-    Dash.where(category: 'staff_link').where("focus like '%landing%'").destroy_all
-    Dash.where(category: 'staff_link').where("focus like '%miscpage%'").destroy_all
-  end
+  # def self.tally_links
+  #   Dash.where(category: 'staff_link').destroy_all
+  #   reset_primary_ids
+  #
+  #   staff_links = Link.where.not(staff_link: nil).map { |link| link.staff_link }
+  #   ranked_links = Hash[staff_links.group_by {|x| x}.map {|k,v| [k,v.count]}]
+  #   sorted_links = ranked_links.sort_by{|k,v| v}.reverse.to_h
+  #
+  #   sorted_links.each do |link_arr|
+  #     staff_link = link_arr.first
+  #     count = link_arr.last
+  #
+  #     if count > 1
+  #       link_hsh = {category: 'staff_link', focus: staff_link, count: count}
+  #       tally_obj = Dash.find_by(category: 'staff_link', focus: staff_link)&.update(link_hsh)
+  #       tally_obj = Dash.create(link_hsh) if !tally_obj.present?
+  #     end
+  #   end
+  #
+  #   ## Delete Bad links
+  #   Dash.where(category: 'staff_link').where("focus like '%landing%'").destroy_all
+  #   Dash.where(category: 'staff_link').where("focus like '%miscpage%'").destroy_all
+  # end
 
 
   #CALL: GenTally.tally_texts
-  def self.tally_texts
-    Dash.where(category: 'staff_text').destroy_all
-    reset_primary_ids
+  # def self.tally_texts
+  #   Dash.where(category: 'staff_text').destroy_all
+  #   reset_primary_ids
+  #
+  #   staff_texts = Link.where.not(staff_text: nil).map { |link| link.staff_text }
+  #   ranked_texts = Hash[staff_texts.group_by {|x| x}.map {|k,v| [k,v.count]}]
+  #   sorted_texts = ranked_texts.sort_by{|k,v| v}.reverse.to_h
+  #
+  #   sorted_texts.each do |text_arr|
+  #     staff_text = text_arr.first
+  #     count = text_arr.last
+  #
+  #     if count > 1
+  #       text_hsh = {category: 'staff_text', focus: staff_text, count: count}
+  #       text_obj = Dash.find_by(category: 'staff_text', focus: staff_text)&.update(text_hsh)
+  #       text_obj = Dash.create(text_hsh) if !text_obj.present?
+  #     end
+  #   end
+  # end
 
-    staff_texts = Link.where.not(staff_text: nil).map { |link| link.staff_text }
-    ranked_texts = Hash[staff_texts.group_by {|x| x}.map {|k,v| [k,v.count]}]
-    sorted_texts = ranked_texts.sort_by{|k,v| v}.reverse.to_h
 
-    sorted_texts.each do |text_arr|
-      staff_text = text_arr.first
-      count = text_arr.last
-
-      if count > 1
-        text_hsh = {category: 'staff_text', focus: staff_text, count: count}
-        text_obj = Dash.find_by(category: 'staff_text', focus: staff_text)&.update(text_hsh)
-        text_obj = Dash.create(text_hsh) if !text_obj.present?
-      end
-    end
-  end
-
-
-  def self.reset_primary_ids
-    ActiveRecord::Base.connection.tables.each do |t|
-      ActiveRecord::Base.connection.reset_pk_sequence!(t)
-    end
-  end
+  # def self.reset_primary_ids
+  #   ActiveRecord::Base.connection.tables.each do |t|
+  #     ActiveRecord::Base.connection.reset_pk_sequence!(t)
+  #   end
+  # end
 
 
 end
