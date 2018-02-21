@@ -19,8 +19,6 @@ class VerUrl
     @timeout = 10 ## below
     @max_time = 60
     @cut_off = 7.days.ago
-    # @cut_off = 1.minute.ago
-    # @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
   end
@@ -66,7 +64,7 @@ class VerUrl
 
     formatted_url = @formatter.format_url(web_url)
     if !formatted_url.present?
-      web.update(url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now)
+      web.update(url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now, timeout: timeout)
       return
     end
 
@@ -89,9 +87,9 @@ class VerUrl
         update_db(web, curl_hsh)
       elsif err_msg == "Error: Timeout" || err_msg == "Error: Host"
         puts "err_msg: #{err_msg}"
-        web.update(url_sts: err_msg, timeout: timeout, url_date: Time.now)
+        web.update(url_sts: err_msg, url_date: Time.now, timeout: timeout)
       else
-        web.update(url_sts_code: nil, url_sts: err_msg, timeout: 0, url_date: Time.now)
+        web.update(url_sts_code: nil, url_sts: err_msg, url_date: Time.now, timeout: 0)
       end
 
     end
@@ -107,7 +105,7 @@ class VerUrl
     if fwd_web_obj.present?
       AssocWeb.transfer_web_associations(web, fwd_web_obj)
     else
-      web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, timeout: 0, url_date: Time.now)
+      web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)
     end
   end
 

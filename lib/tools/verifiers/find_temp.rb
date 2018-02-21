@@ -16,43 +16,26 @@ class FindTemp
     @workers = 4
     @obj_in_grp = 40
     @timeout = 10
+    @max_time = 60
     @cut_off = 10.days.ago
-    @make_urlx = FALSE
     @mig = Mig.new
   end
 
   def get_query
     ## Nil Sts Query ##
-    query = Act.select(:id).where(url_sts: 'Valid', temp_sts: nil).order("id ASC").pluck(:id)
+    query = Web.select(:id).where(url_sts: 'Valid', temp_sts: nil, timeout: 0).order("id ASC").pluck(:id)
 
     ## Valid Sts Query ##
-    val_sts_arr = ['Valid']
-    query = Act.select(:id).where(url_sts: 'Valid', temp_sts: val_sts_arr).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.any?
+    query = Web.select(:id).where(url_sts: 'Valid', temp_sts: 'Valid', timeout: 0).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
-    if !query.any?
-      err_sts_arr = ['Error: Host', 'Error: Timeout', 'Error: TCP']
-      query = Act.select(:id).where(url_sts: 'Valid', temp_sts: err_sts_arr).order("id ASC").pluck(:id)
-      @timeout = 60
+    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+    query = Web.select(:id).where(url_sts: 'Valid', temp_sts: err_sts_arr).where('timeout < ?', @max_time).order("timeout ASC").pluck(:id) if !query.any?
 
-      if query.any? && @make_urlx
-        query.each { |id| act_obj = Act.find(id).update(temp_sts: 'Invalid') }
-        query = [] ## reset
-        @make_urlx = FALSE
-      elsif query.any?
-        @make_urlx = TRUE
-      end
-    end
-
-    print_query_stats(query)
-    sleep(1)
-    return query
-  end
-
-  def print_query_stats(query)
-    puts "\n\n===================="
-    puts "@timeout: #{@timeout}\n\n"
     puts "\n\nQuery Count: #{query.count}"
+    # sleep(1)
+    binding.pry
+    return query
   end
 
   def start_find_temp
@@ -71,42 +54,48 @@ class FindTemp
   end
 
   def template_starter(id)
-    act_obj = Act.find(id) if id.present?
+    web = Web.find(id)
+    web_url = web.url
+    db_timeout = web.timeout
+    db_timeout = 0 ? timeout = @timeout : timeout = (db_timeout * 3)
+    puts db_timeout
+    puts timeout
+    binding.pry
 
-    if act_obj.present?
-      web_url = act_obj.url
-      noko_hsh = start_noko(web_url)
+    if web.present?
+      web_url = web.url
+      noko_hsh = start_noko(web_url, timeout)
       page = noko_hsh[:noko_page]
       err_msg = noko_hsh[:err_msg]
 
       if err_msg.present?
         puts err_msg
-        temp_sts = err_msg
-        new_temp = 'Error: Search'
+        web.update(temp_sts: err_msg, temp_name: 'Error: Search', tmp_date: Time.now, timeout: timeout)
+        return
       end
 
       if page.present?
         new_temp = Term.where(category: "find_temp").where(sub_category: "at_css").select { |term| term.response_term if page&.at_css('html')&.text&.include?(term.criteria_term) }&.first&.response_term
         new_temp.present? ? temp_sts = 'Valid' : temp_sts = 'Unidentified'
+        update_db(id, web, new_temp, temp_sts)
       end
-      update_db(id, act_obj, new_temp, temp_sts)
     end
   end
 
-  def update_db(id, act_obj, new_temp, temp_sts)
-    cur_temp = act_obj.temp_name
-    act_hsh = {temp_sts: temp_sts, temp_name: new_temp, tmp_date: Time.now}
-    act_obj.update(act_hsh)
-    print_temp_results(act_obj, cur_temp, new_temp, temp_sts)
+  def update_db(id, web, new_temp, temp_sts)
+    binding.pry
+    cur_temp = web.temp_name
+    web.update(temp_sts: temp_sts, temp_name: new_temp, tmp_date: Time.now, timeout: 0)
+    print_temp_results(web, cur_temp, new_temp, temp_sts)
   end
 
-  def print_temp_results(act_obj, cur_temp, new_temp, temp_sts)
+  def print_temp_results(web, cur_temp, new_temp, temp_sts)
     puts "\n\n================"
     puts "cur_temp: #{cur_temp}"
     puts "new_temp: #{new_temp}"
     puts "temp_sts: #{temp_sts}"
     puts "-----------------------"
-    puts "#{act_obj.inspect}\n\n"
+    puts "#{web.inspect}\n\n"
   end
 
 end
