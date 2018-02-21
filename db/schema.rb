@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180220204553) do
+ActiveRecord::Schema.define(version: 20180221105039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(version: 20180220204553) do
     t.index ["act_id"], name: "index_act_links_on_act_id"
     t.index ["link_id"], name: "index_act_links_on_link_id"
     t.index ["link_sts"], name: "index_act_links_on_link_sts"
+  end
+
+  create_table "act_webs", force: :cascade do |t|
+    t.integer "act_id", null: false
+    t.integer "web_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["act_id", "web_id"], name: "index_act_webs_on_act_id_and_web_id", unique: true
+    t.index ["act_id"], name: "index_act_webs_on_act_id"
+    t.index ["web_id"], name: "index_act_webs_on_web_id"
   end
 
   create_table "acts", force: :cascade do |t|
@@ -84,28 +94,9 @@ ActiveRecord::Schema.define(version: 20180220204553) do
     t.index ["zip"], name: "index_acts_on_zip"
   end
 
-  create_table "brandings", force: :cascade do |t|
-    t.string "brandable_type"
-    t.integer "brand_id"
-    t.integer "brandable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["brand_id"], name: "index_brandings_on_brand_id"
-    t.index ["brandable_id"], name: "index_brandings_on_brandable_id"
-    t.index ["brandable_type"], name: "index_brandings_on_brandable_type"
-  end
-
-  create_table "brands", force: :cascade do |t|
-    t.string "brand_name"
-    t.string "dealer_type"
-    t.string "brand_term"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["brand_term"], name: "index_brands_on_brand_term"
-  end
-
   create_table "conts", force: :cascade do |t|
     t.integer "act_id"
+    t.integer "web_id"
     t.citext "first_name"
     t.citext "last_name"
     t.citext "full_name", null: false
@@ -117,7 +108,6 @@ ActiveRecord::Schema.define(version: 20180220204553) do
     t.datetime "cs_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["act_id", "full_name"], name: "index_conts_on_act_id_and_full_name", unique: true
     t.index ["act_id"], name: "index_conts_on_act_id"
     t.index ["cs_date"], name: "index_conts_on_cs_date"
     t.index ["cs_sts"], name: "index_conts_on_cs_sts"
@@ -128,22 +118,8 @@ ActiveRecord::Schema.define(version: 20180220204553) do
     t.index ["job_title"], name: "index_conts_on_job_title"
     t.index ["last_name"], name: "index_conts_on_last_name"
     t.index ["phone"], name: "index_conts_on_phone"
-  end
-
-  create_table "crmas", force: :cascade do |t|
-    t.string "crma"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["crma"], name: "index_crmas_on_crma"
-  end
-
-  create_table "crmcs", force: :cascade do |t|
-    t.string "crmc"
-    t.integer "crma_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["crma_id"], name: "index_crmcs_on_crma_id"
-    t.index ["crmc"], name: "index_crmcs_on_crmc"
+    t.index ["web_id", "full_name"], name: "index_conts_on_web_id_and_full_name", unique: true
+    t.index ["web_id"], name: "index_conts_on_web_id"
   end
 
   create_table "dashes", force: :cascade do |t|
@@ -255,6 +231,48 @@ ActiveRecord::Schema.define(version: 20180220204553) do
     t.string "locations_page"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "web_links", force: :cascade do |t|
+    t.integer "web_id", null: false
+    t.integer "link_id", null: false
+    t.string "link_sts"
+    t.integer "cs_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["link_id"], name: "index_web_links_on_link_id"
+    t.index ["link_sts"], name: "index_web_links_on_link_sts"
+    t.index ["web_id", "link_id"], name: "index_web_links_on_web_id_and_link_id", unique: true
+    t.index ["web_id"], name: "index_web_links_on_web_id"
+  end
+
+  create_table "webs", force: :cascade do |t|
+    t.citext "url"
+    t.string "url_sts_code"
+    t.string "temp_name"
+    t.datetime "tmp_date"
+    t.datetime "gp_date"
+    t.datetime "page_date"
+    t.datetime "url_date"
+    t.datetime "cs_date"
+    t.string "url_sts"
+    t.string "temp_sts"
+    t.string "page_sts"
+    t.string "cs_sts"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cs_date"], name: "index_webs_on_cs_date"
+    t.index ["cs_sts"], name: "index_webs_on_cs_sts"
+    t.index ["gp_date"], name: "index_webs_on_gp_date"
+    t.index ["page_date"], name: "index_webs_on_page_date"
+    t.index ["page_sts"], name: "index_webs_on_page_sts"
+    t.index ["temp_name"], name: "index_webs_on_temp_name"
+    t.index ["temp_sts"], name: "index_webs_on_temp_sts"
+    t.index ["tmp_date"], name: "index_webs_on_tmp_date"
+    t.index ["url"], name: "index_webs_on_url"
+    t.index ["url_date"], name: "index_webs_on_url_date"
+    t.index ["url_sts"], name: "index_webs_on_url_sts"
+    t.index ["url_sts_code"], name: "index_webs_on_url_sts_code"
   end
 
   create_table "whos", force: :cascade do |t|

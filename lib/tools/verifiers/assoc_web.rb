@@ -14,11 +14,11 @@ module AssocWeb
 
   #Gets the associations of the current web obj and saves them to FWD web obj.
   #CALL: AssocWeb.transfer_web_associations(web_obj)
-  # def self.transfer_web_associations(web_obj, fwd_web_obj)
-  #   models = %w(cont, brand, crma, crmcc)
-  #   models.each do |model|
-  #     associations = web_obj.send(model.pluralize)
-  #     associations.each { |obj| Mig.new.create_obj_parent_assoc(model, obj, fwd_web_obj) } if associations.present?
-  #   end
-  # end
+  def self.transfer_web_associations(web_obj, fwd_web_obj)
+    models = %w(cont, brand, crma, crmcc)
+    models.each do |model|
+      associations = web_obj.send(model.pluralize)
+      associations.each { |obj| Mig.new.create_obj_parent_assoc(model, obj, fwd_web_obj) } if associations.present?
+    end
+  end
 end

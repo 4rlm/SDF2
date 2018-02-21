@@ -12,6 +12,7 @@ class Cont < ApplicationRecord
   # belongs_to :act, inverse_of: :conts
   # validates_presence_of :act
   belongs_to :act, inverse_of: :conts, optional: true
+  belongs_to :web, inverse_of: :conts, optional: true
   # accepts_nested_attributes_for :act
 
 end

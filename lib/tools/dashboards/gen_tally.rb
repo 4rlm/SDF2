@@ -6,12 +6,19 @@ module GenTally
   # act_links = Tally.last.act_links
 
   # temp_names = acts['temp_name']
+  # gp_ids = Tally.last.acts['gp_id'][0..20]
+  # urls = Tally.last.acts['url'][0..20]
+  # act_names = Tally.last.acts['act_name'][0..20]
+
   # staff_links = links['staff_link']
   # cs_counts = act_links['cs_count']
 
   # staff_texts = Tally.last.links['staff_text'][0..20]
   # staff_links = Tally.last.links['staff_link'][0..40]
   # cs_counts = Tally.last.act_links['cs_count'][0..20]
+  # names = Tally.last.conts['full_name'][0..20]
+  # jobs = Tally.last.conts['job_desc'][0..20]
+
 
   ## Tallies total counts of each uniq item from each of the models and cols below, then saves them to jsonb in Tally model.
   #CALL: GenTally.start_tally
