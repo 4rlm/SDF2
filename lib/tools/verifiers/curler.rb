@@ -6,20 +6,20 @@ require 'net/ping'
 module Curler
 
 
-  def start_curl(web_url)
+  def start_curl(web_url, timeout)
     curl_hsh = { url_sts_code: nil, curl_url: nil, err_msg: nil }
     result = nil
 
     begin
       begin # for timeout
-        Timeout.timeout(@timeout) do
+        Timeout.timeout(timeout) do
         # Timeout.timeout(9000) do
           if web_url.present?
             puts "\n\n=== WAITING FOR CURL RESPONSE ==="
             result = Curl::Easy.perform(web_url) do |curl|
               curl.follow_location = true
               curl.useragent = "curb"
-              curl.connect_timeout = @timeout
+              curl.connect_timeout = timeout
               curl.enable_cookies = true
               curl.head = true #testing - new
             end # result

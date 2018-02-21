@@ -12,54 +12,35 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = true
+    @dj_on = false
     @dj_count_limit = 5
     @workers = 4
     @obj_in_grp = 20
     @timeout = 10 ## below
+    @max_time = 60
     @cut_off = 7.days.ago
     # @cut_off = 1.minute.ago
-    @make_urlx = FALSE
+    # @make_urlx = FALSE
     @formatter = Formatter.new
     @mig = Mig.new
   end
 
-
   def get_query
     ## Nil Sts Query ##
-    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: nil).order("id ASC").pluck(:id)
+    query = Web.select(:id).where(url_sts: nil, timeout: 0).order("id ASC").pluck(:id)
 
     ## Valid Sts Query ##
-    val_sts_arr = ['Valid']
-    query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: val_sts_arr).where('url_date < ? OR url_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.any?
+    query = Web.select(:id).where(url_sts: 'Valid', timeout: 0).where('url_date < ? OR url_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
-    if !query.any?
-      err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-      query = Act.select(:id).where(actx: FALSE, gp_sts: 'Valid', url_sts: err_sts_arr).order("id ASC").pluck(:id)
-      @timeout = 30
+    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+    query = Web.select(:id).where(url_sts: err_sts_arr).where('timeout < ?', @max_time).order("timeout ASC").pluck(:id) if !query.any?
 
-      if query.any? && @make_urlx
-        query.each { |id| act_obj = Act.find(id).update(urlx: TRUE) }
-        query = [] ## reset
-        @make_urlx = FALSE
-      elsif query.any?
-        @make_urlx = TRUE
-      end
-    end
-
-    print_query_stats(query)
+    puts "\n\nQuery Count: #{query.count}"
     sleep(1)
+    # binding.pry
     return query
   end
-
-
-  def print_query_stats(query)
-    puts "\n\n===================="
-    puts "@timeout: #{@timeout}\n\n"
-    puts "\n\nQuery Count: #{query.count}"
-  end
-
 
   def start_ver_url
     query = get_query
@@ -70,51 +51,64 @@ class VerUrl
     end
   end
 
-
   def setup_iterator(query)
     @query_count = query.count
     (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
     @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
 
-
+  #Call: VerUrl.new.start_ver_url
   def template_starter(id)
-    act_obj = Act.find(id)
-    web_url = act_obj.url
+    web = Web.find(id)
+    web_url = web.url
+    db_timeout = web.timeout
+    db_timeout = 0 ? timeout = @timeout : timeout = (db_timeout * 3)
+
     formatted_url = @formatter.format_url(web_url)
     if !formatted_url.present?
-      ## If nil, url is bad, and ends current process.
-      invalid_hsh = {urlx: TRUE, url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now}
-      act_obj.update(invalid_hsh)
-      return ## Stop Here.  Don't run Curl Below.
-    elsif formatted_url != web_url
-      ## These may continue to run Curl.
-      act_obj.update(url: formatted_url)
+      web.update(url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now)
+      return
+    end
+
+    if formatted_url != web_url
+      fwd_web_obj = Web.find_by(url: formatted_url)
+      if fwd_web_obj.present?
+        binding.pry
+        AssocWeb.transfer_web_associations(web, fwd_web_obj)
+        return
+      end
     end
 
     ####### CURL-BEGINS - FORMATTED URLS ONLY!! #######
+    #Call: VerUrl.new.start_ver_url
     if formatted_url.present?
-      curl_hsh = start_curl(formatted_url)
+      curl_hsh = start_curl(formatted_url, timeout)
       err_msg = curl_hsh[:err_msg]
+
       if !err_msg.present?
-        update_db(act_obj, curl_hsh)
+        update_db(web, curl_hsh)
       elsif err_msg == "Error: Timeout" || err_msg == "Error: Host"
         puts "err_msg: #{err_msg}"
-        act_obj.update(urlx: FALSE, url_sts: err_msg, url_date: Time.now)
+        web.update(url_sts: err_msg, timeout: timeout, url_date: Time.now)
       else
-        act_obj.update(urlx: TRUE, url_sts_code: nil, url_sts: err_msg, url_date: Time.now)
+        web.update(url_sts_code: nil, url_sts: err_msg, timeout: 0, url_date: Time.now)
       end
+
     end
   end
 
-
-  def update_db(act_obj, curl_hsh)
-    web_url = act_obj.url
+  def update_db(web, curl_hsh)
+    web_url = web.url
     url_sts_code = curl_hsh[:url_sts_code]
     curl_url = curl_hsh[:curl_url]
     print_curl_results(web_url, curl_url, url_sts_code)
-    web_hsh = {urlx: FALSE, url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now}
-    act_obj.update(web_hsh)
+
+    fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
+    if fwd_web_obj.present?
+      AssocWeb.transfer_web_associations(web, fwd_web_obj)
+    else
+      web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, timeout: 0, url_date: Time.now)
+    end
   end
 
   def print_curl_results(web_url, curl_url, url_sts_code)

@@ -259,6 +259,7 @@ ActiveRecord::Schema.define(version: 20180221105039) do
     t.string "temp_sts"
     t.string "page_sts"
     t.string "cs_sts"
+    t.integer "timeout", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cs_date"], name: "index_webs_on_cs_date"

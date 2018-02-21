@@ -19,6 +19,7 @@ class CreateWebs < ActiveRecord::Migration[5.1]
       t.string  :temp_sts, index: true
       t.string  :page_sts, index: true
       t.string  :cs_sts, index: true
+      t.integer :timeout, index: false, default: 0
 
       t.timestamps
     end
