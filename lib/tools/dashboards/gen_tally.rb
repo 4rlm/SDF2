@@ -10,16 +10,18 @@ module GenTally
   # cs_counts = act_links['cs_count']
 
   # staff_texts = Tally.last.links['staff_text'][0..20]
-  # staff_links = Tally.last.links['staff_link'][0..20]
+  # staff_links = Tally.last.links['staff_link'][0..40]
   # cs_counts = Tally.last.act_links['cs_count'][0..20]
 
   ## Tallies total counts of each uniq item from each of the models and cols below, then saves them to jsonb in Tally model.
   #CALL: GenTally.start_tally
   def self.start_tally
     mod_cols = [
-    {mod: 'act', cols: ['act_name', 'url', 'temp_name', 'gp_sts', 'url_sts', 'temp_sts', 'page_sts', 'cs_sts']},
+    {mod: 'act', cols: ['act_name', 'url', 'temp_name', 'gp_id', 'gp_sts', 'url_sts', 'temp_sts', 'page_sts', 'cs_sts']},
     {mod: 'link', cols: ['staff_link', 'staff_text']},
-    {mod: 'act_link', cols: ['link_sts', 'cs_count']}]
+    {mod: 'act_link', cols: ['link_sts', 'cs_count']},
+    {mod: 'cont', cols: ['full_name', 'job_desc']}]
+    ## IMPORTANT: added conts to schema.  Include above to get full_name and job_desc query - TO ADD TO BAN LIST!
 
     db_tallies = {}
     mod_cols.each do |mod_col|

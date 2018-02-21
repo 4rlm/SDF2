@@ -29,13 +29,15 @@ class FindPage
 
   def get_query
     ### TESTING QUERIES BELOW - WILL DELETE AFTER REFACTORING SCHEMA AND PROCESS FOR FindPage, Link, ActLink, Dash.
-    # query = Act.select(:id).where(page_sts: 'Valid')
+    # query = Act.select(:id).where(temp_name: 'Cobalt', cs_sts: 'Valid')
     #   .where('page_date < ? OR page_date IS NULL', @cut_off)
     #   .order("id ASC").pluck(:id)
-    #
-    # print_query_stats(query)
-    # binding.pry
-    # return query
+
+    query = Act.select(:id).where(temp_name: 'Cobalt', cs_sts: 'Valid').pluck(:id)
+
+    print_query_stats(query)
+    binding.pry
+    return query
 
 
     ### REAL QUERIES BELOW - MIGHT NEED TO MODIFY, BUT GENERALLY GOOD.
@@ -164,7 +166,7 @@ class FindPage
       pre_noko_link = noko_text_link&.href&.downcase&.strip
       noko_link = @formatter.format_link(url, pre_noko_link)
 
-      if (noko_text && noko_link) && (noko_text.length > 3 && noko_link.length > 3) && (is_banned(noko_link, noko_text, temp_name) != true)
+      if (noko_text && noko_link) && (noko_text.length > 3 && noko_link.length > 3) && (check_text_link_ban(noko_link, noko_text, temp_name) != true)
         ## If No Matching Texts or Links find any that include 'team' or 'staff'
         if noko_text.include?('staff') || noko_link.include?('staff')
           link_text_hsh = {staff_text: noko_text, staff_link: noko_link}
@@ -205,31 +207,63 @@ class FindPage
 
 
 
-
-
-
-
-
-
-
   ############ HELPER METHODS BELOW ################
 
-  #CALL: FindPage.new.start_find_page
-  def is_banned(staff_link, staff_text, temp_name)
+  ######### REFACTORED is_banned - DELETE ORIGINAL UNDER AFTER TESTING #########
+  def check_text_link_ban(staff_link, staff_text, temp_name)
     return true if !staff_link.present? || !staff_text.present? || staff_link.length < 4
-    link_strict_ban = %w(/about /about-us /about-us.htm /about.htm /about.html /#commercial /commercial.html /dealership/about.htm /dealeronlineretailing_d /dealeronlineretailing /dealership/department.htm /dealership/news.htm /departments.aspx /fleet /index.htm /meetourdepartments /sales.aspx /#tab-sales)
-
     return true if (temp_name = "Cobalt" && staff_text == 'sales')
-    return true if (staff_text == 'porsche')
+    return true if check_link_ban(staff_link)
+    return true if check_text_ban(staff_text)
 
-    # text_strict_ban = %w(sales)
-    # text_strict_ban.each { |ban| return true if staff_text == ban }
+    light_ban = %w(/#card-view/card/ 404 appl approve body career center click collision commercial contact customer demo direction discl drive employ espanol espaol finan get google guarantee habla history home hour inventory javascript job join lease legal location lube mail map match multilingual offers oil open opportunit parts phone place price quick rating review sales_tab schedule search service special start yourdeal survey tel test text trade value vehicle video virtual websiteby welcome why facebook commercial twit near dealernear educat faculty discount event year fleet build index amenit tire find award year blog)
 
-    light_ban = %w(404 appl approve body career center click collision commercial contact customer demo direction discl drive employ espanol espaol finan get google guarantee habla history home hour inventory javascript job join lease legal location lube mail map match multilingual offers oil open opportunit parts phone place price quick rating review sales_tab schedule search service special start yourdeal survey tel test text trade value vehicle video virtual websiteby welcome why facebook commercial twit)
-
-    link_strict_ban.each { |ban| return true if staff_link == ban }
-    light_ban.each { |ban| return true if staff_link.include?(ban) || staff_text.include?(ban) }
+    banned_link_text = light_ban.find { |ban| staff_link.include?(ban) || staff_text.include?(ban) }
+    banned_link_text.present? ? true : false
   end
+
+
+  def check_text_ban(staff_text)
+    if staff_text.present?
+      ## Make sure staff_text is downcase and compact like below for accurate comparisons.
+      banned_texts = %w(dealershipinfo porsche preowned aboutus ourdealership newcars cars about honda ford learnmoreaboutus news fleet aboutourdealership fordf150 fordtrucks fordtransitconnectwagon fordtransitconnectwagon fordecosport fordfusion fordedge fordfocus fordescape fordexpedition fordexpeditionmax fordcmaxhybrid fordexplorer fordcars fordflex fordtransitcargovan fordsuvs fordtransitconnect fordtransitwagon fordtransitconnectvan fordfusionenergi fordvans fordfusionhybrid fordmustang moreaboutus tourournewdealership tourourdealership)
+
+      banned_text = banned_texts.find { |ban| staff_text == ban }
+      banned_text.present? ? true : false
+    end
+  end
+
+  def check_link_ban(staff_link)
+    if staff_link.present?
+      link_strict_ban = %w(/about /about-us /about-us.htm /about.htm /about.html /#commercial /commercial.html /dealership/about.htm /dealeronlineretailing_d /dealeronlineretailing /dealership/department.htm /dealership/news.htm /departments.aspx /fleet /index.htm /meetourdepartments /sales.aspx /#tab-sales)
+
+      banned_link = link_strict_ban.find { |ban| staff_link == ban }
+      banned_link.present? ? true : false
+    end
+  end
+
+
+
+
+
+  ######### ORIGINAL is_banned - REFACTORED ABOVE #########
+  #CALL: FindPage.new.start_find_page
+  # def is_banned(staff_link, staff_text, temp_name)
+  #   return true if !staff_link.present? || !staff_text.present? || staff_link.length < 4
+  #   link_strict_ban = %w(/about /about-us /about-us.htm /about.htm /about.html /#commercial /commercial.html /dealership/about.htm /dealeronlineretailing_d /dealeronlineretailing /dealership/department.htm /dealership/news.htm /departments.aspx /fleet /index.htm /meetourdepartments /sales.aspx /#tab-sales)
+  #
+  #   return true if (temp_name = "Cobalt" && staff_text == 'sales')
+  #   return true if (staff_text == 'porsche')
+  #
+  #   # text_strict_ban = %w(sales)
+  #   # text_strict_ban.each { |ban| return true if staff_text == ban }
+  #
+  #   light_ban = %w(404 appl approve body career center click collision commercial contact customer demo direction discl drive employ espanol espaol finan get google guarantee habla history home hour inventory javascript job join lease legal location lube mail map match multilingual offers oil open opportunit parts phone place price quick rating review sales_tab schedule search service special start yourdeal survey tel test text trade value vehicle video virtual websiteby welcome why facebook commercial twit)
+  #
+  #   link_strict_ban.each { |ban| return true if staff_link == ban }
+  #   light_ban.each { |ban| return true if staff_link.include?(ban) || staff_text.include?(ban) }
+  # end
+
 
 
   #CALL: FindPage.new.start_find_page
