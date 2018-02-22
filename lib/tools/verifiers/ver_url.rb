@@ -26,11 +26,18 @@ class VerUrl
   def get_query
     ## Valid Sts Query ##
     val_sts_arr = ['Valid', nil]
-    query = Web.select(:id).where(url_sts: val_sts_arr).where('url_date < ? OR url_date IS NULL', @cut_off).order("id ASC").pluck(:id)
+    query = Web.select(:id)
+      .where(url_sts: val_sts_arr)
+      .where('url_date < ? OR url_date IS NULL', @cut_off)
+      .order("id ASC").pluck(:id)
 
     ## Error Sts Query ##
     err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    query = Web.select(:id).where(url_sts: err_sts_arr).where('timeout < ?', @db_timeout_limit).order("timeout DESC").pluck(:id) if !query.any?
+    query = Web.select(:id)
+      .where(url_sts: err_sts_arr)
+      .where('timeout < ?', @db_timeout_limit)
+      .order("timeout DESC")
+      .pluck(:id) if !query.any?
 
     puts "\n\nQuery Count: #{query.count}"
     sleep(1)

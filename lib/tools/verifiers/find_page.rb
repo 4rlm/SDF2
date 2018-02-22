@@ -25,29 +25,11 @@ class FindPage
     # @tally_staff_texts = Text.order("count DESC").pluck(:staff_text)
 
     ## NOTE: REDO BELO...
-    @tally_staff_links = []
-    @tally_staff_texts = []
-
     # @tally_staff_links = Dash.where(category: 'staff_link').order("count DESC").pluck(:focus)
     # @tally_staff_texts = Dash.where(category: 'staff_text').order("count DESC").pluck(:focus)
   end
 
-  ## New Refactored Below ##
   def get_query
-
-    ### == TESTING QUERIES BELOW == ###. - WILL DELETE AFTER REFACTORING SCHEMA AND PROCESS FOR FindPage, Link, ActLink, Dash.
-    # query = Web.select(:id).where(temp_name: 'Cobalt', cs_sts: 'Valid')
-    #   .where('page_date < ? OR page_date IS NULL', @cut_off)
-    #   .order("id ASC").pluck(:id)
-
-    # query = Web.select(:id).where(temp_name: 'Cobalt', cs_sts: 'Valid').pluck(:id)
-
-    # print_query_stats(query)
-    # binding.pry
-    # return query
-
-
-    ### == REAL QUERIES BELOW == ###.
     ## Invalid Sts Query ##
     query = Web.select(:id)
       .where(url_sts: 'Valid', page_sts: "Invalid")
@@ -59,7 +41,7 @@ class FindPage
     query = Web.select(:id)
       .where(url_sts: 'Valid', temp_sts: 'Valid', page_sts: val_sts_arr)
       .where('page_date < ? OR page_date IS NULL', @cut_off)
-      .order("id ASC").pluck(:id)
+      .order("id ASC").pluck(:id) if !query.any?
 
     ## Error Sts Query ##
     err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
@@ -70,8 +52,8 @@ class FindPage
       .pluck(:id) if !query.any?
 
     puts "\n\nQuery Count: #{query.count}"
-    # sleep(1)
-    binding.pry
+    sleep(1)
+    # binding.pry
     return query
   end
 
@@ -94,15 +76,14 @@ class FindPage
   def template_starter(id)
     web = Web.find(id)
     url = web.url
+    temp_name = web.temp_name
     db_timeout = web.timeout
     db_timeout == 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
     puts "timeout: #{timeout}"
+    puts "temp_name: #{temp_name}"
     puts url
-    binding.pry
 
     noko_hsh = start_noko(url, timeout)
-    binding.pry
-
     noko_page = noko_hsh[:noko_page]
     err_msg = noko_hsh[:err_msg]
 
@@ -111,7 +92,6 @@ class FindPage
       web.update(page_sts: err_msg, page_date: Time.now, timeout: timeout)
     elsif noko_page.present?
       link_text_results = find_links_and_texts(noko_page, web)
-
       if !link_text_results.any?
         web.update(page_sts: 'Invalid', page_date: Time.now, timeout: timeout)
       else
@@ -139,9 +119,13 @@ class FindPage
     # stock_links.uniq!
 
     stock_hsh = {stock_texts: stock_texts, stock_links: stock_links}
+    # puts stock_hsh
+    # sleep(1)
+    # binding.pry
+    return stock_hsh
   end
 
-
+  #CALL: FindPage.new.start_find_page
   def find_links_and_texts(noko_page, web)
     url = web.url
     temp_name = web.temp_name
@@ -171,7 +155,7 @@ class FindPage
           end
         end
 
-        ## Find valid Links
+        ## Find valid Texts
         stock_texts.each do |stock_text|
           stock_text = stock_text.downcase&.gsub(/\W/,'')
           if noko_text.include?(stock_text) || stock_text.include?(noko_text)
@@ -186,7 +170,8 @@ class FindPage
     puts "\n\n===================="
     puts "Valid Text and Links: #{link_text_results.count}"
     puts link_text_results.inspect
-
+    # sleep(1)
+    # binding.pry
     # binding.pry if !link_text_results.any?
     return link_text_results
   end

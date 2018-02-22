@@ -49,8 +49,6 @@ class CsHelper # Contact Scraper Helper Method
 
 
   def consolidate_cs_hsh_arr(ez_staffs)
-
-
     cs_hsh_arr = standard_scraper(ez_staffs)
     cs_hsh_arr.map! { |temp_cs_hsh| temp_cs_hsh.sort.to_h }
 
@@ -60,9 +58,6 @@ class CsHelper # Contact Scraper Helper Method
   end
 
 
-  # In case, template scraper wants to use this way.
-  # Just add this line: `cs_hsh_arr = @helper.standard_scraper(staffs)`
-  #CALL: ContScraper.new.start_cont_scraper
   def standard_scraper(staff_arrs)
     cs_hsh_arr = []
 
@@ -195,9 +190,11 @@ class CsHelper # Contact Scraper Helper Method
       # Clean & Divide full name
       if staff_hash[:full_name]
         name_parts = staff_hash[:full_name].split(" ")
-        staff_hash[:full_name] = name_parts.reject {|x| x.first == x.last}.join(' ')
+        full_name = name_parts.reject {|x| x.first == x.last}.join(' ')
+        staff_hash[:full_name] = squeeze_and_strip(full_name)
       end
 
+      # Split full_name into first_name and last_name
       if staff_hash[:full_name]
         name_parts = staff_hash[:full_name].split(" ").each { |name| name&.strip&.capitalize! }
         staff_hash[:first_name] = name_parts&.first&.strip
@@ -212,18 +209,17 @@ class CsHelper # Contact Scraper Helper Method
       # Clean email address
       if email = staff_hash[:email]
         email.gsub!(/mailto:/, '') if email.include?("mailto:")
-        staff_hash[:email] = email.strip
+        staff_hash[:email] = squeeze_and_strip(email)
       end
 
       # Clean Job Desc
       job_desc = staff_hash[:job_desc]
       if job_desc.present?
         job_desc.gsub!('Español', '')
-        job_desc.squeeze(' ')
-        job_desc.strip!
         job_desc = nil if job_desc.scan(/[0-9]/)&.any?
+        staff_hash[:job_title] = get_job_title(job_desc)
+        job_desc = squeeze_and_strip(job_desc)
         staff_hash[:job_desc] = job_desc
-        staff_hash[:job_title] = get_job_title(job_desc) if job_desc
       end
 
       # Clean Phone
@@ -242,25 +238,21 @@ class CsHelper # Contact Scraper Helper Method
     return cs_hsh_arr
   end
 
-
-  ## Reformats all Cont DB job_desc to job_title
-  # #CALL: CsHelper.new.temper_get_job_title
-  # def temper_get_job_title
-  #   Cont.where.not(job_desc: nil).each do |cont|
-  #     job_desc = cont.job_desc
-  #     job_title = get_job_title(job_desc)
-  #     puts "job_desc: #{job_desc}"
-  #     puts "job_title: #{job_title}"
-  #     cont.update(job_title: job_title)
-  #   end
-  # end
+  #CALL: ContScraper.new.start_cont_scraper
+  def squeeze_and_strip(str)
+    if str.present?
+      str.squeeze!(' ')
+      str.strip!
+      return str
+    end
+  end
 
 
   def get_job_title(job_desc)
     if job_desc.present?
-      job_desc.gsub!('-', ' ')
-      job_desc.gsub!('/', ' ')
-      job_desc.gsub!('.', ' ')
+      job_desc = job_desc.gsub('-', ' ')
+      job_desc = job_desc.gsub('/', ' ')
+      job_desc = job_desc.gsub('.', ' ')
       job_desc = job_desc.split(' ').map(&:capitalize).join(' ')
 
       swaps = {Assisant: 'Asst', Person: 'Rep', Consultant: 'Rep', Receivable: 'Payable', Vehicle: 'Car', 'Pre-Owned' => 'Used', Manager: 'Mgr', Brand: 'Sales', Technologist: 'Technician', Exchange: 'Sales', Tech: 'Technician', Agent: 'Rep', Advisor: 'Rep', Representative: 'Rep', Genius: 'Sales Rep', 'Business Development Center' => 'BDC', 'Business Development' => 'BDC', Operator: 'Rep', Coordinator: 'Rep', Mechanic: 'Technician', Associate: 'Rep', Product: 'Sales', Specialist: 'Rep', 'Chief Operations Officer' => 'COO', Truck: 'Sales', Care: 'Service', Client: 'Sales', Appointment: 'BDC', Success: 'Service', Detail: 'Detailer', Delivery: 'Driver', Commerce: 'E-Commerce', Guest: 'Customer', Services: 'Service', Internet: 'BDC', Leasing: 'Sales', 'Pre Owned' => 'Used Car', HR: 'Human Resources', Management: 'Mgr', 'Owner President' => 'Owner', 'General Counsel' => 'Legal', 'Client Advisor' => 'Sales Rep', 'Team Leader' => 'Mgr', 'Delivery Coordinator' => 'Driver', Merchandiser: 'Rep', 'Call Center' => 'BDC', Controller: 'Fixed Operations', Warranty: 'Warranty Rep', Director: 'Dir', Marketing: 'Mktg', Supervisor: 'Supr', Administrator: 'Admin'}.stringify_keys
@@ -291,14 +283,6 @@ class CsHelper # Contact Scraper Helper Method
       job_title&.gsub!('Sales Finance Mgr', 'Sales Mgr')
       job_title&.gsub!('BDC Service', 'BDC')
       job_title&.gsub!('Accounting Clerk', 'Accounting')
-      # job_title&.gsub!('', '')
-      # job_title&.gsub!('', '')
-
-
-      # if !job_title.present?
-      #   job_titles = ['General Sales Manager', 'Internet Sales Manager', 'Sales Director', 'General Manager', 'Owner', 'President', 'Principal', 'Sales Manager', 'Sales Advisor', 'Service Manager', 'Service Advisor']
-      #   job_titles.each { |job_title| return job_title if job_desc&.include?(job_title) }
-      # end
 
       return job_title
     end
@@ -307,6 +291,7 @@ class CsHelper # Contact Scraper Helper Method
 
   def remove_invalid_cs_hsh(cs_hsh_arr)
     cs_hsh_arr.delete_if { |hsh| !hsh[:full_name].present? }.uniq! if cs_hsh_arr.any?
+    cs_hsh_arr.delete_if { |hsh| !hsh[:job_desc].present? }.uniq! if cs_hsh_arr.any?
     return cs_hsh_arr
   end
 
