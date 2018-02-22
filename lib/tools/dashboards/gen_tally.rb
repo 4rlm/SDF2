@@ -2,6 +2,14 @@ module GenTally
 
   ### Notes on JSON QUERYING:
   # acts = Tally.last.acts
+  # acts = JSON.parse(acts)
+  # raw = Tally.last.acts
+  # acts = JSON.parse(Tally.last.acts)
+  # JSON::ParserError: 784: unexpected token at '{"url"=>[{"item"=>nil, "
+  # urls = Tally.last.webs['url']
+  # Tally.last.where("acts->>'url' = ?", "user_renamed")
+
+  # acts = Tally.last.acts
   # links = Tally.last.links
   # act_links = Tally.last.act_links
 
@@ -24,10 +32,12 @@ module GenTally
   #CALL: GenTally.start_tally
   def self.start_tally
     mod_cols = [
-    {mod: 'act', cols: ['act_name', 'url', 'temp_name', 'gp_id', 'gp_sts', 'url_sts', 'temp_sts', 'page_sts', 'cs_sts']},
+    {mod: 'act', cols: ['act_name', 'gp_id', 'gp_sts']},
+    {mod: 'act_web', cols: ['act_id', 'web_id']},
     {mod: 'link', cols: ['staff_link', 'staff_text']},
-    {mod: 'act_link', cols: ['link_sts', 'cs_count']},
-    {mod: 'cont', cols: ['full_name', 'job_desc']}]
+    {mod: 'web_link', cols: ['web_id', 'link_id', 'link_sts', 'cs_count']},
+    {mod: 'cont', cols: ['full_name', 'job_desc']},
+    {mod: 'web', cols: ['url', 'temp_name', 'url_sts', 'temp_sts', 'page_sts', 'cs_sts']}]
     ## IMPORTANT: added conts to schema.  Include above to get full_name and job_desc query - TO ADD TO BAN LIST!
 
     db_tallies = {}
@@ -125,24 +135,6 @@ module GenTally
     #   link.update(staff_text: staff_text, staff_link: staff_link)
     # end
 
-    ## ACTS - Make Nil
-    # make_nil_hsh = {cs_sts: nil, page_sts: nil, staff_text: nil, staff_link: nil }
-    # Link.where(staff_link: nil).each {|link| link.update(make_nil_hsh)}
-    # Link.where("staff_link LIKE '%card%'").each {|link| link.update(staff_link: '/meetourdepartments')}
-
-    # text_strict_ban = %w(porsche)
-    # text_strict_ban.each { |ban| Link.where(staff_text: ban).each {|link| link.update(make_nil_hsh)} }
-    # Link.where(temp_name: "Cobalt", staff_text: "sales").each {|link| link.update(make_nil_hsh)}
-
-    # link_strict_ban = %w(/about /about-us /about-us.htm /about.htm /about.html /dealership/about.htm /dealership/department.htm /dealership/news.htm /departments.aspx /index.htm /meetourdepartments /sales.aspx /#tab-sales)
-    # link_strict_ban.each { |ban| Link.where(staff_link: ban).each {|link| link.update(make_nil_hsh)} }
-
-    # light_ban = %w(404 appl approve body career center click collision contact customer demo direction discl drive employ espanol espaol finan get google guarantee habla history home hour inventory javascript job join lease legal lube mail map match multilingual offers oil open opportunit parts phone place price quick rating review sales_tab schedule search service special survey tel test text trade value vehicle video virtual websiteby welcome why)
-
-    # light_ban.each do |ban|
-      # acts = Link.where("staff_link LIKE '%#{ban}%'").each {|link| link.update(make_nil_hsh)}
-      # acts = Link.where("staff_text LIKE '%#{ban}%'").each {|link| link.update(make_nil_hsh)}
-    # end
   # end
 
   #CALL: GenTally.tally_links

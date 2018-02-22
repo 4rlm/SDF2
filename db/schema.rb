@@ -110,16 +110,18 @@ ActiveRecord::Schema.define(version: 20180221105039) do
 
   create_table "tallies", force: :cascade do |t|
     t.jsonb "acts", default: "{}", null: false
-    t.jsonb "act_links", default: "{}", null: false
+    t.jsonb "act_webs", default: "{}", null: false
+    t.jsonb "web_links", default: "{}", null: false
     t.jsonb "links", default: "{}", null: false
     t.jsonb "conts", default: "{}", null: false
     t.jsonb "webs", default: "{}", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["act_links"], name: "index_tallies_on_act_links", using: :gin
+    t.index ["act_webs"], name: "index_tallies_on_act_webs", using: :gin
     t.index ["acts"], name: "index_tallies_on_acts", using: :gin
     t.index ["conts"], name: "index_tallies_on_conts", using: :gin
     t.index ["links"], name: "index_tallies_on_links", using: :gin
+    t.index ["web_links"], name: "index_tallies_on_web_links", using: :gin
     t.index ["webs"], name: "index_tallies_on_webs", using: :gin
   end
 

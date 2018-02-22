@@ -7,6 +7,7 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.citext  :act_name, index: true, unique: true, allow_nil: true
       t.string  :gp_id, index: true, unique: true, allow_nil: true
       t.string  :gp_sts, index: true
+      t.datetime :gp_date, index: true
       t.string  :gp_indus, index: true
 
       ## Address Info

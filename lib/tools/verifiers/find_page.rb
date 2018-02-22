@@ -25,8 +25,11 @@ class FindPage
     # @tally_staff_texts = Text.order("count DESC").pluck(:staff_text)
 
     ## NOTE: REDO BELO...
-    @tally_staff_links = Dash.where(category: 'staff_link').order("count DESC").pluck(:focus)
-    @tally_staff_texts = Dash.where(category: 'staff_text').order("count DESC").pluck(:focus)
+    @tally_staff_links = []
+    @tally_staff_texts = []
+
+    # @tally_staff_links = Dash.where(category: 'staff_link').order("count DESC").pluck(:focus)
+    # @tally_staff_texts = Dash.where(category: 'staff_text').order("count DESC").pluck(:focus)
   end
 
   ## New Refactored Below ##
@@ -128,12 +131,12 @@ class FindPage
     temp_name = 'general' if !special_templates.include?(temp_name)
 
     stock_texts = Term.where(sub_category: "staff_text").where(criteria_term: temp_name).map(&:response_term)
-    stock_texts += @tally_staff_texts
-    stock_texts.uniq!
+    # stock_texts += @tally_staff_texts
+    # stock_texts.uniq!
 
     stock_links = Term.where(sub_category: "staff_href").where(criteria_term: temp_name).map(&:response_term)
-    stock_links += @tally_staff_links
-    stock_links.uniq!
+    # stock_links += @tally_staff_links
+    # stock_links.uniq!
 
     stock_hsh = {stock_texts: stock_texts, stock_links: stock_links}
   end
