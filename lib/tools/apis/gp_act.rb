@@ -10,9 +10,8 @@ class GpAct
   def initialize
     @dj_on = false
     @dj_count_limit = 0
-    @workers = 4
+    @dj_workers = 4
     @obj_in_grp = 40
-    # @timeout = 10
     @dj_refresh_interval = 10
     @count = 0
     @cut_off = 5.days.ago

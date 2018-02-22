@@ -92,7 +92,7 @@ class FindPage
     web = Web.find(id)
     url = web.url
     db_timeout = web.timeout
-    db_timeout = 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
+    db_timeout == 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
     puts "timeout: #{timeout}"
     puts url
     binding.pry

@@ -55,7 +55,7 @@ class FindTemp
     web = Web.find(id)
     web_url = web.url
     db_timeout = web.timeout
-    db_timeout = 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
+    db_timeout == 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
     puts "timeout: #{timeout}"
 
     if web.present?

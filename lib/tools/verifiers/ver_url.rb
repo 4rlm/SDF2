@@ -30,7 +30,7 @@ class VerUrl
 
     ## Error Sts Query ##
     err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    query = Web.select(:id).where(url_sts: err_sts_arr).where('timeout < ?', @db_timeout_limit).order("timeout ASC").pluck(:id) if !query.any?
+    query = Web.select(:id).where(url_sts: err_sts_arr).where('timeout < ?', @db_timeout_limit).order("timeout DESC").pluck(:id) if !query.any?
 
     puts "\n\nQuery Count: #{query.count}"
     sleep(1)
@@ -58,7 +58,7 @@ class VerUrl
     web = Web.find(id)
     web_url = web.url
     db_timeout = web.timeout
-    db_timeout = 0 ? timeout = @timeout : timeout = (db_timeout * 3)
+    db_timeout == 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
     puts "timeout: #{timeout}"
 
     formatted_url = @formatter.format_url(web_url)
