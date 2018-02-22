@@ -12,15 +12,16 @@ class ContScraper
   def initialize
     @dj_on = false
     @dj_count_limit = 0
-    @workers = 4
+    @dj_workers = 4
     @obj_in_grp = 40
-    @timeout = 60
-    @count = 0
+    @dj_refresh_interval = 60
     @cut_off = 12.hours.ago
-    @make_urlx = FALSE
+    @db_timeout_limit = 60
     @formatter = Formatter.new
     @mig = Mig.new
     @cs_helper = CsHelper.new
+    # @make_urlx = FALSE
+    # @count = 0
   end
 
   def get_query
@@ -69,7 +70,7 @@ class ContScraper
       query = Act.select(:id).where(cs_sts: err_sts_arr).
       order("updated_at ASC").pluck(:id)
 
-      @timeout = 60
+      @dj_refresh_interval = 60
 
       if query.any? && @make_urlx
         query.each { |id| act = Act.find(id).update(cs_sts: 'Invalid') }
@@ -86,7 +87,7 @@ class ContScraper
 
   def print_query_stats(query)
     puts "\n\n===================="
-    puts "@timeout: #{@timeout}\n\n"
+    puts "@dj_refresh_interval: #{@dj_refresh_interval}\n\n"
     puts "\n\nQuery Count: #{query.count}"
   end
 

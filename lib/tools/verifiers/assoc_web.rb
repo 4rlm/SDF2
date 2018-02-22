@@ -21,8 +21,7 @@ module AssocWeb
       associations = web_obj.send(model.pluralize)
       associations.each { |obj| Mig.new.create_obj_parent_assoc(model, obj, fwd_web_obj) } if associations.present?
     end
-
-    web_obj.update(url_sts: 'FWD', url_date: Time.now, timeout: 0)
-    fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
   end
 end
+
+# Call: VerUrl.new.start_ver_url

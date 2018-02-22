@@ -10,36 +10,32 @@ require 'timeout'
 require 'net/ping'
 
 module Noko
-  # def start_mechanize(web_url)
   def start_noko(web_url, timeout)
+    @timeout = timeout
     noko_hsh = { page: nil, err_msg: nil }
 
     begin
       begin
-        Timeout::timeout(timeout) do
-          puts "\n\n=== WAITING FOR Noko RESPONSE ==="
+        Timeout::timeout(@timeout) do
+          puts "\n\n=== WAITING FOR Noko: #{@timeout} ==="
 
           agent = Mechanize.new # { |agent| agent.follow_meta_refresh = true }
           agent.user_agent_alias = 'Mac Safari'
           agent.follow_meta_refresh = true
-          agent.read_timeout = timeout
-          agent.open_timeout = timeout # Length of time to wait until a connection is opened in seconds
-          agent.idle_timeout = timeout # Reset connections that have not been used in this many seconds
+          agent.read_timeout = @timeout
+          agent.open_timeout = @timeout # Length of time to wait until a connection is opened in seconds
+          agent.idle_timeout = @timeout # Reset connections that have not been used in this many seconds
           agent.keep_alive = false # enable
 
           begin
             uri = URI(web_url)
             page = agent.get(uri)
-            # page = agent.get(web_url)
           rescue Mechanize::ResponseReadError => e
+            # binding.pry
             page = e.force_parse
           end
 
           page.respond_to?('at_css') ? noko_hsh[:noko_page] = page : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
-
-          #### ORIGINAL ####
-          # page = Mechanize.new.get(web_url)
-          # page.respond_to?('at_css') ? noko_hsh[:noko_page] = Mechanize.new.get(web_url) : noko_hsh[:err_msg] = "Error: Not-Noko-Obj"
         end
       rescue Timeout::Error # timeout rescue
         noko_hsh[:err_msg] = 'Error: Timeout'

@@ -12,7 +12,8 @@ class GpAct
     @dj_count_limit = 0
     @workers = 4
     @obj_in_grp = 40
-    @timeout = 10
+    # @timeout = 10
+    @dj_refresh_interval = 10
     @count = 0
     @cut_off = 5.days.ago
     # @prior_query_count = 0
@@ -42,7 +43,7 @@ class GpAct
 
   def print_query_stats(query)
     puts "\n\n===================="
-    puts "@timeout: #{@timeout}\n\n"
+    puts "@dj_refresh_interval: #{@dj_refresh_interval}\n\n"
     puts "\n\nQuery Count: #{query.count}"
   end
 

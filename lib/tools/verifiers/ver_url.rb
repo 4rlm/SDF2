@@ -12,27 +12,25 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 5
-    @workers = 4
+    @dj_workers = 4
     @obj_in_grp = 20
-    @timeout = 10 ## below
-    @max_time = 60
-    @cut_off = 7.days.ago
+    @dj_refresh_interval = 10
+    @db_timeout_limit = 60
+    @cut_off = 24.hours.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
 
   def get_query
-    ## Nil Sts Query ##
-    query = Web.select(:id).where(url_sts: nil, timeout: 0).order("id ASC").pluck(:id)
-
     ## Valid Sts Query ##
-    query = Web.select(:id).where(url_sts: 'Valid', timeout: 0).where('url_date < ? OR url_date IS NULL', @cut_off).order("id ASC").pluck(:id) if !query.any?
+    val_sts_arr = ['Valid', nil]
+    query = Web.select(:id).where(url_sts: val_sts_arr).where('url_date < ? OR url_date IS NULL', @cut_off).order("id ASC").pluck(:id)
 
     ## Error Sts Query ##
     err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    query = Web.select(:id).where(url_sts: err_sts_arr).where('timeout < ?', @max_time).order("timeout ASC").pluck(:id) if !query.any?
+    query = Web.select(:id).where(url_sts: err_sts_arr).where('timeout < ?', @db_timeout_limit).order("timeout ASC").pluck(:id) if !query.any?
 
     puts "\n\nQuery Count: #{query.count}"
     sleep(1)
@@ -61,6 +59,7 @@ class VerUrl
     web_url = web.url
     db_timeout = web.timeout
     db_timeout = 0 ? timeout = @timeout : timeout = (db_timeout * 3)
+    puts "timeout: #{timeout}"
 
     formatted_url = @formatter.format_url(web_url)
     if !formatted_url.present?
@@ -71,9 +70,9 @@ class VerUrl
     if formatted_url != web_url
       fwd_web_obj = Web.find_by(url: formatted_url)
       if fwd_web_obj.present?
-        binding.pry
+        web.update(url_sts: 'FWD', url_date: Time.now, timeout: 0)
+        fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
         AssocWeb.transfer_web_associations(web, fwd_web_obj)
-        return
       end
     end
 
@@ -103,6 +102,8 @@ class VerUrl
 
     fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
     if fwd_web_obj.present?
+      web.update(url_sts: 'FWD', url_date: Time.now, timeout: 0)
+      fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
       AssocWeb.transfer_web_associations(web, fwd_web_obj)
     else
       web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)

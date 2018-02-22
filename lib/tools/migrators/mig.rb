@@ -36,14 +36,23 @@ class Mig
     return obj
   end
 
-
   def create_obj_parent_assoc(model, obj, parent)
+  #Ex: act.phones << phone_obj if !act.phones.include?(phone_obj)
     if model.present? && obj.present? && parent.present?
-      parent.send(model.pluralize.to_sym) << obj if !parent.send(model.pluralize.to_sym).include?(obj)
-      #Ex: act.phones << phone_obj if !act.phones.include?(phone_obj)
+
+      begin
+        if !parent.send(model.pluralize.to_sym).include?(obj)
+          parent.send(model.pluralize.to_sym) << obj
+        end
+      rescue StandardError => error
+        ### duplicate object data, but different id. Can ignore.
+        puts "\n\n=== RESCUE ERROR!! ==="
+        puts error.class.name
+        puts error.message
+      end
+
     end
   end
-
 
   def update_obj_if_changed(hsh, obj)
     hsh.delete_if { |k, v| v.nil? }
