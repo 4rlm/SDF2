@@ -3,7 +3,6 @@ class CreateConts < ActiveRecord::Migration[5.1]
     enable_extension 'citext'
     create_table :conts do |t|
 
-      t.integer :act_id, index: true
       t.integer :web_id, index: true
       t.citext :first_name, index: true
       t.citext :last_name, index: true

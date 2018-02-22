@@ -6,6 +6,7 @@ class CreateTallies < ActiveRecord::Migration[5.1]
       t.jsonb :act_links, null: false, default: '{}'
       t.jsonb :links, null: false, default: '{}'
       t.jsonb :conts, null: false, default: '{}'
+      t.jsonb :webs, null: false, default: '{}'
 
       t.timestamps
     end
@@ -14,5 +15,6 @@ class CreateTallies < ActiveRecord::Migration[5.1]
     add_index  :tallies, :act_links, using: :gin
     add_index  :tallies, :links, using: :gin
     add_index  :tallies, :conts, using: :gin
+    add_index  :tallies, :webs, using: :gin
   end
 end

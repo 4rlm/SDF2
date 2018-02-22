@@ -16,19 +16,6 @@ ActiveRecord::Schema.define(version: 20180221105039) do
   enable_extension "plpgsql"
   enable_extension "citext"
 
-  create_table "act_links", force: :cascade do |t|
-    t.integer "act_id", null: false
-    t.integer "link_id", null: false
-    t.string "link_sts"
-    t.integer "cs_count", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["act_id", "link_id"], name: "index_act_links_on_act_id_and_link_id", unique: true
-    t.index ["act_id"], name: "index_act_links_on_act_id"
-    t.index ["link_id"], name: "index_act_links_on_link_id"
-    t.index ["link_sts"], name: "index_act_links_on_link_sts"
-  end
-
   create_table "act_webs", force: :cascade do |t|
     t.integer "act_id", null: false
     t.integer "web_id", null: false
@@ -42,60 +29,29 @@ ActiveRecord::Schema.define(version: 20180221105039) do
   create_table "acts", force: :cascade do |t|
     t.citext "act_name"
     t.string "gp_id"
+    t.string "gp_sts"
+    t.string "gp_indus"
     t.citext "street"
     t.citext "city"
     t.string "state"
     t.string "zip"
     t.citext "full_address"
     t.string "phone"
-    t.citext "url"
-    t.string "url_sts_code"
-    t.string "temp_name"
-    t.citext "staff_link"
-    t.citext "staff_text"
-    t.boolean "actx", default: false
-    t.boolean "urlx", default: false
-    t.string "gp_sts"
-    t.string "url_sts"
-    t.string "temp_sts"
-    t.string "page_sts"
-    t.string "cs_sts"
-    t.string "gp_indus"
-    t.datetime "tmp_date"
-    t.datetime "gp_date"
-    t.datetime "page_date"
-    t.datetime "url_date"
-    t.datetime "cs_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["act_name"], name: "index_acts_on_act_name"
     t.index ["city"], name: "index_acts_on_city"
-    t.index ["cs_date"], name: "index_acts_on_cs_date"
-    t.index ["cs_sts"], name: "index_acts_on_cs_sts"
     t.index ["full_address"], name: "index_acts_on_full_address"
-    t.index ["gp_date"], name: "index_acts_on_gp_date"
     t.index ["gp_id"], name: "index_acts_on_gp_id"
     t.index ["gp_indus"], name: "index_acts_on_gp_indus"
     t.index ["gp_sts"], name: "index_acts_on_gp_sts"
-    t.index ["page_date"], name: "index_acts_on_page_date"
-    t.index ["page_sts"], name: "index_acts_on_page_sts"
     t.index ["phone"], name: "index_acts_on_phone"
-    t.index ["staff_link"], name: "index_acts_on_staff_link"
-    t.index ["staff_text"], name: "index_acts_on_staff_text"
     t.index ["state"], name: "index_acts_on_state"
     t.index ["street"], name: "index_acts_on_street"
-    t.index ["temp_name"], name: "index_acts_on_temp_name"
-    t.index ["temp_sts"], name: "index_acts_on_temp_sts"
-    t.index ["tmp_date"], name: "index_acts_on_tmp_date"
-    t.index ["url"], name: "index_acts_on_url"
-    t.index ["url_date"], name: "index_acts_on_url_date"
-    t.index ["url_sts"], name: "index_acts_on_url_sts"
-    t.index ["url_sts_code"], name: "index_acts_on_url_sts_code"
     t.index ["zip"], name: "index_acts_on_zip"
   end
 
   create_table "conts", force: :cascade do |t|
-    t.integer "act_id"
     t.integer "web_id"
     t.citext "first_name"
     t.citext "last_name"
@@ -108,7 +64,6 @@ ActiveRecord::Schema.define(version: 20180221105039) do
     t.datetime "cs_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["act_id"], name: "index_conts_on_act_id"
     t.index ["cs_date"], name: "index_conts_on_cs_date"
     t.index ["cs_sts"], name: "index_conts_on_cs_sts"
     t.index ["email"], name: "index_conts_on_email"
@@ -158,12 +113,14 @@ ActiveRecord::Schema.define(version: 20180221105039) do
     t.jsonb "act_links", default: "{}", null: false
     t.jsonb "links", default: "{}", null: false
     t.jsonb "conts", default: "{}", null: false
+    t.jsonb "webs", default: "{}", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["act_links"], name: "index_tallies_on_act_links", using: :gin
     t.index ["acts"], name: "index_tallies_on_acts", using: :gin
     t.index ["conts"], name: "index_tallies_on_conts", using: :gin
     t.index ["links"], name: "index_tallies_on_links", using: :gin
+    t.index ["webs"], name: "index_tallies_on_webs", using: :gin
   end
 
   create_table "terms", force: :cascade do |t|
