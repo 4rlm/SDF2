@@ -12,13 +12,13 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 0
     @dj_workers = 4
     @obj_in_grp = 20
     @dj_refresh_interval = 10
     @db_timeout_limit = 60
-    @cut_off = 24.hours.ago
+    @cut_off = 12.hours.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
@@ -105,14 +105,14 @@ class VerUrl
 
     if curl_url.present?
       fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
-      AssocWeb.transfer_web_associations(web, fwd_web_obj) if fwd_web_obj&.url.present?
+      if fwd_web_obj&.url.present?
+        AssocWeb.transfer_web_associations(web, fwd_web_obj)
       else
         web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)
       end
     else
       web.update(url_sts: "Error: Nil", url_sts_code: nil, url_date: Time.now, timeout: 0)
     end
-
   end
 
   def print_curl_results(web_url, curl_url, url_sts_code)
@@ -124,9 +124,9 @@ class VerUrl
 
 
   #Call: VerUrl.new.check_for_dups
-  def check_for_dups
-    dups = Web.select(:url).group(:url).having("count(*) > 1").all
-    return dups
-  end
+  # def check_for_dups
+  #   dups = Web.select(:url).group(:url).having("count(*) > 1").all
+  #   return dups
+  # end
 
 end

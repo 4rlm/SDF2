@@ -1,7 +1,9 @@
 class Cont < ApplicationRecord
 
-  belongs_to :web, inverse_of: :conts, optional: true
+  validates :full_name, :uniqueness => { :scope => [:web_id] }
   validates_presence_of :web
-  validates :full_name, :uniqueness => { :scope => [:web_id] } #=> ALSO IN MIGRATION!
-  
+  belongs_to :web, inverse_of: :conts, optional: true
+  has_many :acts, through: :web
+  has_many :links, through: :web
+
 end

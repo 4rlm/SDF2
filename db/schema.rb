@@ -17,8 +17,8 @@ ActiveRecord::Schema.define(version: 20180221105039) do
   enable_extension "citext"
 
   create_table "act_webs", force: :cascade do |t|
-    t.integer "act_id", null: false
-    t.integer "web_id", null: false
+    t.bigint "act_id", null: false
+    t.bigint "web_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["act_id", "web_id"], name: "index_act_webs_on_act_id_and_web_id", unique: true
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20180221105039) do
   end
 
   create_table "conts", force: :cascade do |t|
-    t.integer "web_id", null: false
+    t.bigint "web_id", null: false
     t.citext "first_name"
     t.citext "last_name"
     t.citext "full_name", null: false
@@ -195,8 +195,8 @@ ActiveRecord::Schema.define(version: 20180221105039) do
   end
 
   create_table "web_links", force: :cascade do |t|
-    t.integer "web_id", null: false
-    t.integer "link_id", null: false
+    t.bigint "web_id", null: false
+    t.bigint "link_id", null: false
     t.string "link_sts"
     t.integer "cs_count", default: 0
     t.datetime "created_at", null: false
