@@ -24,8 +24,6 @@ class CsDealerCom
     end
 
     cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
-    puts cs_hsh_arr
-
     # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
 
@@ -94,11 +92,9 @@ class CsDealerCom
 
 
     staffs_arr << staffs
-    puts staffs_arr.count
     # binding.pry
 
     cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
-    puts cs_hsh_arr
     # binding.pry
     # sleep(1)
     return cs_hsh_arr

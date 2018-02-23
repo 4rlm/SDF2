@@ -41,13 +41,11 @@ class CsHelper # Contact Scraper Helper Method
       end
 
       formatted_css.reject!(&:blank?)
-      # puts formatted_css.inspect
-      # binding.pry if !formatted_css.any?
       return formatted_css
     end
   end
 
-
+  #CALL: ContScraper.new.start_cont_scraper
   def consolidate_cs_hsh_arr(ez_staffs)
     cs_hsh_arr = standard_scraper(ez_staffs)
     cs_hsh_arr.map! { |temp_cs_hsh| temp_cs_hsh.sort.to_h }
@@ -96,7 +94,6 @@ class CsHelper # Contact Scraper Helper Method
         end
 
         cs_hsh_arr << staff_hash
-        puts staff_hash.inspect
       end
     end
     return cs_hsh_arr
@@ -113,7 +110,6 @@ class CsHelper # Contact Scraper Helper Method
   #     step3 = step2&.map! {|str| str.split('  ') }
   #     step4 = step3&.flatten
   #     step5 = step4&.reject(&:blank?)
-  #     # puts step5.inspect
   #     return step5
   #   end
   # end
@@ -185,8 +181,8 @@ class CsHelper # Contact Scraper Helper Method
 
   #CALL: ContScraper.new.start_cont_scraper
   def prep_create_staffer(cs_hsh_arr)
-    cs_hsh_arr.each do |staff_hash|
 
+    cs_hsh_arr.each do |staff_hash|
       # Clean & Divide full name
       if staff_hash[:full_name]
         name_parts = staff_hash[:full_name].split(" ")

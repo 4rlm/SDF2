@@ -25,9 +25,9 @@ module AssocWeb
     fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
     web_obj.update(fwd_web_id: fwd_web_obj.id, url_sts: 'FWD', url_date: Time.now, timeout: 0)
 
-    Act.where(url: fwd_web_obj.url).each do |act|
-      act.webs << fwd_web_obj if !act.webs.include?(fwd_web_obj)
-    end
+    # Act.where(url: fwd_web_obj.url).each do |act|
+    #   act.web = fwd_web_obj if !act.webs.include?(fwd_web_obj)
+    # end
 
   end
 end

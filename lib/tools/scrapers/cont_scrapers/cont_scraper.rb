@@ -15,7 +15,7 @@ class ContScraper
     @dj_workers = 4
     @obj_in_grp = 40
     @dj_refresh_interval = 10
-    @cut_off = 24.hours.ago
+    @cut_off = 16.hours.ago
     @db_timeout_limit = 60
     @formatter = Formatter.new
     @mig = Mig.new
@@ -131,18 +131,20 @@ class ContScraper
 
   #CALL: ContScraper.new.start_cont_scraper
   def update_db(web, cs_hsh_arr, link_obj, act_link_obj)
+    cs_hsh_arr.delete_if { |h| !h[:full_name].present? || !h[:job_desc].present? } if cs_hsh_arr.any?
     cs_hsh_arr.flatten! if cs_hsh_arr.present?
     puts cs_hsh_arr
 
     if cs_hsh_arr&.any?
       cs_hsh_arr.each do |cs_hsh|
-        puts cs_hsh.inspect
+        cs_hsh[:web_id] = web.id
         cs_hsh[:cs_date] = Time.now
         cs_hsh[:cs_sts] = 'Valid'
-        cont_obj = Cont.find_or_create_by(web_id: web.id, full_name: cs_hsh[:full_name]).update(cs_hsh)
+
+        cont_obj = web.conts.find_by(full_name: cs_hsh[:full_name])
+        cont_obj.present? ? cont_obj.update(cs_hsh) : Cont.create(cs_hsh)
+        # cont_obj = Cont.find_or_create_by(web_id: web.id, full_name: cs_hsh[:full_name]).update(cs_hsh)
         @staff_scraped = true
-        # cont_obj = web.conts.find_by(full_name: cs_hsh[:full_name])
-        # cont_obj.present? ? cont_obj.update(cs_hsh) : cont_obj = Cont.create(cs_hsh)
       end
     end
   end

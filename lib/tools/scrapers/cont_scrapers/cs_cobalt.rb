@@ -32,7 +32,6 @@ class CsCobalt
     end
 
     cs_hsh_arr = @cs_helper.prep_create_staffer(cs_hsh_arr) if cs_hsh_arr.any?
-    puts cs_hsh_arr
 
 
     ## Newer Style Below - Run if above is nil.
@@ -63,12 +62,7 @@ class CsCobalt
         ez_staffs += @cs_helper.extract_noko(raw_staffs) if raw_staffs.any?
       end
 
-
       cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
-      puts cs_hsh_arr
-      # binding.pry if !cs_hsh_arr.any?
-
-      # binding.pry if !cs_hsh_arr.any?
       return cs_hsh_arr
 
 
@@ -104,7 +98,6 @@ class CsCobalt
       # raw_staffs_arr << noko_page.css('#af-static .af-staff-member')
     end
 
-    # puts cs_hsh_arr.inspect
     # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
 
