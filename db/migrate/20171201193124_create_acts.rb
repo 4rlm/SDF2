@@ -18,6 +18,8 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.citext  :full_address, index: true
       t.string  :phone, index: true
 
+      # t.string  :url
+
       t.timestamps
     end
   end

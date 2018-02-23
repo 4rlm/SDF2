@@ -16,12 +16,20 @@ module AssocWeb
   #Gets the associations of the current web obj and saves them to FWD web obj.
   #CALL: AssocWeb.transfer_web_associations(web_obj, fwd_web_obj)
   def self.transfer_web_associations(web_obj, fwd_web_obj)
-    models = %w(cont act link)
+    models = %w(act cont link)
     models.each do |model|
       associations = web_obj.send(model.pluralize)
       associations.each { |obj| Mig.new.create_obj_parent_assoc(model, obj, fwd_web_obj) } if associations.present?
     end
+
+    fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
+    web_obj.update(fwd_web_id: fwd_web_obj.id, url_sts: 'FWD', url_date: Time.now, timeout: 0)
+
+    Act.where(url: fwd_web_obj.url).each do |act|
+      act.webs << fwd_web_obj if !act.webs.include?(fwd_web_obj)
+    end
+
   end
 end
 
-# Call: VerUrl.new.start_ver_url
+#Call: VerUrl.new.start_ver_url

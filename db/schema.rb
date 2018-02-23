@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20180221105039) do
     t.citext "act_name"
     t.string "gp_id"
     t.string "gp_sts"
+    t.datetime "gp_date"
     t.string "gp_indus"
     t.citext "street"
     t.citext "city"
@@ -42,6 +43,7 @@ ActiveRecord::Schema.define(version: 20180221105039) do
     t.index ["act_name"], name: "index_acts_on_act_name"
     t.index ["city"], name: "index_acts_on_city"
     t.index ["full_address"], name: "index_acts_on_full_address"
+    t.index ["gp_date"], name: "index_acts_on_gp_date"
     t.index ["gp_id"], name: "index_acts_on_gp_id"
     t.index ["gp_indus"], name: "index_acts_on_gp_indus"
     t.index ["gp_sts"], name: "index_acts_on_gp_sts"
@@ -52,12 +54,12 @@ ActiveRecord::Schema.define(version: 20180221105039) do
   end
 
   create_table "conts", force: :cascade do |t|
-    t.integer "web_id"
+    t.integer "web_id", null: false
     t.citext "first_name"
     t.citext "last_name"
     t.citext "full_name", null: false
     t.citext "job_title"
-    t.citext "job_desc"
+    t.citext "job_desc", null: false
     t.citext "email"
     t.string "phone"
     t.string "cs_sts"
@@ -206,24 +208,23 @@ ActiveRecord::Schema.define(version: 20180221105039) do
   end
 
   create_table "webs", force: :cascade do |t|
-    t.citext "url"
+    t.integer "fwd_web_id"
+    t.string "url", null: false
     t.string "url_sts_code"
     t.string "temp_name"
-    t.datetime "tmp_date"
-    t.datetime "gp_date"
-    t.datetime "page_date"
-    t.datetime "url_date"
-    t.datetime "cs_date"
     t.string "url_sts"
     t.string "temp_sts"
     t.string "page_sts"
     t.string "cs_sts"
     t.integer "timeout", default: 0
+    t.datetime "url_date"
+    t.datetime "tmp_date"
+    t.datetime "page_date"
+    t.datetime "cs_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cs_date"], name: "index_webs_on_cs_date"
     t.index ["cs_sts"], name: "index_webs_on_cs_sts"
-    t.index ["gp_date"], name: "index_webs_on_gp_date"
     t.index ["page_date"], name: "index_webs_on_page_date"
     t.index ["page_sts"], name: "index_webs_on_page_sts"
     t.index ["temp_name"], name: "index_webs_on_temp_name"

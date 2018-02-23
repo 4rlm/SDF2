@@ -11,7 +11,7 @@ class FindPage
 
   def initialize
     @dj_on = false
-    @dj_count_limit = 5
+    @dj_count_limit = 0
     @dj_workers = 4
     @obj_in_grp = 40
     @dj_refresh_interval = 10

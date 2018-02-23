@@ -12,8 +12,8 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = true
-    @dj_count_limit = 5
+    @dj_on = false
+    @dj_count_limit = 0
     @dj_workers = 4
     @obj_in_grp = 20
     @dj_refresh_interval = 10
@@ -24,6 +24,7 @@ class VerUrl
   end
 
   def get_query
+
     ## Valid Sts Query ##
     val_sts_arr = ['Valid', nil]
     query = Web.select(:id)
@@ -66,7 +67,6 @@ class VerUrl
     web_url = web.url
     db_timeout = web.timeout
     db_timeout == 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
-    puts "timeout: #{timeout}"
 
     formatted_url = @formatter.format_url(web_url)
     if !formatted_url.present?
@@ -76,11 +76,7 @@ class VerUrl
 
     if formatted_url != web_url
       fwd_web_obj = Web.find_by(url: formatted_url)
-      if fwd_web_obj.present?
-        web.update(url_sts: 'FWD', url_date: Time.now, timeout: 0)
-        fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
-        AssocWeb.transfer_web_associations(web, fwd_web_obj)
-      end
+      AssocWeb.transfer_web_associations(web, fwd_web_obj) if fwd_web_obj&.url.present?
     end
 
     ####### CURL-BEGINS - FORMATTED URLS ONLY!! #######
@@ -107,14 +103,16 @@ class VerUrl
     curl_url = curl_hsh[:curl_url]
     print_curl_results(web_url, curl_url, url_sts_code)
 
-    fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
-    if fwd_web_obj.present?
-      web.update(url_sts: 'FWD', url_date: Time.now, timeout: 0)
-      fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
-      AssocWeb.transfer_web_associations(web, fwd_web_obj)
+    if curl_url.present?
+      fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
+      AssocWeb.transfer_web_associations(web, fwd_web_obj) if fwd_web_obj&.url.present?
+      else
+        web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)
+      end
     else
-      web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)
+      web.update(url_sts: "Error: Nil", url_sts_code: nil, url_date: Time.now, timeout: 0)
     end
+
   end
 
   def print_curl_results(web_url, curl_url, url_sts_code)
@@ -122,6 +120,13 @@ class VerUrl
     puts "W: #{web_url}"
     puts "C: #{curl_url}"
     puts "S: #{url_sts_code}\n\n\n"
+  end
+
+
+  #Call: VerUrl.new.check_for_dups
+  def check_for_dups
+    dups = Web.select(:url).group(:url).having("count(*) > 1").all
+    return dups
   end
 
 end
