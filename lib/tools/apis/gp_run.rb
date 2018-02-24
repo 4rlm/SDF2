@@ -1,26 +1,35 @@
-#CALL: GpAct.new.start_gp_act
+#CALL: GpStart.new.start_gp_act
 ######### Delayed Job #########
 # $ rake jobs:clear
 
 module GpRun
 
-  def get_spot(act_name, url)
-    if url.present?
-      uri = URI(url)
-      host = uri.host
-      host&.gsub!('www.', '')
-    end
+  def get_spot(act_name, url, gp_id)
 
     begin
-      query1 = "#{host}, #{act_name}" if act_name.present? && host.present?
-      query2 = act_name if act_name.present?
-      query3 = host if host.present?
 
-      spot = @client.spots_by_query(query1, types: ["car_dealer"])&.first if !spot.present? && query1
-      spot = @client.spots_by_query(query2, types: ["car_dealer"])&.first if !spot.present? && query2
-      spot = @client.spots_by_query(query3, types: ["car_dealer"])&.first if !spot.present? && query3
-    rescue
+      if gp_id.present?
+        spot = @client.spot(gp_id)
+      else
+
+        if url.present?
+          uri = URI(url)
+          host = uri.host
+          host&.gsub!('www.', '')
+        end
+
+        query1 = "#{host}, #{act_name}" if act_name.present? && host.present?
+        query2 = act_name if act_name.present?
+        query3 = host if host.present?
+
+        spot = @client.spots_by_query(query1, types: ["car_dealer"])&.first if !spot.present? && query1
+        spot = @client.spots_by_query(query2, types: ["car_dealer"])&.first if !spot.present? && query2
+        spot = @client.spots_by_query(query3, types: ["car_dealer"])&.first if !spot.present? && query3
+      end
+
+    rescue => e
       puts "Google Places Error"
+      # puts e.error
       binding.pry
       return nil
     end
@@ -74,11 +83,47 @@ module GpRun
 
       gp_hsh.values.compact.present? ? validity = 'Valid' : validity = 'Invalid'
       gp_hsh[:gp_sts] = validity
+
+      gp_hsh = check_http(gp_hsh, url) if url.present?
       return gp_hsh
     end
   end
 
+
   ########## HELPER METHODS ##########
+  #CALL: GpStart.new.start_gp_act
+
+  #Call: GpApi.new.check_http(gp_hsh, web_url)
+  def check_http(gp_hsh, web_url)
+    gp_url = gp_hsh[:url] if gp_hsh.present?
+    return gp_hsh if (!gp_url.present? && !web_url.present?)
+    gp_url = @formatter.format_url(gp_url)
+    web_url = @formatter.format_url(web_url)
+
+    return gp_hsh if (gp_url == web_url)
+    gp_uri_hsh = parse_url(gp_url)
+    web_uri_hsh = parse_url(web_url)
+
+    return gp_hsh if (!gp_uri_hsh.present? && !web_uri_hsh.present?)
+    return gp_hsh if (gp_uri_hsh[:host] != web_uri_hsh[:host])
+    gp_scheme = gp_uri_hsh[:scheme]
+    web_scheme = web_uri_hsh[:scheme]
+    return gp_hsh if (gp_scheme == web_scheme)
+    gp_hsh[:url] = web_url if (web_scheme.length > gp_scheme.length)
+
+    return gp_hsh
+  end
+
+  def parse_url(url)
+    if url.present?
+      uri = URI(url)
+      if uri.present?
+        uri_hsh = {scheme: uri.scheme, host: uri.host}
+        return uri_hsh
+      end
+    end
+  end
+
 
   #CALL: GpApi.new.format_goog_adr('adr')
   def format_goog_adr(adr)

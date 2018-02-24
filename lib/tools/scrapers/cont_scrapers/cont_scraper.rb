@@ -15,7 +15,7 @@ class ContScraper
     @dj_workers = 4
     @obj_in_grp = 40
     @dj_refresh_interval = 10
-    @cut_off = 16.hours.ago
+    @cut_off = 20.hours.ago
     @db_timeout_limit = 60
     @formatter = Formatter.new
     @mig = Mig.new
@@ -92,7 +92,7 @@ class ContScraper
         @error_msg = err_msg
       elsif noko_page.present?
         cs_hsh_arr = scrape_page(noko_page, temp_name)
-        update_db(web, cs_hsh_arr, link_obj, act_link_obj)
+        update_db(web, cs_hsh_arr, link_obj, act_link_obj) if cs_hsh_arr.present?
       end
     end
     update_web(web, timeout)
