@@ -18,7 +18,7 @@ class VerUrl
     @obj_in_grp = 20
     @dj_refresh_interval = 10
     @db_timeout_limit = 60
-    @cut_off = 16.hours.ago
+    @cut_off = 48.hours.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end

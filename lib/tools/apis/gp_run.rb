@@ -4,36 +4,76 @@
 
 module GpRun
 
-  def get_spot(act_name, url, gp_id)
+  def get_spot(act, act_name)
+    gp_hsh_arr = []
+    if @return_multiple_spots == true
+      queries = []
+      us_brands = "Chrysler, Jeep, Ford, Chevrolet, GM"
+      eu_brands = "Audi, Benz, BMW, VW, Jaguar"
+      as_brands = "Honda, Hyundai, Kia, Mazda, Nissan, Toyota, Lexus, Acura, Infiniti"
+      location = "#{act.city}, #{act.state}, #{act.zip}"
+      queries << us_query = "#{us_brands} Dealerships in #{location}"
+      queries << eu_brands = "#{eu_brands} Dealerships in #{location}"
+      queries << as_brands = "#{as_brands} Dealerships in #{location}"
+      # options = {types: ["car_dealer"], rankby: 'distance', exclude: ['electronics_store']}
+      options = {types: ["car_dealer"]}
 
-    begin
-
-      if gp_id.present?
-        spot = @client.spot(gp_id)
-      else
-
-        if url.present?
-          uri = URI(url)
-          host = uri.host
-          host&.gsub!('www.', '')
+      queries.each do |query|
+        sleep(1)
+        begin
+          spots = @client.spots_by_query(query, options)
+          spots.each { |spot| gp_hsh_arr << process_spot(spot) }
+        rescue => e
+          puts "Google Places Error: #{e}"
+          binding.pry
+          return nil
         end
-
-        query1 = "#{host}, #{act_name}" if act_name.present? && host.present?
-        query2 = act_name if act_name.present?
-        query3 = host if host.present?
-
-        spot = @client.spots_by_query(query1, types: ["car_dealer"])&.first if !spot.present? && query1
-        spot = @client.spots_by_query(query2, types: ["car_dealer"])&.first if !spot.present? && query2
-        spot = @client.spots_by_query(query3, types: ["car_dealer"])&.first if !spot.present? && query3
       end
-
-    rescue => e
-      puts "Google Places Error"
-      # puts e.error
-      binding.pry
-      return nil
     end
 
+
+    if @return_multiple_spots == false
+      url = act.url
+      gp_id = act.gp_id
+      binding.pry
+
+      begin
+        if !gp_id.present?
+          if url.present?
+            uri = URI(url)
+            host = uri.host
+            host&.gsub!('www.', '')
+          end
+
+          query1 = "#{host}, #{act_name}" if act_name.present? && host.present?
+          query2 = act_name if act_name.present?
+          query3 = host if host.present?
+
+          spot = @client.spots_by_query(query1, types: ["car_dealer"])&.first if !spot.present? && query1
+          spot = @client.spots_by_query(query2, types: ["car_dealer"])&.first if !spot.present? && query2
+          spot = @client.spots_by_query(query3, types: ["car_dealer"])&.first if !spot.present? && query3
+        else
+          spot = @client.spot(gp_id)
+        end
+
+        binding.pry
+        gp_hsh = process_spot(spot)
+        binding.pry
+        gp_hsh_arr << gp_hsh
+
+      rescue => e
+        puts "Google Places Error"
+        # puts e.error
+        binding.pry
+        return nil
+      end
+    end
+
+    return gp_hsh_arr
+  end
+
+
+  def process_spot(spot)
     if spot.present?
       ## Process Act Name ##
       act_name = spot.name
@@ -84,7 +124,7 @@ module GpRun
       gp_hsh.values.compact.present? ? validity = 'Valid' : validity = 'Invalid'
       gp_hsh[:gp_sts] = validity
 
-      gp_hsh = check_http(gp_hsh, url) if url.present?
+      # gp_hsh = check_http(gp_hsh, url) if url.present?
       return gp_hsh
     end
   end
@@ -94,35 +134,35 @@ module GpRun
   #CALL: GpStart.new.start_gp_act
 
   #Call: GpApi.new.check_http(gp_hsh, web_url)
-  def check_http(gp_hsh, web_url)
-    gp_url = gp_hsh[:url] if gp_hsh.present?
-    return gp_hsh if (!gp_url.present? && !web_url.present?)
-    gp_url = @formatter.format_url(gp_url)
-    web_url = @formatter.format_url(web_url)
+  # def check_http(gp_hsh, web_url)
+  #   gp_url = gp_hsh[:url] if gp_hsh.present?
+  #   return gp_hsh if (!gp_url.present? && !web_url.present?)
+  #   gp_url = @formatter.format_url(gp_url)
+  #   web_url = @formatter.format_url(web_url)
+  #
+  #   return gp_hsh if (gp_url == web_url)
+  #   gp_uri_hsh = parse_url(gp_url)
+  #   web_uri_hsh = parse_url(web_url)
+  #
+  #   return gp_hsh if (!gp_uri_hsh.present? && !web_uri_hsh.present?)
+  #   return gp_hsh if (gp_uri_hsh[:host] != web_uri_hsh[:host])
+  #   gp_scheme = gp_uri_hsh[:scheme]
+  #   web_scheme = web_uri_hsh[:scheme]
+  #   return gp_hsh if (gp_scheme == web_scheme)
+  #   gp_hsh[:url] = web_url if (web_scheme.length > gp_scheme.length)
+  #
+  #   return gp_hsh
+  # end
 
-    return gp_hsh if (gp_url == web_url)
-    gp_uri_hsh = parse_url(gp_url)
-    web_uri_hsh = parse_url(web_url)
-
-    return gp_hsh if (!gp_uri_hsh.present? && !web_uri_hsh.present?)
-    return gp_hsh if (gp_uri_hsh[:host] != web_uri_hsh[:host])
-    gp_scheme = gp_uri_hsh[:scheme]
-    web_scheme = web_uri_hsh[:scheme]
-    return gp_hsh if (gp_scheme == web_scheme)
-    gp_hsh[:url] = web_url if (web_scheme.length > gp_scheme.length)
-
-    return gp_hsh
-  end
-
-  def parse_url(url)
-    if url.present?
-      uri = URI(url)
-      if uri.present?
-        uri_hsh = {scheme: uri.scheme, host: uri.host}
-        return uri_hsh
-      end
-    end
-  end
+  # def parse_url(url)
+  #   if url.present?
+  #     uri = URI(url)
+  #     if uri.present?
+  #       uri_hsh = {scheme: uri.scheme, host: uri.host}
+  #       return uri_hsh
+  #     end
+  #   end
+  # end
 
 
   #CALL: GpApi.new.format_goog_adr('adr')

@@ -15,7 +15,7 @@ class FindPage
     @dj_workers = 4
     @obj_in_grp = 40
     @dj_refresh_interval = 10
-    @cut_off = 12.hour.ago
+    @cut_off = 24.hour.ago
     @formatter = Formatter.new
     @db_timeout_limit = 60
     @mig = Mig.new
