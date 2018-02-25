@@ -31,10 +31,10 @@ module CsvImport
   end
 
 
-  # Call: CsvTool.new.restore_backup(Web, 'Webs.csv')
-  # Call: CsvTool.new.restore_backup(WebLink, 'WebLinks.csv')
+  # Call: CsvTool.new.restore_backup(Brand, 'Brands.csv')
+  # Call: CsvTool.new.restore_backup(BrandTerm, 'BrandTerms.csv')
   # Call: CsvTool.new.restore_backup(Who, 'Whos.csv')
-  
+
   # Call: CsvTool.new.restore_backup(Brand, 'Brands.csv')
   # Call: CsvTool.new.restore_backup(Template, 'Templates.csv')
 

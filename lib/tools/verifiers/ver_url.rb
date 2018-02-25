@@ -12,18 +12,20 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = true
+    @dj_on = false
     @dj_count_limit = 0
     @dj_workers = 4
     @obj_in_grp = 20
     @dj_refresh_interval = 10
-    @db_timeout_limit = 60
+    @db_timeout_limit = 200
     @cut_off = 48.hours.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
 
   def get_query
+    # Transfers associations from orig web to fwd web, then destroys orig web
+    # AssocWeb.start_assoc_web
 
     ## Valid Sts Query ##
     val_sts_arr = ['Valid', nil]
@@ -37,7 +39,7 @@ class VerUrl
     query = Web.select(:id)
       .where(url_sts: err_sts_arr)
       .where('timeout < ?', @db_timeout_limit)
-      .order("timeout DESC")
+      .order("timeout ASC")
       .pluck(:id) if !query.any?
 
     puts "\n\nQuery Count: #{query.count}"

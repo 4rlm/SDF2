@@ -55,6 +55,7 @@ module FormatWeb
 
         bad_text_in_url = %w(approv avis budget business collis eat enterprise facebook financ food google gourmet hertz hotel hyatt insur invest loan lube mobility motel motorola parts quick rent repair restaur rv ryder service softwar travel twitter webhost yellowpages yelp youtube)
         url = nil if bad_text_in_url.any? {|bad_text| url&.include?(bad_text) }
+        url = convert_to_scheme_host(url) if url.present?
         return url
       end
 
@@ -159,9 +160,30 @@ module FormatWeb
 
 
 
+  #CALL: Formatter.new.convert_urls_to_uris
+  def convert_urls_to_uris
+    Web.where.not(url: nil).each do |web|
+      url = web.url
+      clean_url = convert_to_scheme_host(url)
+      if (clean_url.present? && url.present?) && (clean_url != url)
+        puts url
+        puts clean_url
+        binding.pry
+        web.update(url: clean_url)
+      end
+    end
+  end
 
-
-
+  #CALL: Formatter.new.convert_to_scheme_host(url)
+  def convert_to_scheme_host(url)
+    if url.present?
+      uri = URI(url)
+      scheme = uri&.scheme
+      host = uri&.host
+      url = "#{scheme}://#{host}" if (scheme.present? && host.present?)
+      return url
+    end
+  end
 
 
 

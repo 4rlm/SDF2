@@ -25,7 +25,7 @@ module GpRun
           spots.each { |spot| gp_hsh_arr << process_spot(spot) }
         rescue => e
           puts "Google Places Error: #{e}"
-          binding.pry
+          # binding.pry
           return nil
         end
       end
@@ -105,7 +105,9 @@ module GpRun
 
       website = detail&.website
       phone = detail&.formatted_phone_number
-      website = @formatter.format_url(website) if website.present?
+      formatted_website = @formatter.format_url(website) if website.present?
+      website = formatted_website if formatted_website.present?
+      website = @formatter.convert_to_scheme_host(website)
       phone = @formatter.validate_phone(phone)
 
       ## Create Result Hashes ##

@@ -104,7 +104,7 @@ class GpStart
     end
 
     gp_hsh_arr = get_spot(act, act_name)
-    gp_hsh_arr.each { |gp_hsh| update_db(act, gp_hsh) }
+    gp_hsh_arr.each { |gp_hsh| update_db(act, gp_hsh) } if gp_hsh_arr&.any?
 
     act.reload
     act.update(gp_sts: 'Skipped') if (act.gp_date < @query_start_time)
