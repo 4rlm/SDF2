@@ -33,7 +33,6 @@ module AssocWeb
 
     fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
     # dep_web_obj.update(fwd_web_id: fwd_web_obj.id, url_sts: 'FWD', url_date: Time.now, timeout: 0)
-    binding.pry
     dep_web_obj.destroy
   end
 end

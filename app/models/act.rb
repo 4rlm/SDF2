@@ -6,6 +6,7 @@ class Act < ApplicationRecord
   has_one :web, through: :act_web
   has_many :conts, through: :web
   has_many :links, through: :web
+  has_many :brands, through: :web
 
-  accepts_nested_attributes_for :act_web, :web, :conts, :links
+  accepts_nested_attributes_for :act_web, :web, :conts, :links, :brands
 end

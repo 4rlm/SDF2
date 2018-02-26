@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180225151305) do
+ActiveRecord::Schema.define(version: 20180226001104) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -205,6 +205,16 @@ ActiveRecord::Schema.define(version: 20180225151305) do
     t.string "locations_page"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "web_brands", force: :cascade do |t|
+    t.bigint "web_id", null: false
+    t.bigint "brand_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brand_id"], name: "index_web_brands_on_brand_id"
+    t.index ["web_id", "brand_id"], name: "index_web_brands_on_web_id_and_brand_id", unique: true
+    t.index ["web_id"], name: "index_web_brands_on_web_id"
   end
 
   create_table "web_links", force: :cascade do |t|
