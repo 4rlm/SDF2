@@ -5,9 +5,6 @@
 require 'iter_query'
 require 'gp_run'
 
-# %w{gp_run iter_query}.each { |x| require x }
-
-
 class GpStart
   include IterQuery
   include GpRun
@@ -23,38 +20,60 @@ class GpStart
     @cut_off = 5.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
-    @return_multiple_spots = true
+    @multi_spots = true
 
     @client = GooglePlaces::Client.new('AIzaSyDX5Sn2mNT1vPh_MyMnNOH5YL4cIWaB3s4')
-    @formatter = Formatter.new
-    @query_start_time = Time.now
+    @spot_start_time = nil
+    @gp_acts = []
   end
 
+
+  #CALL: GpStart.new.start_gp_act
   def get_query
+    query = []
 
-    ## Multiple Spots Query
-    query = Act.select(:id)
-      .where(gp_sts: ['Valid', nil])
-      .where.not(city: nil, state: nil, zip: nil)
-      .where('gp_date < ? OR gp_date IS NULL', @cut_off)
-      .order("id ASC")[0..0].pluck(:id)
+    ## Multiple Spot Query - COP!
+    if !query.any?
+      @multi_spots = true
+      query = Act.includes(:web)
+        .where("acts.gp_date < ? OR gp_date IS NULL", @cut_off).references(:acts)
+        .where(webs: {cop: true})
+        .where.not(acts: {lat: nil, lon: nil})
+        .where(acts: {gp_id: nil, gp_sts: ['Valid', nil]})
+        .select(:id)[0..0].pluck(:id)
+    end
 
 
-    # ## ## Valid Sts Query ##
-    # val_sts_arr = ['Valid', nil]
-    # query = Act.select(:id)
-    #   .where(gp_sts: val_sts_arr)
-    #   .where('gp_date < ? OR gp_date IS NULL', @cut_off)
-    #   .order("id ASC").pluck(:id)
+    ## Single Spot Query - COP!
+    # if !query.any?
+    #   @multi_spots = false
+    #   query = Act.includes(:web)
+    #     .where(webs: {cop: true})
+    #     .where.not(acts: {gp_id: nil})
+    #     .where(acts: {gp_sts: ['Valid', nil]})
+    #     .where(acts: {'gp_date < ? OR gp_date IS NULL', @cut_off})
+    #     .order("id ASC").pluck(:id)
+    # end
+
+
+    ## Multiple Spots Query - Non-Cop
+    # if !query.any?
+    #   @multi_spots = true
+    #   query = Act.select(:id)
+    #     .where(gp_sts: ['Valid', nil])
+    #     .where.not(city: nil, state: nil, zip: nil)
+    #     .where('gp_date < ? OR gp_date IS NULL', @cut_off)
+    #     .order("id ASC")[0..0].pluck(:id)
+    # end
+
 
     ## ## Skipped Sts Query ##
     if !query.any?
+      @multi_spots = false
       query = Act.select(:id)
         .where(gp_sts: 'Skipped')
         .where('gp_date < ? OR gp_date IS NULL', @cut_off)
         .order("id ASC").pluck(:id)
-
-      @return_multiple_spots = false
     end
 
     puts query.count
@@ -79,89 +98,81 @@ class GpStart
     @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
 
+  #CALL: GpStart.new.start_gp_act
   def template_starter(id)
-    act = Act.find(id)
-    act_name = act.act_name
-    orig_act_name = act_name
-    city = act.city
-    state = act.state
-    url = act.web&.url
-    gp_id = act.gp_id
+    samp = Random.rand(11)
+    puts "Sleeping....#{samp}"
+    sleep(samp)
 
-    ## Remove Undesirable Words from Act Name before sending to Goog ##
-    invalid_list = %w(service services contract parts collision repairs repair credit loan department dept and safety safe equipment equip body shop wash detailing detail finance financial mobile rv motorsports mobility)
+    @spot_start_time = Time.now
+    @gp_acts = []
+    @act = Act.find(id)
+    act_name_addr = pre_remove_invalids
+    gp_hsh_arr = get_spot(act_name_addr)
 
-    inval_hsh = @formatter.remove_invalids(act_name, invalid_list)
-    act_name = inval_hsh[:act_name]
-
-    ### GET GOOG RESULTS ###
-    if city && state
-      act_name = "#{act_name} in #{city}, #{state}"
-    elsif city
-      act_name = "#{act_name} in #{city}"
-    elsif state
-      act_name = "#{act_name} in #{state}"
+    if gp_hsh_arr&.any?
+      gp_hsh_arr.each do |gp_hsh|
+        act = Act.find_or_create_by(gp_id: gp_hsh[:gp_id])
+        web = find_web(gp_hsh[:url])
+        update_db(act, web, gp_hsh)
+      end
+    else
+      @act.update(gp_sts: 'Invalid', gp_date: Time.now)
     end
 
-    gp_hsh_arr = get_spot(act, act_name)
-    gp_hsh_arr.each { |gp_hsh| update_db(act, gp_hsh) } if gp_hsh_arr&.any?
-
-    act.reload
-    act.update(gp_sts: 'Skipped') if (act.gp_date < @query_start_time)
+    act_gp_date = @act.gp_date
+    if !act_gp_date || (act_gp_date < @spot_start_time) || !@gp_acts&.uniq&.include?(@act.reload)
+      @act.update(gp_sts: 'Skipped', gp_date: Time.now)
+    end
   end
 
 
-  #CALL: GpStart.new.start_gp_act
-  def update_db(act, gp_hsh)
-
-    if @return_multiple_spots == false
-      act_gp_id = act.gp_id
-      if gp_hsh&.values&.compact&.present?
-        ## Destroys acts based on duplicate gp_id.
-        if !act_gp_id.present?
-          objs = [Act.find_by(gp_id: gp_hsh[:gp_id])].compact
-          if objs.any?
-            objs << act
-            objs = objs.sort_by(&:id)
-            act = objs.first
-            objs[1..-1].each {|act| act.destroy}
-          end
-        end
-      else
-        gp_hsh = {gp_sts: 'Invalid', gp_date: Time.now}
-      end
-    elsif @return_multiple_spots == true
-      act = Act.find_or_create_by(gp_id: gp_hsh[:gp_id])
-      # (@updated_original_act = true) if (act.id == @original_act_id)
+  def update_db(act, web, gp_hsh)
+    if act.present?
+      act.web = web if (web.present? && (act.web != web))
+      url = act.web&.url
+      act_hsh = gp_hsh.slice!(:url)
+      @gp_acts << act.update(act_hsh)
     end
+  end
 
-    if gp_hsh[:url].present?
-      gp_url = gp_hsh[:url]
-      http_s_hsh = make_http_s(gp_url)
+
+  def find_web(gp_url)
+    if gp_url.present?
+      http_s_hsh = @formatter.make_http_s(gp_url)
       web = Web.find_by(url: http_s_hsh[:https])
       web = Web.find_by(url: http_s_hsh[:http]) if !web.present?
       web = Web.create(url: gp_url) if !web.present?
+      return web
     end
-
-    act.web = web if (web.present? && (act.web != web))
-    url = act.web&.url
-    act_hsh = gp_hsh.slice!(:url)
-    act.update(act_hsh)
   end
 
 
-  ## Helper Methods Below ###
+  def pre_remove_invalids
+    if @act.present?
+      act_name = @act.act_name
+      city = @act.city
+      state = @act.state
+      ## Remove Undesirable Words from Act Name before sending to Goog ##
+      invalid_list = %w(service services contract parts collision repairs repair credit loan department dept and safety safe equipment equip body shop wash detailing detail finance financial mobile rv motorsports mobility)
 
-  # Call: GpStart.new.make_http_s('gp_url')
-  def make_http_s(gp_url)
-    if gp_url.present?
-      uri = URI(gp_url)
-      if uri.present?
-        http_s_hsh = { http: "http://#{uri.host}", https: "https://#{uri.host}" }
-        return http_s_hsh
+      inval_hsh = @formatter.remove_invalids(act_name, invalid_list)
+      act_name = inval_hsh[:act_name]
+
+      ### GET GOOG RESULTS ###
+      if city && state
+        act_name_addr = "#{act_name} in #{city}, #{state}"
+      elsif city
+        act_name_addr = "#{act_name} in #{city}"
+      elsif state
+        act_name_addr = "#{act_name} in #{state}"
+      else
+        act_name_addr = act_name
       end
+      return act_name_addr
     end
   end
+
 
 
 end

@@ -9,6 +9,8 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.string  :gp_sts, index: true
       t.datetime :gp_date, index: true
       t.string  :gp_indus, index: true
+      t.string  :lat
+      t.string  :lon
 
       ## Address Info
       t.citext  :street, index: true
@@ -17,8 +19,6 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.string  :zip, index: true
       t.citext  :full_address, index: true
       t.string  :phone, index: true
-
-      # t.string  :url
 
       t.timestamps
     end

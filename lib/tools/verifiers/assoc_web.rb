@@ -25,13 +25,17 @@ module AssocWeb
   #Gets the associations of the current web obj and saves them to FWD web obj.
   #CALL: AssocWeb.transfer_web_associations(dep_web_obj, fwd_web_obj)
   def self.transfer_web_associations(dep_web_obj, fwd_web_obj)
+
     models = %w(act brand cont link)
     models.each do |model|
       associations = dep_web_obj.send(model.pluralize)
       associations.each { |obj| Mig.new.create_obj_parent_assoc(model, obj, fwd_web_obj) } if associations.present?
     end
 
-    fwd_web_obj.update(url_sts: 'Valid', url_date: Time.now, timeout: 0)
+    fwd_web_update_hsh = { url_sts: 'Valid', url_date: Time.now, timeout: 0 }
+    fwd_web_update_hsh[:cop] = true if (dep_web_obj.cop == true)
+
+    fwd_web_obj.update(fwd_web_update_hsh)
     # dep_web_obj.update(fwd_web_id: fwd_web_obj.id, url_sts: 'FWD', url_date: Time.now, timeout: 0)
     dep_web_obj.destroy
   end

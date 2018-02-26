@@ -4,36 +4,66 @@
 
 module GpRun
 
-  def get_spot(act, act_name)
+  def get_spot(act_name_addr)
+    act = @act
     gp_hsh_arr = []
-    if @return_multiple_spots == true
-      queries = []
-      us_brands = "Chrysler, Jeep, Ford, Chevrolet, GM"
-      eu_brands = "Audi, Benz, BMW, VW, Jaguar"
-      as_brands = "Honda, Hyundai, Kia, Mazda, Nissan, Toyota, Lexus, Acura, Infiniti"
-      location = "#{act.city}, #{act.state}, #{act.zip}"
-      queries << us_query = "#{us_brands} Dealerships in #{location}"
-      queries << eu_brands = "#{eu_brands} Dealerships in #{location}"
-      queries << as_brands = "#{as_brands} Dealerships in #{location}"
-      # options = {types: ["car_dealer"], rankby: 'distance', exclude: ['electronics_store']}
-      options = {types: ["car_dealer"]}
 
-      queries.each do |query|
-        sleep(1)
+    if @multi_spots == true
+      lat = act.lat
+      lon = act.lon
+
+      if lat.present? && lon.present?
         begin
-          spots = @client.spots_by_query(query, options)
+          random_brands = []
+          random_brands << "Chrysler, Jeep, Ford, Chevrolet, GMC"
+          random_brands << "Audi, Benz, BMW, VW, Jaguar"
+          random_brands << "Honda, Hyundai, Kia, Mazda, Nissan"
+          random_brands << "Toyota, Lexus, Acura, Infiniti"
+          # sample_brands = random_brands.sample
+          # keyword = "#{random_brands.sample} Franchise Auto Dealership"
+          # keyword = "Franchise Dealership"
+          keyword = "#{act.act_name} Franchise Dealerships"
+          options = { types: ["car_dealer"], keyword: keyword, radius: 50000}
+          spots = @client.spots(lat, lon, options)
+          puts spots.count
+          # spots.uniq!
           spots.each { |spot| gp_hsh_arr << process_spot(spot) }
         rescue => e
           puts "Google Places Error: #{e}"
-          # binding.pry
+          binding.pry
           return nil
         end
+      else
+        binding.pry
+        queries = []
+        us_brands = "Chrysler, Jeep, Ford, Chevrolet, GM"
+        eu_brands = "Audi, Benz, BMW, VW, Jaguar"
+        as_brands = "Honda, Hyundai, Kia, Mazda, Nissan, Toyota, Lexus, Acura, Infiniti"
+        location = "#{act.city}, #{act.state}, #{act.zip}"
+        queries << us_query = "#{us_brands} Dealerships in #{location}"
+        queries << eu_brands = "#{eu_brands} Dealerships in #{location}"
+        queries << as_brands = "#{as_brands} Dealerships in #{location}"
+        # options = {types: ["car_dealer"], rankby: 'distance', exclude: ['electronics_store']}
+        options = {types: ["car_dealer"]}
+
+        queries.each do |query|
+          sleep(1)
+          begin
+            spots = @client.spots_by_query(query, options)
+            spots.each { |spot| gp_hsh_arr << process_spot(spot) }
+          rescue => e
+            puts "Google Places Error: #{e}"
+            # binding.pry
+            return nil
+          end
+        end
       end
+
     end
 
 
-    if @return_multiple_spots == false
-      url = act.url
+    if @multi_spots == false
+      url = act.web&.url
       gp_id = act.gp_id
       binding.pry
 
@@ -45,8 +75,8 @@ module GpRun
             host&.gsub!('www.', '')
           end
 
-          query1 = "#{host}, #{act_name}" if act_name.present? && host.present?
-          query2 = act_name if act_name.present?
+          query1 = "#{host}, #{act_name_addr}" if act_name_addr.present? && host.present?
+          query2 = act_name_addr if act_name_addr.present?
           query3 = host if host.present?
 
           spot = @client.spots_by_query(query1, types: ["car_dealer"])&.first if !spot.present? && query1
@@ -72,11 +102,21 @@ module GpRun
     return gp_hsh_arr
   end
 
-
+  #CALL: GpStart.new.start_gp_act
   def process_spot(spot)
     if spot.present?
+      ## Get Spot Detail ##
+      place_id = spot.place_id
+      detail = @client.spot(spot.place_id)
+
+      lat = spot.lat
+      lon = spot.lng
+      lat = detail.lat if !lat.present?
+      lon = detail.lng if !lon.present?
+
       ## Process Act Name ##
       act_name = spot.name
+      act_name = detail.name if !act_name.present?
       act_name&.gsub!('.com', ' ')
       act_name&.gsub!('.net', ' ')
       act_name&.gsub!('.co', ' ')
@@ -88,21 +128,16 @@ module GpRun
 
       ## Process Address ##
       spot_adr = spot.formatted_address
-      if spot_adr.present?
-        adr_hsh = format_goog_adr(spot_adr)
-      else
-        adr_hsh = {street: nil, city: nil, state: nil, zip: nil}
-      end
+      spot_adr = detail.formatted_address if !spot_adr.present?
+      adr_hsh = format_goog_adr(spot_adr) if spot_adr.present?
+      adr_hsh = {street: nil, city: nil, state: nil, zip: nil} if !spot_adr.present?
 
       ## Process Industry ##
       industries = spot.types ||= []
       industries -= %w(store point_of_interest establishment car_repair)
       gp_indus = industries.join(' ')
 
-      ## Get Spot Detail ##
-      place_id = spot.place_id
-      detail = @client.spot(spot.place_id)
-
+      ## Process Website
       website = detail&.website
       phone = detail&.formatted_phone_number
       formatted_website = @formatter.format_url(website) if website.present?
@@ -116,16 +151,17 @@ module GpRun
         city: adr_hsh[:city],
         state: adr_hsh[:state],
         zip: adr_hsh[:zip],
-        gp_sts: adr_hsh[:gp_sts],
-        url: website,
+        lat: lat,
+        lon: lon,
         phone: phone,
+        url: website,
         gp_indus: gp_indus,
         gp_id: place_id,
         gp_date: Time.now }
 
       gp_hsh.values.compact.present? ? validity = 'Valid' : validity = 'Invalid'
       gp_hsh[:gp_sts] = validity
-
+      gp_hsh[:gp_date] = Time.now
       # gp_hsh = check_http(gp_hsh, url) if url.present?
       return gp_hsh
     end
@@ -173,7 +209,7 @@ module GpRun
       country = adr.split(',').last
       foreign_country = find_foreign_country(country)
       if foreign_country.present?
-        adr_hsh = {gp_sts: 'Invalid', street: nil, city: nil, state: nil, zip: nil}
+        adr_hsh = {street: nil, city: nil, state: nil, zip: nil}
         return adr_hsh
       else
         adr.gsub!('United States', '')
@@ -212,7 +248,7 @@ module GpRun
           zip&.squeeze!(" ")
         end
 
-        adr_hsh = {gp_sts: nil, street: street, city: city, state: state, zip: zip}
+        adr_hsh = {street: street, city: city, state: state, zip: zip}
         return adr_hsh
       end
     end
@@ -248,9 +284,6 @@ module GpRun
       end
       act_name = act_name_parts.join(' ')
       act_name&.gsub!('Gmc', 'GMC')
-      puts "\n\n===================="
-      puts act_name
-      binding.pry
       return string
     end
   end

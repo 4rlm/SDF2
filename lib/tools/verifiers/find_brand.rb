@@ -30,7 +30,7 @@ class FindBrand
   def template_starter(id)
     web = Web.find(id)
     url = web.url
-    web.brands.destroy_all
+    # web.brands.destroy_all
     update_hsh = { brand_sts: nil, brand_date: Time.now }
 
     brands = []
@@ -53,7 +53,9 @@ class FindBrand
       end
 
       if brand_objs.any?
-        web.brands << brand_objs
+        brand_objs.each do |brand_obj|
+          web.brands << brand_obj if !web.brands.include?(brand_obj)
+        end
         update_hsh[:brand_sts] = 'Valid'
       end
     end

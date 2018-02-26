@@ -12,39 +12,49 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 0
     @dj_workers = 4
     @obj_in_grp = 20
     @dj_refresh_interval = 10
     @db_timeout_limit = 200
-    @cut_off = 48.hours.ago
+    @cut_off = 12.hours.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
 
   def get_query
-    # Transfers associations from orig web to fwd web, then destroys orig web
-    # AssocWeb.start_assoc_web
+    query = []
+
+    ## COP True Query ##
+    if !query.any?
+      query = Web.select(:id)
+        .where(url_sts: ['Valid', nil], cop: true)
+        .where('url_date < ? OR url_date IS NULL', @cut_off)
+        .order("id ASC").pluck(:id)
+    end
+
 
     ## Valid Sts Query ##
-    val_sts_arr = ['Valid', nil]
-    query = Web.select(:id)
-      .where(url_sts: val_sts_arr)
-      .where('url_date < ? OR url_date IS NULL', @cut_off)
-      .order("id ASC").pluck(:id)
+    if !query.any?
+      query = Web.select(:id)
+        .where(url_sts: ['Valid', nil])
+        .where('url_date < ? OR url_date IS NULL', @cut_off)
+        .order("id ASC").pluck(:id)
+    end
 
     ## Error Sts Query ##
-    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    query = Web.select(:id)
-      .where(url_sts: err_sts_arr)
-      .where('timeout < ?', @db_timeout_limit)
-      .order("timeout ASC")
-      .pluck(:id) if !query.any?
+    if !query.any?
+      err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+      query = Web.select(:id)
+        .where(url_sts: err_sts_arr)
+        .where('timeout < ?', @db_timeout_limit)
+        .order("timeout ASC").pluck(:id)
+    end
 
     puts "\n\nQuery Count: #{query.count}"
     sleep(1)
-    # binding.pry
+    binding.pry
     return query
   end
 

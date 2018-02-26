@@ -186,6 +186,18 @@ module FormatWeb
   end
 
 
+  # Call: Formatter.new.make_http_s('gp_url')
+  def make_http_s(gp_url)
+    if gp_url.present?
+      uri = URI(gp_url)
+      if uri.present?
+        http_s_hsh = { http: "http://#{uri.host}", https: "https://#{uri.host}" }
+        return http_s_hsh
+      end
+    end
+  end
+
+
 
 
 
