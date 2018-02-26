@@ -5,5 +5,6 @@ class Cont < ApplicationRecord
   belongs_to :web, inverse_of: :conts, optional: true
   has_many :acts, through: :web
   has_many :links, through: :web
+  has_many :brands, through: :web
 
 end

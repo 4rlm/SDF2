@@ -75,6 +75,7 @@ class FindPage
 
   def template_starter(id)
     web = Web.find(id)
+    web.links.destroy_all
     url = web.url
     temp_name = web.temp_name
     db_timeout = web.timeout

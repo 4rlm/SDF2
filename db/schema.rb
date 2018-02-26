@@ -56,7 +56,6 @@ ActiveRecord::Schema.define(version: 20180226001104) do
   create_table "brand_terms", force: :cascade do |t|
     t.string "brand_term", null: false
     t.string "brand_name"
-    t.string "dealer_type"
     t.index ["brand_term"], name: "index_brand_terms_on_brand_term"
   end
 
@@ -239,13 +238,17 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.string "temp_sts"
     t.string "page_sts"
     t.string "cs_sts"
+    t.string "brand_sts"
     t.integer "timeout", default: 0
     t.datetime "url_date"
     t.datetime "tmp_date"
     t.datetime "page_date"
     t.datetime "cs_date"
+    t.datetime "brand_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["brand_date"], name: "index_webs_on_brand_date"
+    t.index ["brand_sts"], name: "index_webs_on_brand_sts"
     t.index ["cs_date"], name: "index_webs_on_cs_date"
     t.index ["cs_sts"], name: "index_webs_on_cs_sts"
     t.index ["page_date"], name: "index_webs_on_page_date"
