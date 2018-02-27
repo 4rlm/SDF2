@@ -16,6 +16,11 @@ class CreateConts < ActiveRecord::Migration[5.1]
       t.string  :cs_sts, index: true
       t.datetime :cs_date, index: true
 
+      t.datetime :email_changed, index: true
+      t.datetime :cont_changed, index: true
+      t.datetime :job_changed, index: true
+      t.datetime :cx_date, index: true
+
       t.timestamps
     end
     # add_index :conts, [:act_id, :full_name], unique: true, name: 'full_name_index' #=> And in Model!

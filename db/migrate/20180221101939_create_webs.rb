@@ -2,7 +2,6 @@ class CreateWebs < ActiveRecord::Migration[5.1]
   def change
     create_table :webs do |t|
 
-      t.integer :fwd_web_id
       t.string  :url, index: true, unique: true, null: false
       # t.string  :url, index: true, unique: true, null: true
       t.string  :url_sts_code, index: true
@@ -23,6 +22,11 @@ class CreateWebs < ActiveRecord::Migration[5.1]
       t.datetime :page_date, index: true
       t.datetime :cs_date, index: true
       t.datetime :brand_date, index: true
+
+      t.integer  :fwd_url
+      t.integer  :fwd_web_id
+      t.datetime :web_changed, index: true
+      t.datetime :wx_date, index: true
 
       t.timestamps
     end

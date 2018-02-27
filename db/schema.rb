@@ -40,9 +40,15 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.string "zip"
     t.citext "full_address"
     t.string "phone"
+    t.datetime "adr_changed"
+    t.datetime "act_changed"
+    t.datetime "ax_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["act_changed"], name: "index_acts_on_act_changed"
     t.index ["act_name"], name: "index_acts_on_act_name"
+    t.index ["adr_changed"], name: "index_acts_on_adr_changed"
+    t.index ["ax_date"], name: "index_acts_on_ax_date"
     t.index ["city"], name: "index_acts_on_city"
     t.index ["full_address"], name: "index_acts_on_full_address"
     t.index ["gp_date"], name: "index_acts_on_gp_date"
@@ -78,13 +84,21 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.string "phone"
     t.string "cs_sts"
     t.datetime "cs_date"
+    t.datetime "email_changed"
+    t.datetime "cont_changed"
+    t.datetime "job_changed"
+    t.datetime "cx_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cont_changed"], name: "index_conts_on_cont_changed"
     t.index ["cs_date"], name: "index_conts_on_cs_date"
     t.index ["cs_sts"], name: "index_conts_on_cs_sts"
+    t.index ["cx_date"], name: "index_conts_on_cx_date"
     t.index ["email"], name: "index_conts_on_email"
+    t.index ["email_changed"], name: "index_conts_on_email_changed"
     t.index ["first_name"], name: "index_conts_on_first_name"
     t.index ["full_name"], name: "index_conts_on_full_name"
+    t.index ["job_changed"], name: "index_conts_on_job_changed"
     t.index ["job_desc"], name: "index_conts_on_job_desc"
     t.index ["job_title"], name: "index_conts_on_job_title"
     t.index ["last_name"], name: "index_conts_on_last_name"
@@ -247,7 +261,6 @@ ActiveRecord::Schema.define(version: 20180226001104) do
   end
 
   create_table "webs", force: :cascade do |t|
-    t.integer "fwd_web_id"
     t.string "url", null: false
     t.string "url_sts_code"
     t.boolean "cop", default: false
@@ -263,6 +276,10 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.datetime "page_date"
     t.datetime "cs_date"
     t.datetime "brand_date"
+    t.integer "fwd_url"
+    t.integer "fwd_web_id"
+    t.datetime "web_changed"
+    t.datetime "wx_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["brand_date"], name: "index_webs_on_brand_date"
@@ -278,6 +295,8 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.index ["url_date"], name: "index_webs_on_url_date"
     t.index ["url_sts"], name: "index_webs_on_url_sts"
     t.index ["url_sts_code"], name: "index_webs_on_url_sts_code"
+    t.index ["web_changed"], name: "index_webs_on_web_changed"
+    t.index ["wx_date"], name: "index_webs_on_wx_date"
   end
 
   create_table "whos", force: :cascade do |t|

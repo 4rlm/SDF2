@@ -20,6 +20,10 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.citext  :full_address, index: true
       t.string  :phone, index: true
 
+      t.datetime :adr_changed, index: true
+      t.datetime :act_changed, index: true
+      t.datetime :ax_date, index: true
+
       t.timestamps
     end
   end
