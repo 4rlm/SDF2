@@ -25,6 +25,8 @@ module AssocWeb
   #Gets the associations of the current web obj and saves them to FWD web obj.
   #CALL: AssocWeb.transfer_web_associations(dep_web_obj, fwd_web_obj)
   def self.transfer_web_associations(dep_web_obj, fwd_web_obj)
+    puts "Need to Refactor! Not deleting old url anymore.  Saving fwd url in dep web."
+    binding.pry
 
     models = %w(act brand cont link)
     models.each do |model|
@@ -37,7 +39,7 @@ module AssocWeb
 
     fwd_web_obj.update(fwd_web_update_hsh)
     # dep_web_obj.update(fwd_web_id: fwd_web_obj.id, url_sts: 'FWD', url_date: Time.now, timeout: 0)
-    dep_web_obj.destroy
+    # dep_web_obj.destroy
   end
 end
 

@@ -23,7 +23,6 @@ class CreateUniActs < ActiveRecord::Migration[5.1]
       t.citext  :staff_text
 
       ## Web Table
-      t.integer :fwd_web_id
       t.string  :url1
       t.string  :url2
       t.string  :brand1

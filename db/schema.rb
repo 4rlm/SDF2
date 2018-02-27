@@ -181,7 +181,6 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.string "phone"
     t.citext "staff_link"
     t.citext "staff_text"
-    t.integer "fwd_web_id"
     t.string "url1"
     t.string "url2"
     t.string "brand1"
@@ -277,7 +276,6 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.datetime "cs_date"
     t.datetime "brand_date"
     t.integer "fwd_url"
-    t.integer "fwd_web_id"
     t.datetime "web_changed"
     t.datetime "wx_date"
     t.datetime "created_at", null: false
