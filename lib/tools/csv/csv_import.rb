@@ -32,7 +32,7 @@ module CsvImport
 
 
   # Call: CsvTool.new.restore_backup(Web, 'Webs.csv')
-  # Call: CsvTool.new.restore_backup(BrandTerm, 'BrandTerms.csv')
+  # Call: CsvTool.new.restore_backup(WebBrand, 'WebBrands.csv')
   # Call: CsvTool.new.restore_backup(Who, 'Whos.csv')
 
   # Call: CsvTool.new.restore_backup(Brand, 'Brands.csv')

@@ -1,5 +1,6 @@
 class Act < ApplicationRecord
-  before_validation :full_address, :track_change
+  # before_validation :full_address, :track_change
+  before_save :full_address, :track_change
 
   # has_many :conts, inverse_of: :act, optional: true
   validates_uniqueness_of :gp_id, allow_blank: true, allow_nil: true
