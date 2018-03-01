@@ -10,6 +10,7 @@ class Start
     VerUrl.new.start_ver_url ## verifies urls, redirects.
   end
 
+
   ##############################
   ###### IMPORTS-EXPORTS #######
   ##############################
