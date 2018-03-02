@@ -1,6 +1,6 @@
 class Act < ApplicationRecord
-  # before_validation :full_address, :track_change
-  before_save :full_address, :track_change
+
+  before_save :full_address, :track_act_change
 
   # has_many :conts, inverse_of: :act, optional: true
   validates_uniqueness_of :gp_id, allow_blank: true, allow_nil: true
@@ -20,22 +20,9 @@ class Act < ApplicationRecord
     self.full_address = [street, city, state, zip].compact.join(', ')
   end
 
-  def track_change
+  def track_act_change
     self.adr_changed = Time.now if full_address_changed?
     self.act_changed = Time.now if act_name_changed?
   end
-
-
-    # adr_changed: nil, act_changed: nil
-    # attrs = ["full_address", "street2", "city", "state", "zipcode"]
-    #
-    # if (self.changed & attrs).any?
-    #   then do something....
-    # end
-
-    # before_update :notify, :if => :my_attribute_changed?
-    # puts "The Attribute 'my_attribute' has been changed!"
-
-
 
 end

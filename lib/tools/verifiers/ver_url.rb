@@ -18,7 +18,7 @@ class VerUrl
     @obj_in_grp = 20
     @dj_refresh_interval = 10
     @db_timeout_limit = 200
-    @cut_off = 12.hours.ago
+    @cut_off = 2.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
@@ -27,7 +27,7 @@ class VerUrl
     query = []
 
     ## COP True Query ##
-    if !query.any?
+    unless query.any?
       query = Web.select(:id)
         .where(url_sts: ['Valid', nil], cop: true)
         .where('url_date < ? OR url_date IS NULL', @cut_off)
@@ -36,7 +36,7 @@ class VerUrl
 
 
     ## Valid Sts Query ##
-    if !query.any?
+    unless query.any?
       query = Web.select(:id)
         .where(url_sts: ['Valid', nil])
         .where('url_date < ? OR url_date IS NULL', @cut_off)
@@ -44,7 +44,7 @@ class VerUrl
     end
 
     ## Error Sts Query ##
-    if !query.any?
+    unless query.any?
       err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
       query = Web.select(:id)
         .where(url_sts: err_sts_arr)
@@ -54,8 +54,7 @@ class VerUrl
 
     puts "\n\nQuery Count: #{query.count}"
     sleep(1)
-    binding.pry
-    return query
+    query
   end
 
   def start_ver_url
@@ -63,7 +62,7 @@ class VerUrl
     while query.any?
       setup_iterator(query)
       query = get_query
-      break if !query.any?
+      break unless query.any?
     end
   end
 
@@ -81,8 +80,8 @@ class VerUrl
     db_timeout == 0 ? timeout = @dj_refresh_interval : timeout = (db_timeout * 3)
 
     formatted_url = @formatter.format_url(web_url)
-    if !formatted_url.present?
-      web.update(url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now, timeout: timeout)
+    unless formatted_url.present?
+      web.update(url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now, wx_date: Time.now, timeout: timeout)
       return
     end
 
@@ -133,12 +132,5 @@ class VerUrl
     puts "C: #{curl_url}"
     puts "S: #{url_sts_code}\n\n\n"
   end
-
-
-  #Call: VerUrl.new.check_for_dups
-  # def check_for_dups
-  #   dups = Web.select(:url).group(:url).having("count(*) > 1").all
-  #   return dups
-  # end
 
 end

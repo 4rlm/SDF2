@@ -35,12 +35,12 @@ class GpStart
     ## Multiple Spot Query - COP!
     if !query.any?
       @multi_spots = true
-      query = Act.includes(:web)
+      query = Act.includes(:webs)
         .where("acts.gp_date < ? OR gp_date IS NULL", @cut_off).references(:acts)
         .where(webs: {cop: true})
         .where.not(acts: {lat: nil, lon: nil})
         .where(acts: {gp_id: nil, gp_sts: ['Valid', nil]})
-        .select(:id)[0..0].pluck(:id)
+        .select(:id).order("gp_date ASC")[0..0].pluck(:id)
     end
 
 
@@ -128,11 +128,16 @@ class GpStart
 
 
   def update_db(act, web, gp_hsh)
+
     if act.present?
-      act.web = web if (web.present? && (act.web != web))
-      url = act.web&.url
-      act_hsh = gp_hsh.slice!(:url)
+      act.webs << web if (web.present? && !act.webs&.include?(web))
+      act_hsh = gp_hsh.except!(:url)
       @gp_acts << act.update(act_hsh)
+
+      # act.web = web if (web.present? && (act.web != web))
+      # url = act.web&.url
+      # act_hsh = gp_hsh.slice!(:url)
+      # @gp_acts << act.update(act_hsh)
     end
   end
 
@@ -140,10 +145,12 @@ class GpStart
   def find_web(gp_url)
     if gp_url.present?
       http_s_hsh = @formatter.make_http_s(gp_url)
-      web = Web.find_by(url: http_s_hsh[:https])
-      web = Web.find_by(url: http_s_hsh[:http]) if !web.present?
-      web = Web.create(url: gp_url) if !web.present?
-      return web
+      if http_s_hsh.present?
+        web = Web.find_by(url: http_s_hsh[:https])
+        web = Web.find_by(url: http_s_hsh[:http]) if !web.present?
+        web = Web.create(url: gp_url) if !web.present?
+        return web
+      end
     end
   end
 

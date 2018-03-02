@@ -30,7 +30,7 @@ module GpRun
           spots.each { |spot| gp_hsh_arr << process_spot(spot) }
         rescue => e
           puts "Google Places Error: #{e}"
-          binding.pry
+          # binding.pry
           return nil
         end
       else
