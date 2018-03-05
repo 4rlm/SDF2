@@ -1,37 +1,21 @@
 class WebsController < ApplicationController
   before_action :set_web, only: [:show, :edit, :update, :destroy]
-  helper_method :sort_column, :sort_direction
+  respond_to :html, :json
 
   # GET /webs
   # GET /webs.json
   def index
-    # @webs = Web.all[0..100]
-    # @webs = Web.where(urlx: FALSE).where.not(url_ver_date: nil).order("url_ver_date DESC")[0..100]
-    # @webs = Web.where(urlx: FALSE).
-    # where.not(url_ver_date: nil).
-    # order("url_ver_date DESC").
-    # paginate(:page => params[:page], :per_page => 20)
-
-    @webs = Web.where(urlx: FALSE).
-    where.not(url_ver_date: nil).
-    order(sort_column + ' ' + sort_direction).
-    paginate(:page => params[:page], :per_page => 50)
-
-    respond_to do |format|
-      format.html
-      format.js
-    end
-
-
+    # @search = Web.all.ransack(params[:q])
+    # @webs = @search.result(distinct: true).paginate(page: params[:page], per_page: 50)
+    
+    @webs = Web.all.paginate(page: params[:page], per_page: 50)
+  
+    respond_with(@webs)
   end
 
   # GET /webs/1
   # GET /webs/1.json
   def show
-    respond_to do |format|
-      format.html
-      format.js
-    end
   end
 
   # GET /webs/new
@@ -84,16 +68,6 @@ class WebsController < ApplicationController
   end
 
   private
-
-    def sort_column
-      Web.column_names.include?(params[:sort]) ? params[:sort] : "url"
-    end
-
-    def sort_direction
-      %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
-    end
-
-
     # Use callbacks to share common setup or constraints between actions.
     def set_web
       @web = Web.find(params[:id])
@@ -101,6 +75,6 @@ class WebsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def web_params
-      params.require(:web).permit(:url, :url_ver_sts, :sts_code, :url_ver_date, :tmp_sts, :temp_name, :tmp_date, :slink_sts, :llink_sts, :stext_sts, :ltext_sts, :pge_date, :as_sts, :as_date, :cs_sts, :cs_date, :created_at, :updated_at)
+      params.require(:act).permit(:id, :url, :url_sts_code, :cop, :temp_name, :url_sts, :temp_sts, :page_sts, :cs_sts, :brand_sts, :url_date, :tmp_date, :page_date, :cs_date, :brand_date, :fwd_url, :web_changed, :wx_date)
     end
 end
