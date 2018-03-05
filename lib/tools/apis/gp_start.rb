@@ -17,7 +17,7 @@ class GpStart
     @dj_refresh_interval = 10
     @db_timeout_limit = 60
     @count = 0
-    @cut_off = 5.days.ago
+    @cut_off = 6.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
     @multi_spots = true
@@ -42,29 +42,7 @@ class GpStart
         .where(acts: {gp_id: nil, gp_sts: ['Valid', nil]})
         .select(:id).order("gp_date ASC")[0..0].pluck(:id)
     end
-
-
-    ## Single Spot Query - COP!
-    # if !query.any?
-    #   @multi_spots = false
-    #   query = Act.includes(:web)
-    #     .where(webs: {cop: true})
-    #     .where.not(acts: {gp_id: nil})
-    #     .where(acts: {gp_sts: ['Valid', nil]})
-    #     .where(acts: {'gp_date < ? OR gp_date IS NULL', @cut_off})
-    #     .order("id ASC").pluck(:id)
-    # end
-
-
-    ## Multiple Spots Query - Non-Cop
-    # if !query.any?
-    #   @multi_spots = true
-    #   query = Act.select(:id)
-    #     .where(gp_sts: ['Valid', nil])
-    #     .where.not(city: nil, state: nil, zip: nil)
-    #     .where('gp_date < ? OR gp_date IS NULL', @cut_off)
-    #     .order("id ASC")[0..0].pluck(:id)
-    # end
+    
 
 
     ## ## Skipped Sts Query ##

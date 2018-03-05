@@ -6,44 +6,15 @@ class ActsController < ApplicationController
   # GET /acts
   # GET /acts.json
   def index
-
-    # @acts = ActsDatatable.new(view_context)
-    # @acts = Act.where(actx: FALSE, gp_sts: 'Valid').
-    #   order(sort_column + ' ' + sort_direction).
-    #   paginate(:page => params[:page], :per_page => 50)
-
+    
     ## Splits 'cont_any' strings into array, if string and has ','
     if !params[:q].nil?
       acts_helper = Object.new.extend(ActsHelper)
       params[:q] = acts_helper.split_ransack_params(params[:q])
     end
 
-    # @search = Act.where(gp_sts: 'Valid').ransack(params[:q])
-    # EX w/ OR: Post.where('id = 1').or(Post.where('id = 2'))
-    # .where(webs: {url_sts: 'Valid', temp_sts: 'Valid', page_sts: 'Valid'})
-    #   .where.not(acts: {gp_id: nil, act_name: nil})
-    # @search = Act.includes(:webs)
-    #   .where(webs: {url_sts: 'Valid'})
-    #   .ransack(params[:q])
-
     @search = Act.web_is_cop_or_franchise.where.not(gp_id: nil).ransack(params[:q])
-    #
-    # samps = Act.includes(:webs).where(webs: {url_sts: 'Valid'})
-    # dealer_type: "Franchise"
-
-    # webs = Web.includes(:brands).where(brands: {dealer_type: "Franchise"})
-    # OR
-    # webs = Web.where(cop: true)
-    #
-    # webs = Web.where(cop: true).or(Web.includes(:brands).where(brands: {dealer_type: "Franchise"}))
-    #
-    # webs = Web.is_cop.count
-    # webs = Web.is_franchise.count
-    # webs = Web.is_franchise.or(Web.is_cop)
-
-
     @acts = @search.result(distinct: true).paginate(page: params[:page], per_page: 50)
-
 
     respond_with(@acts)
   end

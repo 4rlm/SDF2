@@ -30,11 +30,9 @@ module GpRun
           spots.each { |spot| gp_hsh_arr << process_spot(spot) }
         rescue => e
           puts "Google Places Error: #{e}"
-          # binding.pry
           return nil
         end
       else
-        binding.pry
         queries = []
         us_brands = "Chrysler, Jeep, Ford, Chevrolet, GM"
         eu_brands = "Audi, Benz, BMW, VW, Jaguar"
@@ -53,7 +51,6 @@ module GpRun
             spots.each { |spot| gp_hsh_arr << process_spot(spot) }
           rescue => e
             puts "Google Places Error: #{e}"
-            # binding.pry
             return nil
           end
         end
@@ -63,9 +60,8 @@ module GpRun
 
 
     if @multi_spots == false
-      url = act.web&.url
+      url = act.webs.where(url_sts: ['Valid', nil])&.last&.url
       gp_id = act.gp_id
-      binding.pry
 
       begin
         if !gp_id.present?
@@ -86,20 +82,16 @@ module GpRun
           spot = @client.spot(gp_id)
         end
 
-        binding.pry
         gp_hsh = process_spot(spot)
-        binding.pry
         gp_hsh_arr << gp_hsh
 
       rescue => e
         puts "Google Places Error"
-        # puts e.error
-        binding.pry
         return nil
       end
     end
 
-    return gp_hsh_arr
+    gp_hsh_arr
   end
 
   #CALL: GpStart.new.start_gp_act

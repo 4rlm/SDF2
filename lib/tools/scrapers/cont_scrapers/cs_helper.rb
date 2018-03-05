@@ -12,32 +12,35 @@ class CsHelper # Contact Scraper Helper Method
   def extract_noko(raw_css)
     if raw_css.present?
       formatted_css = []
-      raw_css.map do |inner|
-        nodes = []
-        # inner.traverse {|node| nodes << node.text }
-        inner.traverse {|node| nodes << node.text }
-        nodes.reject!(&:blank?)
-        nodes.uniq!
-
-        nodes = nodes.join(", ").split(' - ').join(", ").split(', ')
-        nodes.map! do |nod|
-          # nod = nod.delete("^\u{0000}-\u{007F}")&.strip
-          nod = nod.gsub("^\u{0000}-\u{007F}", " ")&.strip
-
-          if nod.present?
-            nod_nums = nod.scan(/[0-9]/)
-            nod = nil if nod_nums.any? && (nod_nums.count > 11 || nod_nums.count < 10)
+      begin
+        raw_css.map do |inner|
+          nodes = []
+          inner.traverse {|node| nodes << node.text }
+          nodes.reject!(&:blank?)
+          nodes.uniq!
+  
+          nodes = nodes.join(", ").split(' - ').join(", ").split(', ')
+          nodes.map! do |nod|
+            # nod = nod.delete("^\u{0000}-\u{007F}")&.strip
+            nod = nod.gsub("^\u{0000}-\u{007F}", " ")&.strip
+  
+            if nod.present?
+              nod_nums = nod.scan(/[0-9]/)
+              nod = nil if nod_nums.any? && (nod_nums.count > 11 || nod_nums.count < 10)
+            end
+  
+            nod = nil if (nod.length < 3 || nod.length > 30) if nod
+            nod = nil if junk_detector(nod) if nod
+            nod
           end
-
-          nod = nil if (nod.length < 3 || nod.length > 30) if nod
-          nod = nil if junk_detector(nod) if nod
-          nod
+  
+          nodes.map! {|nod| nod&.strip}
+          nodes.reject!(&:blank?)
+          nodes.uniq!
+          formatted_css << nodes
         end
-
-        nodes.map! {|nod| nod&.strip}
-        nodes.reject!(&:blank?)
-        nodes.uniq!
-        formatted_css << nodes
+      rescue => e
+        puts e.message
       end
 
       formatted_css.reject!(&:blank?)
