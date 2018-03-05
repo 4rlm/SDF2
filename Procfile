@@ -1,4 +1,4 @@
-#web: bundle exec rails server -p 5000
+web: bundle exec rails server -p 3000
 worker:         bundle exec foreman start -f Procfile.workers
 # puma:           bundle exec tail -f log/development.log
 

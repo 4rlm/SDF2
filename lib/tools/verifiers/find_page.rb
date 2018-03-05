@@ -19,42 +19,21 @@ class FindPage
     @formatter = Formatter.new
     @db_timeout_limit = 60
     @mig = Mig.new
-    # @count = 0
-    # @make_urlx = FALSE
-    # @tally_staff_links = Link.order("count DESC").pluck(:staff_link)
-    # @tally_staff_texts = Text.order("count DESC").pluck(:staff_text)
-
-    ## NOTE: REDO BELO...
-    # @tally_staff_links = Dash.where(category: 'staff_link').order("count DESC").pluck(:focus)
-    # @tally_staff_texts = Dash.where(category: 'staff_text').order("count DESC").pluck(:focus)
   end
 
   def get_query
-    ## Invalid Sts Query ##
+    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+    
     query = Web.select(:id)
       .where(url_sts: 'Valid', page_sts: "Invalid")
       .where('page_date < ? OR page_date IS NULL', @cut_off)
-      .order("id ASC").pluck(:id)
-
-    ## Valid Sts Query ##
-    val_sts_arr = ['Valid', nil]
-    query = Web.select(:id)
-      .where(url_sts: 'Valid', temp_sts: 'Valid', page_sts: val_sts_arr)
-      .where('page_date < ? OR page_date IS NULL', @cut_off)
-      .order("id ASC").pluck(:id) if !query.any?
-
-    ## Error Sts Query ##
-    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    query = Web.select(:id)
-      .where(url_sts: 'Valid', temp_sts: 'Valid', page_sts: err_sts_arr)
-      .where('timeout < ?', @db_timeout_limit)
-      .order("timeout ASC")
-      .pluck(:id) if !query.any?
-
-    puts "\n\nQuery Count: #{query.count}"
-    sleep(1)
-    # binding.pry
-    return query
+      .or(Web.select(:id)
+        .where(url_sts: 'Valid', temp_sts: 'Valid', page_sts: ['Valid', nil])
+        .where('page_date < ? OR page_date IS NULL', @cut_off)
+      ).or(Web.select(:id)
+         .where(url_sts: 'Valid', temp_sts: 'Valid', page_sts: err_sts_arr)
+         .where('timeout < ?', @db_timeout_limit)
+      ).order("timeout ASC").pluck(:id)
   end
 
   def start_find_page

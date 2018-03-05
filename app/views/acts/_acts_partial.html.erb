@@ -28,7 +28,8 @@
       <th><%= sort_link(@search, :state) %></th>
       <th><%= sort_link(@search, :zip) %></th>
       <th><%= sort_link(@search, :phone) %></th>
-      <th><%= sort_link(@search, :url) %></th>
+      <th>URL-Test</th>
+      <!--<th><%#= sort_link(@search, :url) %></th>-->
       <th><%= sort_link(@search, :gp_date, "RT Scrape Date") %></th>
     </tr>
   </thead>
@@ -42,7 +43,8 @@
         <td><%= act.state %></td>
         <td><%= act.zip %></td>
         <td><%= act.phone %></td>
-        <td><%= act.url %></td>
+        <td><%= act.webs.find_by(url_sts: 'Valid')&.url %></td>
+        <!--<td><%#= act.url %></td>-->
         <td><%= act.gp_date&.strftime('%x') %></td>
       </tr>
     <% end %>

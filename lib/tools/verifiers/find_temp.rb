@@ -17,23 +17,19 @@ class FindTemp
     @obj_in_grp = 40
     @dj_refresh_interval = 10
     @db_timeout_limit = 60
-    @cut_off = 3.days.ago
+    @cut_off = 1.days.ago
     @mig = Mig.new
   end
 
   def get_query
-    ## Valid Sts Query ##
-    val_sts_arr = ['Valid', nil]
-    query = Web.select(:id).where(url_sts: 'Valid', temp_sts: val_sts_arr).where('tmp_date < ? OR tmp_date IS NULL', @cut_off).order("id ASC").pluck(:id)
-
-    ## Error Sts Query ##
     err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    query = Web.select(:id).where(url_sts: 'Valid', temp_sts: err_sts_arr).where('timeout < ?', @db_timeout_limit).order("timeout ASC").pluck(:id) if !query.any?
-
-    puts "\n\nQuery Count: #{query.count}"
-    sleep(1)
-    # binding.pry
-    return query
+    query = Web.select(:id)
+      .where(url_sts: 'Valid', temp_sts: ['Valid', nil])
+      .where('tmp_date < ? OR tmp_date IS NULL', @cut_off)
+        .or(Web.select(:id)
+          .where(url_sts: 'Valid', temp_sts: err_sts_arr)
+          .where('timeout < ?', @db_timeout_limit)
+        ).order("timeout ASC").pluck(:id)
   end
 
   def start_find_temp

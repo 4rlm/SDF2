@@ -25,4 +25,6 @@ class Act < ApplicationRecord
     self.act_changed = Time.now if act_name_changed?
   end
 
+  scope :web_is_cop_or_franchise, -> {joins(:webs).merge(Web.is_cop_or_franchise)}
+
 end

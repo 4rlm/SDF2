@@ -18,43 +18,20 @@ class VerUrl
     @obj_in_grp = 20
     @dj_refresh_interval = 10
     @db_timeout_limit = 200
-    @cut_off = 2.days.ago
+    @cut_off = 1.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
 
   def get_query
-    query = []
-
-    ## COP True Query ##
-    unless query.any?
-      query = Web.select(:id)
-        .where(url_sts: ['Valid', nil], cop: true)
-        .where('url_date < ? OR url_date IS NULL', @cut_off)
-        .order("id ASC").pluck(:id)
-    end
-
-
-    ## Valid Sts Query ##
-    unless query.any?
-      query = Web.select(:id)
-        .where(url_sts: ['Valid', nil])
-        .where('url_date < ? OR url_date IS NULL', @cut_off)
-        .order("id ASC").pluck(:id)
-    end
-
-    ## Error Sts Query ##
-    unless query.any?
-      err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-      query = Web.select(:id)
-        .where(url_sts: err_sts_arr)
-        .where('timeout < ?', @db_timeout_limit)
-        .order("timeout ASC").pluck(:id)
-    end
-
-    puts "\n\nQuery Count: #{query.count}"
-    sleep(1)
-    query
+    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+    query = Web.select(:id)
+      .where(url_sts: ['Valid', nil])
+      .where('url_date < ? OR url_date IS NULL', @cut_off)
+        .or(Web.select(:id)
+          .where(url_sts: err_sts_arr)
+          .where('timeout < ?', @db_timeout_limit)
+        ).order("timeout ASC").pluck(:id)
   end
 
   def start_ver_url

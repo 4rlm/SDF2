@@ -135,6 +135,7 @@ gem 'ransack', '~> 1.8', '>= 1.8.4'
 # gem 'final_fwd_url', '~> 0.1.0'
 
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+gem 'simplecov', '~> 0.12.0'
 
 # gem 'will_filter'
 # gem 'kaminari'
