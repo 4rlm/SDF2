@@ -26,5 +26,7 @@ class Act < ApplicationRecord
   end
 
   scope :web_is_cop_or_franchise, -> {joins(:webs).merge(Web.is_cop_or_franchise)}
+  scope :is_valid_gp, ->{ where.not(gp_id: nil) }
+
 
 end

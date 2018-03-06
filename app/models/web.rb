@@ -25,9 +25,14 @@ class Web < ApplicationRecord
   end
 
   scope :is_franchise, ->{ joins(:brands).merge(Brand.is_franchise) }
+  scope :act_is_valid_gp, ->{ joins(:acts).merge(Act.is_valid_gp) }
   scope :is_cop, ->{ where(cop: true) }
   scope :is_cop_or_franchise, -> {is_franchise.merge(is_cop)}
+  scope :is_not_wx, ->{ where(wx_date: nil) }
+
   # merged = Web.is_cop.merge(Web.is_franchise)
+
+  # scope :act_names, ->(ids_ary) { joins(:acts).where("locations.id" => ids_ary) }
 
 
   # scope :unsent, -> { joins(:user).merge(User.unsent) }

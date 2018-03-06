@@ -1,29 +1,60 @@
 <p id="notice"><%= notice %></p>
 
-<br>
-<h1>Websites</h1>
-<h3><%= @webs.count %></h3>
-<br>
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="text-center">Rooftops</h1>
+  </div>
+</div>
 
-<table class="table table-bordered table-hover table-striped text-nowrap">
-  <thead>
-    <tr>
-      <th>URL</th>
-      <th>COP</th>
 
-      <th>Created</th>
-      <th>Updated</th>
-    </tr>
-  </thead>
+<div class="row">
+  <%= render 'webs/webs_search_partial', search: @search %>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h5>Search Results: <%= @webs.count %></h5>
+  </div>
+</div>
+
+<style>
+ table { table-layout: fixed; }
+ table th, table td { overflow: hidden; }
+</style>
+
+
+<table class="table table-bordered text-nowrap">
 
   <tbody>
     <% @webs.each do |web| %>
       <tr>
-        <td><%= link_to web.url, web %></td>
-        <td><%= web.cop %></td>
+        <td>URL: <%= link_to web.url, web %></td>
+        <td><%= web.conts.count%></td>
 
-        <td><%= web.created_at.strftime('%x') %></td>
-        <td><%= web.updated_at.strftime('%x') %></td>
+        <td>
+          <table class="table-bordered text-nowrap">
+
+            <tr>
+              <th style="width: 40%">Name</th>
+              <th>Address</th>
+              <th style="width: 12%">Phone</th>
+            </tr>
+            <% web.acts.each do |act| %>
+              <tr>
+                <td><%= act.act_name %></td>
+                <td><%= act.full_address %></td>
+                <td><%= act.phone %></td>
+              </tr>
+            <% end %>
+
+          </table>
+
+
+        </td>
+
+
+
+
       </tr>
     <% end %>
   </tbody>

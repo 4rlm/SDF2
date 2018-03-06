@@ -1,15 +1,31 @@
 class WebsController < ApplicationController
   before_action :set_web, only: [:show, :edit, :update, :destroy]
   respond_to :html, :json
+  helper_method :sort_column, :sort_direction
 
   # GET /webs
   # GET /webs.json
   def index
-    # @search = Web.all.ransack(params[:q])
+
+    ## Splits 'cont_any' strings into array, if string and has ','
+    if !params[:q].nil?
+      webs_helper = Object.new.extend(WebsHelper)
+      params[:q] = webs_helper.split_ransack_params(params[:q])
+    end
+
+    # @search= Web.joins(:acts, :brands).ransack(params[:q])
+    # @search = Web.is_cop_or_franchise.ransack(params[:q])
     # @webs = @search.result(distinct: true).paginate(page: params[:page], per_page: 50)
-    
-    @webs = Web.all.paginate(page: params[:page], per_page: 50)
-  
+    @search = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
+
+    # @search = Web.is_cop_or_franchise.ransack(params[:q])
+    @webs = @search.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
+    # @webs = @search.result.includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
+
+    # @webs = @search.result.includes(:acts, :brands).page(params[:page], per_page: 50).to_a.uniq
+
+    # @webs = Web.all.paginate(page: params[:page], per_page: 50)
+
     respond_with(@webs)
   end
 
@@ -68,6 +84,14 @@ class WebsController < ApplicationController
   end
 
   private
+    def sort_column
+      Web.column_names.include?(params[:sort]) ? params[:sort] : "url"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_web
       @web = Web.find(params[:id])
