@@ -1,6 +1,15 @@
 <!DOCTYPE html>
+<html lang="en">
+
 <html>
   <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
     <title>SDF2</title>
     <%= csrf_meta_tags %>
 
@@ -9,15 +18,10 @@
   </head>
 
   <body>
-    <%= render partial: 'shared/nav' %>
-    <div id="main-wrapper" class="container-fluid outer-container" style="margin:5px;">
-      <%= render partial: 'shared/flash' %>
-      <%#= render partial: 'shared/main/main_index' %>
-      <%= yield %>
-    </div>
+    <%= render partial: 'shared/top_nav' %>
+    <%= render partial: 'shared/left_nav' %>
+    <%= render partial: 'shared/main_panel' %>
 
-    <footer id="footer">
-    </footer>
   </body>
 
 </html>

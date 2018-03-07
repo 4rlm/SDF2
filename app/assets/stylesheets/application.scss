@@ -10,27 +10,30 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
- *= require dataTables/jquery.dataTables
  *= require_self
+ *= require_tree .
  */
 
+ // @import 'bootstrap-sprockets';
+ @import "theme/sb-admin-2.min.css";
+ @import "bootstrap";
+ @import "bootstrap/bootstrap.min.css";
+ @import "font-awesome";
+ @import "font-awesome-sprockets";
+ @import "font-awesome/font-awesome.min.css";
+ @import "bootstrap-social/bootstrap-social.css";
 
-// @import 'bootstrap-sprockets';
-@import 'bootstrap';
-@import "font-awesome-sprockets";
-@import "font-awesome";
 
-
-
-// th a.current {
-//   padding-right: 20px;
-//   background-repeat: no-repeat;
-//   background-position: right center;
-// }
-// th a.current.asc {
-//   background-image: url(/assets/up_arrow.gif);
-// }
-// th a.current.desc {
-//   background-image: url(/assets/down_arrow.gif);
-// }
+@import "metisMenu/metisMenu.min.css";
+@import "morrisjs/morris.css";
+@import "datatables/dataTables.bootstrap4.min.css";
+@import "datatables/dataTables.foundation.min.css";
+@import "datatables/dataTables.jqueryui.min.css";
+@import "datatables/dataTables.material.min.css";
+@import "datatables/dataTables.semanticui.min.css";
+@import "datatables/dataTables.uikit.min.css";
+@import "datatables/jquery.dataTables_themeroller.css";
+@import "datatables/jquery.dataTables.min.css";
+@import "datatables-plugins/dataTables.bootstrap.css";
+@import "datatables-responsive/dataTables.responsive.css";
+@import "datatables-responsive/dataTables.responsive.css";
