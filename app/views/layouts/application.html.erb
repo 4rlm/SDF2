@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
     <title>SDF2</title>
     <%= csrf_meta_tags %>
 
@@ -9,15 +15,31 @@
   </head>
 
   <body>
+    <%#= render partial: 'shared/top_nav' %>
     <%= render partial: 'shared/nav' %>
-    <div id="main-wrapper" class="container-fluid outer-container" style="margin:5px;">
-      <%= render partial: 'shared/flash' %>
-      <%#= render partial: 'shared/main/main_index' %>
-      <%= yield %>
+
+    <div class="container-fluid">
+      <div class="row">
+        <%= render partial: 'shared/left_nav' %>
+
+        <main id="main-wrapper" class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+          <%= render partial: 'shared/main_content' %>
+          <%= render partial: 'shared/flash' %>
+          <%#= render partial: 'shared/main/main_index' %>
+          <%= yield %>
+        </main>
+
+      </div>
     </div>
+
+
+
+
 
     <footer id="footer">
     </footer>
+
+
   </body>
 
 </html>
