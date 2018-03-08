@@ -17,49 +17,56 @@
   </div>
 </div>
 
-<style>
- table { table-layout: fixed; }
- table th, table td { overflow: hidden; }
-</style>
-
-<div class="panel panel-default">
-  <table class="table table-bordered text-nowrap">
-
-  <tbody>
-    <% @webs.each do |web| %>
-      <tr>
-        <td>URL: <%= link_to web.url, web %></td>
-        <td><%= web.conts.count%></td>
-
-        <td>
-          <table class="table-bordered text-nowrap">
-
-            <tr>
-              <th style="width: 40%">Name</th>
-              <th>Address</th>
-              <th style="width: 12%">Phone</th>
-            </tr>
-            <% web.acts.each do |act| %>
-              <tr>
-                <td><%= act.act_name %></td>
-                <td><%= act.full_address %></td>
-                <td><%= act.phone %></td>
-              </tr>
-            <% end %>
-
-          </table>
 
 
-        </td>
+<div class="panel outer-panel">
+
+  <% @webs.each do |web| %>
+    <div class="row outer-list-row">
+
+      <div class="col-md-3 outer-list-col">
+        <p><%= link_to web.url, web %></p>
+        <p>Brands: <%= web.brands.select {|brand| brand.brand_name}.pluck(:brand_name).join(', ') %></p>
+        <p>COP: <%= web.cop %></p>
+
+        <p><%= web.url_sts %> URL: <%= web.url_date&.strftime('%x')%></p>
+        <p><%= web.temp_sts %> Template (<%= web.temp_name %>): <%= web.tmp_date&.strftime('%x')%> </p>
+        <p><%= web.page_sts %> Link: <%= web.page_date&.strftime('%x')%></p>
+        <p><%= web.cs_sts %> Staff (<%= web.conts&.count %>): <%= web.cs_date&.strftime('%x')%></p>
+        <p>Created: <%= web.created_at.strftime('%x')%> (Updated: <%= web.web_changed&.strftime('%x')%>)</p>
+      </div>
 
 
+      <div class="col-md-9 outer-list-col">
+        <% web.acts.each do |act| %>
+          <div class="row association-row">
 
+            <div class="col-md-5">
+              <p><%= act.act_name %></p>
+              <p><%= act.full_address %></p>
+              <p><%= act.phone %></p>
+            </div>
 
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+            <div class="col-md-4">
+              <p><%= act.gp_sts %> GP: <%= act.gp_date&.strftime('%x')%></p>
+              <p>lat: <%= act.lat %> || lon: <%= act.lon %></p>
+              <p>GP ID: <%= act.gp_id %> </p>
+            </div>
+
+            <div class="col-md-3">
+              <p>Name Updated (<%= act.act_changed&.strftime('%x') %>)</p>
+              <p>Address Updated (<%= act.adr_changed&.strftime('%x') %>)</p>
+              <p>Created: <%= act.created_at.strftime('%x')%></p>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  <% end %>
 </div>
+
 
 <br>
 <%= will_paginate @webs %>

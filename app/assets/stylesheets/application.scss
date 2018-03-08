@@ -43,20 +43,24 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background: #252830;
     color: #999;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 1.5;
 }
 
 p {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.1em;
+    font-size: 0.8rem;
     font-weight: 300;
-    line-height: 1.7em;
+    line-height: 1em;
     color: #999;
 }
 
@@ -66,23 +70,54 @@ a, a:hover, a:focus {
     transition: all 0.3s;
 }
 
-// table.table {
-//   // border: 1px solid #434857;
-//   border: 1px solid red;
-// }
 
-// <div class="panel panel-default">
-//     <table class="table table-bordered">
-//         ....
-//     </table>
-// </div>
 
-.panel-default {
+
+// SPECIAL VIEW CSS - STARTS
+.outer-panel {
   background-color: #2c303a;
+  border: 1px solid #434857;
   border-radius: 5px;
-  border: 2px solid #434857;
   margin: 5px;
+  padding: 0px;
 }
+
+.outer-list-row {
+  // background-color: #434856;
+  // border: 1px solid #4e5465;
+  background-color: yellow;
+  // border: 1px solid #4e5465;
+  // border-radius: 5px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.outer-list-col {
+  // background-color: #434856;
+  // border: 1px solid #4e5465;
+  background-color: blue;
+  border: 1px solid #4e5465;
+  border-radius: 5px;
+  margin: 1px;
+  padding: 5px;
+  width: 90%;
+}
+
+.association-row {
+  // background-color: #434856;
+  // border: 1px solid #4e5465;
+  background-color: red;
+  border: 1px solid #4e5465;
+  border-radius: 5px;
+  margin: 0px;
+  padding: 0px;
+  width: 90%;
+}
+
+// SPECIAL VIEW CSS - ENDS
+
+
+
 
 table.table {
   // border-collapse: separate;
