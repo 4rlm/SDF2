@@ -22,8 +22,8 @@
  table th, table td { overflow: hidden; }
 </style>
 
-
-<table class="table table-bordered text-nowrap">
+<div class="panel panel-default">
+  <table class="table table-bordered text-nowrap">
 
   <tbody>
     <% @webs.each do |web| %>
@@ -59,6 +59,7 @@
     <% end %>
   </tbody>
 </table>
+</div>
 
 <br>
 <%= will_paginate @webs %>

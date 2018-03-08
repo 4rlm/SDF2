@@ -19,7 +19,8 @@
 </div>
 
 
-<table id="acts" class="display table table-bordered table-hover table-striped text-nowrap">
+<div class="panel panel-default">
+  <table id="acts" class="display table table-bordered table-hover table-striped text-nowrap">
   <thead>
     <tr>
       <th><%= sort_link(@search, :act_name, "RT Name") %></th>
@@ -50,6 +51,9 @@
     <% end %>
   </tbody>
 </table>
+</div>
+
+
 
 <br>
 <%= will_paginate @acts %>

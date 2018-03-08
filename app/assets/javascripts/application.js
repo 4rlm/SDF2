@@ -17,7 +17,7 @@
 //= require bootstrap-sprockets
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
-//= require new_side
+//= require sidebar
 //= require turbolinks
 //= require underscore
 //= require_tree .
