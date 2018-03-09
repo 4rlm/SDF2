@@ -41,21 +41,21 @@
           <div class="row association-row">
 
             <div class="col-md-5">
-              <p><%= act.act_name %></p>
-              <p><%= act.full_address %></p>
-              <p><%= act.phone %></p>
+              <p><%= icon('fas', 'building', act.act_name) %></p>
+              <p><%= icon('fas', 'address-card', act.full_address) %></p>
+              <p><%= icon('fas', 'phone', act.phone) %></p>
             </div>
 
             <div class="col-md-4">
-              <p>GP ID: <%= act.gp_id %> </p>
-              <p>lat: <%= act.lat %> || lon: <%= act.lon %></p>
-              <p><%= act.gp_sts %> GP: <%= act.gp_date&.strftime('%x')%></p>
+              <p><%= icon('fab', 'google', "Places: #{act.gp_sts}")%>: <%= act.gp_date&.strftime('%x')%></p>
+              <p><%= icon('fab', 'google', "# #{act.gp_id}") %></p>
+              <p><%= icon('fas', 'map-marker-alt', "#{act.lat}, #{act.lon}") %></p>
             </div>
 
             <div class="col-md-3">
-              <p>Name Updated (<%= act.act_changed&.strftime('%x') %>)</p>
-              <p>Address Updated (<%= act.adr_changed&.strftime('%x') %>)</p>
-              <p>Created: <%= act.created_at.strftime('%x')%></p>
+              <p><%= icon('fas', 'calendar-alt', "Name Updated: #{act.act_changed&.strftime('%x')}" ) %></p>
+              <p><%= icon('fas', 'calendar-alt', "Address Updated: #{act.adr_changed&.strftime('%x')}" ) %></p>
+              <p><%= icon('fas', 'calendar-alt', "Created: #{act.created_at.strftime('%x')}" ) %></p>
             </div>
 
           </div>
