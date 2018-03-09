@@ -20,6 +20,7 @@
 @import "font-awesome";
 @import 'sidebar.scss';
 
+
 // @import 'form-elements.css';
 // @import 'normalize.css';
 // @import 'style.css';
@@ -50,7 +51,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: #252830;
-    color: #999;
+    color: #f2f2f2;
     font-size: 0.8rem;
     font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -61,7 +62,7 @@ p {
     font-size: 0.8rem;
     font-weight: 300;
     line-height: 1em;
-    color: #999;
+    color: #f2f2f2;
 }
 
 a, a:hover, a:focus {
@@ -70,48 +71,62 @@ a, a:hover, a:focus {
     transition: all 0.3s;
 }
 
+#yield-content {
+  width: 100%;
+  margin: 5px;
+  padding: 5px;
+}
+
 
 
 
 // SPECIAL VIEW CSS - STARTS
 .outer-panel {
-  background-color: #2c303a;
-  border: 1px solid #434857;
-  border-radius: 5px;
-  margin: 5px;
-  padding: 0px;
+  // background-color: #2c303a;
+  // border: 1px solid #434857;
+  // border-radius: 5px;
+  margin: 0px;
+  padding: 5px;
 }
 
 .outer-list-row {
-  // background-color: #434856;
-  // border: 1px solid #4e5465;
-  background-color: yellow;
-  // border: 1px solid #4e5465;
-  // border-radius: 5px;
-  margin: 0px;
+  background-color: #434856;
+  // background-color: yellow;
+  border: 1px solid #434857;
+  border-radius: 5px;
+  margin-bottom: 10px;
   padding: 0px;
 }
 
-.outer-list-col {
-  // background-color: #434856;
-  // border: 1px solid #4e5465;
-  background-color: blue;
+// .outer-list-col {
+//   // background-color: #434856;
+//   // background-color: blue;
+//   // border: 1px solid #4e5465;
+//   // border-radius: 5px;
+//   // margin: 0px;
+//   margin-top: 5px;
+//   padding-top: 10px;
+//   // width: 90%;
+// }
+
+.association-parent{
   border: 1px solid #4e5465;
   border-radius: 5px;
-  margin: 1px;
-  padding: 5px;
-  width: 90%;
+  margin: 0px;
+  padding-top: 10px;
+  // width: 95%;
 }
 
 .association-row {
-  // background-color: #434856;
-  // border: 1px solid #4e5465;
-  background-color: red;
+  background-color: #434856;
+  // background-color: red;
   border: 1px solid #4e5465;
   border-radius: 5px;
-  margin: 0px;
-  padding: 0px;
-  width: 90%;
+  margin-top: 5px;
+  // margin-bottom: 5px;
+  padding-top: 10px;
+  // width: 95%;
+  // width: 90%;
 }
 
 // SPECIAL VIEW CSS - ENDS

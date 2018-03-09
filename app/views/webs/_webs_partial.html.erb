@@ -24,16 +24,15 @@
   <% @webs.each do |web| %>
     <div class="row outer-list-row">
 
-      <div class="col-md-3 outer-list-col">
-        <p><%= link_to web.url, web %></p>
-        <p>Brands: <%= web.brands.select {|brand| brand.brand_name}.pluck(:brand_name).join(', ') %></p>
-        <p>COP: <%= web.cop %></p>
-
-        <p><%= web.url_sts %> URL: <%= web.url_date&.strftime('%x')%></p>
-        <p><%= web.temp_sts %> Template (<%= web.temp_name %>): <%= web.tmp_date&.strftime('%x')%> </p>
-        <p><%= web.page_sts %> Link: <%= web.page_date&.strftime('%x')%></p>
-        <p><%= web.cs_sts %> Staff (<%= web.conts&.count %>): <%= web.cs_date&.strftime('%x')%></p>
-        <p>Created: <%= web.created_at.strftime('%x')%> (Updated: <%= web.web_changed&.strftime('%x')%>)</p>
+      <div class="col-md-3 association-parent">
+        <p><%= link_to icon('fas', 'external-link-alt', web.url), web.url, target: '_blank' %></p>
+        <p><%= icon('fas', 'car', "Brand: #{get_brands(web)}") %></p>
+        <p><%= icon('fas', 'star', "COP: #{web.cop}") %></p>
+        <p><%= icon('fas', 'home', "Website: #{web.url_sts}")%>: <%= web.url_date&.strftime('%x')%></p>
+        <p><%= icon('fab', 'firstdraft', "Template (#{web.temp_name})")%>: <%= web.temp_sts %> <%= web.tmp_date&.strftime('%x')%></p>
+        <p><%= icon('fas', 'link', "Staff Page: #{web.page_sts}")%>: <%= web.page_date&.strftime('%x')%></p>
+        <p><%= icon('fas', 'users', "Staff (#{web.conts&.count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%></p>
+        <p><%= icon('fas', 'calendar-alt', "Created: #{web.created_at.strftime('%x')}")%> (Updated: <%= web.web_changed&.strftime('%x')%>)</p>
       </div>
 
 
@@ -48,9 +47,9 @@
             </div>
 
             <div class="col-md-4">
-              <p><%= act.gp_sts %> GP: <%= act.gp_date&.strftime('%x')%></p>
-              <p>lat: <%= act.lat %> || lon: <%= act.lon %></p>
               <p>GP ID: <%= act.gp_id %> </p>
+              <p>lat: <%= act.lat %> || lon: <%= act.lon %></p>
+              <p><%= act.gp_sts %> GP: <%= act.gp_date&.strftime('%x')%></p>
             </div>
 
             <div class="col-md-3">

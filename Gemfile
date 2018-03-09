@@ -115,8 +115,8 @@ gem 'foreman', '~> 0.84.0'
 # gem 'faker'
 # gem 'rspec', '~>3.0'
 
-gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
-gem 'font-awesome-sass', '~> 4.7.0'
+# gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
+gem 'font-awesome-sass', '~> 5.0.6'
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.3', '>= 4.3.1'
 # gem 'bootstrap', '~> 4.0.0.beta2.1'

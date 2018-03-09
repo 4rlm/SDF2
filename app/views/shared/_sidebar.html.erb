@@ -1,11 +1,11 @@
 <!-- Sidebar Holder -->
 <nav id="sidebar">
-  <div id="dismiss"><%= fa_icon "angle-double-left lg" %></div>
+  <div id="dismiss"><%= icon 'far', "angle-double-left lg" %></div>
 
-  <div class="sidebar-header text-center"><%= content_tag(:h3, fa_icon("tachometer", text: "Dash", left: true)) %></div>
+  <div class="sidebar-header text-center"><%= content_tag(:h3, icon('far', "tachometer", text: "Dash", left: true)) %></div>
 
   <ul class="list-unstyled components">
-    <li><a href="#"><%= fa_icon 'tachometer md', text: "List Item 1", left: true %></a></li>
+    <li><a href="#"><%= icon 'far', 'tachometer md', text: "List Item 1", left: true %></a></li>
     <li class="nav-item"><%= link_to 'Acts', acts_path, class: "nav-link" %></li>
     <li class="nav-item"><%= link_to 'Conts', conts_path, class: "nav-link"  %></li>
     <li class="nav-item"><%= link_to 'Webs', webs_path, class: "nav-link"  %></li>
@@ -34,5 +34,5 @@
     <li><a href="#">Page 1</a></li>
     <li><a href="#">Page 2</a></li>
   </ul>
-  
+
 </nav>

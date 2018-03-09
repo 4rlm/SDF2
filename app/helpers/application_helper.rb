@@ -16,4 +16,10 @@ module ApplicationHelper
 
   end
 
+  def get_brands(web)
+    if web.present?
+      web.brands.select {|brand| brand.brand_name}.pluck(:brand_name).join(', ')
+    end
+  end
+
 end
