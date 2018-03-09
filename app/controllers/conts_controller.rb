@@ -93,6 +93,6 @@ class ContsController < ApplicationController
     def cont_params
       # params.require(:cont).permit(:src, :sts, :act_id, :crma, :crmc, :first_name, :last_name, :email)
 
-      params.require(:cont).permit(:first_name, :last_name, :full_name, :job_title, :job_desc, :email, :phone, :cs_sts, :cs_date, :email_changed, :cont_changed, :job_changed, :cx_date)
+      params.require(:cont).permit(:id, :first_name, :last_name, :full_name, :job_title, :job_desc, :email, :phone, :cs_sts, :cs_date, :email_changed, :cont_changed, :job_changed, :cx_date, :web_id)
     end
 end

@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Conts</h1>
+
+<table class="table table-bordered table-hover table-striped text-nowrap">
+  <thead>
+    <tr>
+      <th>full_name</th>
+      <th>job_title</th>
+      <th>job_desc</th>
+      <th>phone</th>
+      <th>email</th>
+      <th>url</th>
+      <th>created_at</th>
+      <th>cs_date</th>
+      <th>email_changed</th>
+      <th>cont_changed</th>
+      <th>job_changed</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @conts.each do |cont| %>
+      <tr>
+        <td><%= cont.full_name %></td>
+        <td><%= cont.job_title %></td>
+        <td><%= cont.job_desc %></td>
+        <td><%= cont.phone %></td>
+        <td><%= cont.email %></td>
+        <td><%= cont.web.url %></td>
+        <td><%= cont.created_at&.strftime('%x') %></td>
+        <td><%= cont.cs_date&.strftime('%x') %></td>
+        <td><%= cont.email_changed&.strftime('%x') %></td>
+        <td><%= cont.cont_changed&.strftime('%x') %></td>
+        <td><%= cont.job_changed&.strftime('%x') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<br>
+<%= will_paginate @webs %>
+<br>
+<br>
