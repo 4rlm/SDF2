@@ -1,10 +1,24 @@
 class ContsController < ApplicationController
   before_action :set_cont, only: [:show, :edit, :update, :destroy]
+  respond_to :html, :json
+  helper_method :sort_column, :sort_direction
+
 
   # GET /conts
   # GET /conts.json
   def index
-    @conts = Cont.all
+    # @conts = Cont.all
+
+    ## Splits 'cont_any' strings into array, if string and has ','
+    if !params[:q].nil?
+      conts_helper = Object.new.extend(ContsHelper)
+      params[:q] = conts_helper.split_ransack_params(params[:q])
+    end
+
+    @search = Cont.all.ransack(params[:q])
+    @conts = @search.result(distinct: true).includes(:acts, :web).paginate(page: params[:page], per_page: 50)
+
+    respond_with(@conts)
   end
 
   # GET /conts/1
@@ -62,6 +76,14 @@ class ContsController < ApplicationController
   end
 
   private
+    def sort_column
+      Cont.column_names.include?(params[:sort]) ? params[:sort] : "full_name"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_cont
       @cont = Cont.find(params[:id])
@@ -71,10 +93,6 @@ class ContsController < ApplicationController
     def cont_params
       # params.require(:cont).permit(:src, :sts, :act_id, :crma, :crmc, :first_name, :last_name, :email)
 
-      params.require(:cont).permit(:src, :sts, :act_id, :crma, :crmc, :first_name, :last_name, :email, :created_at, :updated_at,
-        title_attributes: [:id, :job_title, :created_at, :updated_at ],
-        description_attributes: [:id, :job_desc, :created_at, :updated_at ],
-        phone_attributes: [:src, :sts, :phone, :created_at, :updated_at ])
-
+      params.require(:cont).permit(:first_name, :last_name, :full_name, :job_title, :job_desc, :email, :phone, :cs_sts, :cs_date, :email_changed, :cont_changed, :job_changed, :cx_date)
     end
 end

@@ -5,37 +5,41 @@
 <table class="table table-bordered table-hover table-striped text-nowrap">
   <thead>
     <tr>
-      <th>Source</th>
-      <th>sts</th>
-      <th>Act</th>
-      <th>Crm cont num</th>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Email</th>
-      <th>Act</th>
-      <th colspan="3"></th>
+      <th>full_name</th>
+      <th>job_title</th>
+      <th>job_desc</th>
+      <th>phone</th>
+      <th>email</th>
+      <th>url</th>
+      <th>created_at</th>
+      <th>cs_date</th>
+      <th>email_changed</th>
+      <th>cont_changed</th>
+      <th>job_changed</th>
     </tr>
   </thead>
 
   <tbody>
     <% @conts.each do |cont| %>
       <tr>
-        <td><%= cont.src %></td>
-        <td><%= cont.sts %></td>
-        <td><%= cont.act_id %></td>
-        <td><%= cont.crmc %></td>
-        <td><%= cont.first_name %></td>
-        <td><%= cont.last_name %></td>
+        <td><%= cont.full_name %></td>
+        <td><%= cont.job_title %></td>
+        <td><%= cont.job_desc %></td>
+        <td><%= cont.phone %></td>
         <td><%= cont.email %></td>
-        <td><%= cont.act %></td>
-        <td><%= link_to 'Show', cont %></td>
-        <td><%= link_to 'Edit', edit_cont_path(cont) %></td>
-        <td><%= link_to 'Destroy', cont, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= cont.web.url %></td>
+        <td><%= cont.created_at&.strftime('%x') %></td>
+        <td><%= cont.cs_date&.strftime('%x') %></td>
+        <td><%= cont.email_changed&.strftime('%x') %></td>
+        <td><%= cont.cont_changed&.strftime('%x') %></td>
+        <td><%= cont.job_changed&.strftime('%x') %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
 
-<%= link_to 'New Cont', new_cont_path %>
+<br>
+<%= will_paginate @webs %>
+<br>
+<br>
