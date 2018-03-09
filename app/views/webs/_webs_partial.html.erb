@@ -22,8 +22,8 @@
 <div class="panel outer-panel">
 
   <% @webs.each do |web| %>
-    <div class="row outer-list-row">
 
+    <div class="row outer-list-row">
       <div class="col-md-3 association-parent">
         <p><%= link_to icon('fas', 'external-link-alt', web.url), web.url, target: '_blank' %></p>
         <p><%= icon('fas', 'car', "Brand: #{get_brands(web)}") %></p>
@@ -34,7 +34,6 @@
         <p><%= icon('fas', 'users', "Staff (#{web.conts&.count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%></p>
         <p><%= icon('fas', 'calendar-alt', "Created: #{web.created_at.strftime('%x')}")%> (Updated: <%= web.web_changed&.strftime('%x')%>)</p>
       </div>
-
 
       <div class="col-md-9 outer-list-col">
         <% web.acts.each do |act| %>
@@ -61,8 +60,15 @@
           </div>
         <% end %>
       </div>
-
     </div>
+
+    <div class="row" id="cont_part_in_web_wrap">
+      <% if web.conts.any? %>
+      <% @conts = web.conts %>
+        <%= render 'conts/conts_partial', conts: @conts %>
+      <% end %>
+    </div>
+
   <% end %>
 </div>
 

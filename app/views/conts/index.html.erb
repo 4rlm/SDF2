@@ -1,1 +1,10 @@
+<p id="notice"><%= notice %></p>
+
+<h5>Staff: <%= @conts.count %></h5>
+
 <%= render 'conts_partial', conts: @conts %>
+
+<br>
+<%= will_paginate @webs %>
+<br>
+<br>

@@ -99,6 +99,6 @@ class WebsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def web_params
-      params.require(:act).permit:id, :url, :url_sts_code, :cop, :temp_name, :url_sts, :temp_sts, :page_sts, :cs_sts, :brand_sts, :timeout, :url_date, :tmp_date, :page_date, :cs_date, :brand_date, :fwd_url, :web_changed, :wx_date)
+      params.require(:act).permit(:id, :url, :url_sts_code, :cop, :temp_name, :url_sts, :temp_sts, :page_sts, :cs_sts, :brand_sts, :timeout, :url_date, :tmp_date, :page_date, :cs_date, :brand_date, :fwd_url, :web_changed, :wx_date)
     end
 end
