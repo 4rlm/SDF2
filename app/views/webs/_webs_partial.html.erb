@@ -19,22 +19,6 @@
 
 
 
-
-<script type="text/javascript">
-  function toggleConts(web_id) {
-
-    var element = $(".contWrap#" + web_id);
-    console.log(element);
-
-    if (element.is(':visible')) {
-      element.hide();
-    } else {
-      element.show();
-    }
-  }
-</script>
-
-
 <div class="panel outer-panel">
   <% @webs.each do |web| %>
 
@@ -46,8 +30,14 @@
         <p><%= icon('fas', 'home', "Website: #{web.url_sts}")%>: <%= web.url_date&.strftime('%x')%></p>
         <p><%= icon('fab', 'firstdraft', "Template (#{web.temp_name})")%>: <%= web.temp_sts %> <%= web.tmp_date&.strftime('%x')%></p>
         <p><%= icon('fas', 'link', "Staff Page: #{web.page_sts}")%>: <%= web.page_date&.strftime('%x')%></p>
-        <button onclick="toggleConts(<%= web.id %>)">View Staff</button>
-        <p><%= icon('fas', 'users', "Staff (#{web.conts&.count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%></p>
+
+        <% cont_count = web.conts&.count %>
+        <% if cont_count > 0 %>
+          <p><%= icon('fas', 'users', "Staff (#{cont_count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%> <a href="#" onclick="toggleConts(<%= web.id %>);return false;">View Staff</a></p>
+        <% else %>
+          <p><%= icon('fas', 'users', "Staff (#{cont_count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%></p>
+        <% end %>
+
         <p><%= icon('fas', 'calendar-alt', "Created: #{web.created_at.strftime('%x')}")%> (Updated: <%= web.web_changed&.strftime('%x')%>)</p>
       </div>
 
@@ -79,7 +69,6 @@
     </div>
 
     <div class='row contWrap' style="display:none" id="<%= web.id %>">
-      <h5>View Staff!!! <%= web.id %></h5>
       <% if web.conts.any? %>
         <% @conts = web.conts %>
         <%= render 'conts/conts_partial', conts: @conts %>

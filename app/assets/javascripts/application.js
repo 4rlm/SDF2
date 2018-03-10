@@ -21,3 +21,18 @@
 //= require turbolinks
 //= require underscore
 //= require_tree .
+
+
+
+
+  function toggleConts(web_id) {
+
+    var element = $(".contWrap#" + web_id);
+    console.log(element);
+
+    if (element.is(':visible')) {
+      element.hide();
+    } else {
+      element.show();
+    }
+  }
