@@ -19,8 +19,23 @@
 
 
 
-<div class="panel outer-panel">
 
+<script type="text/javascript">
+  function toggleConts(web_id) {
+
+    var element = $(".contWrap#" + web_id);
+    console.log(element);
+
+    if (element.is(':visible')) {
+      element.hide();
+    } else {
+      element.show();
+    }
+  }
+</script>
+
+
+<div class="panel outer-panel">
   <% @webs.each do |web| %>
 
     <div class="row outer-list-row">
@@ -31,6 +46,7 @@
         <p><%= icon('fas', 'home', "Website: #{web.url_sts}")%>: <%= web.url_date&.strftime('%x')%></p>
         <p><%= icon('fab', 'firstdraft', "Template (#{web.temp_name})")%>: <%= web.temp_sts %> <%= web.tmp_date&.strftime('%x')%></p>
         <p><%= icon('fas', 'link', "Staff Page: #{web.page_sts}")%>: <%= web.page_date&.strftime('%x')%></p>
+        <button onclick="toggleConts(<%= web.id %>)">View Staff</button>
         <p><%= icon('fas', 'users', "Staff (#{web.conts&.count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%></p>
         <p><%= icon('fas', 'calendar-alt', "Created: #{web.created_at.strftime('%x')}")%> (Updated: <%= web.web_changed&.strftime('%x')%>)</p>
       </div>
@@ -62,9 +78,10 @@
       </div>
     </div>
 
-    <div class="row" id="cont_part_in_web_wrap">
+    <div class='row contWrap' style="display:none" id="<%= web.id %>">
+      <h5>View Staff!!! <%= web.id %></h5>
       <% if web.conts.any? %>
-      <% @conts = web.conts %>
+        <% @conts = web.conts %>
         <%= render 'conts/conts_partial', conts: @conts %>
       <% end %>
     </div>
