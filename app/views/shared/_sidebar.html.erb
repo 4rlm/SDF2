@@ -1,23 +1,19 @@
 <!-- Sidebar Holder -->
 <nav id="sidebar">
+  <!-- <div class="sidebar-header"> -->
+    <h5 class="text-center sidebar-header">Search CRM Data</h5>
+  <!-- </div> -->
 
-  <div class="sidebar-header text-center">
-    <h3><%= icon('fas', 'tachometer-alt', 'Dash') %></h3>
+  <div class="search-items">
+    <div class="row collapse list-unstyled" id="web_searchSubmenu">
+      <%= render 'webs/webs_search_partial', search: @search %>
+    </div>
+
   </div>
 
   <ul class="list-unstyled components">
-    <li><a href="#"><%= icon 'far', 'tachometer md', text: "List Item 1", left: true %></a></li>
-    <li class="nav-item"><%= link_to 'Conts', conts_path, class: "nav-link"  %></li>
-    <li class="nav-item"><%= link_to 'Webs', webs_path, class: "nav-link"  %></li>
 
-    <li class="active">
-      <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
-      <ul class="collapse list-unstyled" id="homeSubmenu">
-          <li><a href="#">Home 1 .........</a></li>
-          <li><a href="#">Home 2</a></li>
-          <li><a href="#">Home 3</a></li>
-      </ul>
-    </li>
+    <li class="nav-item"><%= link_to 'Webs', webs_path, class: "nav-link"  %></li>
 
     <li>
       <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>

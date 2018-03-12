@@ -21,16 +21,19 @@
 
     <!-- Page Content Holder -->
     <div id="content">
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <%= render partial: 'shared/sidebar_btn' %>
-          <%#= render partial: 'shared/flash' %>
-        </div>
-      </nav>
 
       <div id="yield-content">
         <%= yield %>
       </div>
+
+
+      <!-- <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <%#= render partial: 'shared/sidebar_btn' %>
+          <%#= render partial: 'shared/flash' %>
+        </div>
+      </nav> -->
+
 
     </div>
 
