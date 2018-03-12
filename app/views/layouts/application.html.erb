@@ -1,50 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>SDF2</title>
-    <%= csrf_meta_tags %>
+  <title>SDF2</title>
+  <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
 
-  <body>
+<body>
 
-    <%= render partial: 'shared/nav' %>
+  <%= render partial: 'shared/nav' %>
 
-    <div class="wrapper">
-      <%= render partial: 'shared/sidebar' %>
+  <div class="wrapper">
+    <%= render partial: 'shared/sidebar' %>
 
-      <!-- Page Content Holder -->
-      <div id="content">
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-
-            <div class="row navbar-header">
-              <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-                <i class="glyphicon glyphicon-align-left"></i>
-                <span>Open Sidebar</span>
-              </button>
-            </div>
-
-            <%#= render partial: 'shared/flash' %>
-
-          </div>
-        </nav>
-
-        <div id="yield-content">
-          <%= yield %>
+    <!-- Page Content Holder -->
+    <div id="content">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <%= render partial: 'shared/sidebar_btn' %>
+          <%#= render partial: 'shared/flash' %>
         </div>
+      </nav>
 
+      <div id="yield-content">
+        <%= yield %>
       </div>
 
-      <div class="overlay"></div>
     </div>
 
-  </body>
+    <div class="overlay"></div>
+  </div>
+
+
+</body>
 
 </html>

@@ -41,8 +41,8 @@
 //   background-image: url(/assets/down_arrow.gif);
 // }
 
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -98,17 +98,6 @@ a, a:hover, a:focus {
   padding: 0px;
 }
 
-// .outer-list-col {
-//   // background-color: #434856;
-//   // background-color: blue;
-//   // border: 1px solid #4e5465;
-//   // border-radius: 5px;
-//   // margin: 0px;
-//   margin-top: 5px;
-//   padding-top: 10px;
-//   // width: 90%;
-// }
-
 .association-parent{
   border: 1px solid #4e5465;
   border-radius: 5px;
@@ -128,10 +117,7 @@ a, a:hover, a:focus {
   // width: 95%;
   // width: 90%;
 }
-
 // SPECIAL VIEW CSS - ENDS
-
-
 
 
 table.table {
@@ -158,15 +144,3 @@ table.table {
     border-bottom: 1px solid #434857;
   }
 }
-
-// tr td:first-child,
-// tr th:first-child {
-//   border-top-left-radius: 6px;
-//   border-bottom-left-radius: 6px;
-// }
-//
-// tr td:last-child,
-// tr th:last-child {
-//   border-top-right-radius: 6px;
-//   border-bottom-right-radius: 6px;
-// }

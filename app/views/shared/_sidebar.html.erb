@@ -1,38 +1,47 @@
 <!-- Sidebar Holder -->
 <nav id="sidebar">
-  <div id="dismiss"><%= icon 'far', "angle-double-left lg" %></div>
 
-  <div class="sidebar-header text-center"><%= content_tag(:h3, icon('far', "tachometer", text: "Dash", left: true)) %></div>
+  <div class="sidebar-header text-center">
+    <h3><%= icon('fas', 'tachometer-alt', 'Dash') %></h3>
+  </div>
 
   <ul class="list-unstyled components">
     <li><a href="#"><%= icon 'far', 'tachometer md', text: "List Item 1", left: true %></a></li>
-    <li class="nav-item"><%= link_to 'Acts', acts_path, class: "nav-link" %></li>
     <li class="nav-item"><%= link_to 'Conts', conts_path, class: "nav-link"  %></li>
     <li class="nav-item"><%= link_to 'Webs', webs_path, class: "nav-link"  %></li>
 
     <li class="active">
-        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
-        <ul class="collapse list-unstyled" id="homeSubmenu">
-            <li><a href="#">Home 1</a></li>
-            <li><a href="#">Home 2</a></li>
-            <li><a href="#">Home 3</a></li>
-        </ul>
+      <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
+      <ul class="collapse list-unstyled" id="homeSubmenu">
+          <li><a href="#">Home 1 .........</a></li>
+          <li><a href="#">Home 2</a></li>
+          <li><a href="#">Home 3</a></li>
+      </ul>
     </li>
 
     <li>
-        <a href="#">About</a>
-        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-        <ul class="collapse list-unstyled" id="pageSubmenu">
-            <li><a href="#">Page 1</a></li>
-            <li><a href="#">Page 2</a></li>
-            <li><a href="#">Page 3</a></li>
-        </ul>
+      <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+      <ul class="collapse list-unstyled" id="pageSubmenu">
+          <li><a href="#">Page 1</a></li>
+          <li><a href="#">Page 2</a></li>
+          <li><a href="#">Page 3</a></li>
+      </ul>
     </li>
+
+    <li>
+      <a href="#web_searchSubmenu" data-toggle="collapse" aria-expanded="false">
+        <%= icon('fas', 'search', 'Search Webs') %>
+      </a>
+
+      <div class="row collapse list-unstyled" id="web_searchSubmenu">
+        <%= render 'webs/webs_search_partial', search: @search %>
+      </div>
+    </li>
+
   </ul>
 
-  <ul class="list-unstyled CTAs">
-    <li><a href="#">Page 1</a></li>
-    <li><a href="#">Page 2</a></li>
-  </ul>
+
+
+
 
 </nav>

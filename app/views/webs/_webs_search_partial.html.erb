@@ -1,19 +1,20 @@
 <div class="row">
   <div class="col-md-12">
 
-    <%= search_form_for(@search) do |f| %>
-      <div class="field">
-        <%= f.label :url_cont_any, "Url: " %>
-        <%= f.search_field :url_cont_any %>
-      </div>
+    <% if @search.present? %>
+      <%= search_form_for(@search) do |f| %>
+        <div class="field">
+          <%= f.label :url_cont_any, "Url: " %>
+          <%= f.search_field :url_cont_any %>
+        </div>
 
-      <div class="field">
-        <%= f.label :acts_state_cont_any, "State: " %>
-        <%= f.search_field :acts_state_cont_any %>
-      </div>
+        <div class="field">
+          <%= f.label :acts_state_cont_any, "State: " %>
+          <%= f.search_field :acts_state_cont_any %>
+        </div>
 
-      <div class="actions"><%= f.submit "Search" %></div>
+        <div class="actions"><%= f.submit "Search" %></div>
+      <% end %>
     <% end %>
-
   </div>
 </div>
