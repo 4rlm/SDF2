@@ -1,20 +1,9 @@
-<!-- Sidebar Holder -->
-<nav id="sidebar">
-  <!-- <div class="sidebar-header"> -->
+<nav id="sidebar" class="container">
   <h5 class="text-center sidebar-header">Search CRM Data</h5>
-  <!-- </div> -->
-
 
   <% if @search.present? %>
-    <%= search_form_for(@search) do |f| %>
-
-    <% temps = Web.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
-
-    <div class="field" >
-      <p><%= f.label :temp_name_cont, "Web:" %></p>
-       <p><%= f.collection_select(:temp_name_cont, Web.all, :id, :temp_name) %></p>
-    </div>
-
+    <%= search_form_for(@search, html: {:class => "form"}) do |f| %>
+    <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
 
 
     <ul class="components">
@@ -25,17 +14,45 @@
         </a>
 
         <ul class="collapse" id="web-criteria">
-
-          <div class="field">
-            <%= f.label :url_cont_any, "Url: " %>
+          <!-- URL Search -->
+          <li class="field">
+            <%= f.label :url_cont_any, "Website: " %>
             <%= f.search_field :url_cont_any %>
-          </div>
+          </li>
+
+          <li>
+            <a class="dropdown-toggle" href="#web-criteria-temp-name" data-toggle="collapse" aria-expanded="false">
+              <%= icon('fab', 'firstdraft', 'Template') %>
+            </a>
+
+            <ul class="collapse" id="web-criteria-temp-name">
+              <!-- Template Check Boxes -->
+              <% temps.each do |temp_name| %>
+                <div class="form-group row">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                      <%= temp_name %>
+                    </label>
+                  </div>
+                </div>
+              <% end %>
+            </ul>
+          </li>
+
+
+
+
 
         </ul>
+
+
+
+
       </li>
 
 
-      <li class="">
+      <li>
         <a class="dropdown-toggle" href="#act-criteria" data-toggle="collapse" aria-expanded="false">
           <%= icon('fas', 'building', 'Account Criteria') %>
         </a>
@@ -57,15 +74,25 @@
         </a>
 
         <ul class="collapse list-unstyled" id="cont-criteria">
-          <li><a href="#">Page 1</a></li>
-          <li><a href="#">Page 2</a></li>
-          <li><a href="#">Page 3</a></li>
+
+          <% temps.each do |temp_name| %>
+            <div class="form-group row">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                  <%= temp_name %>
+                </label>
+              </div>
+            </div>
+          <% end %>
+
         </ul>
       </li>
 
     </ul>
 
     <div class="actions"><%= f.submit "Search" %></div>
+    <div class=""><%= link_to("Clear Search", request.path) %></div>
     <% end %>
   <% end %>
 
