@@ -139,5 +139,7 @@ gem 'ransack', '~> 1.8', '>= 1.8.4'
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 gem 'simplecov', '~> 0.12.0'
 
+gem 'bootstrap-select-rails', '~> 1.12', '>= 1.12.4'
+
 # gem 'will_filter'
 # gem 'kaminari'

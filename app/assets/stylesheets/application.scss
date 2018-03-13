@@ -144,3 +144,62 @@ table.table {
     border-bottom: 1px solid #434857;
   }
 }
+
+
+// TESTING!!!  MULTI-SELECT - STARTS
+
+
+label, select, form {
+    display: block !important;
+    // vertical-align: middle !important;
+    // vertical-align: text-top;
+}
+
+// .navie {
+//   width: 100%;
+//   text-align: center;
+//   display:inline-block;
+//   vertical-align: top;
+//   float: none;
+//   // background-color: white;
+//   background-image:linear-gradient(#ffffff, #e8f8fc);
+//   border: solid 1px #137fa0;
+//   border-top: none;
+//   box-shadow: 5px 5px 5px gray;
+//   border-radius: 0 0 5px 5px;
+//   // position: fixed;
+// }
+
+// label {
+//     line-height:25px;
+// }
+
+// selectpicker customizing starts
+// select.selectpicker.select-block {
+//   color: blue !important;
+//   background-color: red;
+//   font-style: italic;
+// }
+
+// .form-control {
+//   // color: blue !important;
+//   // background-color: orange;
+//   // font-style: italic;
+//   width: 100% !important;
+//   padding: 0 !important;
+//   margin: 0 !important;
+//   font-size: 100%;
+//   text-align: center;
+// }
+
+
+// .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+//   width: 100%;
+//   li a {
+//     font-size: 100%;
+//   }
+// }
+//
+// .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+//   margin-right: 0;
+// }

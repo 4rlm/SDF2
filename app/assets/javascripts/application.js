@@ -15,6 +15,9 @@
 //= require jquery3
 //= require popper
 //= require bootstrap-sprockets
+//= require bootstrap-select
+//= require bootstrap/alert
+//= require bootstrap/dropdown
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
 //= require sidebar
@@ -36,3 +39,7 @@
       element.show();
     }
   }
+
+
+
+  // $('.collapse').collapse();

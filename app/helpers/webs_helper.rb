@@ -8,7 +8,7 @@ module WebsHelper
     # zip = params[:zip_cont_any]
     # phone = params[:phone_cont_any]
     url = params[:url_cont_any]
-
+    
     # params[:act_name_cont_any] = ransack_splitter(act_name) if act_name
     # params[:city_matches_any] = ransack_splitter(city) if city
     # params[:state_cont_any] = ransack_splitter(state) if state
