@@ -13,8 +13,8 @@ class ActsController < ApplicationController
       params[:q] = acts_helper.split_ransack_params(params[:q])
     end
 
-    @search = Act.web_is_cop_or_franchise.where.not(gp_id: nil).ransack(params[:q])
-    @acts = @search.result(distinct: true).paginate(page: params[:page], per_page: 50)
+    @q = Act.web_is_cop_or_franchise.where.not(gp_id: nil).ransack(params[:q])
+    @acts = @q.result(distinct: true).paginate(page: params[:page], per_page: 50)
 
     respond_with(@acts)
   end

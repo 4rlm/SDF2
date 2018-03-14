@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
 
-    <%= search_form_for(@search) do |f| %>
+    <%= search_form_for(@q) do |f| %>
       <div class="field">
         <%= f.label :act_name_cont_any, "Name: " %>
         <%= f.search_field :act_name_cont_any %>

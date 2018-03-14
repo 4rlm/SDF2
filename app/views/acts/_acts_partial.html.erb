@@ -8,7 +8,7 @@
 
 
 <div class="row">
-  <%= render 'acts/acts_search_partial', search: @search %>
+  <%= render 'acts/acts_search_partial', search: @q %>
 </div>
 
 
@@ -23,15 +23,15 @@
   <table id="acts" class="display table table-bordered table-hover table-striped text-nowrap">
   <thead>
     <tr>
-      <th><%= sort_link(@search, :act_name, "RT Name") %></th>
-      <th><%= sort_link(@search, :street) %></th>
-      <th><%= sort_link(@search, :city) %></th>
-      <th><%= sort_link(@search, :state) %></th>
-      <th><%= sort_link(@search, :zip) %></th>
-      <th><%= sort_link(@search, :phone) %></th>
+      <th><%= sort_link(@q, :act_name, "RT Name") %></th>
+      <th><%= sort_link(@q, :street) %></th>
+      <th><%= sort_link(@q, :city) %></th>
+      <th><%= sort_link(@q, :state) %></th>
+      <th><%= sort_link(@q, :zip) %></th>
+      <th><%= sort_link(@q, :phone) %></th>
       <th>URL-Test</th>
-      <!--<th><%#= sort_link(@search, :url) %></th>-->
-      <th><%= sort_link(@search, :gp_date, "RT Scrape Date") %></th>
+      <!--<th><%#= sort_link(@q, :url) %></th>-->
+      <th><%= sort_link(@q, :gp_date, "RT Scrape Date") %></th>
     </tr>
   </thead>
 
