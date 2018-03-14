@@ -18,7 +18,13 @@ module ApplicationHelper
 
   def get_brands(web)
     if web.present?
-      web.brands.select {|brand| brand.brand_name}.pluck(:brand_name).join(', ')
+      brands = web.brands.select {|brand| brand.brand_name}.pluck(:brand_name)
+    end
+  end
+
+  def get_brands_for_select(webs)
+    if webs.present?
+      brands = webs.is_franchise&.map {|web| get_brands(web)}&.flatten&.uniq&.sort
     end
   end
 

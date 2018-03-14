@@ -2,23 +2,18 @@
   <% if @search.present? %>
     <%= search_form_for(@search, html: {:class => "form"}) do |f| %>
     <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
+    <% brands = get_brands_for_select(@webs) %>
 
-
-
-      <% temps.each do |temp_name| %>
+      <% brands.each do |brand_name| %>
         <div class="form-group row">
           <div class="form-check">
             <label class="form-check-label">
-              <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-              <%= temp_name %>
+              <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+              <%= brand_name %>
             </label>
           </div>
         </div>
       <% end %>
-
-
-
-
 
       <div class="actions"><%= f.submit "Search" %></div>
       <div class=""><%= link_to("Clear Search", request.path) %></div>

@@ -26,7 +26,7 @@
     <div class="row outer-list-row">
       <div class="col-md-3 association-parent">
         <p><%= link_to icon('fas', 'external-link-alt', web.url), web.url, target: '_blank' %></p>
-        <p><%= icon('fas', 'car', "Brand: #{get_brands(web)}") %></p>
+        <p><%= icon('fas', 'car', "Brand: #{get_brands(web)&.join(', ')}") %></p>
         <p><%= icon('fas', 'star', "COP: #{web.cop}") %></p>
         <p><%= icon('fas', 'home', "Website: #{web.url_sts}")%>: <%= web.url_date&.strftime('%x')%></p>
         <p><%= icon('fab', 'firstdraft', "Template (#{web.temp_name})")%>: <%= web.temp_sts %> <%= web.tmp_date&.strftime('%x')%></p>

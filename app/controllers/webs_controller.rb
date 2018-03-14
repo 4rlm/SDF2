@@ -13,13 +13,23 @@ class WebsController < ApplicationController
       params[:q] = webs_helper.split_ransack_params(params[:q])
     end
 
+    ## BEST 2 BELOW - SAVE!!!!
+    @search = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
+    @webs = @search.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
+
+
+    ## TESTING BELOW
+    @search = Web.ransack(params[:q])
+    @webs = @search.result.includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
+
+
     # @search= Web.joins(:acts, :brands).ransack(params[:q])
     # @search = Web.is_cop_or_franchise.ransack(params[:q])
     # @webs = @search.result(distinct: true).paginate(page: params[:page], per_page: 50)
-    @search = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
+    # @search = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
 
     # @search = Web.is_cop_or_franchise.ransack(params[:q])
-    @webs = @search.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
+    # @webs = @search.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
     # @webs = @search.result.includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
 
     # @webs = @search.result.includes(:acts, :brands).page(params[:page], per_page: 50).to_a.uniq

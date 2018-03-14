@@ -3,97 +3,104 @@
 
   <% if @search.present? %>
     <%= search_form_for(@search, html: {:class => "form"}) do |f| %>
-    <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
+      <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
+      <% brands = get_brands_for_select(@webs) %>
 
+      <ul class="components">
+        <li>
+          <a class="dropdown-toggle" href="#web-criteria" data-toggle="collapse" aria-expanded="false">
+            <%= icon('fas', 'external-link-alt', 'Web Criteria') %>
+          </a>
 
-    <ul class="components">
+          <ul class="collapse" id="web-criteria">
 
-      <li>
-        <a class="dropdown-toggle" href="#web-criteria" data-toggle="collapse" aria-expanded="false">
-          <%= icon('fas', 'external-link-alt', 'Web Criteria') %>
-        </a>
+            <li class="field"> <!-- URL Search -->
+              <%= f.label :url_cont_any, "Website: " %>
+              <%= f.search_field :url_cont_any %>
+            </li>
 
-        <ul class="collapse" id="web-criteria">
-          <!-- URL Search -->
-          <li class="field">
-            <%= f.label :url_cont_any, "Website: " %>
-            <%= f.search_field :url_cont_any %>
-          </li>
+            <li> <!-- Template Check Boxes -->
+              <a class="dropdown-toggle" href="#web-criteria-temp-name" data-toggle="collapse" aria-expanded="false">
+                <%= icon('fab', 'firstdraft', 'Template') %>
+              </a>
 
-          <li>
-            <a class="dropdown-toggle" href="#web-criteria-temp-name" data-toggle="collapse" aria-expanded="false">
-              <%= icon('fab', 'firstdraft', 'Template') %>
-            </a>
-
-            <ul class="collapse" id="web-criteria-temp-name">
-              <!-- Template Check Boxes -->
-              <% temps.each do |temp_name| %>
-                <div class="form-group row">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                      <%= temp_name %>
-                    </label>
+              <ul class="collapse" id="web-criteria-temp-name">
+                <% temps.each do |temp_name| %>
+                  <div class="form-group row">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                        <%= temp_name %>
+                      </label>
+                    </div>
                   </div>
-                </div>
-              <% end %>
-            </ul>
-          </li>
+                <% end %>
+              </ul>
+            </li>
+
+            <li> <!-- Franchise Brand Check Boxes -->
+              <a class="dropdown-toggle" href="#web-criteria-brand-name" data-toggle="collapse" aria-expanded="false">
+                <%= icon('fas', 'car', 'Franchise Brand') %>
+              </a>
+
+              <ul class="collapse" id="web-criteria-brand-name">
+                <% brands.each do |brand_name| %>
+                  <div class="form-group row">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                        <%= brand_name %>
+                      </label>
+                    </div>
+                  </div>
+                <% end %>
+              </ul>
+            </li>
+
+          </ul>
+        </li>
 
 
+        <li>
+          <a class="dropdown-toggle" href="#act-criteria" data-toggle="collapse" aria-expanded="false">
+            <%= icon('fas', 'building', 'Account Criteria') %>
+          </a>
 
+          <ul class="collapse" id="act-criteria">
 
-
-        </ul>
-
-
-
-
-      </li>
-
-
-      <li>
-        <a class="dropdown-toggle" href="#act-criteria" data-toggle="collapse" aria-expanded="false">
-          <%= icon('fas', 'building', 'Account Criteria') %>
-        </a>
-
-        <ul class="collapse" id="act-criteria">
-
-          <div class="field">
-            <%= f.label :acts_state_cont_any, "State: " %>
-            <%= f.search_field :acts_state_cont_any %>
-          </div>
-
-        </ul>
-      </li>
-
-
-      <li>
-        <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
-          <%= icon('fas', 'users', 'Contact Criteria') %>
-        </a>
-
-        <ul class="collapse list-unstyled" id="cont-criteria">
-
-          <% temps.each do |temp_name| %>
-            <div class="form-group row">
-              <div class="form-check">
-                <label class="form-check-label">
-                  <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                  <%= temp_name %>
-                </label>
-              </div>
+            <div class="field">
+              <%= f.label :acts_state_cont_any, "State: " %>
+              <%= f.search_field :acts_state_cont_any %>
             </div>
-          <% end %>
 
-        </ul>
-      </li>
+          </ul>
+        </li>
 
-    </ul>
 
-    <div class="actions"><%= f.submit "Search" %></div>
-    <div class=""><%= link_to("Clear Search", request.path) %></div>
+        <li>
+          <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
+            <%= icon('fas', 'users', 'Contact Criteria') %>
+          </a>
+
+          <ul class="collapse list-unstyled" id="cont-criteria">
+
+            <% temps.each do |temp_name| %>
+              <div class="form-group row">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                    <%= temp_name %>
+                  </label>
+                </div>
+              </div>
+            <% end %>
+
+          </ul>
+        </li>
+      </ul>
+
+      <div class="actions"><%= f.submit "Search" %></div>
+      <div class=""><%= link_to("Clear Search", request.path) %></div>
     <% end %>
   <% end %>
-
 </nav>
