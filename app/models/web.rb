@@ -29,6 +29,15 @@ class Web < ApplicationRecord
   scope :is_cop, ->{ where(cop: true) }
   scope :is_cop_or_franchise, -> {is_franchise.merge(is_cop)}
   scope :is_not_wx, ->{ where(wx_date: nil) }
+  scope :web_act_state, ->{ joins(:acts).merge(Act.where.not(state: nil)) }
+
+  scope :web_act_gp_sts, ->{ joins(:acts).merge(Act.where.not(gp_sts: nil)) }
+  scope :web_act_gp_indus, ->{ joins(:acts).merge(Act.where.not(gp_indus: nil)) }
+
+
+
+
+
 
   # merged = Web.is_cop.merge(Web.is_franchise)
 

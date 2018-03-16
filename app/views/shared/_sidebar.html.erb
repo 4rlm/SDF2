@@ -2,6 +2,7 @@
 
   <% if @q.present? %>
     <%= search_form_for(@q, url: search_webs_path, html: {method: :post, class: 'form'}) do |f| %>
+      <!-- WEBS CHECK BOX OPTIONS -->
       <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
       <% brands = get_brands_for_select(@webs) %>
       <% cops = [true, false] %>
@@ -10,164 +11,319 @@
       <% page_stss = @webs.select(:page_sts).where.not(page_sts: nil).pluck(:page_sts).uniq.sort %>
       <% cs_stss = @webs.select(:cs_sts).where.not(cs_sts: nil).pluck(:cs_sts).uniq.sort %>
 
+      <!-- ACCOUNTS CHECK BOX OPTIONS -->
+      <% states = get_states_for_select(@webs) %>
+      <% gp_stss = get_gp_stss_for_select(@webs) %>
+      <% gp_induss = get_gp_induss_for_select(@webs) %>
+
 
       <!-- SEARCH SECTION - START -->
       <h5 class="text-center sidebar-header">Search Criteria</h5>
       <ul class="components">
+
 
         <!-- SEARCH WEBS - START -->
         <li>
           <a class="dropdown-toggle" href="#web-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'external-link-alt', 'Web Criteria') %>
           </a>
-
           <ul class="collapse" id="web-criteria">
 
-            <!-- Search Webs (URL) -->
-            <li class="field">
-              <%= f.label :url_cont_any, "Website: " %>
-              <%= f.search_field :url_cont_any %>
-            </li>
-
-            <!-- Search Webs (Cop Check Boxes) -->
+            <!-- Search Webs (General-1) -->
             <li>
-              <a class="dropdown-toggle" href="#web-criteria-cop" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'star', 'CoPilot') %>
+              <a class="dropdown-toggle" href="#search-criteria-webs-general" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'list-alt', 'General') %>
               </a>
 
-              <ul class="collapse" id="web-criteria-cop">
-                <% cops.each do |cop| %>
-                  <div class="form-group row">
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <%= check_box_tag('q[cop_in][]', cop) %>
-                        <%= cop %>
-                      </label>
+              <ul class="collapse list-unstyled" id="search-criteria-webs-general">
+
+                <!-- Search Webs (URL) -->
+                <li class="field">
+                  <%= f.label :url_cont_any, "URL: " %>
+                  <%= f.search_field :url_cont_any %>
+                </li>
+
+                <!-- Search Webs (FWD URL) -->
+                <li class="field">
+                  <%= f.label :fwd_url_cont_any, "Redirected URL: " %>
+                  <%= f.search_field :fwd_url_cont_any %>
+                </li>
+
+                <!-- Search Webs (Template Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#web-criteria-temp-name" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fab', 'firstdraft', 'Template') %>
+                  </a>
+                  <ul class="collapse" id="web-criteria-temp-name">
+                    <div class="row form-check-row">
+                      <% temps&.each_with_index do |temp_name, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                            <%= temp_name %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                            <%= temp_name %>
+                          </div>
+                        <% end %>
+                      <% end %>
                     </div>
-                  </div>
-                <% end %>
+                  </ul>
+                </li>
+
+                <!-- Search Webs (Franchise Brand Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#web-criteria-brand-name" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'car', 'Franchise Brand') %>
+                  </a>
+                  <ul class="collapse" id="web-criteria-brand-name">
+                    <div class="row form-check-row">
+                      <% brands&.each_with_index do |brand_name, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                            <%= brand_name %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                            <%= brand_name %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
+
               </ul>
             </li>
 
-            <!-- Search Webs (url_sts Check Boxes) -->
+            <!-- Search Webs (Status-2) -->
             <li>
-              <a class="dropdown-toggle" href="#web-criteria-url-sts" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'star', 'url_sts') %>
+              <a class="dropdown-toggle" href="#search-criteria-webs-status" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'check-square', 'Status') %>
               </a>
+              <ul class="collapse list-unstyled" id="search-criteria-webs-status">
 
-              <ul class="collapse" id="web-criteria-url-sts">
-                <% url_stss.each do |url_sts| %>
-                  <div class="form-group row">
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <%= check_box_tag('q[url_sts_in][]', url_sts) %>
-                        <%= url_sts %>
-                      </label>
+                <!-- Search Webs (Cop Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#web-criteria-cop" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'CoPilot') %>
+                  </a>
+                  <ul class="collapse" id="web-criteria-cop">
+                    <div class="row form-check-row">
+                      <% cops&.each_with_index do |cop, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[cop_in][]', cop) %>
+                            <%= cop %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[cop_in][]', cop) %>
+                            <%= cop %>
+                          </div>
+                        <% end %>
+                      <% end %>
                     </div>
-                  </div>
-                <% end %>
+                  </ul>
+                </li>
+
+                <!-- Search Webs (url_sts Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#web-criteria-url-sts" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'url_sts') %>
+                  </a>
+                  <ul class="collapse" id="web-criteria-url-sts">
+                    <div class="row form-check-row">
+                      <% url_stss&.each_with_index do |url_sts, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                            <%= url_sts %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                            <%= url_sts %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
+
+                <!-- Search Webs (temp_sts Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#web-criteria-temp-sts" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'temp_sts') %>
+                  </a>
+                  <ul class="collapse" id="web-criteria-temp-sts">
+                    <div class="row form-check-row">
+                      <% temp_stss&.each_with_index do |temp_sts, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                            <%= temp_sts %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                            <%= temp_sts %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
+
+                <!-- Search Webs (page_sts Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#web-criteria-page-sts" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'page_sts') %>
+                  </a>
+                  <ul class="collapse" id="web-criteria-page-sts">
+                    <div class="row form-check-row">
+                      <% page_stss&.each_with_index do |page_sts, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                            <%= page_sts %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                            <%= page_sts %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
+
+                <!-- Search Webs (cs_sts Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#web-criteria-cs-sts" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'cs_sts') %>
+                  </a>
+                  <ul class="collapse" id="web-criteria-cs-sts">
+                    <div class="row form-check-row">
+                      <% cs_stss&.each_with_index do |cs_sts, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                            <%= cs_sts %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                            <%= cs_sts %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
               </ul>
             </li>
 
-            <!-- Search Webs (temp_sts Check Boxes) -->
+            <!-- Search Webs (Dates-3) -->
             <li>
-              <a class="dropdown-toggle" href="#web-criteria-temp-sts" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'star', 'temp_sts') %>
+              <a class="dropdown-toggle" href="#search-criteria-webs-dates" data-toggle="collapse" aria-expanded="false">
+                <%= icon('fas', 'calendar-alt', 'Dates') %>
               </a>
 
-              <ul class="collapse" id="web-criteria-temp-sts">
-                <% temp_stss.each do |temp_sts| %>
-                  <div class="form-group row">
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
-                        <%= temp_sts %>
-                      </label>
-                    </div>
-                  </div>
-                <% end %>
+              <ul class="collapse list-unstyled" id="search-criteria-webs-dates">
+
+                <!-- Search Webs (Dates-Table) -->
+                <div class="row">
+                  <table class="ransack-table table table-bordered text-nowrap text-center">
+                    <thead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Start</th>
+                        <th>End</th>
+                      </tr>
+                    </thead>
+
+                    <!-- URL Verified -->
+                    <tr>
+                      <td>URL Verified</td>
+                      <td><%= f.date_field :url_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :url_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- Template -->
+                    <tr>
+                      <td>Template Verified</td>
+                      <td><%= f.date_field :tmp_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :tmp_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- Staff Page -->
+                    <tr>
+                      <td>Staff Page Verified</td>
+                      <td><%= f.date_field :page_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :page_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- Staff Mined -->
+                    <tr>
+                      <td>Staff Verified</td>
+                      <td><%= f.date_field :cs_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :cs_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- URL Updated -->
+                    <tr>
+                      <td>URL Updated</td>
+                      <td><%= f.date_field :web_changed_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :web_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- URL Inactive -->
+                    <tr>
+                      <td>URL Inactive</td>
+                      <td><%= f.date_field :wx_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :wx_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- Web Updated -->
+                    <tr>
+                      <td>Web Updated</td>
+                      <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- Web Created -->
+                    <tr>
+                      <td>Web Created</td>
+                      <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                  </table>
+                </div>
+
               </ul>
             </li>
 
-            <!-- Search Webs (page_sts Check Boxes) -->
-            <li>
-              <a class="dropdown-toggle" href="#web-criteria-page-sts" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'star', 'page_sts') %>
-              </a>
-
-              <ul class="collapse" id="web-criteria-page-sts">
-                <% page_stss.each do |page_sts| %>
-                  <div class="form-group row">
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <%= check_box_tag('q[page_sts_in][]', page_sts) %>
-                        <%= page_sts %>
-                      </label>
-                    </div>
-                  </div>
-                <% end %>
-              </ul>
-            </li>
-
-            <!-- Search Webs (cs_sts Check Boxes) -->
-            <li>
-              <a class="dropdown-toggle" href="#web-criteria-cs-sts" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'star', 'cs_sts') %>
-              </a>
-
-              <ul class="collapse" id="web-criteria-cs-sts">
-                <% cs_stss.each do |cs_sts| %>
-                  <div class="form-group row">
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
-                        <%= cs_sts %>
-                      </label>
-                    </div>
-                  </div>
-                <% end %>
-              </ul>
-            </li>
-
-            <!-- Search Webs (Template Check Boxes) -->
-            <li>
-              <a class="dropdown-toggle" href="#web-criteria-temp-name" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fab', 'firstdraft', 'Template') %>
-              </a>
-
-              <ul class="collapse" id="web-criteria-temp-name">
-                <% temps.each do |temp_name| %>
-                  <div class="form-group row">
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                        <%= temp_name %>
-                      </label>
-                    </div>
-                  </div>
-                <% end %>
-              </ul>
-            </li>
-
-            <!-- Search Webs (Franchise Brand Check Boxes) -->
-            <li>
-              <a class="dropdown-toggle" href="#web-criteria-brand-name" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'car', 'Franchise Brand') %>
-              </a>
-
-              <ul class="collapse" id="web-criteria-brand-name">
-                <% brands.each do |brand_name| %>
-                  <div class="form-group row">
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
-                        <%= brand_name %>
-                      </label>
-                    </div>
-                  </div>
-                <% end %>
-              </ul>
-            </li>
 
           </ul>
         </li>
@@ -181,14 +337,229 @@
 
           <ul class="collapse" id="act-criteria">
 
-            <!-- Search Accounts (State) -->
-            <div class="field">
-              <%= f.label :acts_state_cont_any, "State: " %>
-              <%= f.search_field :acts_state_cont_any %>
-            </div>
+            <!-- Search Accounts (General-1) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-acts-general" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'list-alt', 'General') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-acts-general">
+
+                <!-- Search Accounts (act_name) -->
+                <div class="field">
+                  <%= f.label :acts_act_name_cont_any, "Account Name: " %>
+                  <%= f.search_field :acts_act_name_cont_any %>
+                </div>
+
+                <!-- Search Accounts (full_address) -->
+                <div class="field">
+                  <%= f.label :acts_full_address_cont_any, "Full Address: " %>
+                  <%= f.search_field :acts_full_address_cont_any %>
+                </div>
+
+                <!-- Search Accounts (street) -->
+                <div class="field">
+                  <%= f.label :acts_street_cont_any, "Street: " %>
+                  <%= f.search_field :acts_street_cont_any %>
+                </div>
+
+                <!-- Search Accounts (city) -->
+                <div class="field">
+                  <%= f.label :acts_city_cont_any, "City: " %>
+                  <%= f.search_field :acts_city_cont_any %>
+                </div>
+
+                <!-- Search Accounts (State Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#act-criteria-state" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'State!!') %>
+                  </a>
+                  <ul class="collapse" id="act-criteria-state">
+                    <div class="row form-check-row">
+                      <% states&.each_with_index do |state, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[acts_state_in][]', state) %>
+                            <%= state %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[acts_state_in][]', state) %>
+                            <%= state %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
+
+                <!-- Search Accounts (zip) -->
+                <div class="field">
+                  <%= f.label :acts_zip_cont_any, "Zip: " %>
+                  <%= f.search_field :acts_zip_cont_any %>
+                </div>
+
+                <!-- Search Accounts (phone) -->
+                <div class="field">
+                  <%= f.label :acts_phone_cont_any, "Phone: " %>
+                  <%= f.search_field :acts_phone_cont_any %>
+                </div>
+
+                <!-- Search Accounts (lat) -->
+                <div class="field">
+                  <%= f.label :acts_lat_cont_any, "Lat: " %>
+                  <%= f.search_field :acts_lat_cont_any %>
+                </div>
+
+                <!-- Search Accounts (lon) -->
+                <div class="field">
+                  <%= f.label :acts_lon_cont_any, "Lon: " %>
+                  <%= f.search_field :acts_lon_cont_any %>
+                </div>
+
+                <!-- Search Accounts (gp_id) -->
+                <div class="field">
+                  <%= f.label :acts_gp_id_eq_any, "GP ID: " %>
+                  <%= f.search_field :acts_gp_id_eq_any %>
+                </div>
+
+              </ul>
+            </li>
+
+            <!-- Search Accounts (Status-2) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-acts-status" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'check-square', 'Status') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-acts-status">
+
+                <!-- Search Acts (gp_sts Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#act-criteria-gp-sts" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'gp_sts') %>
+                  </a>
+                  <ul class="collapse" id="act-criteria-gp-sts">
+                    <div class="row form-check-row">
+                      <% gp_stss&.each_with_index do |gp_sts, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                            <%= gp_sts %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                            <%= gp_sts %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
+
+                <!-- Search Acts (gp_indus Check Boxes) -->
+                <li>
+                  <a class="dropdown-toggle" href="#act-criteria-gp-indus" data-toggle="collapse" aria-expanded="false">
+                    <%= icon('fas', 'star', 'gp_indus') %>
+                  </a>
+                  <ul class="collapse" id="act-criteria-gp-indus">
+                    <div class="row form-check-row">
+                      <% gp_induss&.each_with_index do |gp_indus, index| %>
+                        <% if index.odd? %>
+                          <!-- LEFT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
+                            <%= gp_indus %>
+                          </div>
+                        <% else %>
+                          <!-- RIGHT -->
+                          <div class="col-md-6 form-check">
+                            <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
+                            <%= gp_indus %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+
+            <!-- Search Accounts (Dates-3) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-acts-dates" data-toggle="collapse" aria-expanded="false">
+                <%= icon('fas', 'calendar-alt', 'Dates') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-acts-dates">
+
+                <!-- Search Acts (Dates-Table) -->
+                <div class="row">
+                  <table class="ransack-table table table-bordered text-nowrap text-center">
+                    <thead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Start</th>
+                        <th>End</th>
+                      </tr>
+                    </thead>
+
+                    <!-- gp_date -->
+                    <tr>
+                      <td>GP Verified</td>
+                      <td><%= f.date_field :acts_gp_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :acts_gp_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- adr_changed -->
+                    <tr>
+                      <td>Address Updated</td>
+                      <td><%= f.date_field :acts_adr_changed_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :acts_adr_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- act_changed -->
+                    <tr>
+                      <td>Acct-Name Updated</td>
+                      <td><%= f.date_field :acts_act_changed_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :acts_act_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- ax_date -->
+                    <tr>
+                      <td>Account Inactive</td>
+                      <td><%= f.date_field :acts_ax_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :acts_ax_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- updated_at -->
+                    <tr>
+                      <td>Account Updated</td>
+                      <td><%= f.date_field :acts_updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :acts_updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- created_at -->
+                    <tr>
+                      <td>Account Created</td>
+                      <td><%= f.date_field :acts_created_at_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :acts_created_at_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                  </table>
+                </div>
+
+              </ul>
+            </li>
 
           </ul>
         </li>
+
 
         <!-- SEARCH CONTACTS - START -->
         <li>
@@ -198,16 +569,38 @@
 
           <ul class="collapse list-unstyled" id="cont-criteria">
 
-            <% temps.each do |temp_name| %>
-              <div class="form-group row">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                    <%= temp_name %>
-                  </label>
-                </div>
-              </div>
-            <% end %>
+            <!-- Search Contacts (General-1) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-conts-general" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'list-alt', 'General') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-conts-general">
+                <!-- Search Criteria Here -->
+              </ul>
+            </li>
+
+            <!-- Search Contacts (Status-2) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-conts-status" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'check-square', 'Status') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-conts-status">
+                  <!-- Search Criteria Here -->
+              </ul>
+            </li>
+
+            <!-- Search Contacts (Dates-3) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-conts-dates" data-toggle="collapse" aria-expanded="false">
+                <%= icon('fas', 'calendar-alt', 'Dates') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-conts-dates">
+                <!-- Search Criteria Here -->
+              </ul>
+            </li>
 
           </ul>
         </li>
@@ -231,7 +624,7 @@
 
           <ul class="collapse" id="sort-options-webs">
 
-            <!-- Sort Webs (General) -->
+            <!-- Sort Webs (General-1) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-webs-general" data-toggle="collapse" aria-expanded="false">
                 <%= icon('far', 'list-alt', 'General') %>
@@ -256,7 +649,7 @@
               </ul>
             </li>
 
-            <!-- Sort Webs (Status) -->
+            <!-- Sort Webs (Status-2) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-webs-status" data-toggle="collapse" aria-expanded="false">
                 <%= icon('far', 'check-square', 'Status') %>
@@ -285,7 +678,7 @@
               </ul>
             </li>
 
-            <!-- Sort Webs (Dates) -->
+            <!-- Sort Webs (Dates-3) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-webs-dates" data-toggle="collapse" aria-expanded="false">
                 <%= icon('fas', 'calendar-alt', 'Dates') %>
@@ -338,7 +731,7 @@
 
           <ul class="collapse" id="sort-options-acts">
 
-            <!-- Sort Acts (General) -->
+            <!-- Sort Acts (General-1) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-acts-general" data-toggle="collapse" aria-expanded="false">
                 <%= icon('far', 'list-alt', 'General') %>
@@ -351,7 +744,7 @@
               </ul>
             </li>
 
-            <!-- Sort Acts (Status) -->
+            <!-- Sort Acts (Status-2) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-acts-status" data-toggle="collapse" aria-expanded="false">
                 <%= icon('far', 'check-square', 'Status') %>
@@ -364,7 +757,7 @@
               </ul>
             </li>
 
-            <!-- Sort Acts (Dates) -->
+            <!-- Sort Acts (Dates-3) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-acts-dates" data-toggle="collapse" aria-expanded="false">
                 <%= icon('fas', 'calendar-alt', 'Dates') %>
@@ -389,7 +782,7 @@
 
           <ul class="collapse" id="sort-options-conts">
 
-            <!-- Sort Conts (General) -->
+            <!-- Sort Conts (General-1) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-conts-general" data-toggle="collapse" aria-expanded="false">
                 <%= icon('far', 'list-alt', 'General') %>
@@ -402,7 +795,7 @@
               </ul>
             </li>
 
-            <!-- Sort Conts (Status) -->
+            <!-- Sort Conts (Status-2) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-conts-status" data-toggle="collapse" aria-expanded="false">
                 <%= icon('far', 'check-square', 'Status') %>
@@ -415,7 +808,9 @@
               </ul>
             </li>
 
-            <!-- Sort Conts (Dates) -->
+            <!-- Sort Conts
+
+            (Dates-3) -->
             <li>
               <a class="dropdown-toggle" href="#sort-options-conts-dates" data-toggle="collapse" aria-expanded="false">
                 <%= icon('fas', 'calendar-alt', 'Dates') %>
@@ -429,6 +824,7 @@
             </li>
 
           </ul>
+
         </li>
 
       </ul>

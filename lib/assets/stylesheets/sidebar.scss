@@ -1,4 +1,25 @@
 /* ---------------------------------------------------
+  RANSACK SEARCH AND SORT STYLE
+----------------------------------------------------- */
+
+.ransack-table {
+  padding-right: 2px;
+  // margin: 0px;
+}
+
+.ransack-table td {
+  font-size: 11px;
+  padding: 3px 0 3px 0;
+  margin: 0px;
+}
+
+.ransack-date-input {
+  width: 90px;
+  font-size: 10px;
+}
+
+
+/* ---------------------------------------------------
   SIDEBAR TOGGLE BUTTON STYLE
 ----------------------------------------------------- */
 .navbar-btn {
@@ -51,6 +72,18 @@
 //   list-style-type: none;
 // }
 
+div.form-check-row {
+  margin: 10px -10px 10px -10px;
+  padding: 10px -10px 10px -10px;
+}
+
+div.form-check {
+  margin: 0px;
+  padding: 0px;
+  // line-height: .5em;
+  display: inline-block;
+  font-size: 11px;
+}
 
 .sidebar-header {
   margin: -10px;
