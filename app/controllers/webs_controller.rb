@@ -20,7 +20,8 @@ class WebsController < ApplicationController
 
     ## TESTING BELOW
     @q = Web.ransack(params[:q])
-    @webs = @q.result.includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
+    @webs = @q.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
+
 
 
     # @q= Web.joins(:acts, :brands).ransack(params[:q])
