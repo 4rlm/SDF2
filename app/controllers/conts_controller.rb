@@ -15,10 +15,15 @@ class ContsController < ApplicationController
       params[:q] = conts_helper.split_ransack_params(params[:q])
     end
 
-    @q = Cont.all.ransack(params[:q])
-    @conts = @q.result(distinct: true).includes(:acts, :web).paginate(page: params[:page], per_page: 50)
+    @cq = Cont.ransack(params[:q])
+    @conts = @cq.result(distinct: true).includes(:acts, :web, :brands).paginate(page: params[:page], per_page: 50)
 
-    respond_with(@conts)
+    # respond_with(@conts)
+  end
+
+  def search
+    index
+    render :index
   end
 
   # GET /conts/1

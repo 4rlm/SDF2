@@ -1,7 +1,7 @@
 <nav id="sidebar" class="container">
 
-  <% if @q.present? %>
-    <%= search_form_for(@q, url: search_webs_path, html: {method: :post, class: 'form'}) do |f| %>
+  <% if @wq.present? %>
+    <%= search_form_for(@wq, url: search_webs_path, html: {method: :post, class: 'form'}) do |f| %>
       <!-- WEBS CHECK BOX OPTIONS -->
       <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
       <% brands = get_brands_for_select(@webs) %>
@@ -710,13 +710,13 @@
                 <table class="ransack-table table table-bordered text-nowrap">
                   <tr>
                     <td>
-                      <%= sort_link(@q, :url) do %>
+                      <%= sort_link(@wq, :url) do %>
                         <span><%= icon('fas', 'home', 'URL') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :fwd_url) do %>
+                      <%= sort_link(@wq, :fwd_url) do %>
                         <span><%= icon('fas', 'home', 'Redirected URL') %></span>
                       <% end %>
                     </td>
@@ -724,13 +724,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :brands_brand_name) do %>
+                      <%= sort_link(@wq, :brands_brand_name) do %>
                         <span><%= icon('fas', 'car', 'Franchise Brand') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :temp_name) do %>
+                      <%= sort_link(@wq, :temp_name) do %>
                         <span><%= icon('fab', 'firstdraft', 'Template') %></span>
                       <% end %>
                     </td>
@@ -749,13 +749,13 @@
                 <table class="ransack-table table table-bordered text-nowrap">
                   <tr>
                     <td>
-                      <%= sort_link(@q, :url_sts) do %>
+                      <%= sort_link(@wq, :url_sts) do %>
                         <span><%= icon('fas', 'home', 'URL') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :cop) do %>
+                      <%= sort_link(@wq, :cop) do %>
                         <span><%= icon('fas', 'star', 'CoPilot') %></span>
                       <% end %>
                     </td>
@@ -763,13 +763,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :temp_sts) do %>
+                      <%= sort_link(@wq, :temp_sts) do %>
                         <span><%= icon('fab', 'firstdraft', 'Template') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :page_sts) do %>
+                      <%= sort_link(@wq, :page_sts) do %>
                         <span><%= icon('fas', 'link', 'Staff Page') %></span>
                       <% end %>
                     </td>
@@ -777,7 +777,7 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :cs_sts) do %>
+                      <%= sort_link(@wq, :cs_sts) do %>
                         <span><%= icon('fas', 'users', 'Staff Mined') %></span>
                       <% end %>
                     </td>
@@ -798,13 +798,13 @@
                 <table class="ransack-table table table-bordered text-nowrap">
                   <tr>
                     <td>
-                      <%= sort_link(@q, :url_date) do %>
+                      <%= sort_link(@wq, :url_date) do %>
                         <span><%= icon('fas', 'home', 'URL Verified') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :web_changed) do %>
+                      <%= sort_link(@wq, :web_changed) do %>
                         <span><%= icon('fas', 'home', 'URL Changed') %></span>
                       <% end %>
                     </td>
@@ -812,13 +812,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :wx_date) do %>
+                      <%= sort_link(@wq, :wx_date) do %>
                         <span><%= icon('fas', 'home', 'URL Inactive') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :tmp_date) do %>
+                      <%= sort_link(@wq, :tmp_date) do %>
                         <span><%= icon('fab', 'firstdraft', 'Template Verified') %></span>
                       <% end %>
                     </td>
@@ -826,13 +826,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :page_date) do %>
+                      <%= sort_link(@wq, :page_date) do %>
                         <span><%= icon('fas', 'link', 'Staff Page Verified') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :cs_date) do %>
+                      <%= sort_link(@wq, :cs_date) do %>
                         <span><%= icon('fas', 'users', 'Staff Mined') %></span>
                       <% end %>
                     </td>
@@ -840,13 +840,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :created_at) do %>
+                      <%= sort_link(@wq, :created_at) do %>
                         <span><%= icon('fas', 'external-link-alt', 'Web Created') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :updated_at) do %>
+                      <%= sort_link(@wq, :updated_at) do %>
                         <span><%= icon('fas', 'external-link-alt', 'Web Updated') %></span>
                       <% end %>
                     </td>
@@ -877,13 +877,13 @@
                 <table class="ransack-table table table-bordered text-nowrap">
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_act_name) do %>
+                      <%= sort_link(@wq, :acts_act_name) do %>
                         <span><%= icon('fas', 'building', 'Account Name') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_gp_id) do %>
+                      <%= sort_link(@wq, :acts_gp_id) do %>
                         <span><%= icon('fab', 'google', 'GP ID') %></span>
                       <% end %>
                     </td>
@@ -891,13 +891,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_gp_indus) do %>
+                      <%= sort_link(@wq, :acts_gp_indus) do %>
                         <span><%= icon('fab', 'google', 'GP Industry') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_phone) do %>
+                      <%= sort_link(@wq, :acts_phone) do %>
                         <span><%= icon('fas', 'star', 'Phone') %></span>
                       <% end %>
                     </td>
@@ -905,13 +905,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_street) do %>
+                      <%= sort_link(@wq, :acts_street) do %>
                         <span><%= icon('fas', 'star', 'Street') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_city) do %>
+                      <%= sort_link(@wq, :acts_city) do %>
                         <span><%= icon('fas', 'star', 'City') %></span>
                       <% end %>
                     </td>
@@ -919,13 +919,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_state) do %>
+                      <%= sort_link(@wq, :acts_state) do %>
                         <span><%= icon('fas', 'star', 'State') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_zip) do %>
+                      <%= sort_link(@wq, :acts_zip) do %>
                         <span><%= icon('fas', 'star', 'Zip') %></span>
                       <% end %>
                     </td>
@@ -933,13 +933,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_lat) do %>
+                      <%= sort_link(@wq, :acts_lat) do %>
                         <span><%= icon('fas', 'star', 'Lat') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_lon) do %>
+                      <%= sort_link(@wq, :acts_lon) do %>
                         <span><%= icon('fas', 'star', 'Lon') %></span>
                       <% end %>
                     </td>
@@ -958,7 +958,7 @@
                 <table class="ransack-table table table-bordered text-nowrap">
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_gp_sts) do %>
+                      <%= sort_link(@wq, :acts_gp_sts) do %>
                         <span><%= icon('fab', 'google', 'GP') %></span>
                       <% end %>
                     </td>
@@ -979,13 +979,13 @@
                 <table class="ransack-table table table-bordered text-nowrap">
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_gp_date) do %>
+                      <%= sort_link(@wq, :acts_gp_date) do %>
                         <span><%= icon('fab', 'google', 'GP') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_ax_date) do %>
+                      <%= sort_link(@wq, :acts_ax_date) do %>
                         <span><%= icon('fab', 'google', 'Account Inactive') %></span>
                       <% end %>
                     </td>
@@ -993,13 +993,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_adr_changed) do %>
+                      <%= sort_link(@wq, :acts_adr_changed) do %>
                         <span><%= icon('fab', 'google', 'adr_changed') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_act_changed) do %>
+                      <%= sort_link(@wq, :acts_act_changed) do %>
                         <span><%= icon('fab', 'google', 'act_changed') %></span>
                       <% end %>
                     </td>
@@ -1007,13 +1007,13 @@
 
                   <tr>
                     <td>
-                      <%= sort_link(@q, :acts_created_at) do %>
+                      <%= sort_link(@wq, :acts_created_at) do %>
                         <span><%= icon('fab', 'google', 'created_at') %></span>
                       <% end %>
                     </td>
 
                     <td>
-                      <%= sort_link(@q, :acts_updated_at) do %>
+                      <%= sort_link(@wq, :acts_updated_at) do %>
                         <span><%= icon('fab', 'google', 'updated_at') %></span>
                       <% end %>
                     </td>

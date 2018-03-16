@@ -8,11 +8,6 @@
 
 <p id="notice"><%= notice %></p>
 
-<!-- <div class="row"> -->
-  <%#= render 'webs/webs_search_partial', search: @q %>
-<!-- </div> -->
-
-
 <div class="row">
   <div class="col-md-12">
     <h5>Web Based View (Results: <%= @webs.count %>)</h5>
@@ -78,9 +73,3 @@
 
   <% end %>
 </div>
-
-
-<br>
-<%= will_paginate @webs %>
-<br>
-<br>

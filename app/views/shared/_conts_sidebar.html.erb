@@ -1,0 +1,9 @@
+<nav id="sidebar" class="container">
+
+  <% if @cq.present? %>
+    <%= search_form_for(@cq, url: search_conts_path, html: {method: :post, class: 'form'}) do |f| %>
+      <h5>hi!!!!</h5>
+    <% end %>
+  <% end %>
+
+</nav>
