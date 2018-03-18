@@ -1,4 +1,5 @@
-<nav id="sidebar" class="container">
+<nav class="container sidebar">
+
 
   <% if @wq.present? %>
     <%= search_form_for(@wq, url: search_webs_path, html: {method: :post, class: 'form'}) do |f| %>
@@ -29,314 +30,243 @@
           </a>
           <ul class="collapse" id="web-criteria">
 
-            <!-- Search Webs (General-1) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-webs-general" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'list-alt', 'General') %>
-              </a>
+            <div class="panel sidebar-panel">
 
-              <ul class="collapse list-unstyled" id="search-criteria-webs-general">
-
-
-                <!-- Search Webs (General-Table) -->
-                <table class="ransack-table table table-bordered text-nowrap text-center">
-                    <thead>
-                      <tr>
-                        <th>Category</th>
-                        <th>Criteria</th>
-                      </tr>
-                    </thead>
-
-                    <!-- Search Webs (URL) -->
+              <!-- Search Webs (General-Table) -->
+              <table class="ransack-table table table-bordered text-nowrap text-center">
+                  <thead>
                     <tr>
-                      <td>URL</td>
-                      <td><%= f.search_field :url_cont_any %></td>
+                      <th>Category</th>
+                      <th>Criteria</th>
                     </tr>
+                  </thead>
 
-                    <!-- Search Webs (FWD URL) -->
-                    <tr>
-                      <td>FWD URL</td>
-                      <td><%= f.search_field :fwd_url_cont_any %></td>
-                    </tr>
+                  <!-- Search Webs (URL) -->
+                  <tr>
+                    <td>URL</td>
+                    <td><%= f.search_field :url_cont_any %></td>
+                  </tr>
 
-                  </table>
+                  <!-- Search Webs (FWD URL) -->
+                  <tr>
+                    <td>FWD URL</td>
+                    <td><%= f.search_field :fwd_url_cont_any %></td>
+                  </tr>
 
-                <!-- Search Webs (Template Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#web-criteria-temp-name" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fab', 'firstdraft', 'Template') %>
-                  </a>
-                  <ul class="collapse" id="web-criteria-temp-name">
-                    <div class="row form-check-row">
-                      <% temps&.each_with_index do |temp_name, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                            <%= temp_name %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                            <%= temp_name %>
-                          </div>
-                        <% end %>
-                      <% end %>
+                </table>
+
+              <!-- Search Webs (Template Check Boxes) -->
+              <p class="text-center"><strong>Template</strong></p>
+              <div class="row form-check-row">
+                <% temps&.each_with_index do |temp_name, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                      <%= temp_name %>
                     </div>
-                  </ul>
-                </li>
-
-                <!-- Search Webs (Franchise Brand Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#web-criteria-brand-name" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'car', 'Franchise Brand') %>
-                  </a>
-                  <ul class="collapse" id="web-criteria-brand-name">
-                    <div class="row form-check-row">
-                      <% brands&.each_with_index do |brand_name, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
-                            <%= brand_name %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
-                            <%= brand_name %>
-                          </div>
-                        <% end %>
-                      <% end %>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                      <%= temp_name %>
                     </div>
-                  </ul>
-                </li>
+                  <% end %>
+                <% end %>
+              </div>
 
-              </ul>
-            </li>
-
-            <!-- Search Webs (Status-2) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-webs-status" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'check-square', 'Status') %>
-              </a>
-              <ul class="collapse list-unstyled" id="search-criteria-webs-status">
-
-                <!-- Search Webs (Cop Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#web-criteria-cop" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'CoPilot') %>
-                  </a>
-                  <ul class="collapse" id="web-criteria-cop">
-                    <div class="row form-check-row">
-                      <% cops&.each_with_index do |cop, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[cop_in][]', cop) %>
-                            <%= cop %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[cop_in][]', cop) %>
-                            <%= cop %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-
-                <!-- Search Webs (url_sts Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#web-criteria-url-sts" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'url_sts') %>
-                  </a>
-                  <ul class="collapse" id="web-criteria-url-sts">
-                    <div class="row form-check-row">
-                      <% url_stss&.each_with_index do |url_sts, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[url_sts_in][]', url_sts) %>
-                            <%= url_sts %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[url_sts_in][]', url_sts) %>
-                            <%= url_sts %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-
-                <!-- Search Webs (temp_sts Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#web-criteria-temp-sts" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'temp_sts') %>
-                  </a>
-                  <ul class="collapse" id="web-criteria-temp-sts">
-                    <div class="row form-check-row">
-                      <% temp_stss&.each_with_index do |temp_sts, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
-                            <%= temp_sts %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
-                            <%= temp_sts %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-
-                <!-- Search Webs (page_sts Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#web-criteria-page-sts" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'page_sts') %>
-                  </a>
-                  <ul class="collapse" id="web-criteria-page-sts">
-                    <div class="row form-check-row">
-                      <% page_stss&.each_with_index do |page_sts, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[page_sts_in][]', page_sts) %>
-                            <%= page_sts %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[page_sts_in][]', page_sts) %>
-                            <%= page_sts %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-
-                <!-- Search Webs (cs_sts Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#web-criteria-cs-sts" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'cs_sts') %>
-                  </a>
-                  <ul class="collapse" id="web-criteria-cs-sts">
-                    <div class="row form-check-row">
-                      <% cs_stss&.each_with_index do |cs_sts, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
-                            <%= cs_sts %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
-                            <%= cs_sts %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-
-            <!-- Search Webs (Dates-3) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-webs-dates" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'calendar-alt', 'Dates') %>
-              </a>
-
-              <ul class="collapse list-unstyled" id="search-criteria-webs-dates">
-
-                <!-- Search Webs (Dates-Table) -->
-                <div class="row">
-                  <table class="ransack-table table table-bordered text-nowrap text-center">
-                    <thead>
-                      <tr>
-                        <th>Category</th>
-                        <th>Start</th>
-                        <th>End</th>
-                      </tr>
-                    </thead>
-
-                    <!-- URL Verified -->
-                    <tr>
-                      <td>URL Verified</td>
-                      <td><%= f.date_field :url_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :url_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- Template -->
-                    <tr>
-                      <td>Template Verified</td>
-                      <td><%= f.date_field :tmp_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :tmp_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- Staff Page -->
-                    <tr>
-                      <td>Staff Page Verified</td>
-                      <td><%= f.date_field :page_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :page_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- Staff Mined -->
-                    <tr>
-                      <td>Staff Verified</td>
-                      <td><%= f.date_field :cs_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :cs_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- URL Updated -->
-                    <tr>
-                      <td>URL Updated</td>
-                      <td><%= f.date_field :web_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :web_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- URL Inactive -->
-                    <tr>
-                      <td>URL Inactive</td>
-                      <td><%= f.date_field :wx_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :wx_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- Web Updated -->
-                    <tr>
-                      <td>Web Updated</td>
-                      <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- Web Created -->
-                    <tr>
-                      <td>Web Created</td>
-                      <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                  </table>
+              <!-- Search Webs (Franchise Brand Check Boxes) -->
+              <p class="text-center"><strong>Brand</strong></p>
+              <div class="row form-check-row">
+                  <% brands&.each_with_index do |brand_name, index| %>
+                    <% if index.odd? %>
+                      <!-- LEFT -->
+                      <div class="col-md-6 form-check">
+                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                        <%= brand_name %>
+                      </div>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <div class="col-md-6 form-check">
+                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                        <%= brand_name %>
+                      </div>
+                    <% end %>
+                  <% end %>
                 </div>
 
-              </ul>
-            </li>
+              <!-- Search Webs (Cop Check Boxes) -->
+              <p class="text-center"><strong>CoPilot</strong></p>
+              <div class="row form-check-row">
+                <% cops&.each_with_index do |cop, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[cop_in][]', cop) %>
+                      <%= cop %>
+                    </div>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[cop_in][]', cop) %>
+                      <%= cop %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
 
+              <!-- Search Webs (url_sts Check Boxes) -->
+              <p class="text-center"><strong>URL Status</strong></p>
+              <div class="row form-check-row">
+                    <% url_stss&.each_with_index do |url_sts, index| %>
+                      <% if index.odd? %>
+                        <!-- LEFT -->
+                        <div class="col-md-6 form-check">
+                          <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                          <%= url_sts %>
+                        </div>
+                      <% else %>
+                        <!-- RIGHT -->
+                        <div class="col-md-6 form-check">
+                          <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                          <%= url_sts %>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
 
+              <!-- Search Webs (temp_sts Check Boxes) -->
+              <p class="text-center"><strong>Template Status</strong></p>
+              <div class="row form-check-row">
+                <% temp_stss&.each_with_index do |temp_sts, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                      <%= temp_sts %>
+                    </div>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                      <%= temp_sts %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <!-- Search Webs (page_sts Check Boxes) -->
+              <p class="text-center"><strong>Staff Page Status</strong></p>
+              <div class="row form-check-row">
+                <% page_stss&.each_with_index do |page_sts, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                      <%= page_sts %>
+                    </div>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                      <%= page_sts %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <!-- Search Webs (cs_sts Check Boxes) -->
+              <p class="text-center"><strong>Staff Mined Status</strong></p>
+              <div class="row form-check-row">
+                <% cs_stss&.each_with_index do |cs_sts, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                      <%= cs_sts %>
+                    </div>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                      <%= cs_sts %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <!-- Search Webs (Dates-Table) -->
+              <p class="text-center"><strong>Dates</strong></p>
+              <div class="row">
+                <table class="ransack-table table table-bordered text-nowrap text-center">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Start</th>
+                      <th>End</th>
+                    </tr>
+                  </thead>
+
+                  <!-- URL Verified -->
+                  <tr>
+                    <td>URL Verified</td>
+                    <td><%= f.date_field :url_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :url_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Template -->
+                  <tr>
+                    <td>Template Verified</td>
+                    <td><%= f.date_field :tmp_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :tmp_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Staff Page -->
+                  <tr>
+                    <td>Staff Page Verified</td>
+                    <td><%= f.date_field :page_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :page_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Staff Mined -->
+                  <tr>
+                    <td>Staff Verified</td>
+                    <td><%= f.date_field :cs_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :cs_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- URL Updated -->
+                  <tr>
+                    <td>URL Updated</td>
+                    <td><%= f.date_field :web_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_changed_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- URL Inactive -->
+                  <tr>
+                    <td>URL Inactive</td>
+                    <td><%= f.date_field :wx_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :wx_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Web Updated -->
+                  <tr>
+                    <td>Web Updated</td>
+                    <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Web Created -->
+                  <tr>
+                    <td>Web Created</td>
+                    <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                </table>
+              </div>
+
+            </div>
           </ul>
         </li>
 
@@ -584,102 +514,6 @@
           </ul>
         </li>
 
-
-        <!-- SEARCH CONTACTS - START -->
-        <li>
-          <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
-            <%= icon('fas', 'users', 'Contact Criteria') %>
-          </a>
-
-          <ul class="collapse list-unstyled" id="cont-criteria">
-
-            <!-- Search Contacts (General-1) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-conts-general" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'list-alt', 'General') %>
-              </a>
-
-              <ul class="collapse list-unstyled" id="search-criteria-conts-general">
-                <!-- Search Criteria Here -->
-              </ul>
-            </li>
-
-            <!-- Search Contacts (Status-2) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-conts-status" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'check-square', 'Status') %>
-              </a>
-
-              <ul class="collapse list-unstyled" id="search-criteria-conts-status">
-                  <!-- Search Criteria Here -->
-              </ul>
-            </li>
-
-            <!-- Search Contacts (Dates-3) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-conts-dates" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'calendar-alt', 'Dates') %>
-              </a>
-              <ul class="collapse list-unstyled" id="search-criteria-conts-dates">
-                <!-- Search Conts (Dates-Table) -->
-                <div class="row">
-                  <table class="ransack-table table table-bordered text-nowrap text-center">
-                    <thead>
-                      <tr>
-                        <th>Category</th>
-                        <th>Start</th>
-                        <th>End</th>
-                      </tr>
-                    </thead>
-
-                    <!-- cs_date -->
-                    <tr>
-                      <td>email_changed</td>
-                      <td><%= f.date_field :conts_email_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :conts_email_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- cont_changed -->
-                    <tr>
-                      <td>cont_changed</td>
-                      <td><%= f.date_field :conts_cont_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :conts_cont_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- job_changed -->
-                    <tr>
-                      <td>job_changed</td>
-                      <td><%= f.date_field :conts_job_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :conts_job_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- cx_date -->
-                    <tr>
-                      <td>cx_date</td>
-                      <td><%= f.date_field :conts_cx_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :conts_cx_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- updated_at -->
-                    <tr>
-                      <td>Contact Updated</td>
-                      <td><%= f.date_field :conts_updated_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :conts_updated_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- created_at -->
-                    <tr>
-                      <td>Contact Created</td>
-                      <td><%= f.date_field :conts_created_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :conts_created_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-                  </table>
-                </div>
-              </ul>
-            </li>
-
-          </ul>
-        </li>
       </ul>
 
 
@@ -697,164 +531,152 @@
           <a class="dropdown-toggle" href="#sort-options-webs" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'external-link-alt', 'Web Sort') %>
           </a>
-
           <ul class="collapse" id="sort-options-webs">
-
             <!-- Sort Webs (General-1) -->
-            <li>
-              <a class="dropdown-toggle" href="#sort-options-webs-general" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'list-alt', 'General') %>
-              </a>
-              <ul class="collapse list-unstyled" id="sort-options-webs-general">
-                <!-- Sort Table - Webs (General) -->
-                <table class="ransack-table table table-bordered text-nowrap">
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :url) do %>
-                        <span><%= icon('fas', 'home', 'URL') %></span>
-                      <% end %>
-                    </td>
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">General</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :url) do %>
+                    <span><%= icon('fas', 'home', 'URL') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :fwd_url) do %>
-                        <span><%= icon('fas', 'home', 'Redirected URL') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :fwd_url) do %>
+                    <span><%= icon('fas', 'home', 'Redirected URL') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :brands_brand_name) do %>
-                        <span><%= icon('fas', 'car', 'Franchise Brand') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :brands_brand_name) do %>
+                    <span><%= icon('fas', 'car', 'Franchise Brand') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :temp_name) do %>
-                        <span><%= icon('fab', 'firstdraft', 'Template') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
-                </table>
-              </ul>
-            </li>
+                <td>
+                  <%= sort_link(@wq, :temp_name) do %>
+                    <span><%= icon('fab', 'firstdraft', 'Template') %></span>
+                  <% end %>
+                </td>
+              </tr>
+            </table>
 
             <!-- Sort Webs (Status-2) -->
-            <li>
-              <a class="dropdown-toggle" href="#sort-options-webs-status" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'check-square', 'Status') %>
-              </a>
-              <ul class="collapse list-unstyled" id="sort-options-webs-status">
-                <!-- Sort Table - Webs (Status) -->
-                <table class="ransack-table table table-bordered text-nowrap">
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :url_sts) do %>
-                        <span><%= icon('fas', 'home', 'URL') %></span>
-                      <% end %>
-                    </td>
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Status</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :url_sts) do %>
+                    <span><%= icon('fas', 'home', 'URL') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :cop) do %>
-                        <span><%= icon('fas', 'star', 'CoPilot') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :cop) do %>
+                    <span><%= icon('fas', 'star', 'CoPilot') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :temp_sts) do %>
-                        <span><%= icon('fab', 'firstdraft', 'Template') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :temp_sts) do %>
+                    <span><%= icon('fab', 'firstdraft', 'Template') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :page_sts) do %>
-                        <span><%= icon('fas', 'link', 'Staff Page') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :page_sts) do %>
+                    <span><%= icon('fas', 'link', 'Staff Page') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :cs_sts) do %>
-                        <span><%= icon('fas', 'users', 'Staff Mined') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :cs_sts) do %>
+                    <span><%= icon('fas', 'users', 'Staff Mined') %></span>
+                  <% end %>
+                </td>
 
-                    <td></td>
-                  </tr>
-                </table>
-              </ul>
-            </li>
+                <td></td>
+              </tr>
+            </table>
 
             <!-- Sort Webs (Dates-3) -->
-            <li>
-              <a class="dropdown-toggle" href="#sort-options-webs-dates" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'calendar-alt', 'Dates') %>
-              </a>
-              <ul class="collapse list-unstyled" id="sort-options-webs-dates">
-                <!-- Sort Table - Webs (Dates) -->
-                <table class="ransack-table table table-bordered text-nowrap">
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :url_date) do %>
-                        <span><%= icon('fas', 'home', 'URL Verified') %></span>
-                      <% end %>
-                    </td>
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Dates</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :url_date) do %>
+                    <span><%= icon('fas', 'home', 'URL Verified') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :web_changed) do %>
-                        <span><%= icon('fas', 'home', 'URL Changed') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :web_changed) do %>
+                    <span><%= icon('fas', 'home', 'URL Changed') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :wx_date) do %>
-                        <span><%= icon('fas', 'home', 'URL Inactive') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :wx_date) do %>
+                    <span><%= icon('fas', 'home', 'URL Inactive') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :tmp_date) do %>
-                        <span><%= icon('fab', 'firstdraft', 'Template Verified') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :tmp_date) do %>
+                    <span><%= icon('fab', 'firstdraft', 'Template Verified') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :page_date) do %>
-                        <span><%= icon('fas', 'link', 'Staff Page Verified') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :page_date) do %>
+                    <span><%= icon('fas', 'link', 'Staff Page Verified') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :cs_date) do %>
-                        <span><%= icon('fas', 'users', 'Staff Mined') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :cs_date) do %>
+                    <span><%= icon('fas', 'users', 'Staff Mined') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :created_at) do %>
-                        <span><%= icon('fas', 'external-link-alt', 'Web Created') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :created_at) do %>
+                    <span><%= icon('fas', 'external-link-alt', 'Web Created') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :updated_at) do %>
-                        <span><%= icon('fas', 'external-link-alt', 'Web Updated') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
-                </table>
-              </ul>
-            </li>
-
+                <td>
+                  <%= sort_link(@wq, :updated_at) do %>
+                    <span><%= icon('fas', 'external-link-alt', 'Web Updated') %></span>
+                  <% end %>
+                </td>
+              </tr>
+            </table>
           </ul>
         </li>
 
@@ -866,164 +688,154 @@
             <%= icon('fas', 'building', 'Account Sort') %>
           </a>
           <ul class="collapse" id="sort-options-acts">
-
             <!-- Sort Acts (General-1) -->
-            <li>
-              <a class="dropdown-toggle" href="#sort-options-acts-general" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'list-alt', 'General') %>
-              </a>
-              <ul class="collapse list-unstyled" id="sort-options-acts-general">
-                <!-- Sort Table - Acts (General) -->
-                <table class="ransack-table table table-bordered text-nowrap">
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_act_name) do %>
-                        <span><%= icon('fas', 'building', 'Account Name') %></span>
-                      <% end %>
-                    </td>
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">General</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_act_name) do %>
+                    <span><%= icon('fas', 'building', 'Account Name') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_gp_id) do %>
-                        <span><%= icon('fab', 'google', 'GP ID') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :acts_gp_id) do %>
+                    <span><%= icon('fab', 'google', 'GP ID') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_gp_indus) do %>
-                        <span><%= icon('fab', 'google', 'GP Industry') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_gp_indus) do %>
+                    <span><%= icon('fab', 'google', 'GP Industry') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_phone) do %>
-                        <span><%= icon('fas', 'star', 'Phone') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :acts_phone) do %>
+                    <span><%= icon('fas', 'star', 'Phone') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_street) do %>
-                        <span><%= icon('fas', 'star', 'Street') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_street) do %>
+                    <span><%= icon('fas', 'star', 'Street') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_city) do %>
-                        <span><%= icon('fas', 'star', 'City') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :acts_city) do %>
+                    <span><%= icon('fas', 'star', 'City') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_state) do %>
-                        <span><%= icon('fas', 'star', 'State') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_state) do %>
+                    <span><%= icon('fas', 'star', 'State') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_zip) do %>
-                        <span><%= icon('fas', 'star', 'Zip') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+                <td>
+                  <%= sort_link(@wq, :acts_zip) do %>
+                    <span><%= icon('fas', 'star', 'Zip') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_lat) do %>
-                        <span><%= icon('fas', 'star', 'Lat') %></span>
-                      <% end %>
-                    </td>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_lat) do %>
+                    <span><%= icon('fas', 'star', 'Lat') %></span>
+                  <% end %>
+                </td>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_lon) do %>
-                        <span><%= icon('fas', 'star', 'Lon') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
-                </table>
-              </ul>
-            </li>
+                <td>
+                  <%= sort_link(@wq, :acts_lon) do %>
+                    <span><%= icon('fas', 'star', 'Lon') %></span>
+                  <% end %>
+                </td>
+              </tr>
+            </table>
 
             <!-- Sort Acts (Status-2) -->
-            <li>
-              <a class="dropdown-toggle" href="#sort-options-acts-status" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'check-square', 'Status') %>
-              </a>
-              <ul class="collapse list-unstyled" id="sort-options-acts-status">
-                <!-- Sort Table - Acts (Status) -->
-                <table class="ransack-table table table-bordered text-nowrap">
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_gp_sts) do %>
-                        <span><%= icon('fab', 'google', 'GP') %></span>
-                      <% end %>
-                    </td>
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Status</th>
+                </tr>
+              </thead>
 
-                    <td></td>
-                  </tr>
-                </table>
-              </ul>
-            </li>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_gp_sts) do %>
+                    <span><%= icon('fab', 'google', 'GP') %></span>
+                  <% end %>
+                </td>
+
+                <td></td>
+              </tr>
+            </table>
 
             <!-- Sort Acts (Dates-3) -->
-            <li>
-              <a class="dropdown-toggle" href="#sort-options-acts-dates" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'calendar-alt', 'Dates') %>
-              </a>
-              <ul class="collapse list-unstyled" id="sort-options-acts-dates">
-                <!-- Sort Table - Acts (Dates) -->
-                <table class="ransack-table table table-bordered text-nowrap">
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_gp_date) do %>
-                        <span><%= icon('fab', 'google', 'GP') %></span>
-                      <% end %>
-                    </td>
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Dates</th>
+                </tr>
+              </thead>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_ax_date) do %>
-                        <span><%= icon('fab', 'google', 'Account Inactive') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_gp_date) do %>
+                    <span><%= icon('fab', 'google', 'GP') %></span>
+                  <% end %>
+                </td>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_adr_changed) do %>
-                        <span><%= icon('fab', 'google', 'adr_changed') %></span>
-                      <% end %>
-                    </td>
+                <td>
+                  <%= sort_link(@wq, :acts_ax_date) do %>
+                    <span><%= icon('fab', 'google', 'Account Inactive') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_act_changed) do %>
-                        <span><%= icon('fab', 'google', 'act_changed') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_adr_changed) do %>
+                    <span><%= icon('fab', 'google', 'adr_changed') %></span>
+                  <% end %>
+                </td>
 
-                  <tr>
-                    <td>
-                      <%= sort_link(@wq, :acts_created_at) do %>
-                        <span><%= icon('fab', 'google', 'created_at') %></span>
-                      <% end %>
-                    </td>
+                <td>
+                  <%= sort_link(@wq, :acts_act_changed) do %>
+                    <span><%= icon('fab', 'google', 'act_changed') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-                    <td>
-                      <%= sort_link(@wq, :acts_updated_at) do %>
-                        <span><%= icon('fab', 'google', 'updated_at') %></span>
-                      <% end %>
-                    </td>
-                  </tr>
+              <tr>
+                <td>
+                  <%= sort_link(@wq, :acts_created_at) do %>
+                    <span><%= icon('fab', 'google', 'created_at') %></span>
+                  <% end %>
+                </td>
 
-                </table>
+                <td>
+                  <%= sort_link(@wq, :acts_updated_at) do %>
+                    <span><%= icon('fab', 'google', 'updated_at') %></span>
+                  <% end %>
+                </td>
+              </tr>
 
-              </ul>
-            </li>
-
+            </table>
           </ul>
         </li>
 

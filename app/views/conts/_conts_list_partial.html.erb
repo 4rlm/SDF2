@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<!-- ## ORIGINAL BELOW -->
+<div class="panel outer-panel list-view">
+  <table class="table table-bordered table-hover table-striped text-nowrap list-view">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Phone</th>
+      <th>email</th>
+      <th>URL</th>
+      <th>Created</th>
+      <th>Verified</th>
+      <th>Email 𝚫</th>
+      <th>Job 𝚫</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @conts&.each do |cont| %>
+      <tr>
+        <td><%= cont.full_name %></td>
+        <td><%= cont.job_title %></td>
+        <td><%= cont.job_desc %></td>
+        <td><%= cont.phone %></td>
+        <td><%= cont.email %></td>
+        <td><%= cont.web.url %></td>
+        <td><%= cont.created_at&.strftime('%x') %></td>
+        <td><%= cont.cs_date&.strftime('%x') %></td>
+        <td><%= cont.email_changed&.strftime('%x') %></td>
+        <td><%= cont.job_changed&.strftime('%x') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>

@@ -1,8 +1,261 @@
-<nav id="sidebar" class="container">
+<nav class="container sidebar">
 
   <% if @cq.present? %>
     <%= search_form_for(@cq, url: search_conts_path, html: {method: :post, class: 'form'}) do |f| %>
-      <h5>hi!!!!</h5>
+
+      <!-- SEARCH SECTION - START -->
+      <h5 class="text-center sidebar-header">Search Criteria</h5>
+      <ul class="components">
+        <!-- SEARCH CONTCONTS - START -->
+        <li>
+          <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
+            <%= icon('fas', 'users', 'Contact Criteria') %>
+          </a>
+          <ul class="collapse list-unstyled" id="cont-criteria">
+            <!-- Search Contacts (General-1) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-conts-general" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'list-alt', 'General') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-conts-general">
+                <!-- Search Criteria Here -->
+              </ul>
+            </li>
+
+            <!-- Search Contacts (Status-2) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-conts-status" data-toggle="collapse" aria-expanded="false">
+                <%= icon('far', 'check-square', 'Status') %>
+              </a>
+
+              <ul class="collapse list-unstyled" id="search-criteria-conts-status">
+                  <!-- Search Criteria Here -->
+              </ul>
+            </li>
+
+            <!-- Search Contacts (Dates-3) -->
+            <li>
+              <a class="dropdown-toggle" href="#search-criteria-conts-dates" data-toggle="collapse" aria-expanded="false">
+                <%= icon('fas', 'calendar-alt', 'Dates') %>
+              </a>
+              <ul class="collapse list-unstyled" id="search-criteria-conts-dates">
+                <!-- Search Conts (Dates-Table) -->
+                <div class="row">
+                  <table class="ransack-table table table-bordered text-nowrap text-center">
+                    <thead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Start</th>
+                        <th>End</th>
+                      </tr>
+                    </thead>
+
+                    <!-- cs_date -->
+                    <tr>
+                      <td>email_changed</td>
+                      <td><%= f.date_field :email_changed_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :email_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- cont_changed -->
+                    <tr>
+                      <td>cont_changed</td>
+                      <td><%= f.date_field :cont_changed_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :cont_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- job_changed -->
+                    <tr>
+                      <td>job_changed</td>
+                      <td><%= f.date_field :job_changed_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :job_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- cx_date -->
+                    <tr>
+                      <td>cx_date</td>
+                      <td><%= f.date_field :cx_date_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :cx_date_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- updated_at -->
+                    <tr>
+                      <td>Contact Updated</td>
+                      <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+
+                    <!-- created_at -->
+                    <tr>
+                      <td>Contact Created</td>
+                      <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
+                      <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
+                    </tr>
+                  </table>
+                </div>
+              </ul>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+
+
+      <!-- SORT SECTION - START -->
+      <h5 class="text-center sidebar-header">
+        <%= icon('fas', 'sort', 'Sort Options', class: 'fa-pull-right') %>
+      </h5>
+
+      <ul class="components">
+
+        <!-- SORT CONTS - START -->
+        <li>
+          <a class="dropdown-toggle" href="#sort-options-acts" data-toggle="collapse" aria-expanded="false">
+            <%= icon('fas', 'users', 'Contact Sort') %>
+          </a>
+          <ul class="collapse" id="sort-options-acts">
+
+            <!-- Sort Conts (General-1) -->
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">General</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :full_name) do %>
+                    <span><%= icon('fas', 'user', 'full_name') %></span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= sort_link(@cq, :last_name) do %>
+                    <span><%= icon('fas', 'user', 'last_name') %></span>
+                  <% end %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :job_title) do %>
+                    <span><%= icon('fas', 'user', 'job_title') %></span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= sort_link(@cq, :job_desc) do %>
+                    <span><%= icon('fas', 'star', 'job_desc') %></span>
+                  <% end %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :email) do %>
+                    <span><%= icon('fas', 'star', 'email') %></span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= sort_link(@cq, :phone) do %>
+                    <span><%= icon('fas', 'star', 'phone') %></span>
+                  <% end %>
+                </td>
+              </tr>
+
+              </tr>
+            </table>
+
+            <!-- Sort Conts (Status-2) -->
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Status</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :cs_sts) do %>
+                    <span><%= icon('fas', 'user', 'cs_sts') %></span>
+                  <% end %>
+                </td>
+
+                <td></td>
+              </tr>
+            </table>
+
+            <!-- Sort Conts (Dates-3) -->
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Dates</th>
+                </tr>
+              </thead>
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :cs_date) do %>
+                    <span><%= icon('fas', 'user', 'cs_date') %></span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= sort_link(@cq, :email_changed) do %>
+                    <span><%= icon('fas', 'user', 'email_changed') %></span>
+                  <% end %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :cont_changed) do %>
+                    <span><%= icon('fas', 'user', 'cont_changed') %></span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= sort_link(@cq, :job_changed) do %>
+                    <span><%= icon('fas', 'user', 'job_changed') %></span>
+                  <% end %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :cx_date) do %>
+                    <span><%= icon('fas', 'user', 'cx_date') %></span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= sort_link(@cq, :created_at) do %>
+                    <span><%= icon('fas', 'user', 'created_at') %></span>
+                  <% end %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <%= sort_link(@cq, :updated_at) do %>
+                    <span><%= icon('fas', 'user', 'updated_at') %></span>
+                  <% end %>
+                </td>
+
+                <td></td>
+              </tr>
+            </table>
+
+          </ul>
+        </li>
+
+      </ul>
+
+
+      <div class="actions"><%= f.submit "Search" %></div>
+      <div class=""><%= link_to("Clear Search", request.path) %></div>
+
     <% end %>
   <% end %>
 

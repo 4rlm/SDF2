@@ -1,0 +1,5 @@
+<% if @wq.present? %>
+  <%= render partial: 'shared/webs_sidebar' %>
+<% elsif @cq.present? %>
+  <%= render partial: 'shared/conts_sidebar' %>
+<% end%>

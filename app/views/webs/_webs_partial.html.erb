@@ -1,10 +1,4 @@
-<!-- <nav class="navbar navbar-default"> -->
-  <!-- <div class="container-fluid"> -->
-    <%= render partial: 'shared/sidebar_btn' %>
-    <%#= render partial: 'shared/flash' %>
-  <!-- </div> -->
-<!-- </nav> -->
-
+<%= render partial: 'shared/webs_sidebar_btn' %>
 
 <p id="notice"><%= notice %></p>
 
@@ -64,12 +58,14 @@
       </div>
     </div>
 
+
     <div class='row contWrap' style="display:none" id="<%= web.id %>">
       <% if web.conts.any? %>
         <% @conts = web.conts %>
-        <%= render 'conts/conts_partial', conts: @conts %>
+        <%= render 'conts/conts_list_partial', conts: @conts %>
       <% end %>
     </div>
+
 
   <% end %>
 </div>

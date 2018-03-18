@@ -1,0 +1,75 @@
+<%= render partial: 'shared/conts_sidebar_btn' %>
+
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+  <div class="col-md-12">
+    <h5>Contacts (Results: <%= @conts.count %>)</h5>
+  </div>
+</div>
+
+
+<div class="panel outer-panel list-view">
+  <% @conts&.each do |cont| %>
+
+  <div class="row outer-list-row">
+    <div class="col-4">
+      <table class="table">
+        <tr>
+          <td>Name:</td>
+          <td><%= cont.full_name %></td>
+        </tr>
+        <tr>
+          <td>Job:</td>
+          <td><%= cont.job_title %> | <%= cont.job_desc %> </td>
+        </tr>
+        <tr>
+          <td>E/P:</td>
+          <td><%= cont.phone %> | <%= cont.email %></td>
+        </tr>
+
+        <tr>
+          <td>URL:</td>
+          <td><%= cont.web.url %></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="col-2">
+      <table class="table">
+        <tr>
+          <td>Created:</td>
+          <td><%= cont.created_at&.strftime('%x') %></td>
+        </tr>
+        <tr>
+          <td>Verified:</td>
+          <td><%= cont.cs_date&.strftime('%x') %></td>
+        </tr>
+        <tr>
+          <td>Email 𝚫:</td>
+          <td><%= cont.email_changed&.strftime('%x') %></td>
+        </tr>
+        <tr>
+          <td>Job 𝚫:</td>
+          <td><%= cont.job_changed&.strftime('%x') %></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="col-6">
+      <table class="table">
+
+        <% acts = cont.acts %>
+        <% acts&.each do |act| %>
+          <tr>
+            <td><%= act.act_name %>:</td>
+            <td><%= act.full_address %></td>
+          </tr>
+        <% end %>
+
+      </table>
+    </div>
+  </div>
+
+  <% end %>
+</div>

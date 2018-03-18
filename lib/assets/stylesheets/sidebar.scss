@@ -45,7 +45,7 @@
 /* ---------------------------------------------------
   SIDEBAR STYLE
 ----------------------------------------------------- */
-#sidebar {
+.sidebar {
   margin-top: 60px;
   height: 100vh;
   width: 350px;
@@ -62,7 +62,7 @@
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
-#sidebar.active {
+.sidebar.active {
   // left: 0;
   right: 0px;
 }
@@ -93,27 +93,27 @@ div.form-check {
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
-#sidebar ul.components {
+.sidebar ul.components {
   padding: 20px 0;
   border-bottom: 1px solid #5a6172;
 }
 
-#sidebar ul p {
+.sidebar ul p {
   color: #fff;
   padding: 10px;
 }
 
-#sidebar ul li a {
+.sidebar ul li a {
   padding: 10px;
   font-size: 1.1em;
   display: block;
 }
-#sidebar ul li a:hover {
+.sidebar ul li a:hover {
   color: #fff;
   background: #595959;
 }
 
-#sidebar ul li.active > a, a[aria-expanded="true"] {
+.sidebar ul li.active > a, a[aria-expanded="true"] {
   color: #fff;
   background: #404040;
 }
@@ -157,6 +157,13 @@ ul ul a {
   height: 1px;
   border-bottom: 1px dashed #5a6172;
   margin: 40px 0;
+}
+
+.sidebar-panel {
+  border: 1px solid white;
+  margin: 2px 0px 2px -15px;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 /* ---------------------------------------------------
