@@ -18,9 +18,6 @@
 
 .byebug_history
 
-*.csv
-
-
 ##### BELOW IS RESOURCE FROM GITHUB #####
 
 # Compiled source #
@@ -50,6 +47,8 @@
 *.log
 *.sql
 *.sqlite
+*.psql
+*.csv
 
 # OS generated files #
 ######################
