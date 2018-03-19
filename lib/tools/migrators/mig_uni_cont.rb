@@ -74,7 +74,6 @@ module MigUniCont
           puts error.class.name
           puts error.message
           print error.backtrace.join("\n")
-          binding.pry
           @rollbacks << uni_cont
         end
       end ## end of iteration.
@@ -83,7 +82,7 @@ module MigUniCont
     @rollbacks.each { |uni_cont| puts uni_cont }
     # UniCont.destroy_all
 
-    UniCont.delete_all
+    # UniCont.delete_all
     ActiveRecord::Base.connection.reset_pk_sequence!('uni_conts')
   end
 

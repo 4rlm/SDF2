@@ -28,9 +28,10 @@ class CsvTool
     Rails.application.eager_load!
     db_table_list = ActiveRecord::Base.descendants.map(&:name)
     removables = ['ApplicationRecord', 'UniAct', 'UniCont', 'UniWeb', 'Delayed::Backend::ActiveRecord::Job']
+    move_to_back = ['Cont', 'Profile']
+    removables += move_to_back
     removables.each { |table| db_table_list.delete(table) }
-    # db_table_list = db_table_list.sort_by(&:length)
-    db_table_list = db_table_list.sort
+    db_table_list += move_to_back
     return db_table_list
   end
 
@@ -38,10 +39,8 @@ class CsvTool
   def val_hsh(cols, hsh)
     ## Consider switching hash to keys.
     # cols.map!(&:to_sym)
-    # binding.pry
     keys = hsh.keys
     keys.each { |key| hsh.delete(key) if !cols.include?(key) }
-    # binding.pry
     # adr_hsh.symbolize_keys
     return hsh
   end

@@ -10,6 +10,7 @@ module CsvImport
   #CALL: CsvTool.new.restore_all_backups
   def restore_all_backups
     db_table_list = get_db_table_list
+
     db_table_list_hashes = db_table_list.map do |table_name|
       { model: table_name.classify.constantize, plural_model_name: table_name.pluralize }
     end
@@ -32,6 +33,8 @@ module CsvImport
 
 
   # Call: CsvTool.new.restore_backup(Web, 'Webs.csv')
+  # Call: CsvTool.new.restore_backup(Cont, 'Conts.csv')
+
   # Call: CsvTool.new.restore_backup(WebBrand, 'WebBrands.csv')
   # Call: CsvTool.new.restore_backup(Who, 'Whos.csv')
 

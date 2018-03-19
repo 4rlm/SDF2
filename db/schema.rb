@@ -103,7 +103,6 @@ ActiveRecord::Schema.define(version: 20180319120458) do
     t.index ["job_title"], name: "index_conts_on_job_title"
     t.index ["last_name"], name: "index_conts_on_last_name"
     t.index ["phone"], name: "index_conts_on_phone"
-    t.index ["web_id", "full_name"], name: "index_conts_on_web_id_and_full_name", unique: true
     t.index ["web_id"], name: "index_conts_on_web_id"
   end
 

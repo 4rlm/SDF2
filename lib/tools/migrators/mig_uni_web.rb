@@ -9,6 +9,7 @@ module MigUniWeb
     # UniWeb.all.each do |uni_web|
     # UniWeb.find((1..100).to_a).each do |uni_web|
     UniWeb.in_batches.each do |each_batch|
+      binding.pry
       each_batch.each do |uni_web|
 
         begin

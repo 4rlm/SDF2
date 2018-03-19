@@ -1,5 +1,5 @@
 NOTE:  ADD THESE NOTES BELOW TO ESSENTIAL RAILS IN github.
-NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt
+NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG Dump-Restore
 
 ====================================
 ** ESSENTIAL RAILS....1) Polymorphic
@@ -162,3 +162,20 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt
 8) Update Navigation to include new registration and login form and control who sees which form.
 
 --------------------
+
+
+
+
+====================================
+** ESSENTIAL RAILS....3) PG Dump-Restore
+====================================
+# Call: CsvTool.new.restore_backup(Brand, 'Brands.csv')
+
+
+1) Backup PG
+  $ pg_dump -U postgres -F t sdf2_development > db/csv/pg_backups/sdf2_development.psql
+  $ pg_dump -F c -v -U postgres -h localhost sdf2_development -f db/csv/pg_backups/sdf2_development.tar
+
+2) Restore PG:
+  $ pg_restore -U postgres db/csv/pg_backups/sdf2_development.psql
+  $ pg_restore -c -C -F c -v -U postgres db/csv/pg_backups/sdf2_development.tar
