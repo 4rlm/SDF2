@@ -1,0 +1,164 @@
+NOTE:  ADD THESE NOTES BELOW TO ESSENTIAL RAILS IN github.
+NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt
+
+====================================
+** ESSENTIAL RAILS....1) Polymorphic
+====================================
+
+1) Generate Track Scaffold:
+  1a) $ rails g model Track
+
+  1b) Check User Migration (nothing to do - just check if ok.):
+    class CreateTracks < ActiveRecord::Migration[5.1]
+      def change
+        create_table :tracks do |t|
+          t.references :user, index: true, null: false
+
+          t.timestamps
+        end
+      end
+    end
+
+  1c) Configure Tracks Model:
+  class Track < ApplicationRecord
+    belongs_to :user
+
+    has_many :trackings
+    has_many :acts, through: :trackings, source: :trackable, source_type: :act
+    has_many :webs, through: :trackings, source: :trackable, source_type: :web
+    has_many :conts, through: :trackings, source: :trackable, source_type: :cont
+  end
+--------------------
+
+2) Generate Tracking Scaffold:
+
+  2a) $ rails g model Tracking track:references{index} trackable:references{polymorphic}:index
+
+  2b) Check User Migration (nothing to do - just check if ok.):
+    class CreateTrackings < ActiveRecord::Migration[5.1]
+      def change
+        create_table :trackings do |t|
+          t.references :track, index: true, foreign_key: true
+          t.references :trackable, polymorphic: true
+
+          t.timestamps
+        end
+        add_index :trackings, [:track_id, :trackable_type, :trackable_id], unique: true, name: 'trackings_index'
+      end
+    end
+
+  2c) Configure Trackings Model:
+    class Tracking < ApplicationRecord
+      belongs_to :trackable, polymorphic: true
+      belongs_to :track
+
+      validates :track_id, :uniqueness => { :scope => [:trackable_type, :trackable_id] }
+    end
+--------------------
+
+3) Edit Associated Models
+  3a) Add the following in each (Acts, Conts, Webs Models) to create associations to Track/Tracking:
+    has_many :trackings, as: :trackable
+    has_many :tracks, through: :trackings
+
+  3b) Add the following in (Users Model) to create associations to Track/Tracking:
+    has_many :tracks, dependent: :destroy
+--------------------
+
+
+
+
+====================================
+** ESSENTIAL RAILS....2) Bcrypt/User
+====================================
+
+1) Install Gems:
+  # Use ActiveModel has_secure_password (for session help)
+  gem 'bcrypt'
+--------------------
+
+2) Generate User Scaffold:
+  2a) $ rails generate scaffold User username:string email:string pw_hash:string
+
+  2b) Edit User Migration (Important!):
+    class CreateUsers < ActiveRecord::Migration[5.1]
+      def change
+        create_table :users do |t|
+          t.string :username
+          t.string :email, null: false
+          t.string :password_digest, null: false
+          t.string :role, { default: "standard" }
+
+          t.timestamps
+        end
+      end
+    end
+
+  2c) Configure Users Model:
+    class User < ApplicationRecord
+      has_secure_password
+      validates :username, :email, :password, presence: true
+      validates :email, uniqueness: true
+      has_one :profile, dependent: :destroy
+    end
+--------------------
+
+3) Generate Profile Scaffold:
+  3a) $ rails generate scaffold Profile user:references{index} first_name:string last_name:string phone:string
+
+  3b) Check Profile Migration (nothing to do - just check if ok.):
+    class CreateProfiles < ActiveRecord::Migration[5.1]
+      def change
+        create_table :profiles do |t|
+          t.references :user, index: true, foreign_key: true
+          t.string :first_name
+          t.string :last_name
+          t.string :phone
+
+          t.timestamps
+        end
+      end
+    end
+
+  3c) Configure Profile Model:
+    class Profile < ApplicationRecord
+      belongs_to :user
+
+      def fullname
+        "#{self.first_name} #{self.last_name}"
+      end
+    end
+--------------------
+
+4) DB Migrate: $ rails db:migrate
+--------------------
+
+5) Controllers (Application, Home, Profiles, Sessions, Users; all controllers)
+  * Several detailed variations across controllers.  Too many to list.  Most significant listed below.  Use ShareSpace or SDF2 as exact references.
+
+  5a) $ rails g controller Sessions (then copy paste from sdf2 or sharespace)
+
+  5b) UsersController - Paste to top: skip_before_action :require_login, only: [:new, :create]
+    Then compare controllers line by line with sdf2 and sharespace to edit:
+
+  5c) ApplicationController (IMPORTANT!): Contains methods requiring login and registration.
+    Copy and paste entire file from SDF2 or ShareSpace
+
+  5d) HomeController - Paste to top: skip_before_action :require_login, only: [:index, :show]
+--------------------
+
+6) Views: Ensure all have been created, then refactor them into partials for ajax if not already done.
+  'CopyPaste' indicates to copy and paste exactly from SDF2 or ShareSpace.
+  6a) CopyPaste: users (entire file as is.  just replace current).
+  6b) CopyPaste: sessions(_form.html.erb & _new.html.erb) *Only contains two files.
+--------------------
+
+7) Add to Routes:
+    get 'signup', to: 'users#new', as: 'signup'
+    get 'login', to: 'sessions#new', as: 'login'
+    get 'logout', to: 'sessions#destroy', as: 'logout'
+--------------------
+
+8) Update Navigation to include new registration and login form and control who sees which form.
+
+--------------------

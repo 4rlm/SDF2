@@ -311,6 +311,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import (~> 0.21.0)
   autoprefixer-rails
+  bcrypt (~> 3.1.7)
   bootstrap (~> 4.0.0)
   bootstrap-select-rails (~> 1.12, >= 1.12.4)
   byebug

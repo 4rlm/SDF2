@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180226001104) do
+ActiveRecord::Schema.define(version: 20180319120458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,6 +138,16 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
   end
 
+  create_table "profiles", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
   create_table "tallies", force: :cascade do |t|
     t.jsonb "acts", default: "{}", null: false
     t.jsonb "act_webs", default: "{}", null: false
@@ -163,6 +173,25 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.string "mth_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "trackings", force: :cascade do |t|
+    t.bigint "track_id"
+    t.string "trackable_type"
+    t.bigint "trackable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["track_id", "trackable_type", "trackable_id"], name: "trackings_index", unique: true
+    t.index ["track_id"], name: "index_trackings_on_track_id"
+    t.index ["trackable_type", "trackable_id"], name: "index_trackings_on_trackable_type_and_trackable_id"
+  end
+
+  create_table "tracks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "track"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_tracks_on_user_id"
   end
 
   create_table "uni_acts", force: :cascade do |t|
@@ -232,6 +261,15 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.string "url"
     t.string "staff_page"
     t.string "locations_page"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "email", null: false
+    t.string "password_digest", null: false
+    t.string "role", default: "standard"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -307,4 +345,6 @@ ActiveRecord::Schema.define(version: 20180226001104) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "profiles", "users"
+  add_foreign_key "trackings", "tracks"
 end

@@ -1,0 +1,36 @@
+<div class="row">
+
+  <table class="table table-bordered table-hover table-striped text-nowrap">
+    <thead>
+      <tr>
+        <th>Username <%= icon('user') %></th>
+        <th>Email <%= icon('envelope') %></th>
+        <th>Updated <%= icon('calendar') %></th>
+        <th colspan="2">Manage <%= icon('sliders') %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+      <tr>
+        <td><%= link_to user.username.capitalize, user %></td>
+        <td><%= user.email %></td>
+        <td><%= user.updated_at.strftime('%x') %></td>
+
+        <td><%= link_to edit_user_path(user) do %>
+          <%= icon('pencil-square-o') %>
+          <% end %>
+        </td>
+
+        <td><%= link_to user, remote: true, method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <%= icon('trash') %>
+          <% end %>
+        </td>
+
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%#= link_to 'New User', new_user_path, class: "btn btn-info" %>
+
+</div>

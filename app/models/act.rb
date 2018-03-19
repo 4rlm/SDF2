@@ -13,8 +13,10 @@ class Act < ApplicationRecord
   has_many :conts, through: :webs
   has_many :links, through: :webs
   has_many :brands, through: :webs
-
   accepts_nested_attributes_for :act_webs, :webs, :conts, :links, :brands
+
+  has_many :trackings, as: :trackable
+  has_many :tracks, through: :trackings
 
   def full_address
     self.full_address = [street, city, state, zip].compact.join(', ')
