@@ -29,9 +29,7 @@
             <%= icon('fas', 'external-link-alt', 'Web Criteria') %>
           </a>
           <ul class="collapse" id="web-criteria">
-
             <div class="panel sidebar-panel">
-
               <!-- Search Webs (General-Table) -->
               <table class="ransack-table table table-bordered text-nowrap text-center">
                   <thead>
@@ -265,7 +263,6 @@
 
                 </table>
               </div>
-
             </div>
           </ul>
         </li>
@@ -276,241 +273,191 @@
           <a class="dropdown-toggle" href="#act-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'building', 'Account Criteria') %>
           </a>
-
           <ul class="collapse" id="act-criteria">
-            <!-- Search Accounts (General-1) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-acts-general" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'list-alt', 'General') %>
-              </a>
+            <div class="panel sidebar-panel">
+              <!-- Search Acts (General-1) -->
+              <!-- Search Acts (General-Table) -->
+              <table class="ransack-table table table-bordered text-nowrap text-center">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Criteria</th>
+                    </tr>
+                  </thead>
 
-              <ul class="collapse list-unstyled" id="search-criteria-acts-general">
+                  <!-- Search Acts (Account Name) -->
+                  <tr>
+                    <td>Account Name</td>
+                    <td><%= f.search_field :acts_act_name_cont_any %></td>
+                  </tr>
 
+                  <!-- Search Acts (Full Address) -->
+                  <tr>
+                    <td>Full Address</td>
+                    <td><%= f.search_field :acts_act_name_cont_any %></td>
+                  </tr>
 
+                  <!-- Search Acts (Street) -->
+                  <tr>
+                    <td>Street</td>
+                    <td><%= f.search_field :acts_street_cont_any %></td>
+                  </tr>
 
-                <!-- Search Webs (General-Table) -->
+                  <!-- Search Acts (City) -->
+                  <tr>
+                    <td>City</td>
+                    <td><%= f.search_field :acts_city_cont_any %></td>
+                  </tr>
+
+                  <!-- Search Acts (Zip) -->
+                  <tr>
+                    <td>Zip</td>
+                    <td><%= f.search_field :acts_zip_cont_any %></td>
+                  </tr>
+
+                  <!-- Search Acts (Phone) -->
+                  <tr>
+                    <td>Phone</td>
+                    <td><%= f.search_field :acts_phone_cont_any %></td>
+                  </tr>
+
+                  <!-- Search Acts (Lat) -->
+                  <tr>
+                    <td>Lat</td>
+                    <td><%= f.search_field :acts_lat_cont_any %></td>
+                  </tr>
+
+                  <!-- Search Acts (Lon) -->
+                  <tr>
+                    <td>Lon</td>
+                    <td><%= f.search_field :acts_lon_cont_any %></td>
+                  </tr>
+
+                  <!-- Search Acts (GP ID) -->
+                  <tr>
+                    <td>GP ID</td>
+                    <td><%= f.search_field :acts_gp_id_eq_any %></td>
+                  </tr>
+
+                </table>
+
+              <!-- Search Acts (State Check Boxes) -->
+              <p class="text-center"><strong>State</strong></p>
+              <div class="row form-check-row">
+                <% states&.each_with_index do |state, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[acts_state_in][]', state) %>
+                      <%= state %>
+                    </div>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[acts_state_in][]', state) %>
+                      <%= state %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <!-- Search Acts (Status-2) -->
+              <!-- Search Acts (gp_sts Check Boxes) -->
+              <p class="text-center"><strong>GP Status</strong></p>
+              <div class="row form-check-row">
+                <% gp_stss&.each_with_index do |gp_sts, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                      <%= gp_sts %>
+                    </div>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                      <%= gp_sts %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <!-- Search Acts (gp_indus Check Boxes) -->
+              <p class="text-center"><strong>GP Indus</strong></p>
+              <div class="row form-check-row">
+                <% gp_induss&.each_with_index do |gp_indus, index| %>
+                  <% if index.odd? %>
+                    <!-- LEFT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
+                      <%= gp_indus %>
+                    </div>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <div class="col-md-6 form-check">
+                      <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
+                      <%= gp_indus %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <!-- Search Acts (Dates-3) -->
+              <div class="row">
                 <table class="ransack-table table table-bordered text-nowrap text-center">
-                    <thead>
-                      <tr>
-                        <th>Category</th>
-                        <th>Criteria</th>
-                      </tr>
-                    </thead>
-
-                    <!-- Search Webs (Account Name) -->
+                  <thead>
                     <tr>
-                      <td>Account Name</td>
-                      <td><%= f.search_field :acts_act_name_cont_any %></td>
+                      <th>Category</th>
+                      <th>Start</th>
+                      <th>End</th>
                     </tr>
+                  </thead>
 
-                    <!-- Search Webs (Full Address) -->
-                    <tr>
-                      <td>Full Address</td>
-                      <td><%= f.search_field :acts_act_name_cont_any %></td>
-                    </tr>
+                  <!-- gp_date -->
+                  <tr>
+                    <td>GP Verified</td>
+                    <td><%= f.date_field :acts_gp_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_gp_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
 
-                    <!-- Search Webs (Street) -->
-                    <tr>
-                      <td>Street</td>
-                      <td><%= f.search_field :acts_street_cont_any %></td>
-                    </tr>
+                  <!-- adr_changed -->
+                  <tr>
+                    <td>Address Updated</td>
+                    <td><%= f.date_field :acts_adr_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_adr_changed_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
 
-                    <!-- Search Webs (City) -->
-                    <tr>
-                      <td>City</td>
-                      <td><%= f.search_field :acts_city_cont_any %></td>
-                    </tr>
+                  <!-- act_changed -->
+                  <tr>
+                    <td>Acct-Name Updated</td>
+                    <td><%= f.date_field :acts_act_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_act_changed_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
 
-                    <!-- Search Webs (Zip) -->
-                    <tr>
-                      <td>Zip</td>
-                      <td><%= f.search_field :acts_zip_cont_any %></td>
-                    </tr>
+                  <!-- ax_date -->
+                  <tr>
+                    <td>Account Inactive</td>
+                    <td><%= f.date_field :acts_ax_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_ax_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
 
-                    <!-- Search Webs (Phone) -->
-                    <tr>
-                      <td>Phone</td>
-                      <td><%= f.search_field :acts_phone_cont_any %></td>
-                    </tr>
+                  <!-- updated_at -->
+                  <tr>
+                    <td>Account Updated</td>
+                    <td><%= f.date_field :acts_updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
 
-                    <!-- Search Webs (Lat) -->
-                    <tr>
-                      <td>Lat</td>
-                      <td><%= f.search_field :acts_lat_cont_any %></td>
-                    </tr>
+                  <!-- created_at -->
+                  <tr>
+                    <td>Account Created</td>
+                    <td><%= f.date_field :acts_created_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_created_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
 
-                    <!-- Search Webs (Lon) -->
-                    <tr>
-                      <td>Lon</td>
-                      <td><%= f.search_field :acts_lon_cont_any %></td>
-                    </tr>
-
-                    <!-- Search Webs (GP ID) -->
-                    <tr>
-                      <td>GP ID</td>
-                      <td><%= f.search_field :acts_gp_id_eq_any %></td>
-                    </tr>
-
-                  </table>
-
-                <!-- Search Accounts (State Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#act-criteria-state" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'State!!') %>
-                  </a>
-                  <ul class="collapse" id="act-criteria-state">
-                    <div class="row form-check-row">
-                      <% states&.each_with_index do |state, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[acts_state_in][]', state) %>
-                            <%= state %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[acts_state_in][]', state) %>
-                            <%= state %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-
-              </ul>
-            </li>
-
-            <!-- Search Accounts (Status-2) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-acts-status" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'check-square', 'Status') %>
-              </a>
-
-              <ul class="collapse list-unstyled" id="search-criteria-acts-status">
-
-                <!-- Search Acts (gp_sts Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#act-criteria-gp-sts" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'gp_sts') %>
-                  </a>
-                  <ul class="collapse" id="act-criteria-gp-sts">
-                    <div class="row form-check-row">
-                      <% gp_stss&.each_with_index do |gp_sts, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
-                            <%= gp_sts %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
-                            <%= gp_sts %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-
-                <!-- Search Acts (gp_indus Check Boxes) -->
-                <li>
-                  <a class="dropdown-toggle" href="#act-criteria-gp-indus" data-toggle="collapse" aria-expanded="false">
-                    <%= icon('fas', 'star', 'gp_indus') %>
-                  </a>
-                  <ul class="collapse" id="act-criteria-gp-indus">
-                    <div class="row form-check-row">
-                      <% gp_induss&.each_with_index do |gp_indus, index| %>
-                        <% if index.odd? %>
-                          <!-- LEFT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
-                            <%= gp_indus %>
-                          </div>
-                        <% else %>
-                          <!-- RIGHT -->
-                          <div class="col-md-6 form-check">
-                            <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
-                            <%= gp_indus %>
-                          </div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-
-            <!-- Search Accounts (Dates-3) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-acts-dates" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'calendar-alt', 'Dates') %>
-              </a>
-
-              <ul class="collapse list-unstyled" id="search-criteria-acts-dates">
-
-                <!-- Search Acts (Dates-Table) -->
-                <div class="row">
-                  <table class="ransack-table table table-bordered text-nowrap text-center">
-                    <thead>
-                      <tr>
-                        <th>Category</th>
-                        <th>Start</th>
-                        <th>End</th>
-                      </tr>
-                    </thead>
-
-                    <!-- gp_date -->
-                    <tr>
-                      <td>GP Verified</td>
-                      <td><%= f.date_field :acts_gp_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :acts_gp_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- adr_changed -->
-                    <tr>
-                      <td>Address Updated</td>
-                      <td><%= f.date_field :acts_adr_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :acts_adr_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- act_changed -->
-                    <tr>
-                      <td>Acct-Name Updated</td>
-                      <td><%= f.date_field :acts_act_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :acts_act_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- ax_date -->
-                    <tr>
-                      <td>Account Inactive</td>
-                      <td><%= f.date_field :acts_ax_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :acts_ax_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- updated_at -->
-                    <tr>
-                      <td>Account Updated</td>
-                      <td><%= f.date_field :acts_updated_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :acts_updated_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                    <!-- created_at -->
-                    <tr>
-                      <td>Account Created</td>
-                      <td><%= f.date_field :acts_created_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :acts_created_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-
-                  </table>
-                </div>
-
-              </ul>
-            </li>
-
+                </table>
+              </div>
+            </div>
           </ul>
         </li>
 
