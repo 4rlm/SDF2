@@ -1,4 +1,7 @@
 class ActsController < ApplicationController
+  # before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!
+
   before_action :set_act, only: [:show, :edit, :update, :destroy]
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
@@ -6,7 +9,7 @@ class ActsController < ApplicationController
   # GET /acts
   # GET /acts.json
   def index
-    
+
     ## Splits 'cont_any' strings into array, if string and has ','
     if !params[:q].nil?
       acts_helper = Object.new.extend(ActsHelper)

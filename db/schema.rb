@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180319120458) do
+ActiveRecord::Schema.define(version: 20180320031752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,16 +137,6 @@ ActiveRecord::Schema.define(version: 20180319120458) do
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
   end
 
-  create_table "profiles", force: :cascade do |t|
-    t.bigint "user_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "phone"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_profiles_on_user_id"
-  end
-
   create_table "tallies", force: :cascade do |t|
     t.jsonb "acts", default: "{}", null: false
     t.jsonb "act_webs", default: "{}", null: false
@@ -265,12 +255,29 @@ ActiveRecord::Schema.define(version: 20180319120458) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
-    t.string "email", null: false
-    t.string "password_digest", null: false
-    t.string "role", default: "standard"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
   create_table "web_brands", force: :cascade do |t|
@@ -344,6 +351,5 @@ ActiveRecord::Schema.define(version: 20180319120458) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "profiles", "users"
   add_foreign_key "trackings", "tracks"
 end

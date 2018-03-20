@@ -123,6 +123,7 @@ GEM
       httparty
     google_places (1.0.0)
       httparty (>= 0.13.1)
+    hashie (1.2.0)
     hirb (0.7.3)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -173,6 +174,9 @@ GEM
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     ntlm-http (0.1.1)
+    omniauth (1.0.3)
+      hashie (~> 1.2)
+      rack
     openssl (2.0.7)
     orm_adapter (0.5.0)
     pg (0.21.0)
@@ -311,7 +315,6 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import (~> 0.21.0)
   autoprefixer-rails
-  bcrypt (~> 3.1.7)
   bootstrap (~> 4.0.0)
   bootstrap-select-rails (~> 1.12, >= 1.12.4)
   byebug
@@ -338,6 +341,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   mechanize (~> 2.7, >= 2.7.5)
   net-ping (~> 1.7, >= 1.7.8)
+  omniauth (~> 1.0.0)
   openssl (~> 2.0.0.beta.1)
   pg (~> 0.18)
   pry (~> 0.11.3)

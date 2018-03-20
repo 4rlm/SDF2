@@ -1,5 +1,5 @@
 class Track < ApplicationRecord
-  belongs_to :user
+  # belongs_to :user
 
   has_many :trackings
   has_many :acts, through: :trackings, source: :trackable, source_type: :act
