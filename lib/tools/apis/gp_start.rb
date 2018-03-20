@@ -21,8 +21,7 @@ class GpStart
     @formatter = Formatter.new
     @mig = Mig.new
     @multi_spots = true
-
-    @client = GooglePlaces::Client.new('AIzaSyDX5Sn2mNT1vPh_MyMnNOH5YL4cIWaB3s4')
+    @client = GooglePlaces::Client.new(ENV['GOOGLE_PLACES_API'])
     @spot_start_time = nil
     @gp_acts = []
   end
@@ -42,7 +41,7 @@ class GpStart
         .where(acts: {gp_id: nil, gp_sts: ['Valid', nil]})
         .select(:id).order("gp_date ASC")[0..0].pluck(:id)
     end
-    
+
 
 
     ## ## Skipped Sts Query ##
