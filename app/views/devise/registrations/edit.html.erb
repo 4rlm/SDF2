@@ -28,6 +28,27 @@
         <%= f.password_field :current_password, autocomplete: "off", class: 'form-control' %>
       </div>
 
+
+
+
+
+      <div class="form-group">
+        <%= f.label :first_name %><br />
+        <%= f.text_field :first_name, autofocus: true, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :last_name %><br />
+        <%= f.text_field :last_name, autofocus: true, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :phone %><br />
+        <%= f.phone_field :phone, autofocus: true, class: 'form-control' %>
+      </div>
+
+
+
       <div class="actions">
         <%= f.submit "Update", class: 'btn btn-primary' %>
       </div>
