@@ -1,6 +1,5 @@
 class ProfilesController < ApplicationController
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
-  # skip_before_action :require_login, only: [:index, :show]
 
   # GET /profiles
   # GET /profiles.json
@@ -11,8 +10,6 @@ class ProfilesController < ApplicationController
   # GET /profiles/1
   # GET /profiles/1.json
   def show
-    format.html # show.html.erb
-    format.js # show.js.erb
   end
 
   # GET /profiles/new
@@ -27,17 +24,17 @@ class ProfilesController < ApplicationController
   # POST /profiles
   # POST /profiles.json
   def create
-    # @profile = Profile.new(profile_params)
-    #
-    # respond_to do |format|
-    #   if @profile.save
-    #     format.html { redirect_to @profile, notice: 'Profile was successfully created.' }
-    #     format.json { render :show, status: :created, location: @profile }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @profile.errors, status: :unprocessable_entity }
-    #   end
-    # end
+    @profile = Profile.new(profile_params)
+
+    respond_to do |format|
+      if @profile.save
+        format.html { redirect_to @profile, notice: 'Profile was successfully created.' }
+        format.json { render :show, status: :created, location: @profile }
+      else
+        format.html { render :new }
+        format.json { render json: @profile.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /profiles/1
@@ -45,8 +42,8 @@ class ProfilesController < ApplicationController
   def update
     respond_to do |format|
       if @profile.update(profile_params)
-        format.html { redirect_to @profile.user_id, notice: 'Profile was successfully updated.' }
-        format.json { render :'user/show', status: :ok, location: @user }
+        format.html { redirect_to @profile, notice: 'Profile was successfully updated.' }
+        format.json { render :show, status: :ok, location: @profile }
       else
         format.html { render :edit }
         format.json { render json: @profile.errors, status: :unprocessable_entity }
@@ -72,6 +69,6 @@ class ProfilesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def profile_params
-      params.require(:profile).permit(:user_id, :first_name, :last_name, :phone)
+      params.fetch(:profile, {})
     end
 end
