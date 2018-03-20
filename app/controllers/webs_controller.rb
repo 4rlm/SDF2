@@ -6,7 +6,6 @@ class WebsController < ApplicationController
   # GET /webs
   # GET /webs.json
   def index
-
     ## Splits 'cont_any' strings into array, if string and has ','
     if !params[:q].nil?
       webs_helper = Object.new.extend(WebsHelper)
@@ -16,7 +15,6 @@ class WebsController < ApplicationController
     ## BEST 2 BELOW - SAVE!!!!
     # @q = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
     # @webs = @q.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
-
 
     ## TESTING BELOW
 

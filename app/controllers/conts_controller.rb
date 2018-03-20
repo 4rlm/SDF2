@@ -3,7 +3,6 @@ class ContsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
 
-
   # GET /conts
   # GET /conts.json
   def index
