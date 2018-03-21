@@ -28,7 +28,7 @@ class CsvTool
     Rails.application.eager_load!
     db_table_list = ActiveRecord::Base.descendants.map(&:name)
     removables = ['ApplicationRecord', 'UniAct', 'UniCont', 'UniWeb', 'Delayed::Backend::ActiveRecord::Job']
-    move_to_back = ['Cont', 'Profile']
+    move_to_back = ['Cont']
     removables += move_to_back
     removables.each { |table| db_table_list.delete(table) }
     db_table_list += move_to_back

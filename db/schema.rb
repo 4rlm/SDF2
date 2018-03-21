@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180320063200) do
+ActiveRecord::Schema.define(version: 20180320031752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,16 +135,6 @@ ActiveRecord::Schema.define(version: 20180320063200) do
     t.citext "staff_link", null: false
     t.citext "staff_text"
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
-  end
-
-  create_table "profiles", force: :cascade do |t|
-    t.bigint "user_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "phone"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
   create_table "tallies", force: :cascade do |t|
@@ -366,6 +356,5 @@ ActiveRecord::Schema.define(version: 20180320063200) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "profiles", "users"
   add_foreign_key "trackings", "tracks"
 end

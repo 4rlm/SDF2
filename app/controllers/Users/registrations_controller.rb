@@ -2,27 +2,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
-
-  ## CUSTOM METHODS BELOW ###
-
-  # GET /users
-  # GET /users.json
-  # def index
-  #   @users = User.all
-  # end
-
-  # GET /users/1
-  # GET /users/1.json
-  # def show
-  #   @user = User.find(params[:id])
-  #   respond_to do |format|
-  #     format.html # show.html.erb
-  #     format.js # show.js.erb
-  #   end
-  # end
-
-  ## ORIGINAL METHODS BELOW ###
-
   # GET /resource/sign_up
   # def new
   #   super
