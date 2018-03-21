@@ -5,10 +5,6 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-## MOVE dotenv TO TOP AND REQUIRE:
-# gem 'dotenv-rails', require: 'dotenv/rails-now'
-# gem 'dotenv-rails', groups: [:development, :test]
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1', '>= 5.1.4'
 # Use postgresql as the database for Active Record
@@ -87,7 +83,6 @@ gem 'hirb', '~> 0.7.3'
 
 gem 'will_paginate', '~> 3.1', '>= 3.1.6'
 gem 'will_paginate-bootstrap4'
-
 gem 'daemons', '~> 1.2', '>= 1.2.5'
 gem 'delayed_job_active_record', '~> 4.1', '>= 4.1.2'
 gem 'delayed_job_web', '~> 1.4'
@@ -102,44 +97,34 @@ gem 'devise', '~> 4.3'
 gem 'omniauth', '~> 1.0.0'
 gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'curb', '~> 0.9.4'
-# gem 'curb', '~> 0.9.3'
-# gem 'curb'
 gem 'whois', '~> 4.0', '>= 4.0.5'
 gem 'chartkick', '~> 2.2', '>= 2.2.5'
 gem 'foreman', '~> 0.84.0'
-# gem 'whenever', require: false
-###############
-
-## Adam's DBC Gems ##
-# gem 'bcrypt'
-# gem 'faker'
-# gem 'rspec', '~>3.0'
-
-# gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
 gem 'font-awesome-sass', '~> 5.0.6'
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '~> 4.3', '>= 4.3.1'
-# gem 'bootstrap', '~> 4.0.0.beta2.1'
 gem 'bootstrap', '~> 4.0.0'
-# gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'autoprefixer-rails'
 gem 'net-ping', '~> 1.7', '>= 1.7.8'
 gem 'openssl', '~> 2.0.0.beta.1'
-# gem 'pg_search', '~> 2.1', '>= 2.1.1'
-# gem 'stripe', '~> 3.9'
 gem 'ransack', '~> 1.8', '>= 1.8.4'
+gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+gem 'simplecov', '~> 0.12.0'
+gem 'bootstrap-select-rails', '~> 1.12', '>= 1.12.4'
+gem "roo", "~> 2.7.0"
+
+# gem 'will_filter'
+# gem 'kaminari'
 # gem 'aws-sdk', '~> 1.6'
 # gem 'paperclip', '~> 5.1'
 # gem 'google-api-client', '~> 0.18.0'
 # gem 'geokit', '~> 1.11'
-
-## Sample - Testing this gem below:
-# gem 'final_fwd_url', '~> 0.1.0'
-
-gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-gem 'simplecov', '~> 0.12.0'
-
-gem 'bootstrap-select-rails', '~> 1.12', '>= 1.12.4'
-
-# gem 'will_filter'
-# gem 'kaminari'
+# gem 'pg_search', '~> 2.1', '>= 2.1.1'
+# gem 'stripe', '~> 3.9'
+# gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
+# gem 'bootstrap', '~> 4.0.0.beta2.1'
+# gem 'sprockets-rails', :require => 'sprockets/railtie'
+# gem 'whenever', require: false
+# gem 'bcrypt'
+# gem 'faker'
+# gem 'rspec', '~>3.0'
