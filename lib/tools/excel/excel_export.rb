@@ -1,12 +1,40 @@
 module ExcelExport
-  #
-  # ################ !!! CAUTION !!! #########################
-  # # THESE METHODS WILL OVER-WRITE PRIOR Excel BACKUPS !!
-  # # Exports Excel to: db/Excel/backups/file_name.Excel
-  # # Excels can be re-imported via ExcelTool.new.restore_all_backups
-  # ###########################################################
-  #
-  #
+
+
+  def action_name
+    binding.pry
+    @brands = Brand.all
+    respond_to do |format|
+      format.xlsx
+    end
+    binding.pry
+  end
+
+# CALL: ExcelTool.new.exporty
+  def exporty
+    # excel_file = "test_small.xlsx"
+    # excel_path_file = "#{@excel_path}/#{excel_file}"
+
+    # Brand id: nil, brand_name: nil, dealer_type: nil>
+
+    action_name
+    binding.pry
+
+    wb = xlsx_package.workbook
+    binding.pry
+    wb.add_worksheet(name: "Buttons") do |sheet|
+      @brands.each do |button|
+        sheet.add_row [button.name, button.category, button.price]
+      end
+    end
+
+
+
+    binding.pry
+  end
+
+
+
   # # CALL: ExcelTool.new.backup_entire_db
   # def backup_entire_db
   #   # db_table_list = ["Link", "Linking", "Text", "Texting"]

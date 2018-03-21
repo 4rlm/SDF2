@@ -1,18 +1,23 @@
 # require 'Excel'
 # require 'pry'
-# require 'Excel_export'
+require 'Excel_export'
 # require 'Excel_import'
 
 # %w{Excel pry Excel_export Excel_import}.each { |x| require x }
 
 class ExcelTool
-  # extend ActiveSupport::Concern
-  # include ExcelExport
+  extend ActiveSupport::Concern
+  include ExcelExport
   # include ExcelImport
   # attr_reader :file_name, :file_path
   #
   def initialize
     puts "Hi!"
+
+    @excel_path = "./db/excel/backups"
+    FileUtils.mkdir_p(@excel_path)
+
+
     # @seeds_dir_path = "./db/Excel/seeds"
     # @backups_dir_path = "./db/Excel/backups"
     # FileUtils.mkdir_p(@seeds_dir_path)
