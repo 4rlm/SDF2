@@ -1,15 +1,4 @@
 GIT
-  remote: https://github.com/randym/axlsx.git
-  revision: c8ac844572b25fda358cc01d2104720c4c42f450
-  ref: c8ac844
-  specs:
-    axlsx (2.1.0.pre)
-      htmlentities (~> 4.3.4)
-      mimemagic (~> 0.3)
-      nokogiri (>= 1.6.6)
-      rubyzip (>= 1.2.1)
-
-GIT
   remote: https://github.com/rweng/jquery-datatables-rails.git
   revision: d486b31b192a2924b1913e080ad23460e6b96d31
   specs:
@@ -66,9 +55,6 @@ GEM
     arel (8.0.0)
     autoprefixer-rails (7.2.3)
       execjs
-    axlsx_rails (0.5.1)
-      actionpack (>= 3.1)
-      axlsx (>= 2.0.1)
     bcrypt (3.1.11)
     bindex (0.5.0)
     bootstrap (4.0.0)
@@ -139,7 +125,6 @@ GEM
       httparty (>= 0.13.1)
     hashie (1.2.0)
     hirb (0.7.3)
-    htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httparty (0.15.6)
@@ -176,7 +161,6 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mimemagic (0.3.2)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.10.3)
@@ -331,8 +315,6 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import (~> 0.21.0)
   autoprefixer-rails
-  axlsx!
-  axlsx_rails
   bootstrap (~> 4.0.0)
   bootstrap-select-rails (~> 1.12, >= 1.12.4)
   byebug
@@ -367,7 +349,6 @@ DEPENDENCIES
   rails (~> 5.1, >= 5.1.4)
   ransack (~> 1.8, >= 1.8.4)
   redis (~> 3.3, >= 3.3.1)
-  rubyzip (>= 1.2.1)
   sass-rails (~> 5.0)
   selenium-webdriver
   sidekiq (~> 5.0, >= 5.0.5)

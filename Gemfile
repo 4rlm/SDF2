@@ -111,11 +111,15 @@ gem 'ransack', '~> 1.8', '>= 1.8.4'
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 gem 'simplecov', '~> 0.12.0'
 gem 'bootstrap-select-rails', '~> 1.12', '>= 1.12.4'
-# gem "roo", "~> 2.7.0"
 
-gem 'rubyzip', '>= 1.2.1'
-gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
-gem 'axlsx_rails'
+# gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
+
+# gem "roo", "~> 2.7.0"
+# gem 'rubyzip', '>= 1.2.1'
+# gem 'axlsx', '~> 2.0', '>= 2.0.1'
+# gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
+# gem 'acts_as_xlsx', '~> 1.0', '>= 1.0.6'
+# gem 'axlsx_rails'
 
 # gem 'will_filter'
 # gem 'kaminari'
