@@ -112,7 +112,7 @@ gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 gem 'simplecov', '~> 0.12.0'
 gem 'bootstrap-select-rails', '~> 1.12', '>= 1.12.4'
 
-# gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
+gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
 
 # gem "roo", "~> 2.7.0"
 # gem 'rubyzip', '>= 1.2.1'
