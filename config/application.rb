@@ -42,6 +42,9 @@ module Sdf2
     config.autoload_paths << Rails.root.join('lib/tools/dashboards')
     config.autoload_paths += Dir["#{config.root}/lib/tools/dashboards"]
 
+    config.autoload_paths << Rails.root.join('lib/tools/excel')
+    config.autoload_paths += Dir["#{config.root}/lib/tools/excel"]
+
     config.autoload_paths << Rails.root.join('lib/tools/formatters')
     config.autoload_paths += Dir["#{config.root}/lib/tools/formatters"]
 
