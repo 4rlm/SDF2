@@ -23,43 +23,43 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
   class Track < ApplicationRecord
     belongs_to :user
 
-    has_many :trackings
-    has_many :acts, through: :trackings, source: :trackable, source_type: :act
-    has_many :webs, through: :trackings, source: :trackable, source_type: :web
-    has_many :conts, through: :trackings, source: :trackable, source_type: :cont
+    has_many :exportings
+    has_many :acts, through: :exportings, source: :exportable, source_type: :act
+    has_many :webs, through: :exportings, source: :exportable, source_type: :web
+    has_many :conts, through: :exportings, source: :exportable, source_type: :cont
   end
 --------------------
 
 2) Generate Tracking Scaffold:
 
-  2a) $ rails g model Tracking track:references{index} trackable:references{polymorphic}:index
+  2a) $ rails g model Tracking track:references{index} exportable:references{polymorphic}:index
 
   2b) Check User Migration (nothing to do - just check if ok.):
     class CreateTrackings < ActiveRecord::Migration[5.1]
       def change
-        create_table :trackings do |t|
+        create_table :exportings do |t|
           t.references :track, index: true, foreign_key: true
-          t.references :trackable, polymorphic: true
+          t.references :exportable, polymorphic: true
 
           t.timestamps
         end
-        add_index :trackings, [:track_id, :trackable_type, :trackable_id], unique: true, name: 'trackings_index'
+        add_index :exportings, [:export_id, :exportable_type, :exportable_id], unique: true, name: 'exportings_index'
       end
     end
 
   2c) Configure Trackings Model:
     class Tracking < ApplicationRecord
-      belongs_to :trackable, polymorphic: true
+      belongs_to :exportable, polymorphic: true
       belongs_to :track
 
-      validates :track_id, :uniqueness => { :scope => [:trackable_type, :trackable_id] }
+      validates :export_id, :uniqueness => { :scope => [:exportable_type, :exportable_id] }
     end
 --------------------
 
 3) Edit Associated Models
   3a) Add the following in each (Acts, Conts, Webs Models) to create associations to Track/Tracking:
-    has_many :trackings, as: :trackable
-    has_many :tracks, through: :trackings
+    has_many :exportings, as: :exportable
+    has_many :tracks, through: :exportings
 
   3b) Add the following in (Users Model) to create associations to Track/Tracking:
     has_many :tracks, dependent: :destroy

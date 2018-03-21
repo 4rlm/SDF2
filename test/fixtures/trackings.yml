@@ -2,10 +2,10 @@
 
 one:
   track: one
-  trackable: one
-  trackable_type: Trackable
+  exportable: one
+  exportable_type: Trackable
 
 two:
   track: two
-  trackable: two
-  trackable_type: Trackable
+  exportable: two
+  exportable_type: Trackable

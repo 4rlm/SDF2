@@ -131,6 +131,25 @@ ActiveRecord::Schema.define(version: 20180321063204) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "exportings", force: :cascade do |t|
+    t.bigint "export_id"
+    t.string "exportable_type"
+    t.bigint "exportable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["export_id", "exportable_type", "exportable_id"], name: "exportings_index", unique: true
+    t.index ["export_id"], name: "index_exportings_on_export_id"
+    t.index ["exportable_type", "exportable_id"], name: "index_exportings_on_exportable_type_and_exportable_id"
+  end
+
+  create_table "exports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "export_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_exports_on_user_id"
+  end
+
   create_table "favorites", force: :cascade do |t|
     t.string "favoritable_type", null: false
     t.bigint "favoritable_id", null: false
@@ -179,25 +198,6 @@ ActiveRecord::Schema.define(version: 20180321063204) do
     t.string "mth_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "trackings", force: :cascade do |t|
-    t.bigint "track_id"
-    t.string "trackable_type"
-    t.bigint "trackable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["track_id", "trackable_type", "trackable_id"], name: "trackings_index", unique: true
-    t.index ["track_id"], name: "index_trackings_on_track_id"
-    t.index ["trackable_type", "trackable_id"], name: "index_trackings_on_trackable_type_and_trackable_id"
-  end
-
-  create_table "tracks", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "track"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_tracks_on_user_id"
   end
 
   create_table "uni_acts", force: :cascade do |t|
@@ -277,8 +277,7 @@ ActiveRecord::Schema.define(version: 20180321063204) do
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "phone", null: false
-    t.string "role", default: "user", null: false
-    t.string "approved", default: "f", null: false
+    t.string "role", default: "pending", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -373,5 +372,5 @@ ActiveRecord::Schema.define(version: 20180321063204) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "trackings", "tracks"
+  add_foreign_key "exportings", "exports"
 end

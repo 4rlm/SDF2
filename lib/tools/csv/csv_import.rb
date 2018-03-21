@@ -33,16 +33,8 @@ module CsvImport
 
 
   # Call: CsvTool.new.restore_backup(User, 'Users.csv')
-  # Call: CsvTool.new.restore_backup(Cont, 'Conts.csv')
-
-  # Call: CsvTool.new.restore_backup(WebBrand, 'WebBrands.csv')
-  # Call: CsvTool.new.restore_backup(Who, 'Whos.csv')
-
-  # Call: CsvTool.new.restore_backup(Brand, 'Brands.csv')
-  # Call: CsvTool.new.restore_backup(Template, 'Templates.csv')
-
   def restore_backup(model, file_name)
-    @file_path = "#{@backups_dir_path}/#{file_name}"
+    @file_path = "#{@backups_path}/#{file_name}"
     parse_csv
     @headers.map!(&:to_sym)
     model.import(@headers, @rows, validate: false)
@@ -71,18 +63,6 @@ module CsvImport
     # CsvTool.new.import_uni_seeds('uni_act', '5_acts_scraped.csv')
     # CsvTool.new.import_uni_seeds('uni_act', '6_acts_geo_locations.csv')
 
-
-    ########## UNI SEED IMPORT BELOW ##########
-    # CsvTool.new.import_uni_seeds('uni_web', '1_valid_uni_webs.csv')
-    # CsvTool.new.import_uni_seeds('uni_web', '2_archived_uni_webs.csv')
-    # CsvTool.new.import_uni_seeds('uni_web', '3_links_texts_uni_webs.csv')
-    #
-    # CsvTool.new.import_uni_seeds('uni_act', '4_crm_uni_acts.csv')
-    # CsvTool.new.import_uni_seeds('uni_act', '5_indexers_uni_acts.csv')
-    # CsvTool.new.import_uni_seeds('uni_act', '6_locations_uni_acts.csv')
-    #
-    # CsvTool.new.import_uni_seeds('uni_cont', '7_uni_conts.csv')
-    #
     # ########## STANDARD SEED IMPORT BELOW ##########
     # CsvTool.new.import_standard_seeds('who', '8_whos.csv')
     # CsvTool.new.import_standard_seeds('brand', '9_brands.csv')
@@ -92,10 +72,8 @@ module CsvImport
 
   ########## UNI SEED IMPORT BELOW ##########
   # CsvTool.new.import_uni_seeds('uni_act', '1_cops.csv')
-  # CsvTool.new.import_uni_seeds('uni_act', '03_crm_uni_acts.csv')
-
   def import_uni_seeds(model_name, file_name)
-    @file_path = "#{@seeds_dir_path}/#{file_name}"
+    @file_path = "#{@seeds_path}/#{file_name}"
     model = model_name.classify.constantize
     plural_model_name = model_name.pluralize
     custom_migrate_method = "migrate_#{plural_model_name}"
@@ -125,7 +103,7 @@ module CsvImport
   ########## STANDARD SEED IMPORT BELOW ##########
 
   def import_standard_seeds(model_name, file_name)
-    @file_path = "#{@seeds_dir_path}/#{file_name}"
+    @file_path = "#{@seeds_path}/#{file_name}"
     model = model_name.classify.constantize
     plural_model_name = model_name.pluralize
     custom_migrate_method = "migrate_#{plural_model_name}"

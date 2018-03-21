@@ -12,10 +12,13 @@ class CsvTool
   attr_reader :file_name, :file_path
 
   def initialize
-    @seeds_dir_path = "./db/csv/seeds"
-    @backups_dir_path = "./db/csv/backups"
-    FileUtils.mkdir_p(@seeds_dir_path)
-    FileUtils.mkdir_p(@backups_dir_path)
+    @seeds_path = "./db/csv/seeds"
+    @backups_path = "./db/csv/backups"
+    @exports_path = "./db/csv/exports"
+
+    FileUtils.mkdir_p(@seeds_path)
+    FileUtils.mkdir_p(@backups_path)
+    FileUtils.mkdir_p(@exports_path)
   end
 
 

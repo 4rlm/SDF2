@@ -10,7 +10,7 @@ class Cont < ApplicationRecord
   has_many :links, through: :web
   has_many :brands, through: :web
 
-  has_many :trackings, as: :trackable
-  has_many :tracks, through: :trackings
+  has_many :exportings, as: :exportable
+  has_many :exports, through: :exportings
 
 end

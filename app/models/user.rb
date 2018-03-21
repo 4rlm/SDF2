@@ -6,5 +6,5 @@ class User < ApplicationRecord
   # Additional Devise Modules: :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :lockable
 
-  has_many :tracks, dependent: :destroy
+  has_many :exports, dependent: :destroy
 end
