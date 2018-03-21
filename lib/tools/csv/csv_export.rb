@@ -19,7 +19,7 @@ module CsvExport
   ## PERFECT! - INCLUDES [WEB, BRANDS, ACTS]!
   ## CALL: CsvTool.new.export_web_acts('query')
   def export_web_acts(query)
-    query = Web.where(cs_sts: 'Valid')[-1..-1] ## Just for testing - Query should be passed in.
+    query = Web.where(cs_sts: 'Valid')[-50..-1] ## Just for testing - Query should be passed in.
     file_name = "web_acts_#{@current_time}.csv"
     path_and_file = "#{@exports_path}/#{file_name}"
 
@@ -36,7 +36,7 @@ module CsvExport
 
         if web.acts.any?
           web.acts.each do |act|
-            csv.add_row(values += act.attributes.slice(*act_cols).values)
+            csv.add_row(values + act.attributes.slice(*act_cols).values)
           end
         else
           csv.add_row(values)

@@ -13,11 +13,9 @@ class CsvTool
 
   def initialize
     @current_time = Time.now.strftime("%Y%m%d%I%M%S")
-
     @seeds_path = "./db/csv/seeds"
     @backups_path = "./db/csv/backups"
     @exports_path = "./db/csv/exports"
-
     FileUtils.mkdir_p(@seeds_path)
     FileUtils.mkdir_p(@backups_path)
     FileUtils.mkdir_p(@exports_path)
