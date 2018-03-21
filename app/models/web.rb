@@ -1,4 +1,5 @@
 class Web < ApplicationRecord
+  acts_as_favoritable ## Allows Model to be Favorited by users.
 
   before_save :track_web_change, :prevent_valid_wx
 

@@ -1,4 +1,5 @@
 class Act < ApplicationRecord
+  acts_as_favoritable ## Allows Model to be Favorited by users.
 
   before_save :full_address, :track_act_change
 

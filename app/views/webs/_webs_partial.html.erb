@@ -14,21 +14,68 @@
 
     <div class="row outer-list-row">
       <div class="col-md-3 association-parent">
-        <p><%= link_to icon('fas', 'external-link-alt', web.url), web.url, target: '_blank' %></p>
-        <p><%= icon('fas', 'car', "Brand: #{get_brands(web)&.join(', ')}") %></p>
-        <p><%= icon('fas', 'star', "COP: #{web.cop}") %></p>
-        <p><%= icon('fas', 'home', "Website: #{web.url_sts}")%>: <%= web.url_date&.strftime('%x')%></p>
-        <p><%= icon('fab', 'firstdraft', "Template (#{web.temp_name})")%>: <%= web.temp_sts %> <%= web.tmp_date&.strftime('%x')%></p>
-        <p><%= icon('fas', 'link', "Staff Page: #{web.page_sts}")%>: <%= web.page_date&.strftime('%x')%></p>
 
-        <% cont_count = web.conts&.count %>
-        <% if cont_count > 0 %>
-          <p><%= icon('fas', 'users', "Staff (#{cont_count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%> <a href="#" onclick="toggleConts(<%= web.id %>);return false;">View Staff</a></p>
-        <% else %>
-          <p><%= icon('fas', 'users', "Staff (#{cont_count})")%>: <%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%></p>
-        <% end %>
+        <div class="row">
+          <table>
+            <tr>
+              <td><%= link_to icon('fas', 'home'), web.url, target: '_blank' %></td>
+              <td><%= web.url %></td>
+            </tr>
 
-        <p><%= icon('fas', 'calendar-alt', "Created: #{web.created_at.strftime('%x')}")%> (Updated: <%= web.web_changed&.strftime('%x')%>)</p>
+            <tr>
+              <td><%= icon('fas', 'car') %></td>
+              <td><%= get_brands(web)&.join(', ') %></td>
+            </tr>
+
+            <tr>
+              <td><%= icon('fas', 'star') %></td>
+              <td><%= web.cop %></td>
+            </tr>
+
+            <tr>
+              <td><%= icon('fab', 'firstdraft')%></td>
+              <td><%= web.temp_sts %> (<%= web.temp_name %>) <%= web&.tmp_date&.strftime('%x')%></td>
+            </tr>
+
+            <tr>
+              <td><%= icon('fas', 'link')%></td>
+              <td><%= web.page_sts %> <%= web&.page_date&.strftime('%x')%></td>
+            </tr>
+
+            <tr>
+              <td><%= icon('fas', 'users')%></td>
+
+              <td><%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%>
+                <% cont_count = web.conts&.count %>
+                <% if cont_count > 0 %>
+                  | <a href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+                <% end %>
+              </td>
+            </tr>
+
+            <tr>
+              <td><%= icon('fas', 'calendar-alt')%></td>
+              <td>Created <%= web&.created_at&.strftime('%x')%>
+                <% if web.web_changed.present? %>
+                  | Updated <%= web&.web_changed&.strftime('%x')%>
+                <% end %>
+              </td>
+            </tr>
+
+            <tr>
+              <td><%= icon('fas', 'download')%></td>
+              <td>export date</td>
+            </tr>
+
+          </table>
+        </div>
+
+
+        <div class="row btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-secondary">Fav</button>
+          <button type="button" class="btn btn-secondary">Hide</button>
+        </div>
+
       </div>
 
       <div class="col-md-9 outer-list-col">

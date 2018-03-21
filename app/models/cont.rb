@@ -1,4 +1,5 @@
 class Cont < ApplicationRecord
+  acts_as_favoritable ## Allows Model to be Favorited by users.
 
   # validates :full_name, presence: true, case_sensitive: false, :uniqueness => { :scope => [:web_id] }
   # validates :full_name, :uniqueness => { :scope => [:web_id] }
