@@ -5,20 +5,18 @@
 
 # %w{csv pry csv_export csv_import}.each { |x| require x }
 
-class CsvTool
+class CsvServTool
   extend ActiveSupport::Concern
-  include CsvExport
-  include CsvImport
+  include CsvServExport
+  include CsvServImport
   attr_reader :file_name, :file_path
 
   def initialize
     @current_time = Time.now
     @seeds_path = "./db/csv/seeds"
     @backups_path = "./db/csv/backups"
-    @exports_path = "./db/csv/exports"
-    FileUtils.mkdir_p(@seeds_path)
-    FileUtils.mkdir_p(@backups_path)
-    FileUtils.mkdir_p(@exports_path)
+    @exports_path = "./public/downloads"
+    # FileUtils.mkdir_p(@seeds_path)
   end
 
 
@@ -26,7 +24,7 @@ class CsvTool
   ###### SHARED METHODS AMONGST BOTH MODULES ######
 
 
-  #CALL: CsvTool.new.get_db_table_list
+  #CALL: CsvServTool.new.get_db_table_list
   def get_db_table_list
     Rails.application.eager_load!
     db_table_list = ActiveRecord::Base.descendants.map(&:name)

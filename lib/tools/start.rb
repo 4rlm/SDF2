@@ -5,7 +5,7 @@ class Start
 
   #Call: Start.mega_start
   def self.mega_start
-    CsvTool.new.import_all_seed_files ## imports all seeds.
+    CsvServTool.new.import_all_seed_files ## imports all seeds.
     VerUrl.new.start_ver_url ## verifies urls, redirects.
   end
 
@@ -16,17 +16,17 @@ class Start
 
   # 1) CALL: Start.import_all_seed_files
   def self.import_all_seed_files
-    CsvTool.new.import_all_seed_files
+    CsvServTool.new.import_all_seed_files
   end
 
   # 2) CALL: Start.backup_entire_db
   def self.backup_entire_db
-    CsvTool.new.backup_entire_db
+    CsvServTool.new.backup_entire_db
   end
 
   # 3) CALL: Start.restore_all_backups
   def self.restore_all_backups
-    CsvTool.new.restore_all_backups
+    CsvServTool.new.restore_all_backups
   end
 
   ##############################

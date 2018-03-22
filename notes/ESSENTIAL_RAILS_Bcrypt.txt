@@ -169,7 +169,7 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
 ====================================
 ** ESSENTIAL RAILS....3) PG Dump-Restore
 ====================================
-# Call: CsvTool.new.restore_backup(Brand, 'Brands.csv')
+# Call: CsvServTool.new.restore_backup(Brand, 'Brands.csv')
 
 
 1) Backup PG

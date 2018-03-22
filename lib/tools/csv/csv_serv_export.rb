@@ -1,27 +1,9 @@
-module CsvExport
-  extend ActiveSupport::Concern
+module CsvServExport
 
-  module ClassMethods
-    # ===== Export CSV =====
-    def to_csv
-      CSV.generate do |csv|
-        csv << column_names
-        all.each do |obj|
-          csv << obj.attributes.values_at(*column_names)
-        end
-      end
-    end
-
+  ## CALL: CsvServTool.new.greeter
+  def greeter
+    puts "Hi"
   end
-
-
-
-
-
-
-
-
-
 
   def download_csv
     CSV.generate do |csv|
@@ -40,7 +22,7 @@ module CsvExport
   ###########################################################
   ## FILTERED COLS: SAVES CSV, NOT GENERATE!
   ## PERFECT! - INCLUDES [WEB, BRANDS, ACTS]!
-  ## CALL: CsvTool.new.export_web_acts('query')
+  ## CALL: CsvServTool.new.export_web_acts('query')
   def export_web_acts(webs)
     webs = Web.where(cs_sts: 'Valid')[-100..-1] ## Just for testing - Query should be passed in.
     file_name = "web_acts_#{@current_time.strftime("%Y%m%d%I%M%S")}.csv"
@@ -86,7 +68,7 @@ module CsvExport
 
   ## FILTERED COLS: SAVES CSV, NOT GENERATE!
   ## PERFECT! - INCLUDES [CONTS, WEB, BRANDS]!
-  ## CALL: CsvTool.new.export_cont_web('query')
+  ## CALL: CsvServTool.new.export_cont_web('query')
   def export_cont_web(conts)
     file_name = "cont_web_#{@current_time.strftime("%Y%m%d%I%M%S")}.csv"
     path_and_file = "#{@exports_path}/#{file_name}"
@@ -110,7 +92,7 @@ module CsvExport
 
   ###########################################################
 
-  ## CALL: CsvTool.new.log_export_cont_web('conts', 'user_id')
+  ## CALL: CsvServTool.new.log_export_cont_web('conts', 'user_id')
   def log_export_cont_web(conts, user_id)
     user = User.find(1)
     conts = Cont.where("job_title LIKE '%General%'")[-100..-1]
@@ -144,20 +126,20 @@ module CsvExport
 
   ########## ADMIN BACK-END BACKUP METHODS BELOW #############
   # Exports CSV to: db/csv/backups/file_name.csv
-  # CSVs can be re-imported via CsvTool.new.restore_all_backups
+  # CSVs can be re-imported via CsvServTool.new.restore_all_backups
   ###########################################################
 
-  # CALL: CsvTool.new.backup_entire_db
+  # CALL: CsvServTool.new.backup_entire_db
   def backup_entire_db
     db_table_list = get_db_table_list
     db_table_list.each do |table_name|
       model = table_name.constantize
       file_name = "#{table_name.pluralize}.csv"
-      CsvTool.new.backup_csv(model, file_name)
+      CsvServTool.new.backup_csv(model, file_name)
     end
   end
 
-  #CALL: CsvTool.new.backup_csv(User, 'Users.csv')
+  #CALL: CsvServTool.new.backup_csv(User, 'Users.csv')
   def backup_csv(model, file_name)
     path_and_file = "#{@backups_path}/#{file_name}"
     CSV.open(path_and_file, "wb") do |csv|

@@ -1,4 +1,4 @@
-#Call: CsvTool.new.import_uni_seeds('uni_act', 'cop_formated.csv')
+#Call: CsvServTool.new.import_uni_seeds('uni_act', 'cop_formated.csv')
 #Call: Mig.new.migrate_uni_acts
 
 module MigUniAct
