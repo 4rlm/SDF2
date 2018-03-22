@@ -8,6 +8,24 @@
   </div>
 </div>
 
+<div class="row">
+  <%#= link_to "Export Data", export_webs_path(format: "csv") %>
+</div>
+
+
+<div class="row">
+  <%= link_to webs_path(format: "csv"), class: 'btn btn-primary btn-xs' do %>
+    <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+  <% end %>
+
+  <%= link_to "Export Data 2", webs_path(format: "csv") %>
+
+</div>
+
+<div class="row">
+  <%= link_to 'Download CSV-3', webs_path(format: "csv"), class: 'btn btn-primary btn btn-primary btn-xs' %>
+</div>
+
 
 <div class="panel outer-panel">
   <% @webs.each do |web| %>

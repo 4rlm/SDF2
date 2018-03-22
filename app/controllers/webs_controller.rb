@@ -12,36 +12,52 @@ class WebsController < ApplicationController
       params[:q] = webs_helper.split_ransack_params(params[:q])
     end
 
-    ## BEST 2 BELOW - SAVE!!!!
+    @wq = Web.ransack(params[:q])
+    # @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
+
+    selected_data = @wq.result(distinct: true).includes(:acts, :conts, :brands)
+    @webs = selected_data.paginate(page: params[:page], per_page: 50)
+
+
+
     # @q = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
     # @webs = @q.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
-
-    ## TESTING BELOW
-
-    @wq = Web.ransack(params[:q])
-    @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
-
-
-
     # @q= Web.joins(:acts, :brands).ransack(params[:q])
     # @q = Web.is_cop_or_franchise.ransack(params[:q])
     # @webs = @q.result(distinct: true).paginate(page: params[:page], per_page: 50)
     # @q = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
-
     # @q = Web.is_cop_or_franchise.ransack(params[:q])
     # @webs = @q.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
     # @webs = @q.result.includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
-
     # @webs = @q.result.includes(:acts, :brands).page(params[:page], per_page: 50).to_a.uniq
-
     # @webs = Web.all.paginate(page: params[:page], per_page: 50)
-
     # respond_with(@webs)
+
+
+    respond_to do |format|
+      binding.pry
+      format.html
+      format.csv { send_data selected_data.to_csv }
+      # format.csv { render text: @webs.to_csv }
+    end
+
   end
 
   def search
     index
     render :index
+  end
+
+  def export
+    index
+    # @webs
+    binding.pry
+
+    @data = Web.order(:created_at)
+    respond_to do |format|
+      format.html { redirect_to root_url }
+      format.csv { send_data @data.to_csv }
+    end
   end
 
   # GET /webs/1

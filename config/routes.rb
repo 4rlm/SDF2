@@ -16,8 +16,13 @@ Rails.application.routes.draw do
   resources :webs do
     collection do
       match 'search' => 'webs#search', via: [:get, :post], as: :search
+      match 'export' => 'webs#export', via: [:get], as: :export
     end
   end
+
+  # get 'export', to: 'foo#export', as: :foo_export
+  # get 'webs/export', to: 'webs#export', as: :export_webs
+
 
   resources :acts, :terms, :links
 end

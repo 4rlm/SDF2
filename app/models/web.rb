@@ -1,6 +1,7 @@
 class Web < ApplicationRecord
-  acts_as_favoritable ## Allows Model to be Favorited by users.
+  include CsvExport
 
+  acts_as_favoritable ## Allows Model to be Favorited by users.
   before_save :track_web_change, :prevent_valid_wx
 
   validates_uniqueness_of :url, allow_blank: false, allow_nil: false
@@ -34,25 +35,23 @@ class Web < ApplicationRecord
   scope :is_cop_or_franchise, -> {is_franchise.merge(is_cop)}
   scope :is_not_wx, ->{ where(wx_date: nil) }
   scope :web_act_state, ->{ joins(:acts).merge(Act.where.not(state: nil)) }
-
   scope :web_act_gp_sts, ->{ joins(:acts).merge(Act.where.not(gp_sts: nil)) }
   scope :web_act_gp_indus, ->{ joins(:acts).merge(Act.where.not(gp_indus: nil)) }
-
-
-
-
-
-
   # merged = Web.is_cop.merge(Web.is_franchise)
-
   # scope :act_names, ->(ids_ary) { joins(:acts).where("locations.id" => ids_ary) }
-
-
   # scope :unsent, -> { joins(:user).merge(User.unsent) }
   # scope :sent, -> { joins(:user).merge(User.sent) }
   # scope :accepted, -> { joins(:user).merge(User.accepted) }
-  #
   # scope :containing_blog_keyword_with_id_greater_than, ->(id) { contains_blog_keyword.or(id_greater_than(id)) }
 
+  # def self.to_csv(options = {})
+  #   CSV.generate(options) do |csv|
+  #     csv.add_row column_names
+  #     all.each do |web|
+  #       values = web.attributes.values
+  #       csv.add_row values
+  #     end
+  #   end
+  # end
 
 end
