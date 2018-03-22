@@ -18,6 +18,7 @@ class Web < ApplicationRecord
 
   has_many :exportings, as: :exportable
   has_many :exports, through: :exportings
+  # has_many :exports, as: :exportable, dependent: :destroy
 
   def track_web_change
     self.web_changed = Time.now if url_changed? || fwd_url_changed? || wx_date_changed?

@@ -12,7 +12,7 @@ class CsvTool
   attr_reader :file_name, :file_path
 
   def initialize
-    @current_time = Time.now.strftime("%Y%m%d%I%M%S")
+    @current_time = Time.now
     @seeds_path = "./db/csv/seeds"
     @backups_path = "./db/csv/backups"
     @exports_path = "./db/csv/exports"

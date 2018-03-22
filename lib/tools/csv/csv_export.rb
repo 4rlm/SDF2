@@ -20,7 +20,7 @@ module CsvExport
   ## CALL: CsvTool.new.export_web_acts('query')
   def export_web_acts(webs)
     webs = Web.where(cs_sts: 'Valid')[-100..-1] ## Just for testing - Query should be passed in.
-    file_name = "web_acts_#{@current_time}.csv"
+    file_name = "web_acts_#{@current_time.strftime("%Y%m%d%I%M%S")}.csv"
     path_and_file = "#{@exports_path}/#{file_name}"
 
     web_cols = %w(id url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
@@ -48,12 +48,24 @@ module CsvExport
   ###########################################################
 
   ###########################################################
+
+  ## Method for Testing export_cont_web.  Would normally be run by user on front-end based on Favorites.
+  def testing_export_cont_web
+    conts = Cont.where("job_title LIKE '%General%'")[-100..-1] ## Just for testing - Query should be passed in.
+    user_id = 1
+    export_cont_web(conts)
+
+    binding.pry
+    ## Add export log to Export Table.
+    log_export_cont_web(query, user_id)
+    binding.pry
+  end
+
   ## FILTERED COLS: SAVES CSV, NOT GENERATE!
-  ## TRIAL! - INCLUDES [WEB, BRANDS, CONTS]!
+  ## PERFECT! - INCLUDES [CONTS, WEB, BRANDS]!
   ## CALL: CsvTool.new.export_cont_web('query')
   def export_cont_web(conts)
-    conts = Cont.where("job_title LIKE '%General%'")[-100..-1] ## Just for testing - Query should be passed in.
-    file_name = "cont_web_#{@current_time}.csv"
+    file_name = "cont_web_#{@current_time.strftime("%Y%m%d%I%M%S")}.csv"
     path_and_file = "#{@exports_path}/#{file_name}"
 
     cont_cols = %w(id web_id first_name last_name job_title job_desc email phone cs_date email_changed cont_changed job_changed created_at cx_date)
@@ -72,6 +84,25 @@ module CsvExport
     end
   end
   ###########################################################
+
+  ###########################################################
+
+  ## CALL: CsvTool.new.log_export_cont_web('conts', 'user_id')
+  def log_export_cont_web(conts, user_id)
+    user = User.find(1)
+    conts = Cont.where("job_title LIKE '%General%'")[-100..-1]
+
+    cont_ids = conts.map(&:id)&.sort.uniq
+    web_ids = conts.map(&:web_id)&.sort.uniq
+
+    export_obj = Export.find_or_create_by(user: user, export_date: @current_time)
+    export_obj.conts << conts
+
+    webs = conts.map {|cont| cont.web }&.sort&.uniq
+    export_obj.webs << webs
+
+    binding.pry
+  end
 
 
 

@@ -145,8 +145,7 @@ ActiveRecord::Schema.define(version: 20180321063204) do
   create_table "exports", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "export_date", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.index ["user_id", "export_date"], name: "user_exports", unique: true
     t.index ["user_id"], name: "index_exports_on_user_id"
   end
 
