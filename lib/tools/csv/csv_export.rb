@@ -18,19 +18,19 @@ module CsvExport
   ## FILTERED COLS: SAVES CSV, NOT GENERATE!
   ## PERFECT! - INCLUDES [WEB, BRANDS, ACTS]!
   ## CALL: CsvTool.new.export_web_acts('query')
-  def export_web_acts(query)
-    query = Web.where(cs_sts: 'Valid')[-50..-1] ## Just for testing - Query should be passed in.
+  def export_web_acts(webs)
+    webs = Web.where(cs_sts: 'Valid')[-100..-1] ## Just for testing - Query should be passed in.
     file_name = "web_acts_#{@current_time}.csv"
     path_and_file = "#{@exports_path}/#{file_name}"
 
-    web_cols = %w(id url temp_name)
+    web_cols = %w(id url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
     brand_cols = %w(brand_name)
-    act_cols = %w(act_name gp_id lat lon street city state zip phone adr_changed act_changed)
+    act_cols = %w(act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)
 
     CSV.open(path_and_file, "wb") do |csv|
       csv.add_row(web_cols + brand_cols + act_cols)
 
-      query.each do |web|
+      webs.each do |web|
         values = web.attributes.slice(*web_cols).values
         values << web.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
 
@@ -46,6 +46,33 @@ module CsvExport
     end
   end
   ###########################################################
+
+  ###########################################################
+  ## FILTERED COLS: SAVES CSV, NOT GENERATE!
+  ## TRIAL! - INCLUDES [WEB, BRANDS, CONTS]!
+  ## CALL: CsvTool.new.export_cont_web('query')
+  def export_cont_web(conts)
+    conts = Cont.where("job_title LIKE '%General%'")[-100..-1] ## Just for testing - Query should be passed in.
+    file_name = "cont_web_#{@current_time}.csv"
+    path_and_file = "#{@exports_path}/#{file_name}"
+
+    cont_cols = %w(id web_id first_name last_name job_title job_desc email phone cs_date email_changed cont_changed job_changed created_at cx_date)
+    web_cols = %w(url url_sts cop temp_name cs_sts web_changed wx_date)
+    brand_cols = %w(brand_name)
+
+    CSV.open(path_and_file, "wb") do |csv|
+      csv.add_row(cont_cols + web_cols + brand_cols)
+
+      conts.each do |cont|
+        values = cont.attributes.slice(*cont_cols).values
+        values += cont.web.attributes.slice(*web_cols).values
+        values << cont.web.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
+        csv.add_row(values)
+      end
+    end
+  end
+  ###########################################################
+
 
 
 
