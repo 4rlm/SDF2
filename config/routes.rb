@@ -15,15 +15,18 @@ Rails.application.routes.draw do
   end
 
   resources :webs do
+    get :flag_data, on: :collection
+
     collection do
       match 'search' => 'webs#search', via: [:get, :post], as: :search
-      match 'export' => 'webs#export', via: [:get], as: :export
+      match 'generate_csv' => 'webs#generate_csv', via: [:get, :post], as: :generate_csv
     end
   end
 
-  # get 'export', to: 'foo#export', as: :foo_export
-  # get 'webs/export', to: 'webs#export', as: :export_webs
-
-
   resources :acts, :terms, :links
+
+  ############ BUTTONS ~ START ##############
+  get 'export_web_acts' => 'webs#export_web_acts'
+  ############ BUTTONS ~ END ##############
+
 end

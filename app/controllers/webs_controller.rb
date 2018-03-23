@@ -1,7 +1,12 @@
 class WebsController < ApplicationController
   before_action :set_web, only: [:show, :edit, :update, :destroy]
-  respond_to :html, :json
+  # respond_to :html, :json
   helper_method :sort_column, :sort_direction
+
+  before_action :set_web_service, only: [:flag_data]
+
+
+
 
   # GET /webs
   # GET /webs.json
@@ -15,10 +20,8 @@ class WebsController < ApplicationController
     @wq = Web.ransack(params[:q])
     # @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
 
-    selected_data = @wq.result(distinct: true).includes(:acts, :conts, :brands)
-    @webs = selected_data.paginate(page: params[:page], per_page: 50)
-
-
+    @selected_webs = @wq.result(distinct: true).includes(:acts, :conts, :brands)
+    @webs = @selected_webs.paginate(page: params[:page], per_page: 50)
 
     # @q = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
     # @webs = @q.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
@@ -33,31 +36,45 @@ class WebsController < ApplicationController
     # @webs = Web.all.paginate(page: params[:page], per_page: 50)
     # respond_with(@webs)
 
-
     respond_to do |format|
-      binding.pry
       format.html
-      format.csv { send_data selected_data.to_csv }
-      # format.csv { render text: @webs.to_csv }
+      # format.csv { send_data selected_webs.web_acts_to_csv }
+      # format.csv { render text: selected_webs.to_csv }
+      # format.csv { send_data selected_webs.web_acts_to_csv, file_name: "web_acts_#{Time.now.strftime("%Y%m%d%I%M%S")}.csv" }
+      # format.csv { send_data(selected_webs.web_acts_to_csv) }
     end
 
   end
+
+  def generate_csv
+    binding.pry
+    Web.web_acts_to_csv(params[:ids])
+    # Web.delay.web_acts_to_csv(params[:ids])
+    # @service.delay.core_staffer_domain_cleaner
+
+    redirect_to webs_path
+  end
+
+
+  def set_web_service
+    binding.pry
+    @service = WebService.new
+  end
+
+  def flag_data
+    binding.pry
+    @service.flag_data_starter(params[:webs])
+    flash[:notice] = "Flagging Data Done!"
+    redirect_to webs_path
+  end
+
+
+
+
 
   def search
     index
     render :index
-  end
-
-  def export
-    index
-    # @webs
-    binding.pry
-
-    @data = Web.order(:created_at)
-    respond_to do |format|
-      format.html { redirect_to root_url }
-      format.csv { send_data @data.to_csv }
-    end
   end
 
   # GET /webs/1
@@ -114,6 +131,30 @@ class WebsController < ApplicationController
     end
   end
 
+
+  ############ BUTTONS ~ START ##############
+  # def export_web_acts
+  #   binding.pry
+  #
+  #   respond_to do |format|
+  #     format.html
+  #     # format.csv { send_data(selected_webs.web_acts_to_csv) }
+  #     format.csv do
+  #       binding.pry
+  #       selected_webs.web_acts_to_csv
+  #       binding.pry
+  #
+  #       redirect_to webs_path
+  #     end
+  #   end
+  #
+  #   # @service.mega_dash
+  #   # @service.delay.mega_dash
+  #
+  # end
+  ############ BUTTONS ~ END ##############
+
+
   private
     def sort_column
       Web.column_names.include?(params[:sort]) ? params[:sort] : "url"
@@ -129,7 +170,7 @@ class WebsController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def web_params
-      params.require(:act).permit(:id, :url, :url_sts_code, :cop, :url_sts, :temp_sts, :page_sts, :cs_sts, :brand_sts, :timeout, :url_date, :tmp_date, :page_date, :cs_date, :brand_date, :fwd_url, :web_changed, :wx_date, temp_name: [])
-    end
+    # def web_params
+    #   params.require(:act).permit(:id, :url, :url_sts_code, :cop, :url_sts, :temp_sts, :page_sts, :cs_sts, :brand_sts, :timeout, :url_date, :tmp_date, :page_date, :cs_date, :brand_date, :fwd_url, :web_changed, :wx_date, temp_name: [])
+    # end
 end

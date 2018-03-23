@@ -19,37 +19,37 @@ module CsvServExport
   ###########################################################
 
 
-  ###########################################################
-  ## FILTERED COLS: SAVES CSV, NOT GENERATE!
-  ## PERFECT! - INCLUDES [WEB, BRANDS, ACTS]!
-  ## CALL: CsvServTool.new.export_web_acts('query')
-  def export_web_acts(webs)
-    webs = Web.where(cs_sts: 'Valid')[-100..-1] ## Just for testing - Query should be passed in.
-    file_name = "web_acts_#{@current_time.strftime("%Y%m%d%I%M%S")}.csv"
-    path_and_file = "#{@exports_path}/#{file_name}"
-
-    web_cols = %w(id url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
-    brand_cols = %w(brand_name)
-    act_cols = %w(act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)
-
-    CSV.open(path_and_file, "wb") do |csv|
-      csv.add_row(web_cols + brand_cols + act_cols)
-
-      webs.each do |web|
-        values = web.attributes.slice(*web_cols).values
-        values << web.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
-
-        if web.acts.any?
-          web.acts.each do |act|
-            csv.add_row(values + act.attributes.slice(*act_cols).values)
-          end
-        else
-          csv.add_row(values)
-        end
-
-      end
-    end
-  end
+  # ################### moved to client tool ########################################
+  # ## FILTERED COLS: SAVES CSV, NOT GENERATE!
+  # ## PERFECT! - INCLUDES [WEB, BRANDS, ACTS]!
+  # ## CALL: CsvServTool.new.export_web_acts('query')
+  # def export_web_acts(webs)
+  #   webs = Web.where(cs_sts: 'Valid')[-100..-1] ## Just for testing - Query should be passed in.
+  #   file_name = "web_acts_#{@current_time.strftime("%Y%m%d%I%M%S")}.csv"
+  #   path_and_file = "#{@exports_path}/#{file_name}"
+  #
+  #   web_cols = %w(id url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
+  #   brand_cols = %w(brand_name)
+  #   act_cols = %w(act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)
+  #
+  #   CSV.open(path_and_file, "wb") do |csv|
+  #     csv.add_row(web_cols + brand_cols + act_cols)
+  #
+  #     webs.each do |web|
+  #       values = web.attributes.slice(*web_cols).values
+  #       values << web.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
+  #
+  #       if web.acts.any?
+  #         web.acts.each do |act|
+  #           csv.add_row(values + act.attributes.slice(*act_cols).values)
+  #         end
+  #       else
+  #         csv.add_row(values)
+  #       end
+  #
+  #     end
+  #   end
+  # end
   ###########################################################
 
   ###########################################################

@@ -44,14 +44,29 @@ class Web < ApplicationRecord
   # scope :accepted, -> { joins(:user).merge(User.accepted) }
   # scope :containing_blog_keyword_with_id_greater_than, ->(id) { contains_blog_keyword.or(id_greater_than(id)) }
 
-  # def self.to_csv(options = {})
-  #   CSV.generate(options) do |csv|
-  #     csv.add_row column_names
-  #     all.each do |web|
-  #       values = web.attributes.values
-  #       csv.add_row values
-  #     end
-  #   end
-  # end
+  def self.to_csv(options = {})
+    CSV.generate(options) do |csv|
+      csv.add_row column_names
+      all.each do |web|
+        values = web.attributes.values
+        csv.add_row values
+      end
+    end
+  end
+
+  def self.export
+    binding.pry
+    CSV.generate(options) do |csv|
+      csv.add_row column_names
+      all.each do |web|
+        values = web.attributes.values
+        csv.add_row values
+      end
+    end
+  end
+
+  def self.exporty(msg)
+    binding.pry
+  end
 
 end

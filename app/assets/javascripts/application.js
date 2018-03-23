@@ -41,5 +41,28 @@
   }
 
 
+  // Export Webs CSV if Clicked.
+  function webExporter() {
+      var x = document.getElementById("webExportWrap");
+      if (x.style.display === "none") {
+          x.style.display = "block";
+      } else {
+          x.style.display = "none";
+      }
+  }
+
+
+
+  // GENERATES CSV FROM RANSACK QUERY VIA BUTTON
+  // function flagDataWeb() {
+  //   console.log("flagData Clicked", webs);
+  //   $.ajax({
+  //     url: "/webs/flag_data",
+  //     data: {webs: webs},
+  //     success: function() { web.reload(); }
+  //   });
+  // }
+
+
 
   // $('.collapse').collapse();

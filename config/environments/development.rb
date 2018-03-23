@@ -1,6 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  ## NOTE!! DANGEROUS!! - TEMPORARILY DISABILING STRONG PARAMETERS FOR TESTING.
+  config.action_controller.permit_all_parameters = true
+
   # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   config.action_mailer.default_url_options = {host: ENV['MAILER_HOST']}
   config.action_mailer.smtp_settings = {

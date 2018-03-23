@@ -8,23 +8,46 @@
   </div>
 </div>
 
-<div class="row">
-  <%#= link_to "Export Data", export_webs_path(format: "csv") %>
-</div>
-
 
 <div class="row">
-  <%= link_to webs_path(format: "csv"), class: 'btn btn-primary btn-xs' do %>
+  <%= link_to generate_csv_webs_path(ids: @selected_webs.pluck(:id)), class: 'btn btn-primary btn-xs' do %>
     <i class="fa fa-download" aria-hidden="true"></i> Download CSV
   <% end %>
-
-  <%= link_to "Export Data 2", webs_path(format: "csv") %>
-
 </div>
+
 
 <div class="row">
-  <%= link_to 'Download CSV-3', webs_path(format: "csv"), class: 'btn btn-primary btn btn-primary btn-xs' %>
+  <!-- <h5>Flag Data - Export CSV</h5> -->
+  <span class="btn btn-primary btn-xs" onClick="flagData();"><i class="fa fa-flag" aria-hidden="true"></i> Flag Data</span>
 </div>
+
+<script>
+  var webs = new Array();
+
+  function flagData() {
+    console.log("flagData Clicked", webs);
+    $.ajax({
+      url: "/webs/flag_data",
+      data: {webs: @webs},
+      success: function() { location.reload(); }
+    });
+  }
+</script>
+
+
+
+
+
+
+<div class="row">
+  <span class="btn btn-primary btn-xs" onClick="webExporter();"><i class="fa fa-flag" aria-hidden="true"></i> HIDDEN</span>
+
+  <div id="webExportWrap" class="row">
+    This is my DIV element.
+  </div>
+
+</div>
+
 
 
 <div class="panel outer-panel">
