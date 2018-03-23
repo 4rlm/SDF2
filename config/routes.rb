@@ -20,13 +20,10 @@ Rails.application.routes.draw do
     collection do
       match 'search' => 'webs#search', via: [:get, :post], as: :search
       match 'generate_csv' => 'webs#generate_csv', via: [:get, :post], as: :generate_csv
+      # match 'export' => 'webs#export', via: [:post], as: :export
     end
   end
 
   resources :acts, :terms, :links
-
-  ############ BUTTONS ~ START ##############
-  get 'export_web_acts' => 'webs#export_web_acts'
-  ############ BUTTONS ~ END ##############
 
 end

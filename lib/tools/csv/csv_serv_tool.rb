@@ -9,6 +9,7 @@ class CsvServTool
   extend ActiveSupport::Concern
   include CsvServExport
   include CsvServImport
+  # include CsvClientTool
   attr_reader :file_name, :file_path
 
   def initialize

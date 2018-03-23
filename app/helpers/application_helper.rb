@@ -16,6 +16,12 @@ module ApplicationHelper
 
   end
 
+  # def current_url(new_params)
+  #   binding.pry
+  #   url_for :params => params.merge(new_params)
+  #   binding.pry
+  # end
+
 
   ## GET_BRANDS_FOR_SELECT - STARTS
   def get_brands(web)
