@@ -1,24 +1,41 @@
 class WebCsvTool
 
-  def initialize
+  def initialize(web_q, current_user)
+    @web_q = web_q
+    @user = current_user
+    @webs = Web.ransack(@web_q).result(distinct: true).includes(:acts, :conts, :brands)
+
     @export_date = Time.now
     @file_name = "web_acts_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
     @path_and_file = "./public/downloads/#{@file_name}"
-
-    @user = User.find(1) ## Should be from Sessions.
-    @webs = nil
   end
 
 
-  def start_web_acts_csv_and_log(web_q)
-    @webs = Web.ransack(web_q).result(distinct: true).includes(:acts, :conts, :brands)
+  def start_web_acts_csv_and_log
     web_acts_to_csv
     log_web_acts_export
+  end
+
+  def save_web_queries
+    query = @user.queries.find_or_create_by(mod_name: 'Web', param_hsh: @web_q)
+    # query[:param_hsh]
+
+    # url = pars['url_cont_any']
+    # pars.delete('url_cont_any')
+    # pars.delete_if { |key, value| value.blank? }
+
+    # id: nil, user_id: nil, search_name: nil, mod_name: nil, param_hsh: nil
+    # activity = @user.activities.find_or_initialize_by(mod_name: 'Act', mod_id: act.id)
+    # activity.export_id = export.id
+    # activity.save
+
+    # JSON.parse( h.to_json, {:symbolize_names => true} )
   end
 
 
   ############  WEB_ACTS EXPORT  ############
   def web_acts_to_csv
+    binding.pry
     web_cols = %w(id url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
     brand_cols = %w(brand_name)
     act_cols = %w(act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)

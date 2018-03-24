@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180324092846) do
+ActiveRecord::Schema.define(version: 20180324123319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "citext"
   enable_extension "hstore"
+  enable_extension "citext"
 
   create_table "act_webs", force: :cascade do |t|
     t.bigint "act_id", null: false
@@ -158,20 +158,14 @@ ActiveRecord::Schema.define(version: 20180324092846) do
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
   end
 
-  create_table "searches", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "search_name", null: false
-    t.string "model_name", null: false
-    t.jsonb "param_js", default: "{}", null: false
+  create_table "queries", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "search_name"
+    t.string "mod_name"
     t.hstore "param_hsh"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["model_name"], name: "index_searches_on_model_name"
-    t.index ["param_hsh"], name: "index_searches_on_param_hsh", using: :gin
-    t.index ["param_js"], name: "index_searches_on_param_js", using: :gin
-    t.index ["search_name"], name: "index_searches_on_search_name"
-    t.index ["user_id", "search_name"], name: "user_searches", unique: true
-    t.index ["user_id"], name: "index_searches_on_user_id"
+    t.index ["param_hsh"], name: "index_queries_on_param_hsh", using: :gin
   end
 
   create_table "tallies", force: :cascade do |t|

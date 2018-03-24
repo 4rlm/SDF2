@@ -5,12 +5,13 @@ class ContCsvTool
     @file_name = "cont_web_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
     @path_and_file = "./public/downloads/#{@file_name}"
 
-    @user = User.find(1) ## Should be from Sessions.
+    @user = nil
     @conts = nil
   end
 
 
-  def start_cont_web_csv_and_log(cont_q)
+  def start_cont_web_csv_and_log(cont_q, current_user)
+    @user = current_user
     @conts = Cont.ransack(cont_q).result(distinct: true).includes(:acts, :web, :brands)
     cont_web_to_csv
     log_cont_web_export

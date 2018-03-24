@@ -7,6 +7,7 @@ class WebsController < ApplicationController
   # GET /webs
   # GET /webs.json
   def index
+
     ## Splits 'cont_any' strings into array, if string and has ','
     if !params[:q].nil?
       webs_helper = Object.new.extend(WebsHelper)
@@ -19,9 +20,10 @@ class WebsController < ApplicationController
 
 
   def generate_csv
+
     if params[:q].present?
-      WebCsvTool.new.delay.start_web_acts_csv_and_log(params[:q])
-      # WebCsvTool.new.start_web_acts_csv_and_log(params[:q])
+      # WebCsvTool.new.delay.start_web_acts_csv_and_log(params[:q], current_user)
+      WebCsvTool.new.start_web_acts_csv_and_log(params[:q], current_user)
       params['action'] = 'index'
       redirect_to webs_path(params)
     end
@@ -29,6 +31,12 @@ class WebsController < ApplicationController
 
 
   def search
+
+    if params[:q].present?
+      binding.pry
+      WebCsvTool.new(params[:q], current_user).save_web_queries
+    end
+
     index
     render :index
   end

@@ -179,3 +179,16 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
 2) Restore PG:
   $ pg_restore -U postgres db/csv/pg_backups/sdf2_development.psql
   $ pg_restore -c -C -F c -v -U postgres db/csv/pg_backups/sdf2_development.tar
+
+
+======================
+
+Add hstore
+sdf2_development
+sdf2_production
+
+psql template1 -c 'create extension hstore;'
+psql sdf2_development -c 'create extension hstore;'
+psql sdf2_production -c 'create extension hstore;'
+
+JSON.parse( h.to_json, {:symbolize_names => true} )
