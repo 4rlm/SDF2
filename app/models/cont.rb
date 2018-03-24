@@ -1,6 +1,4 @@
 class Cont < ApplicationRecord
-  acts_as_favoritable ## Allows Model to be Favorited by users.
-
   # validates :full_name, presence: true, case_sensitive: false, :uniqueness => { :scope => [:web_id] }
   # validates :full_name, :uniqueness => { :scope => [:web_id] }
 
@@ -9,8 +7,5 @@ class Cont < ApplicationRecord
   has_many :acts, through: :web
   has_many :links, through: :web
   has_many :brands, through: :web
-
-  has_many :exportings, as: :exportable
-  has_many :exports, through: :exportings
 
 end

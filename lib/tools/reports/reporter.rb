@@ -3,7 +3,7 @@ module Reporter
 
   # CALL: Reporter.db_totals_report
   def self.db_totals_report
-    db_totals = CsvServTool.new.get_db_table_list.sort.map do |e|
+    db_totals = ServCsvTool.new.get_db_table_list.sort.map do |e|
       [e.pluralize, e.constantize.all.count]
     end.to_h
 

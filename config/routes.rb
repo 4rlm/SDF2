@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :conts do
     collection do
       match 'search' => 'conts#search', via: [:get, :post], as: :search
+      match 'generate_csv' => 'conts#generate_csv', via: [:get, :post], as: :generate_csv
     end
   end
 
@@ -20,10 +21,8 @@ Rails.application.routes.draw do
     collection do
       match 'search' => 'webs#search', via: [:get, :post], as: :search
       match 'generate_csv' => 'webs#generate_csv', via: [:get, :post], as: :generate_csv
-      # match 'export' => 'webs#export', via: [:post], as: :export
     end
   end
 
   resources :acts, :terms, :links
-
 end

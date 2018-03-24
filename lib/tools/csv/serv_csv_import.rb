@@ -1,4 +1,4 @@
-module CsvServImport
+module ServCsvImport
 
   ############## BEST CSV IMPORT METHOD #####################
   # RESTORE BACKUP METHODS BELOW - VERY QUICK PROCESS !!!
@@ -7,7 +7,7 @@ module CsvServImport
   ###########################################################
 
 
-  #CALL: CsvServTool.new.restore_all_backups
+  #CALL: ServCsvTool.new.restore_all_backups
   def restore_all_backups
     db_table_list = get_db_table_list
 
@@ -32,7 +32,7 @@ module CsvServImport
   end
 
 
-  # Call: CsvServTool.new.restore_backup(User, 'Users.csv')
+  # Call: ServCsvTool.new.restore_backup(User, 'Users.csv')
   def restore_backup(model, file_name)
     @file_path = "#{@backups_path}/#{file_name}"
     parse_csv
@@ -50,28 +50,28 @@ module CsvServImport
   ##########################################################
 
 
-  #CALL: CsvServTool.new.import_all_seed_files
+  #CALL: ServCsvTool.new.import_all_seed_files
   def import_all_seed_files
     Mig.new.reset_pk_sequence
 
-    CsvServTool.new.import_uni_seeds('uni_act', 'cop_formated.csv')
+    ServCsvTool.new.import_uni_seeds('uni_act', 'cop_formated.csv')
 
-    # CsvServTool.new.import_uni_seeds('uni_act', '1_acts_top_150.csv')
-    # CsvServTool.new.import_uni_seeds('uni_act', '2_wards_500.csv')
-    # CsvServTool.new.import_uni_seeds('uni_act', '3_acts_cop.csv')
-    # CsvServTool.new.import_uni_seeds('uni_act', '4_acts_sfdc.csv')
-    # CsvServTool.new.import_uni_seeds('uni_act', '5_acts_scraped.csv')
-    # CsvServTool.new.import_uni_seeds('uni_act', '6_acts_geo_locations.csv')
+    # ServCsvTool.new.import_uni_seeds('uni_act', '1_acts_top_150.csv')
+    # ServCsvTool.new.import_uni_seeds('uni_act', '2_wards_500.csv')
+    # ServCsvTool.new.import_uni_seeds('uni_act', '3_acts_cop.csv')
+    # ServCsvTool.new.import_uni_seeds('uni_act', '4_acts_sfdc.csv')
+    # ServCsvTool.new.import_uni_seeds('uni_act', '5_acts_scraped.csv')
+    # ServCsvTool.new.import_uni_seeds('uni_act', '6_acts_geo_locations.csv')
 
     # ########## STANDARD SEED IMPORT BELOW ##########
-    # CsvServTool.new.import_standard_seeds('who', '8_whos.csv')
-    # CsvServTool.new.import_standard_seeds('brand', '9_brands.csv')
-    # CsvServTool.new.import_standard_seeds('term', '10_terms.csv')
+    # ServCsvTool.new.import_standard_seeds('who', '8_whos.csv')
+    # ServCsvTool.new.import_standard_seeds('brand', '9_brands.csv')
+    # ServCsvTool.new.import_standard_seeds('term', '10_terms.csv')
   end
 
 
   ########## UNI SEED IMPORT BELOW ##########
-  # CsvServTool.new.import_uni_seeds('uni_act', '1_cops.csv')
+  # ServCsvTool.new.import_uni_seeds('uni_act', '1_cops.csv')
   def import_uni_seeds(model_name, file_name)
     @file_path = "#{@seeds_path}/#{file_name}"
     model = model_name.classify.constantize

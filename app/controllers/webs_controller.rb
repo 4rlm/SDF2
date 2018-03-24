@@ -3,10 +3,6 @@ class WebsController < ApplicationController
   # respond_to :html, :json
   helper_method :sort_column, :sort_direction
 
-  # before_action :set_web_service, only: [:flag_data]
-
-
-
 
   # GET /webs
   # GET /webs.json
@@ -19,48 +15,16 @@ class WebsController < ApplicationController
 
     @wq = Web.ransack(params[:q])
     @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
-
-    # @selected_webs = @wq.result(distinct: true).includes(:acts, :conts, :brands)
-    # @webs = @selected_webs.paginate(page: params[:page], per_page: 50)
-
-    # @q = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
-    # @webs = @q.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
-    # @q= Web.joins(:acts, :brands).ransack(params[:q])
-    # @q = Web.is_cop_or_franchise.ransack(params[:q])
-    # @webs = @q.result(distinct: true).paginate(page: params[:page], per_page: 50)
-    # @q = Web.joins(:acts, :brands).is_not_wx.act_is_valid_gp.merge(Web.is_cop).merge(Web.is_franchise).ransack(params[:q])
-    # @q = Web.is_cop_or_franchise.ransack(params[:q])
-    # @webs = @q.result(distinct: true).includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
-    # @webs = @q.result.includes(:acts, :brands).paginate(page: params[:page], per_page: 50)
-    # @webs = @q.result.includes(:acts, :brands).page(params[:page], per_page: 50).to_a.uniq
-    # @webs = Web.all.paginate(page: params[:page], per_page: 50)
-    # respond_with(@webs)
-
-    respond_to do |format|
-      format.html
-      # format.csv { send_data selected_webs.web_acts_to_csv }
-      # format.csv { render text: selected_webs.to_csv }
-      # format.csv { send_data selected_webs.web_acts_to_csv, file_name: "web_acts_#{Time.now.strftime("%Y%m%d%I%M%S")}.csv" }
-      # format.csv { send_data(selected_webs.web_acts_to_csv) }
-    end
-
   end
 
 
   def generate_csv
     if params[:q].present?
-      web_ids = Web.ransack(params[:q]).result(distinct: true).includes(:acts, :conts, :brands).map(&:id)&.sort&.uniq
-
-      CsvClientTool.new.web_acts_to_csv(web_ids)
+      WebCsvTool.new.delay.start_web_acts_csv_and_log(params[:q])
+      # WebCsvTool.new.start_web_acts_csv_and_log(params[:q])
+      params['action'] = 'index'
+      redirect_to webs_path(params)
     end
-
-    # current_url(new_params)
-    # Web.web_acts_to_csv(params[:ids])
-    # Web.delay.web_acts_to_csv(params[:ids])
-    # @service.delay.core_staffer_domain_cleaner
-
-    params['action'] = 'index'
-    redirect_to webs_path(params)
   end
 
 
@@ -70,18 +34,12 @@ class WebsController < ApplicationController
   end
 
 
-  # def set_web_service
+  # def flag_data
   #   binding.pry
-  #   @service = WebService.new
+  #   @service.flag_data_starter(params[:webs])
+  #   flash[:notice] = "Flagging Data Done!"
+  #   redirect_to webs_path
   # end
-
-
-  def flag_data
-    binding.pry
-    @service.flag_data_starter(params[:webs])
-    flash[:notice] = "Flagging Data Done!"
-    redirect_to webs_path
-  end
 
 
   # GET /webs/1
@@ -97,9 +55,6 @@ class WebsController < ApplicationController
   # GET /webs/1/edit
   def edit
   end
-
-
-
 
 
   # POST /webs

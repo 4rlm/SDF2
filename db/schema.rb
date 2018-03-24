@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180321063204) do
+ActiveRecord::Schema.define(version: 20180324092846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "citext"
+  enable_extension "hstore"
 
   create_table "act_webs", force: :cascade do |t|
     t.bigint "act_id", null: false
@@ -24,6 +25,18 @@ ActiveRecord::Schema.define(version: 20180321063204) do
     t.index ["act_id", "web_id"], name: "index_act_webs_on_act_id_and_web_id", unique: true
     t.index ["act_id"], name: "index_act_webs_on_act_id"
     t.index ["web_id"], name: "index_act_webs_on_web_id"
+  end
+
+  create_table "activities", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "export_id", null: false
+    t.string "mod_name"
+    t.integer "mod_id"
+    t.string "fav_sts"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["export_id"], name: "index_activities_on_export_id"
+    t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
   create_table "acts", force: :cascade do |t|
@@ -131,45 +144,34 @@ ActiveRecord::Schema.define(version: 20180321063204) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "exportings", force: :cascade do |t|
-    t.bigint "export_id"
-    t.string "exportable_type"
-    t.bigint "exportable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["export_id", "exportable_type", "exportable_id"], name: "exportings_index", unique: true
-    t.index ["export_id"], name: "index_exportings_on_export_id"
-    t.index ["exportable_type", "exportable_id"], name: "index_exportings_on_exportable_type_and_exportable_id"
-  end
-
   create_table "exports", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "export_date", null: false
-    t.index ["user_id", "export_date"], name: "user_exports", unique: true
+    t.string "file_name", null: false
+    t.index ["user_id", "file_name"], name: "user_exports", unique: true
     t.index ["user_id"], name: "index_exports_on_user_id"
-  end
-
-  create_table "favorites", force: :cascade do |t|
-    t.string "favoritable_type", null: false
-    t.bigint "favoritable_id", null: false
-    t.string "favoritor_type", null: false
-    t.bigint "favoritor_id", null: false
-    t.string "scope", default: "favorite", null: false
-    t.boolean "blocked", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["blocked"], name: "index_favorites_on_blocked"
-    t.index ["favoritable_id", "favoritable_type"], name: "fk_favoritables"
-    t.index ["favoritable_type", "favoritable_id"], name: "index_favorites_on_favoritable_type_and_favoritable_id"
-    t.index ["favoritor_id", "favoritor_type"], name: "fk_favorites"
-    t.index ["favoritor_type", "favoritor_id"], name: "index_favorites_on_favoritor_type_and_favoritor_id"
-    t.index ["scope"], name: "index_favorites_on_scope"
   end
 
   create_table "links", force: :cascade do |t|
     t.citext "staff_link", null: false
     t.citext "staff_text"
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
+  end
+
+  create_table "searches", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "search_name", null: false
+    t.string "model_name", null: false
+    t.jsonb "param_js", default: "{}", null: false
+    t.hstore "param_hsh"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["model_name"], name: "index_searches_on_model_name"
+    t.index ["param_hsh"], name: "index_searches_on_param_hsh", using: :gin
+    t.index ["param_js"], name: "index_searches_on_param_js", using: :gin
+    t.index ["search_name"], name: "index_searches_on_search_name"
+    t.index ["user_id", "search_name"], name: "user_searches", unique: true
+    t.index ["user_id"], name: "index_searches_on_user_id"
   end
 
   create_table "tallies", force: :cascade do |t|
@@ -371,5 +373,4 @@ ActiveRecord::Schema.define(version: 20180321063204) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "exportings", "exports"
 end

@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/jonhue/acts_as_favoritor.git
-  revision: 55e3c646b56789fa4ea566be8f84770bae171ee9
-  specs:
-    acts_as_favoritor (2.0.1)
-      activerecord (>= 5.0)
-
-GIT
   remote: https://github.com/rweng/jquery-datatables-rails.git
   revision: d486b31b192a2924b1913e080ad23460e6b96d31
   specs:
@@ -321,7 +314,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import (~> 0.21.0)
-  acts_as_favoritor!
   autoprefixer-rails
   bootstrap (~> 4.0.0)
   bootstrap-select-rails (~> 1.12, >= 1.12.4)

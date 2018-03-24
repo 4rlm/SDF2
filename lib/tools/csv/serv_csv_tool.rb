@@ -5,11 +5,11 @@
 
 # %w{csv pry csv_export csv_import}.each { |x| require x }
 
-class CsvServTool
+class ServCsvTool
   extend ActiveSupport::Concern
-  include CsvServExport
-  include CsvServImport
-  # include CsvClientTool
+  include ServCsvExport
+  include ServCsvImport
+  # include WebCsvTool
   attr_reader :file_name, :file_path
 
   def initialize
@@ -25,7 +25,7 @@ class CsvServTool
   ###### SHARED METHODS AMONGST BOTH MODULES ######
 
 
-  #CALL: CsvServTool.new.get_db_table_list
+  #CALL: ServCsvTool.new.get_db_table_list
   def get_db_table_list
     Rails.application.eager_load!
     db_table_list = ActiveRecord::Base.descendants.map(&:name)

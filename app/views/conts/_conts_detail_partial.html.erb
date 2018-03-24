@@ -9,6 +9,16 @@
 </div>
 
 
+<% if params[:q].present? %>
+  <div class="row">
+    <%= link_to generate_csv_conts_path(params), class: 'btn btn-primary btn-xs' do %>
+      <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+    <% end %>
+  </div>
+<% end %>
+
+
+
 <div class="panel outer-panel list-view">
   <% @conts&.each do |cont| %>
 

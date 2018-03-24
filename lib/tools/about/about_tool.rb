@@ -8,7 +8,7 @@
 #   ActiveRecord::Base.connection.reset_pk_sequence!(t)
 # end
 
-# CALL: CsvServTool.new.db_totals_report
+# CALL: ServCsvTool.new.db_totals_report
 ############################################
 
 class AboutTool
@@ -38,11 +38,11 @@ class AboutTool
     # Call: AboutTool.new.application_master_program_starter
 
     # Note: There is also separate methods for importing new data and backing up existing db, but this is simply restoring db to previous save point, then running all processes from start to end.
-    # To Backup, CALL: CsvServToolMod::Export.backup_entire_db
-    # To Import New or Additional Data, CALL: CsvServToolMod::Import.import_entire_seeds
+    # To Backup, CALL: ServCsvToolMod::Export.backup_entire_db
+    # To Import New or Additional Data, CALL: ServCsvToolMod::Import.import_entire_seeds
 
     puts "\n\n== AboutTool.new.application_master_program_starter ==\nDoes EVERYTHING! from A - Z!"
-    msg_1 = "1) CsvServToolMod::Import.restore_all_backups: Destroys contents of all tables."
+    msg_1 = "1) ServCsvToolMod::Import.restore_all_backups: Destroys contents of all tables."
     msg_2 = "2) Re-Imports each CSV backup to restore db"
     msg_3 = "3) Formatters: Formats the db data and parses when necessary."
     msg_4 = "4) VerUrl: Verifies & updates urls Valid/FWD."
@@ -62,7 +62,7 @@ class AboutTool
 
     puts msg_1
     puts msg_2
-    CsvServToolMod::Import.restore_all_backups
+    ServCsvToolMod::Import.restore_all_backups
 
     puts msg_3
     Formatter.new.run_all_formatters

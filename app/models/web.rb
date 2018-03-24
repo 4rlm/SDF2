@@ -1,7 +1,5 @@
 class Web < ApplicationRecord
-  # include CsvClientTool
-
-  acts_as_favoritable ## Allows Model to be Favorited by users.
+  # include WebCsvTool
   before_save :track_web_change, :prevent_valid_wx
 
   validates_uniqueness_of :url, allow_blank: false, allow_nil: false
@@ -16,10 +14,6 @@ class Web < ApplicationRecord
   has_many :act_webs, dependent: :destroy
   has_many :acts, through: :act_webs
   accepts_nested_attributes_for :act_webs, :acts, :conts, :web_links, :links, :web_brands, :brands
-
-  has_many :exportings, as: :exportable
-  has_many :exports, through: :exportings
-  # has_many :exports, as: :exportable, dependent: :destroy
 
   def track_web_change
     self.web_changed = Time.now if url_changed? || fwd_url_changed? || wx_date_changed?
@@ -43,30 +37,5 @@ class Web < ApplicationRecord
   # scope :sent, -> { joins(:user).merge(User.sent) }
   # scope :accepted, -> { joins(:user).merge(User.accepted) }
   # scope :containing_blog_keyword_with_id_greater_than, ->(id) { contains_blog_keyword.or(id_greater_than(id)) }
-
-  def self.to_csv(options = {})
-    CSV.generate(options) do |csv|
-      csv.add_row column_names
-      all.each do |web|
-        values = web.attributes.values
-        csv.add_row values
-      end
-    end
-  end
-
-  def self.export
-    binding.pry
-    CSV.generate(options) do |csv|
-      csv.add_row column_names
-      all.each do |web|
-        values = web.attributes.values
-        csv.add_row values
-      end
-    end
-  end
-
-  def self.exporty(msg)
-    binding.pry
-  end
 
 end

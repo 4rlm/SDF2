@@ -10,7 +10,6 @@
 
 <% if params[:q].present? %>
   <div class="row">
-    <!-- <%#= link_to export_webs_path(ids: @selected_webs.pluck(:id)), class: 'btn btn-primary btn-xs' do %> -->
     <%= link_to generate_csv_webs_path(params), class: 'btn btn-primary btn-xs' do %>
       <i class="fa fa-download" aria-hidden="true"></i> Download CSV
     <% end %>

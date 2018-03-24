@@ -113,7 +113,7 @@ Short list to-do ...
 	$ rails db:migrate
 
 2) Import: COPs to uni_act - then backup
-	:> CsvServTool.new.import_uni_seeds('uni_act', '1_acts_cop.csv')
+	:> ServCsvTool.new.import_uni_seeds('uni_act', '1_acts_cop.csv')
 	:> Start.create_backups
 
 3) Restore: backups (to get brands, cities, dealers, templates, terms)

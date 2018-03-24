@@ -1,6 +1,4 @@
 class Act < ApplicationRecord
-  acts_as_favoritable ## Allows Model to be Favorited by users.
-
   before_save :full_address, :track_act_change
 
   # has_many :conts, inverse_of: :act, optional: true
@@ -15,9 +13,6 @@ class Act < ApplicationRecord
   has_many :links, through: :webs
   has_many :brands, through: :webs
   accepts_nested_attributes_for :act_webs, :webs, :conts, :links, :brands
-
-  has_many :exportings, as: :exportable
-  has_many :exports, through: :exportings
 
   def full_address
     self.full_address = [street, city, state, zip].compact.join(', ')
