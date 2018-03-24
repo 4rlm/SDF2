@@ -1,6 +1,7 @@
 <nav class="container sidebar">
 
   <% if @wq.present? %>
+
     <%= search_form_for(@wq, url: search_webs_path, html: {method: :post, class: 'form'}) do |f| %>
       <!-- WEBS CHECK BOX OPTIONS -->
       <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
@@ -787,8 +788,18 @@
 
       </ul>
 
-      <div class="actions"><%= f.submit "Search" %></div>
-      <div class=""><%= link_to("Clear Search", request.path) %></div>
+      <!-- Search Webs (URL) -->
+      <div class="form-group">
+        <%= f.text_field :save_q_cont_any, placeholder: "Save search as ..", class: "form-control" %>
+      </div>
+
+
+      <div class="row">
+        <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary btn-xs"%></div>
+        <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger btn-xs" %></div>
+      </div>
+
+
     <% end %>
 
 

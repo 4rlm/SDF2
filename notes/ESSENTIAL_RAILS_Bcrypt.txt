@@ -192,3 +192,67 @@ psql sdf2_development -c 'create extension hstore;'
 psql sdf2_production -c 'create extension hstore;'
 
 JSON.parse( h.to_json, {:symbolize_names => true} )
+
+
+====================================
+** ESSENTIAL RAILS....4) migration files
+====================================
+--ADD
+  $ rails generate migration add_aq_name_to_acts aq_name:string
+  $ rails generate migration add_cq_name_to_conts cq_name:string
+  $ rails generate migration add_wq_name_to_webs wq_name:string
+
+--CHANGE
+  $ rails g migration ChangeColumnName1
+  rename_column :acts, :aq_name, :save_q
+  rename_column :conts, :cq_name, :save_q
+  rename_column :webs, :wq_name, :save_q
+
+
+
+--REMOVE
+
+
+====================================
+** ESSENTIAL RAILS....5) Ransack-BS-Ruby Form Styles
+====================================
+## Not easy to get right, so keep this resource.
+
+--- YES ---Boring
+  <div class="form-group">
+    <p>Save Search-1-YES!</p>
+    <p><%= f.search_field :wq_name_cont_any %></p>
+  </div>
+
+--- YES ---Nice!!
+  <div class="form-group">
+    <%= f.label :wq_name_cont_any, "Save Search-2-YES", class: "col-md-4 control-label" %>
+    <div class="col-md-8">
+      <%= f.text_field :wq_name_cont_any, class: "form-control" %>
+    </div>
+  </div>
+
+--- NO ---
+  <div class="form-group">
+    <label for="usr">Save Search-3-NO!</label>
+    <input type="text" class="form-control" id="usr">
+  </div>
+
+  -----------
+  Placeholder Text
+  f.text_field :attr, placeholder: "placeholder text"
+
+  Submit Button
+  <div class="actions"><%= f.submit "Search", class: "btn btn-primary btn-xs"%></div>
+
+  Clear Form - link_to (not button)
+  <div class=""><%= link_to("Clear Search", request.path) %></div>
+
+  Reset Form - button_tag
+  <div class=""><%= button_tag "Reset", type: :reset, class: "btn btn-primary btn-xs" %></div>
+
+  Submit - Reset Buttons - Set
+  <div class="row">
+    <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary btn-xs"%></div>
+    <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger btn-xs" %></div>
+  </div>

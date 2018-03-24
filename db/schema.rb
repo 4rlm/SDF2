@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180324123319) do
+ActiveRecord::Schema.define(version: 20180324220155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20180324123319) do
     t.datetime "ax_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "save_q"
     t.index ["act_changed"], name: "index_acts_on_act_changed"
     t.index ["act_name"], name: "index_acts_on_act_name"
     t.index ["adr_changed"], name: "index_acts_on_adr_changed"
@@ -103,6 +104,7 @@ ActiveRecord::Schema.define(version: 20180324123319) do
     t.datetime "cx_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "save_q"
     t.index ["cont_changed"], name: "index_conts_on_cont_changed"
     t.index ["cs_date"], name: "index_conts_on_cs_date"
     t.index ["cs_sts"], name: "index_conts_on_cs_sts"
@@ -340,6 +342,7 @@ ActiveRecord::Schema.define(version: 20180324123319) do
     t.datetime "wx_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "save_q"
     t.index ["brand_date"], name: "index_webs_on_brand_date"
     t.index ["brand_sts"], name: "index_webs_on_brand_sts"
     t.index ["cs_date"], name: "index_webs_on_cs_date"

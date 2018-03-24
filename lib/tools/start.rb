@@ -24,6 +24,10 @@ class Start
     ServCsvTool.new.backup_entire_db
   end
 
+  # Backup PG
+  # $ pg_dump -U postgres -F t sdf2_development > db/csv/pg_backups/sdf2_development.psql
+  # $ pg_dump -F c -v -U postgres -h localhost sdf2_development -f db/csv/pg_backups/sdf2_development.tar
+
   # 3) CALL: Start.restore_all_backups
   def self.restore_all_backups
     ServCsvTool.new.restore_all_backups

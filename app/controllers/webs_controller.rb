@@ -31,10 +31,9 @@ class WebsController < ApplicationController
 
 
   def search
-
-    if params[:q].present?
-      binding.pry
-      WebCsvTool.new(params[:q], current_user).save_web_queries
+    save_q = params[:q].delete('save_q_cont_any')
+    if save_q.present?
+      WebCsvTool.new(params[:q], current_user).save_web_queries(save_q)
     end
 
     index

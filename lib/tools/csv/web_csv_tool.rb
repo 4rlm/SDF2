@@ -16,20 +16,10 @@ class WebCsvTool
     log_web_acts_export
   end
 
-  def save_web_queries
-    query = @user.queries.find_or_create_by(mod_name: 'Web', param_hsh: @web_q)
-    # query[:param_hsh]
-
-    # url = pars['url_cont_any']
-    # pars.delete('url_cont_any')
-    # pars.delete_if { |key, value| value.blank? }
-
-    # id: nil, user_id: nil, search_name: nil, mod_name: nil, param_hsh: nil
-    # activity = @user.activities.find_or_initialize_by(mod_name: 'Act', mod_id: act.id)
-    # activity.export_id = export.id
-    # activity.save
-
-    # JSON.parse( h.to_json, {:symbolize_names => true} )
+  def save_web_queries(save_q)
+    query = @user.queries.find_or_initialize_by(mod_name: 'Web', search_name: save_q)
+    query.param_hsh = @web_q
+    query.save
   end
 
 
