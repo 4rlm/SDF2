@@ -277,24 +277,25 @@
         <ul class="collapse" id="saved-search-conts">
           <!-- SAVED SEARCH LIST - START -->
           <h5>list of saved search links here.</h5>
+
           <table class="table">
             <thead>
               <tr>
-                <th>name</th>
-                <th>time</th>
+                <th>Name</th>
+                <th>Date</th>
               </tr>
             </thead>
 
-            <tr>
-              <td>search 1</td>
-              <td>3/24/18</td>
-            </tr>
-
-            <tr>
-              <td>search 2</td>
-              <td>3/23/18</td>
-            </tr>
+            <% queries = current_user&.queries&.where(mod_name: 'Cont')&.order("updated_at DESC") %>
+            <% queries&.each do |query| %>
+            <%# binding.pry %>
+              <tr>
+                <td><%= query.q_name %></td>
+                <td><%= query.updated_at.strftime('%x') %></td>
+              </tr>
+            <% end %>
           </table>
+
         </ul>
       </li>
     </ul>
