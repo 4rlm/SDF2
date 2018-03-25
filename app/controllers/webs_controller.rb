@@ -20,10 +20,9 @@ class WebsController < ApplicationController
 
 
   def generate_csv
-
     if params[:q].present?
-      # WebCsvTool.new.delay.start_web_acts_csv_and_log(params[:q], current_user)
-      WebCsvTool.new.start_web_acts_csv_and_log(params[:q], current_user)
+      # WebCsvTool.new(params[:q], current_user).delay.start_web_acts_csv_and_log
+      WebCsvTool.new(params[:q], current_user).start_web_acts_csv_and_log
       params['action'] = 'index'
       redirect_to webs_path(params)
     end
@@ -31,9 +30,9 @@ class WebsController < ApplicationController
 
 
   def search
-    save_q = params[:q].delete('save_q_cont_any')
-    if save_q.present?
-      WebCsvTool.new(params[:q], current_user).save_web_queries(save_q)
+    q_name = params[:q].delete('q_name_cont_any')
+    if q_name.present?
+      WebCsvTool.new(params[:q], current_user).save_web_queries(q_name)
     end
 
     index
@@ -42,7 +41,6 @@ class WebsController < ApplicationController
 
 
   # def flag_data
-  #   binding.pry
   #   @service.flag_data_starter(params[:webs])
   #   flash[:notice] = "Flagging Data Done!"
   #   redirect_to webs_path

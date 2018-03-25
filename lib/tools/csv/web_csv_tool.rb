@@ -16,16 +16,15 @@ class WebCsvTool
     log_web_acts_export
   end
 
-  def save_web_queries(save_q)
-    query = @user.queries.find_or_initialize_by(mod_name: 'Web', search_name: save_q)
-    query.param_hsh = @web_q
+  def save_web_queries(q_name)
+    query = @user.queries.find_or_initialize_by(mod_name: 'Web', q_name: q_name)
+    query.q_hsh = @web_q
     query.save
   end
 
 
   ############  WEB_ACTS EXPORT  ############
   def web_acts_to_csv
-    binding.pry
     web_cols = %w(id url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
     brand_cols = %w(brand_name)
     act_cols = %w(act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)

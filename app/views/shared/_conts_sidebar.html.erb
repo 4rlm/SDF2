@@ -252,11 +252,55 @@
 
       </ul>
 
+      <!-- Save & Name Search Field -->
+      <div class="form-group">
+        <%= f.text_field :q_name_cont_any, placeholder: "Save search as ..", class: "form-control" %>
+      </div>
 
-      <div class="actions"><%= f.submit "Search" %></div>
-      <div class=""><%= link_to("Clear Search", request.path) %></div>
+      <div class="row">
+        <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary btn-xs"%></div>
+        <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger btn-xs" %></div>
+      </div>
+
+
 
     <% end %>
+
+
+    <!-- SAVED SEARCHES SECTION - START -->
+    <h5 class="text-center sidebar-header">Saved Searches</h5>
+    <ul class="components">
+      <li>
+        <a class="dropdown-toggle" href="#saved-search-conts" data-toggle="collapse" aria-expanded="false">
+          <%= icon('fas', 'search', 'Saved Searches') %>
+        </a>
+        <ul class="collapse" id="saved-search-conts">
+          <!-- SAVED SEARCH LIST - START -->
+          <h5>list of saved search links here.</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>time</th>
+              </tr>
+            </thead>
+
+            <tr>
+              <td>search 1</td>
+              <td>3/24/18</td>
+            </tr>
+
+            <tr>
+              <td>search 2</td>
+              <td>3/23/18</td>
+            </tr>
+          </table>
+        </ul>
+      </li>
+    </ul>
+
+
+
   <% end %>
 
 </nav>

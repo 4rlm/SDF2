@@ -204,9 +204,9 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
 
 --CHANGE
   $ rails g migration ChangeColumnName1
-  rename_column :acts, :aq_name, :save_q
-  rename_column :conts, :cq_name, :save_q
-  rename_column :webs, :wq_name, :save_q
+  rename_column :acts, :aq_name, :q_name
+  rename_column :conts, :cq_name, :q_name
+  rename_column :webs, :wq_name, :q_name
 
 
 

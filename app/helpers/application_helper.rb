@@ -78,21 +78,5 @@ module ApplicationHelper
     end
   end
 
-  # def parse_save_q(params)
-  #   binding.pry
-  #
-  #   # params[:q]['wq_name_cont_any'].present?
-  #
-  #   # url = pars['url_cont_any']
-  #   # pars.delete('url_cont_any')
-  #   # pars.delete_if { |key, value| value.blank? }
-  #
-  #   ## Return hash of parsed param.  Removing the save_q from param[:q]
-  #
-  #   params_hsh = {params: clean_params, save_q: save_q}
-  #   binding.pry
-  #   params_hsh
-  # end
-
 
 end

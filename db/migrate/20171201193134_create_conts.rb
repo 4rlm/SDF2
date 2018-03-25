@@ -20,6 +20,7 @@ class CreateConts < ActiveRecord::Migration[5.1]
       t.datetime :cont_changed, index: true
       t.datetime :job_changed, index: true
       t.datetime :cx_date, index: true
+      t.string   :q_name
 
       t.timestamps
     end

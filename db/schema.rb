@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180324220155) do
+ActiveRecord::Schema.define(version: 20180324123319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,9 +56,9 @@ ActiveRecord::Schema.define(version: 20180324220155) do
     t.datetime "adr_changed"
     t.datetime "act_changed"
     t.datetime "ax_date"
+    t.string "q_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "save_q"
     t.index ["act_changed"], name: "index_acts_on_act_changed"
     t.index ["act_name"], name: "index_acts_on_act_name"
     t.index ["adr_changed"], name: "index_acts_on_adr_changed"
@@ -102,9 +102,9 @@ ActiveRecord::Schema.define(version: 20180324220155) do
     t.datetime "cont_changed"
     t.datetime "job_changed"
     t.datetime "cx_date"
+    t.string "q_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "save_q"
     t.index ["cont_changed"], name: "index_conts_on_cont_changed"
     t.index ["cs_date"], name: "index_conts_on_cs_date"
     t.index ["cs_sts"], name: "index_conts_on_cs_sts"
@@ -161,13 +161,16 @@ ActiveRecord::Schema.define(version: 20180324220155) do
   end
 
   create_table "queries", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "search_name"
-    t.string "mod_name"
-    t.hstore "param_hsh"
+    t.bigint "user_id", null: false
+    t.string "q_name", null: false
+    t.string "mod_name", null: false
+    t.hstore "q_hsh"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["param_hsh"], name: "index_queries_on_param_hsh", using: :gin
+    t.index ["mod_name"], name: "index_queries_on_mod_name"
+    t.index ["q_hsh"], name: "index_queries_on_q_hsh", using: :gin
+    t.index ["q_name"], name: "index_queries_on_q_name"
+    t.index ["user_id"], name: "index_queries_on_user_id"
   end
 
   create_table "tallies", force: :cascade do |t|
@@ -340,9 +343,9 @@ ActiveRecord::Schema.define(version: 20180324220155) do
     t.integer "fwd_url"
     t.datetime "web_changed"
     t.datetime "wx_date"
+    t.string "q_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "save_q"
     t.index ["brand_date"], name: "index_webs_on_brand_date"
     t.index ["brand_sts"], name: "index_webs_on_brand_sts"
     t.index ["cs_date"], name: "index_webs_on_cs_date"

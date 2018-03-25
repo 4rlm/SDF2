@@ -788,9 +788,9 @@
 
       </ul>
 
-      <!-- Search Webs (URL) -->
+      <!-- Save & Name Search Field -->
       <div class="form-group">
-        <%= f.text_field :save_q_cont_any, placeholder: "Save search as ..", class: "form-control" %>
+        <%= f.text_field :q_name_cont_any, placeholder: "Save search as ..", class: "form-control" %>
       </div>
 
 
@@ -801,40 +801,6 @@
 
 
     <% end %>
-
-
-
-    <!-- RECENT SEARCHES SECTION - START -->
-    <h5 class="text-center sidebar-header">Recent Searches</h5>
-    <ul class="components">
-      <li>
-        <a class="dropdown-toggle" href="#recent-search-webs" data-toggle="collapse" aria-expanded="false">
-          <%= icon('fas', 'search', 'Recent Searches') %>
-        </a>
-        <ul class="collapse" id="recent-search-webs">
-          <!-- RECENT SEARCH LIST - START -->
-          <h5>list of recent search links here.</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>name</th>
-                <th>time</th>
-              </tr>
-            </thead>
-
-            <tr>
-              <td>search 1</td>
-              <td>3/24/18</td>
-            </tr>
-
-            <tr>
-              <td>search 2</td>
-              <td>3/23/18</td>
-            </tr>
-          </table>
-        </ul>
-      </li>
-    </ul>
 
 
     <!-- SAVED SEARCHES SECTION - START -->

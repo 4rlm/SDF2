@@ -1,20 +1,25 @@
 class ContCsvTool
 
-  def initialize
+  def initialize(cont_q, current_user)
+    @cont_q = cont_q
+    @user = current_user
+    @conts = Cont.ransack(cont_q).result(distinct: true).includes(:acts, :web, :brands)
+
     @export_date = Time.now
     @file_name = "cont_web_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
     @path_and_file = "./public/downloads/#{@file_name}"
-
-    @user = nil
-    @conts = nil
   end
 
 
-  def start_cont_web_csv_and_log(cont_q, current_user)
-    @user = current_user
-    @conts = Cont.ransack(cont_q).result(distinct: true).includes(:acts, :web, :brands)
+  def start_cont_web_csv_and_log
     cont_web_to_csv
     log_cont_web_export
+  end
+
+  def save_cont_queries(q_name)
+    query = @user.queries.find_or_initialize_by(mod_name: 'Cont', q_name: q_name)
+    query.q_hsh = @cont_q
+    query.save
   end
 
 

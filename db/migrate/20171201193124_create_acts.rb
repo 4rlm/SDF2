@@ -23,6 +23,7 @@ class CreateActs < ActiveRecord::Migration[5.1]
       t.datetime :adr_changed, index: true
       t.datetime :act_changed, index: true
       t.datetime :ax_date, index: true
+      t.string   :q_name
 
       t.timestamps
     end
