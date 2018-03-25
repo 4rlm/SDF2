@@ -1,9 +1,9 @@
 class ContCsvTool
 
-  def initialize(cont_q, current_user)
-    @cont_q = cont_q
+  def initialize(params, current_user)
+    @params = params
     @user = current_user
-    @conts = Cont.ransack(cont_q).result(distinct: true).includes(:acts, :web, :brands)
+    @conts = Cont.ransack(params[:q]).result(distinct: true).includes(:acts, :web, :brands)
 
     @export_date = Time.now
     @file_name = "cont_web_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
@@ -18,7 +18,7 @@ class ContCsvTool
 
   def save_cont_queries(q_name)
     query = @user.queries.find_or_initialize_by(mod_name: 'Cont', q_name: q_name)
-    query.q_hsh = @cont_q
+    query.params = @params
     query.save
   end
 

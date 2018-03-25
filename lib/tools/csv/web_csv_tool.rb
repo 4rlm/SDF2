@@ -1,9 +1,9 @@
 class WebCsvTool
 
-  def initialize(web_q, current_user)
-    @web_q = web_q
+  def initialize(params, current_user)
+    @params = params
     @user = current_user
-    @webs = Web.ransack(@web_q).result(distinct: true).includes(:acts, :conts, :brands)
+    @webs = Web.ransack(params[:q]).result(distinct: true).includes(:acts, :conts, :brands)
 
     @export_date = Time.now
     @file_name = "web_acts_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
@@ -18,7 +18,7 @@ class WebCsvTool
 
   def save_web_queries(q_name)
     query = @user.queries.find_or_initialize_by(mod_name: 'Web', q_name: q_name)
-    query.q_hsh = @web_q
+    query.params = @params
     query.save
   end
 

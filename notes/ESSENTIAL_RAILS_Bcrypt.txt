@@ -194,6 +194,30 @@ psql sdf2_production -c 'create extension hstore;'
 JSON.parse( h.to_json, {:symbolize_names => true} )
 
 
+# query.params ## Need to convert params q from array to hash.
+# query.params['q']
+# JSON.parse( h.to_json, {:symbolize_names => true} )
+# acts = JSON.parse(acts)
+# raw = Tally.last.acts
+# acts = JSON.parse(Tally.last.acts)
+# hash = Hash[array.collect { |item| [item, ""] } ]
+
+# JSON.parse(query.params)
+# query.params['q'].class = String
+# params[:q].to_h
+# q = query.params['q']
+# JSON.parse(value)
+
+# q_string = Query.last.params['q'].class = String
+# JSON.parse(q_string)
+
+#params[:q] is a query hash you can manipulate directly.
+# In Rails 5, it's an ActionController::Parameters object that you can call #to_unsafe_h on (if it responds_to?(:to_unsafe_h)) to turn into a HWIA.
+
+# foo = ActionController::Parameters.new("foo"=>{"bar"=>["baz"]})
+
+
+
 ====================================
 ** ESSENTIAL RAILS....4) migration files
 ====================================
@@ -202,11 +226,15 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
   $ rails generate migration add_cq_name_to_conts cq_name:string
   $ rails generate migration add_wq_name_to_webs wq_name:string
 
+
 --CHANGE
   $ rails g migration ChangeColumnName1
   rename_column :acts, :aq_name, :q_name
   rename_column :conts, :cq_name, :q_name
   rename_column :webs, :wq_name, :q_name
+
+  $ rails g migration ChangeColumnName3
+  rename_column :query, :params, :params
 
 
 

@@ -1,6 +1,5 @@
 class Query < ApplicationRecord
-  serialize :ransack_query, Hash
-
+  # serialize :ransack_query, Hash
   belongs_to :user
 
 end

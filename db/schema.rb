@@ -164,11 +164,11 @@ ActiveRecord::Schema.define(version: 20180324123319) do
     t.bigint "user_id", null: false
     t.string "q_name", null: false
     t.string "mod_name", null: false
-    t.hstore "q_hsh"
+    t.jsonb "params", default: "{}", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["mod_name"], name: "index_queries_on_mod_name"
-    t.index ["q_hsh"], name: "index_queries_on_q_hsh", using: :gin
+    t.index ["params"], name: "index_queries_on_params", using: :gin
     t.index ["q_name"], name: "index_queries_on_q_name"
     t.index ["user_id"], name: "index_queries_on_user_id"
   end

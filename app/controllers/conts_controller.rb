@@ -6,7 +6,6 @@ class ContsController < ApplicationController
   # GET /conts
   # GET /conts.json
   def index
-    # @conts = Cont.all
 
     ## Splits 'cont_any' strings into array, if string and has ','
     if !params[:q].nil?
@@ -16,14 +15,12 @@ class ContsController < ApplicationController
 
     @cq = Cont.ransack(params[:q])
     @conts = @cq.result(distinct: true).includes(:acts, :web, :brands).paginate(page: params[:page], per_page: 50)
-
-    # respond_with(@conts)
   end
 
   def generate_csv
     if params[:q].present?
-      # ContCsvTool.new(params[:q], current_user).delay.start_cont_web_csv_and_log
-      ContCsvTool.new(params[:q], current_user).start_cont_web_csv_and_log
+      # ContCsvTool.new(params, current_user).delay.start_cont_web_csv_and_log
+      ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
       params['action'] = 'index'
       redirect_to conts_path(params)
     end
@@ -31,9 +28,9 @@ class ContsController < ApplicationController
 
 
   def search
-    q_name = params[:q].delete('q_name_cont_any')
-    if q_name.present?
-      ContCsvTool.new(params[:q], current_user).save_cont_queries(q_name)
+    if params[:q]['q_name_cont_any'].present?
+      q_name = params[:q].delete('q_name_cont_any')
+      ContCsvTool.new(params, current_user).save_cont_queries(q_name)
     end
 
     index
