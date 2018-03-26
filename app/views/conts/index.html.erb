@@ -1,6 +1,6 @@
-<%= render 'conts_detail_partial', conts: @conts %>
+<%= render 'conts_detail', conts: @conts %>
 
 <br>
-<%= will_paginate @conts %>
+<%= will_paginate @conts if @conts&.any? %>
 <br>
 <br>

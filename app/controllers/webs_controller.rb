@@ -15,7 +15,13 @@ class WebsController < ApplicationController
     end
 
     @wq = Web.ransack(params[:q])
-    @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 50)
+    @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 20)
+
+    respond_to do |format|
+      format.json
+      format.html
+    end
+
   end
 
 
@@ -35,8 +41,9 @@ class WebsController < ApplicationController
       WebCsvTool.new(params, current_user).save_web_queries(q_name)
     end
 
-    index
-    render :index
+    # index
+    # render :index
+    redirect_to webs_path(params)
   end
 
 

@@ -1,0 +1,27 @@
+<div class="row">
+  <% if activity.fav_sts != 'follow' && activity.fav_sts != 'hide' %>
+
+    <!-- FOLLOW: TOGGLE STS PARTIAL -->
+    <%= render partial: "activities/tog_fav", locals: { activity: activity } %>
+
+    <!-- HIDE: TOGGLE STS PARTIAL -->
+    <%= render partial: "activities/tog_hide", locals: { activity: activity } %>
+
+  <% elsif activity.fav_sts == 'hide' %>
+
+    <!-- FOLLOW: TOGGLE STS PARTIAL -->
+    <%= render partial: "activities/tog_fav", locals: { activity: activity } %>
+
+    <!-- RESET: TOGGLE STS PARTIAL -->
+    <%= render partial: "activities/tog_reset", locals: { activity: activity } %>
+
+  <% elsif activity.fav_sts == 'follow' %>
+
+    <!-- RESET: TOGGLE STS PARTIAL -->
+    <%= render partial: "activities/tog_reset", locals: { activity: activity } %>
+
+    <!-- HIDE: TOGGLE STS PARTIAL -->
+    <%= render partial: "activities/tog_hide", locals: { activity: activity } %>
+
+  <% end %>
+</div>

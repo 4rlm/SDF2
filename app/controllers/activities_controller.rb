@@ -4,8 +4,14 @@ class ActivitiesController < ApplicationController
   # GET /activities
   # GET /activities.json
   def index
-    binding.pry
     @activities = Activity.all
+
+    respond_to do |format|
+      format.json
+      format.html
+      # format.html { redirect_back fallback_location: root_path }
+    end
+
   end
 
   def show
@@ -61,7 +67,6 @@ class ActivitiesController < ApplicationController
     @activity.update(fav_sts: params[:fav_sts])
 
     respond_to do |format|
-      # binding.pry
       format.html { redirect_back fallback_location: root_path }
       format.json { render :index, status: :ok, location: @activity, layout: false }
       # format.json { render json:  @activity }

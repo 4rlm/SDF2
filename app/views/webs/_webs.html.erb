@@ -49,7 +49,7 @@
         <p><%= icon('fas', 'download', "#{web_export&.export_date&.strftime('%x')} #{web_export&.file_name}" )%></p>
 
         <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
-        <%= render partial: "activities/toggle_sts_partial", locals: { activity: web_activity } %>
+        <%= render partial: "activities/toggle_sts", locals: { activity: web_activity } %>
       </div>
 
 
@@ -68,7 +68,7 @@
               <p><%= icon('fas', 'phone', act.phone) %></p>
 
               <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-              <%= render partial: "activities/toggle_sts_partial", locals: { activity: act_activity } %>
+              <%= render partial: "activities/toggle_sts", locals: { activity: act_activity } %>
             </div>
 
             <div class="col-md-4">
@@ -93,7 +93,7 @@
     <div class='row contWrap' style="display:none" id="<%= web.id %>">
       <% if web.conts.any? %>
         <% @conts = web.conts %>
-        <%= render 'conts/conts_list_partial', conts: @conts %>
+        <%= render 'conts/conts_list', conts: @conts %>
       <% end %>
     </div>
 
