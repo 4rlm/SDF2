@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
 
-  resources :activities
   resources :users, :only => [:index, :show]
   resources :downloads, only: [:show]
+  # resources :activities, only: [:toggle_sts]
 
   devise_for :users, controllers: { sessions: 'users/sessions' }, path_prefix: 'd', path: 'auth', path_names: { sign_in: 'login', sign_out: 'logout', password: 'secret', confirmation: 'verification', unlock: 'unblock', registration: 'register', sign_up: 'cmon_let_me_in' }
 
@@ -25,7 +25,14 @@ Rails.application.routes.draw do
     end
   end
 
-  get :toggle_sts, to: 'activities#toggle_sts'
+  resources :activities do
+    collection do
+      match 'toggle_sts' => 'activities#toggle_sts', via: [:get, :post], as: :toggle_sts
+    end
+  end
 
-  resources :acts, :terms, :links
+
+  # get :toggle_sts, to: 'activities#toggle_sts'
+
+  resources :acts, :terms, :links, :activities
 end

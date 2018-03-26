@@ -1,0 +1,39 @@
+
+<div class="row">
+  <% if activity.fav_sts != 'follow' && activity.fav_sts != 'hide' %>
+    <div class="col-md-4">
+      <%= link_to toggle_sts_activities_path(id: activity.id, fav_sts: 'follow'), class: "btn btn-primary btn-xs", remote: true do %>
+        <%= icon('fas', 'thumbs-up')%> Follow
+      <% end %>
+    </div>
+    <div class="col-md-4">
+      <%= link_to toggle_sts_activities_path(id: activity.id, fav_sts: 'hide'), class: "btn btn-danger btn-xs", remote: true do %>
+        <%= icon('fas', 'eye-slash')%> Hide
+      <% end %>
+    </div>
+  <% elsif activity.fav_sts == 'hide' %>
+    <div class="col-md-4">
+      <%= link_to toggle_sts_activities_path(id: activity.id, fav_sts: 'follow'), class: "btn btn-primary btn-xs", remote: true do %>
+        <%= icon('fas', 'thumbs-up')%> Follow
+      <% end %>
+    </div>
+
+    <div class="col-md-4">
+      <%= link_to toggle_sts_activities_path(id: activity.id, fav_sts: 'none'), class: "btn btn-default btn-xs", remote: true do %>
+        <%= icon('fas', 'sync')%> Reset
+      <% end %>
+    </div>
+  <% elsif activity.fav_sts == 'follow' %>
+    <div class="col-md-4">
+      <%= link_to toggle_sts_activities_path(id: activity.id, fav_sts: 'none'), class: "btn btn-default btn-xs", remote: true do %>
+        <%= icon('fas', 'sync')%> Reset
+      <% end %>
+    </div>
+
+    <div class="col-md-4">
+      <%= link_to toggle_sts_activities_path(id: activity.id, fav_sts: 'hide'), class: "btn btn-danger btn-xs", remote: true do %>
+        <%= icon('fas', 'eye-slash')%> Hide
+      <% end %>
+    </div>
+  <% end %>
+</div>

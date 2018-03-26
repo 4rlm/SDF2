@@ -20,10 +20,11 @@
 
 <div class="panel outer-panel">
   <% @webs.each do |web| %>
-  <% web_activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
-  <% web_export = Export.find_by(id: web_activity.export_id) %>
-  <%# binding.pry %>
+    <!-- FIND OR CREATE web_activity -->
+    <% web_activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
+    <% web_export = Export.find_by(id: web_activity.export_id) %>
 
+    <!-- WEBS SECTION STARTS -->
     <div class="row outer-list-row">
       <div class="col-md-3 association-parent">
         <p><%= link_to(icon('fas', 'home', web.url ), web.url, target: '_blank')%></p>
@@ -47,65 +48,17 @@
 
         <p><%= icon('fas', 'download', "#{web_export&.export_date&.strftime('%x')} #{web_export&.file_name}" )%></p>
 
-
-
-
-
-        <div class="row">
-          <% if web_activity.fav_sts != 'follow' && web_activity.fav_sts != 'hide' %>
-            <div class="col-md-4">
-              <%= link_to toggle_sts_path(activity_id: web_activity.id, fav_sts: 'follow', class: 'follow-sts btn btn-primary btn-xs') do %>
-                <%= icon('fas', 'thumbs-up')%> Follow
-              <% end %>
-            </div>
-
-            <div class="col-md-4">
-              <%= link_to toggle_sts_path(activity_id: web_activity.id, fav_sts: 'hide', class: 'hide-sts btn btn-primary btn-xs') do %>
-                <%= icon('fas', 'eye-slash')%> Hide
-              <% end %>
-            </div>
-
-          <% elsif web_activity.fav_sts == 'hide' %>
-
-            <div class="col-md-4">
-              <%= link_to toggle_sts_path(activity_id: web_activity.id, fav_sts: 'follow', class: 'follow-sts btn btn-primary btn-xs') do %>
-                <%= icon('fas', 'thumbs-up')%> Follow
-              <% end %>
-            </div>
-
-            <div class="col-md-4">
-              <%= link_to toggle_sts_path(activity_id: web_activity.id, fav_sts: 'none', class: 'visible-sts btn btn-primary btn-xs') do %>
-                <%= icon('fas', 'sync')%> Reset
-              <% end %>
-            </div>
-
-          <% elsif web_activity.fav_sts == 'follow' %>
-
-            <div class="col-md-4">
-              <%= link_to toggle_sts_path(activity_id: web_activity.id, fav_sts: 'none', class: 'visible-sts btn btn-primary btn-xs') do %>
-                <%= icon('fas', 'sync')%> Reset
-              <% end %>
-            </div>
-
-            <div class="col-md-4">
-              <%= link_to toggle_sts_path(activity_id: web_activity.id, fav_sts: 'hide', class: 'hide-sts btn btn-primary btn-xs') do %>
-                <%= icon('fas', 'eye-slash')%> Hide
-              <% end %>
-            </div>
-
-          <% end %>
-        </div>
-
+        <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
+        <%= render partial: "activities/toggle_sts_partial", locals: { activity: web_activity } %>
       </div>
 
 
-
-
+      <!-- ACTS SECTION BEGINS -->
       <div class="col-md-9 outer-list-col">
         <% web.acts.each do |act| %>
+        <!-- FIND OR CREATE web_activity -->
         <% act_activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
         <% act_export = Export.find_by(id: act_activity.export_id) %>
-        <%# binding.pry %>
 
           <div class="row association-row">
 
@@ -114,25 +67,8 @@
               <p><%= icon('fas', 'address-card', act.full_address) %></p>
               <p><%= icon('fas', 'phone', act.phone) %></p>
 
-              <div class="row">
-                <div class="col-md-4">
-                  <%= link_to toggle_sts_path(activity_id: act_activity.id, fav_sts: 'follow', class: 'follow-sts btn btn-primary btn-xs') do %>
-                    <%= icon('fas', 'thumbs-up')%> Follow
-                  <% end %>
-                </div>
-
-                <div class="col-md-4">
-                  <%= link_to toggle_sts_path(activity_id: act_activity.id, fav_sts: 'hide', class: 'hide-sts btn btn-primary btn-xs') do %>
-                    <%= icon('fas', 'eye-slash')%> Hide
-                  <% end %>
-                </div>
-
-                <div class="col-md-4">
-                  <%= link_to toggle_sts_path(activity_id: act_activity.id, fav_sts: 'none', class: 'visible-sts btn btn-primary btn-xs') do %>
-                    <%= icon('fas', 'sync')%> Reset
-                  <% end %>
-                </div>
-              </div>
+              <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
+              <%= render partial: "activities/toggle_sts_partial", locals: { activity: act_activity } %>
             </div>
 
             <div class="col-md-4">
@@ -163,4 +99,9 @@
 
 
   <% end %>
+
+  <br>
+  <%= will_paginate @webs if @webs.present? %>
+  <br>
+  <br>
 </div>

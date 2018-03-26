@@ -1,8 +1,10 @@
 class ActivitiesController < ApplicationController
+  before_action :set_activity, only: [:show, :edit, :update, :destroy, :toggle_sts]
 
   # GET /activities
   # GET /activities.json
   def index
+    binding.pry
     @activities = Activity.all
   end
 
@@ -34,6 +36,7 @@ class ActivitiesController < ApplicationController
   end
 
   def update
+    binding.pry
     respond_to do |format|
       if @activity.update(activity_params)
         format.html { redirect_to @activity, notice: 'Activity was successfully updated.' }
@@ -55,9 +58,16 @@ class ActivitiesController < ApplicationController
 
   # GET /toggle_sts
   def toggle_sts
-    activity = Activity.where(id: params[:activity_id]).update_all(fav_sts: params[:fav_sts])
-    acty = Activity.find_by(id: params[:activity_id])
-    redirect_back fallback_location: root_path
+    @activity.update(fav_sts: params[:fav_sts])
+
+    respond_to do |format|
+      # binding.pry
+      format.html { redirect_back fallback_location: root_path }
+      format.json { render :index, status: :ok, location: @activity, layout: false }
+      # format.json { render json:  @activity }
+    end
+
+    # redirect_back fallback_location: root_path
   end
 
   private
@@ -65,8 +75,8 @@ class ActivitiesController < ApplicationController
       @activity = Activity.find(params[:id])
     end
 
-    def activities_params
-      params.require(:activity).permit()
-    end
+    # def activities_params
+    #   params.require(:activity).permit()
+    # end
 
 end

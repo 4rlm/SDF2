@@ -1,0 +1,126 @@
+
+    <div class="row outer-list-row">
+      <div class="col-md-3 association-parent">
+        <p><%= link_to(icon('fas', 'home', web.url ), web.url, target: '_blank')%></p>
+        <p><%= icon('fas', 'car', get_brands(web)&.join(', ')) %></p>
+        <p><%= icon('fas', 'star', web.cop) %></p>
+        <p><%= icon('fab', 'firstdraft', "#{web&.tmp_date&.strftime('%x')} #{web.temp_sts} #{web.temp_name}" )%></p>
+        <p><%= icon('fas', 'link', "#{web&.page_date&.strftime('%x')} #{web.page_sts}" )%></p>
+
+        <p><%= icon('fas', 'users', "#{web&.cs_date&.strftime('%x')} #{web.cs_sts}" )%>
+          <% cont_count = web.conts&.count %>
+          <% if cont_count > 0 %>
+            | <a href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+          <% end %>
+        </p>
+
+        <p><%= icon('fas', 'calendar-alt', "#{web&.created_at&.strftime('%x')} Created")%>
+          <% if web.web_changed.present? %>
+          | <%= web&.web_changed&.strftime('%x')%>: Updated
+          <% end %>
+        </p>
+
+        <p><%= icon('fas', 'download', "#{web_export&.export_date&.strftime('%x')} #{web_export&.file_name}" )%></p>
+
+
+        <div class="row">
+          <% if web_activity.fav_sts != 'follow' && web_activity.fav_sts != 'hide' %>
+            <div class="col-md-4">
+              <%= link_to toggle_sts_path(id: web_activity.id, fav_sts: 'follow', class: 'follow-sts btn btn-primary btn-xs') do %>
+                <%= icon('fas', 'thumbs-up')%> Follow
+              <% end %>
+            </div>
+
+            <div class="col-md-4">
+              <%= link_to toggle_sts_path(id: web_activity.id, fav_sts: 'hide', class: 'hide-sts btn btn-primary btn-xs') do %>
+                <%= icon('fas', 'eye-slash')%> Hide
+              <% end %>
+            </div>
+
+          <% elsif web_activity.fav_sts == 'hide' %>
+
+            <div class="col-md-4">
+              <%= link_to toggle_sts_path(id: web_activity.id, fav_sts: 'follow', class: 'follow-sts btn btn-primary btn-xs') do %>
+                <%= icon('fas', 'thumbs-up')%> Follow
+              <% end %>
+            </div>
+
+            <div class="col-md-4">
+              <%= link_to toggle_sts_path(id: web_activity.id, fav_sts: 'none', class: 'visible-sts btn btn-primary btn-xs') do %>
+                <%= icon('fas', 'sync')%> Reset
+              <% end %>
+            </div>
+
+          <% elsif web_activity.fav_sts == 'follow' %>
+
+            <div class="col-md-4">
+              <%= link_to toggle_sts_path(id: web_activity.id, fav_sts: 'none', class: 'visible-sts btn btn-primary btn-xs') do %>
+                <%= icon('fas', 'sync')%> Reset
+              <% end %>
+            </div>
+
+            <div class="col-md-4">
+              <%= link_to toggle_sts_path(id: web_activity.id, fav_sts: 'hide', class: 'hide-sts btn btn-primary btn-xs') do %>
+                <%= icon('fas', 'eye-slash')%> Hide
+              <% end %>
+            </div>
+
+          <% end %>
+        </div>
+
+      </div>
+
+
+
+
+      <div class="col-md-9 outer-list-col">
+        <% web.acts.each do |act| %>
+        <% act_activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
+        <% act_export = Export.find_by(id: act_activity.export_id) %>
+        <%# binding.pry %>
+
+          <div class="row association-row">
+
+            <div class="col-md-5">
+              <p><%= icon('fas', 'building', act.act_name) %></p>
+              <p><%= icon('fas', 'address-card', act.full_address) %></p>
+              <p><%= icon('fas', 'phone', act.phone) %></p>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <%= link_to toggle_sts_path(activity_id: act_activity.id, fav_sts: 'follow', class: 'follow-sts btn btn-primary btn-xs') do %>
+                    <%= icon('fas', 'thumbs-up')%> Follow
+                  <% end %>
+                </div>
+
+                <div class="col-md-4">
+                  <%= link_to toggle_sts_path(activity_id: act_activity.id, fav_sts: 'hide', class: 'hide-sts btn btn-primary btn-xs') do %>
+                    <%= icon('fas', 'eye-slash')%> Hide
+                  <% end %>
+                </div>
+
+                <div class="col-md-4">
+                  <%= link_to toggle_sts_path(activity_id: act_activity.id, fav_sts: 'none', class: 'visible-sts btn btn-primary btn-xs') do %>
+                    <%= icon('fas', 'sync')%> Reset
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <p><%= icon('fab', 'google', "Places: #{act.gp_sts}")%>: <%= act.gp_date&.strftime('%x')%></p>
+              <p><%= icon('fab', 'google', "# #{act.gp_id}") %></p>
+              <p><%= icon('fas', 'map-marker-alt', "#{act.lat}, #{act.lon}") %></p>
+              <p><%= icon('fas', 'download', "#{act_export&.export_date&.strftime('%x')} #{act_export&.file_name}" )%></p>
+            </div>
+
+            <div class="col-md-3">
+              <p><%= icon('fas', 'calendar-alt', "Name Updated: #{act.act_changed&.strftime('%x')}" ) %></p>
+              <p><%= icon('fas', 'calendar-alt', "Address Updated: #{act.adr_changed&.strftime('%x')}" ) %></p>
+              <p><%= icon('fas', 'calendar-alt', "Created: #{act.created_at.strftime('%x')}" ) %></p>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+    </div>

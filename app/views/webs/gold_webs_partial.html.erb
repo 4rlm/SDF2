@@ -1,0 +1,43 @@
+<%= render partial: 'shared/webs_sidebar_btn' %>
+
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+  <div class="col-md-12">
+    <h5>Web Based View (Results: <%= @webs.count %>)</h5>
+  </div>
+</div>
+
+<% if params[:q].present? %>
+  <div class="row">
+    <%= link_to generate_csv_webs_path(params), class: 'btn btn-primary btn-xs' do %>
+      <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+    <% end %>
+  </div>
+<% end %>
+
+
+
+<div class="panel outer-panel">
+  <% @webs.each do |web| %>
+  <% web_activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
+  <% @activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
+  <% web_export = Export.find_by(id: web_activity.export_id) %>
+  <%# binding.pry %>
+
+
+
+  <%= render partial: "activities/toggle_sts_partial", locals: { activity: @activity } %>
+
+
+
+    <div class='row contWrap' style="display:none" id="<%= web.id %>">
+      <% if web.conts.any? %>
+        <% @conts = web.conts %>
+        <%= render 'conts/conts_list_partial', conts: @conts %>
+      <% end %>
+    </div>
+
+
+  <% end %>
+</div>
