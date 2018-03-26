@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :activities
   resources :users, :only => [:index, :show]
   resources :downloads, only: [:show]
 
