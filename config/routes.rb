@@ -24,5 +24,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get :toggle_sts, to: 'activities#toggle_sts'
+
   resources :acts, :terms, :links
 end

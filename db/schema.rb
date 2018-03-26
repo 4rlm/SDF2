@@ -29,13 +29,14 @@ ActiveRecord::Schema.define(version: 20180324123319) do
 
   create_table "activities", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "export_id", null: false
-    t.string "mod_name"
+    t.bigint "export_id"
+    t.string "mod_name", null: false
     t.integer "mod_id"
     t.string "fav_sts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["export_id"], name: "index_activities_on_export_id"
+    t.index ["mod_name"], name: "index_activities_on_mod_name"
     t.index ["user_id"], name: "index_activities_on_user_id"
   end
 

@@ -17,108 +17,50 @@
 <% end %>
 
 
-<div class="row">
-  <!-- <h5>Flag Data - Export CSV</h5> -->
-  <span class="btn btn-primary btn-xs" onClick="flagData();"><i class="fa fa-flag" aria-hidden="true"></i> Flag Data</span>
-</div>
-
-<script>
-  var webs = new Array();
-
-  function flagData() {
-    console.log("flagData Clicked", webs);
-    $.ajax({
-      url: "/webs/flag_data",
-      data: {webs: @webs},
-      success: function() { location.reload(); }
-    });
-  }
-</script>
-
-
-
-
-
-
-<div class="row">
-  <span class="btn btn-primary btn-xs" onClick="webExporter();"><i class="fa fa-flag" aria-hidden="true"></i> HIDDEN</span>
-
-  <div id="webExportWrap" class="row">
-    This is my DIV element.
-  </div>
-
-</div>
-
-
 
 <div class="panel outer-panel">
   <% @webs.each do |web| %>
+  <% activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
+  <% export = Export.find_by(id: activity.export_id) %>
+  <%# binding.pry %>
 
     <div class="row outer-list-row">
       <div class="col-md-3 association-parent">
+        <p><%= link_to(icon('fas', 'home', web.url ), web.url, target: '_blank')%></p>
+        <p><%= icon('fas', 'car', get_brands(web)&.join(', ')) %></p>
+        <p><%= icon('fas', 'star', web.cop) %></p>
+        <p><%= icon('fab', 'firstdraft', "#{web&.tmp_date&.strftime('%x')} #{web.temp_sts} #{web.temp_name}" )%></p>
+        <p><%= icon('fas', 'link', "#{web&.page_date&.strftime('%x')} #{web.page_sts}" )%></p>
+        <p><%= icon('fas', 'link', "#{web&.page_date&.strftime('%x')} #{web.page_sts}" )%></p>
 
-        <div class="row">
-          <table>
-            <tr>
-              <td><%= link_to icon('fas', 'home'), web.url, target: '_blank' %></td>
-              <td><%= web.url %></td>
-            </tr>
+        <p><%= icon('fas', 'users', "#{web&.cs_date&.strftime('%x')} #{web.cs_sts}" )%>
+          <% cont_count = web.conts&.count %>
+          <% if cont_count > 0 %>
+            | <a href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+          <% end %>
+        </p>
 
-            <tr>
-              <td><%= icon('fas', 'car') %></td>
-              <td><%= get_brands(web)&.join(', ') %></td>
-            </tr>
+        <p><%= icon('fas', 'calendar-alt', "#{web&.created_at&.strftime('%x')}: Created")%>
+          <% if web.web_changed.present? %>
+          | <%= web&.web_changed&.strftime('%x')%>: Updated
+          <% end %>
+        </p>
 
-            <tr>
-              <td><%= icon('fas', 'star') %></td>
-              <td><%= web.cop %></td>
-            </tr>
+        <p><%= icon('fas', 'download', "#{export&.export_date&.strftime('%x')} #{export&.file_name}" )%></p>
 
-            <tr>
-              <td><%= icon('fab', 'firstdraft')%></td>
-              <td><%= web.temp_sts %> (<%= web.temp_name %>) <%= web&.tmp_date&.strftime('%x')%></td>
-            </tr>
-
-            <tr>
-              <td><%= icon('fas', 'link')%></td>
-              <td><%= web.page_sts %> <%= web&.page_date&.strftime('%x')%></td>
-            </tr>
-
-            <tr>
-              <td><%= icon('fas', 'users')%></td>
-
-              <td><%= web.cs_sts %> <%= web.cs_date&.strftime('%x')%>
-                <% cont_count = web.conts&.count %>
-                <% if cont_count > 0 %>
-                  | <a href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
-                <% end %>
-              </td>
-            </tr>
-
-            <tr>
-              <td><%= icon('fas', 'calendar-alt')%></td>
-              <td>Created <%= web&.created_at&.strftime('%x')%>
-                <% if web.web_changed.present? %>
-                  | Updated <%= web&.web_changed&.strftime('%x')%>
-                <% end %>
-              </td>
-            </tr>
-
-            <tr>
-              <td><%= icon('fas', 'download')%></td>
-              <td>export date</td>
-            </tr>
-
-          </table>
-        </div>
-
-
-        <div class="row btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary">Fav</button>
-          <button type="button" class="btn btn-secondary">Hide</button>
-        </div>
-
+        <% if activity.fav_sts == 'Hidden' %>
+          <p><%= link_to toggle_sts_path(activity_id: activity.id, fav_sts: 'none', class: 'hidden-sts btn btn-primary btn-xs') do %>
+            <%= icon('fas', 'eye')%> UnHide
+          </p><% end %>
+        <% else %>
+          <p><%= link_to toggle_sts_path(activity_id: activity.id, fav_sts: 'Hidden', class: 'visible-sts btn btn-primary btn-xs') do %>
+            <%= icon('fas', 'eye-slash')%> Hide
+          </p><% end %>
+        <% end %>
       </div>
+
+
+
 
       <div class="col-md-9 outer-list-col">
         <% web.acts.each do |act| %>
