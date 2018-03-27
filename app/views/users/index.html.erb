@@ -2,7 +2,7 @@
 
 <h1>Users</h1>
 
-<table>
+<table class="table table-bordered">
   <thead>
     <tr>
       <th>Full Name</th>
@@ -12,28 +12,27 @@
       <th>Approved</th>
       <th>Registered</th>
       <th>Updated</th>
-
-      <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @users.each do |user| %>
       <tr>
-
-        <td><%= link_to "#{user.first_name} #{user.last_name}", user %></td>
-        <td><%= user.email %></td>
-        <td><%= user.phone %></td>
-        <td><%= user.role %></td>
-        <td><%= user.approved %></td>
+        <td><%= link_to "#{user&.first_name} #{user&.last_name}", user %></td>
+        <td><%= user&.email %></td>
+        <td><%= user&.phone %></td>
+        <td><%= user&.role %></td>
         <td><%= user.created_at&.strftime('%x') %></td>
         <td><%= user.updated_at&.strftime('%x') %></td>
-
-        <td><%= link_to 'Show', user %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<br>
+
+
+<br>
+<%= will_paginate @users if @users.present? %>
+<br>
 <br>

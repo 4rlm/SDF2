@@ -2,9 +2,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :authenticate_user!
 
-
   ## Custom: Strong Parameters White Listing
   before_action :configure_permitted_parameters, if: :devise_controller?
+
+  def block_pending_users
+    unless current_user && current_user.role != "admin"
+      flash[:alert] = "Please wait for admin approval."
+      redirect_to root_path
+    end
+  end
 
   protected
 
