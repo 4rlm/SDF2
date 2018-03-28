@@ -16,6 +16,11 @@ class ActsController < ApplicationController
     @q = Act.web_is_cop_or_franchise.where.not(gp_id: nil).ransack(params[:q])
     @acts = @q.result(distinct: true).paginate(page: params[:page], per_page: 50)
 
+    respond_to do |format|
+      format.json # show.js.erb
+      format.html # show.html.erb
+    end
+
     respond_with(@acts)
   end
 

@@ -12,6 +12,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # respond_to do |format|
+  #   format.json # show.js.erb
+  #   format.html # show.html.erb
+  # end
+
   protected
 
   def configure_permitted_parameters

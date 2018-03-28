@@ -20,9 +20,9 @@
 
 <div class="panel outer-panel">
   <% @webs.each do |web| %>
-    <!-- FIND OR CREATE web_activity -->
-    <% web_activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
-    <% web_export = Export.find_by(id: web_activity.export_id) %>
+    <!-- FIND OR CREATE @activity -->
+    <% @activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
+    <% web_export = Export.find_by(id: @activity.export_id) %>
 
     <!-- WEBS SECTION STARTS -->
     <div class="row outer-list-row">
@@ -49,7 +49,14 @@
         <p><%= icon('fas', 'download', "#{web_export&.export_date&.strftime('%x')} #{web_export&.file_name}" )%></p>
 
         <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
-        <%= render partial: "activities/toggle_sts", locals: { activity: web_activity } %>
+        <div id="yield-toggle-web_activity">
+          <%= render partial: "activities/toggle_sts", object: @activity %>
+          <%#= render partial: "product", collection: @products, as: :item %>
+
+          <%#= render partial: "activities/toggle_sts", locals: { activity: @activity } %>
+          <%#= render partial: 'activities/toggle_sts', activity: @activity %>
+        </div>
+
       </div>
 
 
@@ -68,9 +75,10 @@
               <p><%= icon('fas', 'phone', act.phone) %></p>
 
               <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-              <div id="yield-toggle-sts">
-                <%= render partial: "activities/toggle_sts", locals: { activity: act_activity } %>
-              </div>
+              <!-- <div id="yield-toggle-act_activity"> -->
+                <%#= render partial: "activities/toggle_sts", locals: { activity: act_activity } %>
+              <!-- </div> -->
+
             </div>
 
             <div class="col-md-4">

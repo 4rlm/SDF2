@@ -7,6 +7,12 @@ class UsersController < ApplicationController
   def index
     # @users = User.all
     @users = User.all.paginate(page: params[:page], per_page: 50)
+
+    respond_to do |format|
+      format.json # show.js.erb
+      format.html # show.html.erb
+    end
+    
   end
 
   # GET /users/1

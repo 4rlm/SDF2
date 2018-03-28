@@ -1,3 +1,5 @@
+http://localhost:3000/artists.json
+http://localhost:3000/activities.json 
 STEPS FOR CREATING JSON COMPATIBLE PARTIALS.
 
 ========== I. Data Flows in Order Listed  ==========
@@ -27,7 +29,7 @@ STEPS FOR CREATING JSON COMPATIBLE PARTIALS.
   ====================== II. Details of Each Page ======================
 
   ---- A. HTML.ERB (3/5 pages) ----
-  
+
     1) show.html.erb
       Copy and paste entire contents from typical html.erb file into _profile_partial.html.erb (#2)
 
