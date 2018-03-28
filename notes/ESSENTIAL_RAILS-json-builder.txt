@@ -1,0 +1,69 @@
+STEPS FOR CREATING JSON COMPATIBLE PARTIALS.
+
+========== I. Data Flows in Order Listed  ==========
+
+  ---- A. HTML Rendering (3/5 pages) ----
+
+    1) show.html.erb
+      <%= render 'profiles/profile_partial', profile: @profile %>
+
+    2) _profile_partial.html.erb
+      Original html.erb content from show.
+
+    3) show.js.erb
+      $("#main-wrapper").html("<%= j (render 'profile_partial', profile: @profile) %>");
+
+
+  ---- B. JSON Rendering (2/5 pages) ----
+
+    4) show.json.jbuilder
+      json.partial! "profiles/profile", profile: @profile
+
+    5) _profile.json.jbuilder
+      json.extract! profile, :id, :user_id, :first_name, :last_name, :phone, :created_at, :updated_at
+      json.url profile_url(profile, format: :json)
+
+
+  ====================== II. Details of Each Page ======================
+
+  ---- A. HTML.ERB (3/5 pages) ----
+  
+    1) show.html.erb
+      Copy and paste entire contents from typical html.erb file into _profile_partial.html.erb (#2)
+
+      Entire File Contents:
+      <%= render 'profiles/profile_partial', profile: @profile %>
+
+
+    2) _profile_partial.html.erb
+      Copy content from original show.html.erb (#1).
+
+      Snippet of File Contents:
+      <td><%= @profile.first_name %></td>
+      <td><%= @profile.last_name %></td>
+      <td><%= @profile.phone %></td>
+
+
+    3) show.js.erb
+      Mapping for where the partial should be routed to.  In most cases, Index and Show partials route to layouts/application.html.erb directly above the 'yield' block.  It's important that the immediate container, such as a div contain the same CSS ID indicated in your show.js.erb file.
+
+      Entire File Contents:
+      $("#main-wrapper").html("<%= j (render 'profile_partial', profile: @profile) %>");
+
+
+  ---- B. JSON.BUILDER (2/5 pages) ----
+
+
+    4) show.json.jbuilder
+      Just as file 1 routed to file 2 for the html.erb pages, jbuilder does the same for the JSON content to _profile.json.jbuilder.
+
+      Entire File Contents:
+      json.partial! "profiles/profile", profile: @profile
+
+
+    5) _profile.json.jbuilder
+      File 4 sent @profile object, in JSON format.  It needs to be extracted to a format that ruby/active record is used to.
+
+      Entire File Contents:
+      json.extract! profile, :id, :user_id, :first_name, :last_name, :phone, :created_at, :updated_at
+      json.url profile_url(profile, format: :json)

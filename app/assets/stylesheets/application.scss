@@ -89,6 +89,50 @@ a, a:hover, a:focus, a:visited {
 
 
 
+// Toggle_sts Customizing
+.toggle-btn-group {
+  max-width: 350px;
+}
+
+.toggle-div {
+  margin-left: 3px;
+}
+
+// .fav-btn {
+//   background: #106cd6; // bs-primary: #106cd6
+//   // opacity: .4;
+// }
+//
+// .hide-btn {
+//   background: #c62638; // bs-danger: #c62638
+// }
+
+.fa-span {
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
+
+.btn-sm {
+  text-align: center;
+  line-height: normal;
+  margin: 1px;
+  border: 2px solid #4e5465;
+  border-radius: 5px;
+}
+
+.fa-btn-xs {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.active-sts {
+  background-color: #434856 !important;
+  color: #8d93a5 !important;
+}
+
+
 
 
 // SPECIAL VIEW CSS - STARTS
@@ -110,6 +154,7 @@ a, a:hover, a:focus, a:visited {
 }
 
 .association-parent{
+  // background-color: yellow;
   border: 1px solid #4e5465;
   border-radius: 5px;
   margin: 0px;

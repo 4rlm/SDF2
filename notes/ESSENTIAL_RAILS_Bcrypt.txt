@@ -5,7 +5,7 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
 ** ESSENTIAL RAILS....1) Polymorphic
 ====================================
 
-1) Generate Track Scaffold:
+1) g Track Scaffold:
   1a) $ rails g model Track
 
   1b) Check User Migration (nothing to do - just check if ok.):
@@ -30,7 +30,7 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
   end
 --------------------
 
-2) Generate Tracking Scaffold:
+2) g Tracking Scaffold:
 
   2a) $ rails g model Tracking track:references{index} exportable:references{polymorphic}:index
 
@@ -77,8 +77,8 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
   gem 'bcrypt'
 --------------------
 
-2) Generate User Scaffold:
-  2a) $ rails generate scaffold User username:string email:string pw_hash:string
+2) g User Scaffold:
+  2a) $ rails g scaffold User username:string email:string pw_hash:string
 
   2b) Edit User Migration (Important!):
     class CreateUsers < ActiveRecord::Migration[5.1]
@@ -103,8 +103,8 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
     end
 --------------------
 
-3) Generate Profile Scaffold:
-  3a) $ rails generate scaffold Profile user:references{index} first_name:string last_name:string phone:string
+3) g Profile Scaffold:
+  3a) $ rails g scaffold Profile user:references{index} first_name:string last_name:string phone:string
 
   3b) Check Profile Migration (nothing to do - just check if ok.):
     class CreateProfiles < ActiveRecord::Migration[5.1]
@@ -222,9 +222,9 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
 ** ESSENTIAL RAILS....4) migration files
 ====================================
 --ADD
-  $ rails generate migration add_aq_name_to_acts aq_name:string
-  $ rails generate migration add_cq_name_to_conts cq_name:string
-  $ rails generate migration add_wq_name_to_webs wq_name:string
+  $ rails g migration add_hide_sts_to_acts hide_sts:string
+  $ rails g migration add_hide_sts_to_conts hide_sts:string
+  $ rails g migration add_hide_sts_to_activities hide_sts:string
 
 
 --CHANGE
@@ -239,6 +239,10 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
 
 
 --REMOVE
+  $ rails g migration remove_hide_sts_from_acts hide_sts:string
+  $ rails g migration remove_hide_sts_from_conts hide_sts:string
+  $ rails g migration remove_hide_sts_from_webs hide_sts:string
+
 
 
 ====================================

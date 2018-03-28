@@ -68,7 +68,9 @@
               <p><%= icon('fas', 'phone', act.phone) %></p>
 
               <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-              <%= render partial: "activities/toggle_sts", locals: { activity: act_activity } %>
+              <div id="yield-toggle-sts">
+                <%= render partial: "activities/toggle_sts", locals: { activity: act_activity } %>
+              </div>
             </div>
 
             <div class="col-md-4">

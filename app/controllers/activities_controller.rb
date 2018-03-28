@@ -6,16 +6,21 @@ class ActivitiesController < ApplicationController
   def index
     @activities = Activity.all.paginate(page: params[:page], per_page: 50)
 
-    respond_to do |format|
-      format.json
-      format.html
-      # format.html { redirect_back fallback_location: root_path }
-    end
+    # respond_to do |format|
+    #   format.html { redirect_to @activities }
+    #   format.json { render :index, status: :ok, location: @activities, layout: true }
+    # end
+
+    # respond_to do |format|
+    #   format.html
+    #   format.js
+    # end
 
   end
 
   def show
     respond_to do |format|
+      binding.pry
       format.html
       format.js
     end
@@ -42,9 +47,9 @@ class ActivitiesController < ApplicationController
   end
 
   def update
-    binding.pry
     respond_to do |format|
       if @activity.update(activity_params)
+        binding.pry
         format.html { redirect_to @activity, notice: 'Activity was successfully updated.' }
         format.json { render :show, status: :ok, location: @activity }
       else
@@ -64,13 +69,22 @@ class ActivitiesController < ApplicationController
 
   # GET /toggle_sts
   def toggle_sts
-    @activity.update(fav_sts: params[:fav_sts])
+    sts_hsh = { fav_sts: params[:fav_sts], hide_sts: params[:hide_sts] }&.delete_if {|k,v| v.blank?}
 
     respond_to do |format|
-      format.html { redirect_back fallback_location: root_path }
-      format.json { render :index, status: :ok, location: @activity, layout: false }
-      # format.json { render json:  @activity }
+      if @activity.update(sts_hsh)
+        # format.html { redirect_to @activity, notice: 'Activity was successfully updated.' }
+        binding.pry
+        format.json { render :toggle_sts, status: :ok, location: @activity }
+      end
     end
+
+    # @activity.update(sts_hsh)
+    ## BELOW WORKS, BUT RETURNING WHOLE PARTIAL.  NEED TO RETURN BETTER JSON.
+    # respond_to do |format|
+    #   format.html { redirect_back fallback_location: root_path }
+    #   format.json { render :show, status: :ok, location: @activity }
+    # end
 
     # redirect_back fallback_location: root_path
   end

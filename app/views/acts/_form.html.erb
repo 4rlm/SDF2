@@ -1,4 +1,4 @@
-<%= form_with(model: act, local: true) do |form| %>
+<%= form_with(model: act, remote: true) do |form| %>
   <% if act.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(act.errors.count, "error") %> prohibited this act from being saved:</h2>

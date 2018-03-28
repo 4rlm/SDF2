@@ -1,4 +1,4 @@
-<%= form_with(model: cont, local: true) do |form| %>
+<%= form_with(model: cont, remote: true) do |form| %>
   <% if cont.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(cont.errors.count, "error") %> prohibited this cont from being saved:</h2>

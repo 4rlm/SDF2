@@ -18,8 +18,8 @@ class WebsController < ApplicationController
     @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 20)
 
     respond_to do |format|
-      format.json
       format.html
+      format.json { render :index, status: :ok, location: @web, layout: true }
     end
 
   end
