@@ -1,12 +1,13 @@
-<% if @activity.hide_sts == 'hide' %>
-  <% hide_btn = 'active-sts' %>
-  <% hide_sts = 'none' %>
-<% else %>
-  <% hide_sts = 'hide' %>
-<% end %>
+<div id="toggle_hide_form">
+  <%= form_with(model: @activity) do |f| %>
+    <div class="field form-group field">
+      <%= f.hidden_field :form_id, value: 'toggle_hide_form' %>
+      <%= f.label :hide_sts %>
+      <%= f.text_field :hide_sts, id: :hide_sts, class: 'form-control' %>
+    </div>
 
-
-
-<%= link_to activity_path(id: @activity.id, hide_sts: hide_sts), class: "btn btn-sm #{hide_btn} btn-danger", remote: true do %>
-  <%= icon('fas', 'ban', class: 'fa-btn-xs')%> <span class="fa-span">Hide</span>
-<% end %>
+    <div class="actions">
+      <%= f.submit name = @activity.hide_sts %>
+    </div>
+  <% end %>
+</div>

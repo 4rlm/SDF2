@@ -1,11 +1,13 @@
-<% if @activity.fav_sts == 'follow' %>
-  <% fav_btn = 'active-sts' %>
-  <% fav_sts = 'none' %>
-<% else %>
-  <% fav_sts = 'follow' %>
-<% end %>
+<div id="toggle_fav_form">
+  <%= form_with(model: @activity) do |f| %>
+    <div class="field form-group field">
+      <%= f.hidden_field :form_id, value: 'toggle_fav_form' %>
+      <%= f.label :fav_sts %>
+      <%= f.text_field :fav_sts, id: :fav_sts, class: 'form-control' %>
+    </div>
 
-
-<%= link_to activity_path(id: @activity.id, fav_sts: fav_sts), class: "btn btn-sm #{fav_btn} btn-primary", remote: true do %>
-  <%= icon('fas', 'plus-circle', class: 'fa-btn-xs')%> <span class="fa-span">Follow</span>
-<% end %>
+    <div class="actions">
+      <%= f.submit name = @activity.fav_sts %>
+    </div>
+  <% end %>
+</div>
