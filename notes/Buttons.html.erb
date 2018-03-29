@@ -1,0 +1,26 @@
+Buttons Guide
+
+  <%#= form_for @activity do %>
+    <%#= button_tag 'Change Me' %>
+  <%# end %>
+
+  <div class="actions">
+    <%#= f.button :submit, 'Label', class: 'btn btn-primary' %>
+    <%#= f.submit button_id, class: "" %>
+    <%#= f.submit class: 'btn btn-success pull-right' %>
+    <%#= f.button :submit, 'Label', class: 'btn btn-primary' %>
+    <%#= f.button :submit, value: "#{f.object.new_record? ? '12Create' : '34Update'}" %>
+    <%#= f.button :submit, value: "#{f.object.new_record? ? 'CreateX' : 'UpdateX'}" %>
+    <%= submit_tag("Search") %>
+  </div>
+
+
+  <%= form_with(model: @activity, remote: true) do |form| %>
+    <%= form.hidden_field :hide_sts, value: 'none' %>
+    <%= form.submit name='gh' %>
+  <% end %>
+
+  <%= form_with(model: @activity, remote: true) do |form| %>
+    <%= form.hidden_field :fav_sts, value: 'none' %>
+    <%= form.submit %>
+  <% end %>

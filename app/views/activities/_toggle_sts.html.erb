@@ -1,32 +1,33 @@
-<div class="row toggle-btn-group" role="group" aria-label="Basic example">
-  <% fav_sts = 'follow' %>
-  <% hide_sts = 'hide' %>
+<div id="toggle_sts_form">
+<!-- <div id=""> -->
 
-  <% if @activity.fav_sts == 'follow' %>
-    <% fav_btn = 'active-sts' %>
-    <% fav_sts = 'none' %>
-  <% end %>
+  <%= form_with(model: activity, remote: true) do |f| %>
+    <% if activity.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(activity.errors.count, "error") %> prohibited this activity from being saved:</h2>
 
-  <% if @activity.hide_sts == 'hide' %>
-    <% hide_btn = 'active-sts' %>
-    <% hide_sts = 'none' %>
-  <% end %>
-
-
-  <div class="col-md-3 toggle-div">
-    <%= link_to toggle_sts_activities_path(id: @activity.id, hide_sts: hide_sts), class: "btn btn-sm #{hide_btn} btn-danger", remote: true do %>
-      <%= icon('fas', 'ban', class: 'fa-btn-xs')%> <span class="fa-span">Hide</span>
+        <ul>
+        <% activity.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
     <% end %>
-  </div>
 
-  <div class="col-md-3">
-    <%= link_to toggle_sts_activities_path(id: @activity.id, fav_sts: fav_sts), class: "btn btn-sm #{fav_btn} btn-primary", remote: true do %>
-      <%= icon('fas', 'plus-circle', class: 'fa-btn-xs')%> <span class="fa-span">Follow</span>
-    <% end %>
-  </div>
+    <div class="field form-group field">
+      <%= f.hidden_field :form_id, value: 'toggle_sts_form' %>
 
-  <div class="col-md-6">
+      <%= f.label :fav_sts %>
+      <%= f.text_field :fav_sts, id: :fav_sts, class: 'form-control' %>
+    </div>
 
-  </div>
+
+    <div class="actions">
+      <%= f.submit name = @activity.fav_sts %>
+    </div>
+
+
+
+  <% end %>
 
 </div>

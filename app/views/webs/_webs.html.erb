@@ -49,13 +49,12 @@
         <p><%= icon('fas', 'download', "#{web_export&.export_date&.strftime('%x')} #{web_export&.file_name}" )%></p>
 
         <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
-        <div id="yield-toggle-web_activity">
-          <%= render partial: "activities/toggle_sts", object: @activity %>
-          <%#= render partial: "product", collection: @products, as: :item %>
+        <%= render 'activities/toggle_sts_wrap', activity: @activity %>
 
-          <%#= render partial: "activities/toggle_sts", locals: { activity: @activity } %>
-          <%#= render partial: 'activities/toggle_sts', activity: @activity %>
-        </div>
+        <%#= render partial: "activities/toggle_sts", object: @activity %>
+        <%#= render partial: "product", collection: @products, as: :item %>
+        <%#= render partial: "activities/toggle_sts", locals: { activity: @activity } %>
+        <%#= render partial: 'activities/toggle_sts', activity: @activity %>
 
       </div>
 

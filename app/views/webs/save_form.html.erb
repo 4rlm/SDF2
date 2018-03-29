@@ -1,3 +1,5 @@
+<% if web&.present? %>
+
 <%= form_with(model: web, remote: true) do |form| %>
   <% if web.errors.any? %>
     <div id="error_explanation">
@@ -14,4 +16,6 @@
   <div class="actions">
     <%= form.submit %>
   </div>
+<% end %>
+
 <% end %>

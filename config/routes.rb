@@ -27,6 +27,8 @@ Rails.application.routes.draw do
 
   resources :activities do
     collection do
+      match 'toggle_fav' => 'activities#toggle_fav', via: [:get, :post], as: :toggle_fav
+      match 'toggle_hide' => 'activities#toggle_hide', via: [:get, :post], as: :toggle_hide
       match 'toggle_sts' => 'activities#toggle_sts', via: [:get, :post], as: :toggle_sts
     end
   end
