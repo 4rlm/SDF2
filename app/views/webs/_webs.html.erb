@@ -49,13 +49,7 @@
         <p><%= icon('fas', 'download', "#{web_export&.export_date&.strftime('%x')} #{web_export&.file_name}" )%></p>
 
         <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
-        <%= render 'activities/toggle_sts_wrap', activity: @activity %>
-
-        <%#= render partial: "activities/toggle_sts", object: @activity %>
-        <%#= render partial: "product", collection: @products, as: :item %>
-        <%#= render partial: "activities/toggle_sts", locals: { activity: @activity } %>
-        <%#= render partial: 'activities/toggle_sts', activity: @activity %>
-
+        <%= render 'activities/toggle_sts_wrap', locals: {activity: @activity} %>
       </div>
 
 
@@ -63,8 +57,8 @@
       <div class="col-md-9 outer-list-col">
         <% web.acts.each do |act| %>
         <!-- FIND OR CREATE web_activity -->
-        <% act_activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
-        <% act_export = Export.find_by(id: act_activity.export_id) %>
+        <% @activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
+        <% act_export = Export.find_by(id: @activity.export_id) %>
 
           <div class="row association-row">
 
@@ -74,9 +68,7 @@
               <p><%= icon('fas', 'phone', act.phone) %></p>
 
               <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-              <!-- <div id="yield-toggle-act_activity"> -->
-                <%#= render partial: "activities/toggle_sts", locals: { activity: act_activity } %>
-              <!-- </div> -->
+              <%= render 'activities/toggle_sts_wrap', locals: {activity: @activity} %>
 
             </div>
 
