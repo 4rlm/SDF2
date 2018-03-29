@@ -1,13 +1,24 @@
-<div id="toggle_fav_form">
+<!-- <div id="toggle_fav_form"> -->
+<div>
   <%= form_with(model: @activity) do |f| %>
     <div class="field form-group field">
       <%= f.hidden_field :form_id, value: 'toggle_fav_form' %>
-      <%= f.label :fav_sts %>
-      <%= f.text_field :fav_sts, id: :fav_sts, class: 'form-control' %>
+
+      <% if @activity.fav_sts == 'follow' %>
+        <% fav_btn = 'active-sts' %>
+        <% submit_label = 'Following' %>
+        <%= f.hidden_field :fav_sts, value: 'none' %>
+      <% else %>
+        <% fav_btn = 'btn-primary' %>
+        <% submit_label = 'Follow' %>
+        <%= f.hidden_field :fav_sts, value: 'follow' %>
+      <% end %>
+
     </div>
 
+
     <div class="actions">
-      <%= f.submit name = @activity.fav_sts %>
+      <%= f.submit "#{submit_label}", class: "btn btn-sm #{fav_btn}" %>
     </div>
   <% end %>
 </div>

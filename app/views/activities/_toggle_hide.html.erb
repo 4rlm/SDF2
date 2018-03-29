@@ -1,13 +1,23 @@
-<div id="toggle_hide_form">
+<!-- <div id="toggle_hide_form"> -->
+<div>
   <%= form_with(model: @activity) do |f| %>
     <div class="field form-group field">
       <%= f.hidden_field :form_id, value: 'toggle_hide_form' %>
-      <%= f.label :hide_sts %>
-      <%= f.text_field :hide_sts, id: :hide_sts, class: 'form-control' %>
+
+      <% if @activity.hide_sts == 'hide' %>
+        <% hide_btn = 'active-sts' %>
+        <% submit_label = 'Hidden' %>
+        <%= f.hidden_field :hide_sts, value: 'none' %>
+      <% else %>
+        <% hide_btn = 'btn-danger' %>
+        <% submit_label = 'Hide' %>
+        <%= f.hidden_field :hide_sts, value: 'hide' %>
+      <% end %>
+
     </div>
 
     <div class="actions">
-      <%= f.submit name = @activity.hide_sts %>
+      <%= f.submit "#{submit_label}", class: "btn btn-sm #{hide_btn}" %>
     </div>
   <% end %>
 </div>

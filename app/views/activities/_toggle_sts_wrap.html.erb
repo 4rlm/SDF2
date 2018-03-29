@@ -1,22 +1,15 @@
 <div class="row toggle-btn-group" role="group" aria-label="Basic example">
 
-  <div id="toggle_fav" class="col-md-3 toggle-div">
-    <%= render 'activities/toggle_favx', activity: @activity %>
-  </div>
-
-  <div id="toggle_hide" class="col-md-3">
-    <%= render 'activities/toggle_hidex', activity: @activity %>
-  </div>
-
-  <!-- <div id="toggle_sts_form" class="col-md-6"> -->
-  <div class="col-md-3">
-    <!-- IMPORTANT TO KEEP THIS FOR LAYOUT -->
+  <div class="toggle_fav col-md-3 toggle-div" data-id="<%= @activity.id %>">
     <%= render 'activities/toggle_fav', activity: @activity %>
   </div>
 
-  <div class="col-md-3">
-    <!-- IMPORTANT TO KEEP THIS FOR LAYOUT -->
+  <div class="toggle_hide col-md-3" data-id="<%= @activity.id %>">
     <%= render 'activities/toggle_hide', activity: @activity %>
+  </div>
+
+  <div class="col-md-6">
+    <!-- IMPORTANT TO KEEP THIS FOR LAYOUT -->
   </div>
 
 </div>
