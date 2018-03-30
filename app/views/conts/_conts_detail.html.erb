@@ -19,88 +19,24 @@
 
 
 
-<div class="panel outer-panel list-view">
-  <% @conts&.each do |cont| %>
-
-  <% @activity = current_user.activities.find_or_create_by(mod_name: 'Cont', mod_id: cont.id) %>
-  <% cont_export = Export.find_by(id: @activity.export_id) %>
-
-  <!-- <div class="row outer-list-row"> -->
-  <div class="row outer-list-row">
-
-    <!-- <div class="row"> -->
-      <div class="col-md-8">
-        <table class="table">
-          <tr>
-            <td style="width: 70%;"><%= cont.full_name %></td>
-            <td style="width: 15%;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
-            <td style="width: 15%;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
-          </tr>
-          <tr>
-            <td colspan="3"><%= cont.job_title %> | <%= cont.job_desc %> </td>
-          </tr>
-
-          <tr>
-            <td colspan="3">
-              <%= cont.phone.present? ? cont.phone : "no phone" %> |
-              <%= cont.email.present? ? cont.email : "no email" %>
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="3"><%= cont.web.url %></td>
-          </tr>
-        </table>
+<div class="row">
+  <% @conts&.each_with_index do |cont, index| %>
+    <% if index.even? %>
+    <!-- LEFT -->
+      <div class="col-md-6">
+        <div class="col-md-12">
+          <%= index %>
+          <%= render 'conts_detail_deep', cont: cont %>
+        </div>
       </div>
-
-      <div class="col-md-4">
-        <table class="table">
-          <tr>
-            <td>Created:</td>
-            <td><%= cont.created_at&.strftime('%x') %></td>
-          </tr>
-          <tr>
-            <td>Verified:</td>
-            <td><%= cont.cs_date&.strftime('%x') %></td>
-          </tr>
-          <tr>
-            <td>Email 𝚫:</td>
-            <td><%= cont.email_changed&.strftime('%x') %></td>
-          </tr>
-          <tr>
-            <td>Job 𝚫:</td>
-            <td><%= cont.job_changed&.strftime('%x') %></td>
-          </tr>
-        </table>
+    <% else %>
+      <!-- RIGHT -->
+      <div class="col-md-6">
+        <div class="col-md-12">
+          <%= index %>
+          <%= render 'conts_detail_deep', cont: cont %>
+        </div>
       </div>
-    <!-- </div> -->
-
-    <div class="row">
-      <!-- <div class="col-md-12"> -->
-
-          <% acts = cont.acts %>
-          <% acts&.each do |act| %>
-
-          <!-- FIND OR CREATE act_activity -->
-          <% @activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
-          <% act_export = Export.find_by(id: @activity.export_id) %>
-
-          <table class="table">
-            <tr>
-              <td style="width: 40%;"><%= act.act_name %>:</td>
-              <td style="width: 40%;"><%= act.full_address %></td>
-              <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-              <td style="width: 10%;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
-              <td style="width: 10%;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
-            </tr>
-          </table>
-
-          <% end %>
-
-      <!-- </div> -->
-    </div>
-
-  </div>
-
+    <% end %>
   <% end %>
 </div>
