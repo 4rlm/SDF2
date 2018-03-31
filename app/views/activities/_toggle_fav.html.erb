@@ -1,24 +1,15 @@
-<!-- <div id="toggle_fav_form"> -->
-<div>
-  <%= form_with(model: @activity) do |f| %>
-    <div class="field form-group field">
-      <%= f.hidden_field :form_id, value: 'toggle_fav_form' %>
+<%= form_with(model: @activity) do |f| %>
+  <%= f.hidden_field :form_id, value: 'toggle_fav_form' %>
 
-      <% if @activity.fav_sts == 'follow' %>
-        <% fav_btn = 'active-sts' %>
-        <% submit_label = 'Following' %>
-        <%= f.hidden_field :fav_sts, value: 'none' %>
-      <% else %>
-        <% fav_btn = 'btn-primary' %>
-        <% submit_label = 'Follow' %>
-        <%= f.hidden_field :fav_sts, value: 'follow' %>
-      <% end %>
-
-    </div>
-
-
-    <div class="actions">
-      <%= f.submit "#{submit_label}", class: "btn btn-sm #{fav_btn}" %>
-    </div>
+  <% if @activity.fav_sts == 'follow' %>
+    <% fav_btn = 'active-sts' %>
+    <% submit_label = 'Following' %>
+    <%= f.hidden_field :fav_sts, value: 'none' %>
+  <% else %>
+    <% fav_btn = 'btn-primary' %>
+    <% submit_label = 'Follow' %>
+    <%= f.hidden_field :fav_sts, value: 'follow' %>
   <% end %>
-</div>
+
+  <%= f.submit "#{submit_label}", class: "btn btn-sm #{fav_btn}" %>
+<% end %>
