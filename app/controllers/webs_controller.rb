@@ -15,7 +15,7 @@ class WebsController < ApplicationController
     end
 
     @wq = Web.ransack(params[:q])
-    @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands).paginate(page: params[:page], per_page: 20)
+    @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)
 
     respond_to do |format|
       format.json # show.js.erb

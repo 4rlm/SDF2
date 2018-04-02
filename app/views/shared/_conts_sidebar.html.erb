@@ -1,13 +1,42 @@
 <nav class="container sidebar">
 
   <% if @cq.present? %>
-  
+
     <%= search_form_for(@cq, url: search_conts_path, html: {method: :post, class: 'form'}) do |f| %>
 
       <!-- SEARCH SECTION - START -->
       <h5 class="text-center sidebar-header">Search Criteria</h5>
       <ul class="components">
         <!-- SEARCH CONTCONTS - START -->
+
+
+        <!-- user: <%#= current_user.id %> -->
+        <td><%= f.hidden_field :cont_activities_user_id_eq, value: current_user.id  %></td>
+        <tr>
+          <td>Cont Activities: Fav</td>
+          <td><%= f.search_field :cont_activities_fav_sts_eq %></td>
+        </tr>
+        <tr>
+          <td>Cont Activities: Hide</td>
+          <td><%= f.search_field :cont_activities_hide_sts_eq %></td>
+        </tr>
+
+
+
+        <td><%= f.hidden_field :act_activities_user_id_eq, value: current_user.id  %></td>
+        <tr>
+          <td>Act Activities: Fav</td>
+          <td><%= f.search_field :act_activities_fav_sts_eq %></td>
+        </tr>
+
+        <tr>
+          <td>Act Activities: Hide</td>
+          <td><%= f.search_field :act_activities_hide_sts_eq %></td>
+        </tr>
+
+
+
+
         <li>
           <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'users', 'Contact Criteria') %>

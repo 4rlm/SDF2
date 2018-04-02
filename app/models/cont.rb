@@ -4,9 +4,11 @@ class Cont < ApplicationRecord
 
   validates_presence_of :web
   belongs_to :web, inverse_of: :conts, optional: true
-  has_many :acts, through: :web
   has_many :links, through: :web
   has_many :brands, through: :web
+
+  has_many :acts, through: :web
+  has_many :act_activities, through: :acts
 
   has_many :cont_activities, dependent: :destroy
   accepts_nested_attributes_for :cont_activities

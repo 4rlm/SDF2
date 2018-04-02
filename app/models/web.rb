@@ -13,8 +13,10 @@ class Web < ApplicationRecord
 
   has_many :act_webs, dependent: :destroy
   has_many :acts, through: :act_webs
+  has_many :act_activities, through: :acts
 
   has_many :web_activities, dependent: :destroy
+  has_many :users, through: :web_activities
 
   accepts_nested_attributes_for :act_webs, :acts, :conts, :web_links, :links, :web_brands, :brands, :web_activities
 
