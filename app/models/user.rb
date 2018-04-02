@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   has_many :exports, dependent: :destroy
   has_many :activities, dependent: :destroy
+  has_many :web_activities, dependent: :destroy
   has_many :queries, dependent: :destroy
 
 end

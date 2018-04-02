@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :web_activities
   resources :users, :only => [:index, :show]
   resources :downloads, only: [:show]
   # resources :activities, only: [:toggle_sts]
@@ -34,5 +35,5 @@ Rails.application.routes.draw do
   # end
   # get :toggle_sts, to: 'activities#toggle_sts'
 
-  resources :acts, :terms, :links, :activities
+  resources :acts, :terms, :links, :activities, :web_activities
 end

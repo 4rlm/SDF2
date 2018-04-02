@@ -1,7 +1,11 @@
 <!-- FIND OR CREATE @activity -->
 <% web = @web %>
-<% @activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
-<% web_export = Export.find_by(id: @activity.export_id) %>
+<!-- <% @activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %> -->
+<!-- <% web_export = Export.find_by(id: @activity.export_id) %> -->
+
+<% @web_activity = current_user.web_activities.find_or_create_by(web_id: web.id) %>
+<%#= binding.pry %>
+<% web_export = Export.find_by(id: @web_activity.export_id) %>
 
 <!-- WEBS SECTION STARTS -->
 <div class="row outer-list-row">
@@ -12,8 +16,8 @@
       <tr>
         <td style="width: 30%;"><%= icon('fas', 'star', web.cop) %></td>
         <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
-        <td style="width: 30%;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
-        <td style="width: 30%;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
+        <td style="width: 30%;"><%= render 'web_activities/toggle_fav_wrap', locals: {web_activity: @web_activity} %></td>
+        <td style="width: 30%;"><%= render 'web_activities/toggle_hide_wrap', locals: {web_activity: @web_activity} %></td>
       </tr>
 
       <tr><td colspan="3"><%= icon('fas', 'car', get_brands(web)&.join(', ')) %></td></tr>

@@ -13,7 +13,10 @@ class Web < ApplicationRecord
 
   has_many :act_webs, dependent: :destroy
   has_many :acts, through: :act_webs
-  accepts_nested_attributes_for :act_webs, :acts, :conts, :web_links, :links, :web_brands, :brands
+
+  has_many :web_activities, dependent: :destroy
+
+  accepts_nested_attributes_for :act_webs, :acts, :conts, :web_links, :links, :web_brands, :brands, :web_activities
 
   def track_web_change
     self.web_changed = Time.now if url_changed? || fwd_url_changed? || wx_date_changed?

@@ -1,0 +1,2 @@
+var toggle_fav_div = $('div.toggle_fav[data-id="<%= @web_activity.id %>"]');
+$(toggle_fav_div).html("<%= j (render 'toggle_fav', web_activity: @web_activity) %>");

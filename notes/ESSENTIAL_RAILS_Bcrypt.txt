@@ -288,3 +288,8 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
     <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary btn-xs"%></div>
     <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger btn-xs" %></div>
   </div>
+
+
+==================
+
+rails g scaffold WebActivity
