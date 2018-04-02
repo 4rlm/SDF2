@@ -41,6 +41,20 @@
   }
 
 
+  // SHOWS Webs LIST FROM Conts VIA BUTTON
+  function toggleWeb(id) {
+
+    var element = $(".webWrap#" + id);
+    console.log(element);
+
+    if (element.is(':visible')) {
+      element.hide();
+    } else {
+      element.show();
+    }
+  }
+
+
   // Export Webs CSV if Clicked.
   function webExporter() {
       var x = document.getElementById("webExportWrap");

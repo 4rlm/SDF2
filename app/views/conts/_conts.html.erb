@@ -18,23 +18,46 @@
 <% end %>
 
 
-
 <div class="row">
   <% @conts&.each_with_index do |cont, index| %>
     <% if index.even? %>
     <!-- LEFT -->
       <div class="col-md-6">
         <div class="col-md-12">
-          <%= render 'conts_detail_deep', cont: cont %>
+          <% @cont = cont %>
+          <%= render 'conts/cont_detail', cont: cont %>
+          <%#= render 'webs/web_details', locals: {web: @web} %>
         </div>
       </div>
+
     <% else %>
       <!-- RIGHT -->
       <div class="col-md-6">
         <div class="col-md-12">
-          <%= render 'conts_detail_deep', cont: cont %>
+          <% @cont = cont %>
+          <%= render 'conts/cont_detail', cont: cont %>
+          <%#= render 'webs/web_details', locals: {web: @web} %>
         </div>
       </div>
     <% end %>
-  <% end %>
+
+
+<!-- THIS WILL BE JS PARTIAL OF CONT'S WEB AND ACTS WHEN CLICKED -->
+<!-- <div class='webWrap' style="display:none" id="<%#= cont.id %>"> -->
+  <%# @web = cont.web %>
+  <%#= render 'webs/web_details', web: @web %>
+<!-- </div> -->
+
+
+
+<% end %>
 </div>
+
+
+
+
+
+<br>
+<%#= will_paginate @conts if @conts&.present? %>
+<br>
+<br>

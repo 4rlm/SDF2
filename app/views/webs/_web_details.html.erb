@@ -1,0 +1,92 @@
+<!-- FIND OR CREATE @activity -->
+<% web = @web %>
+<% @activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %>
+<% web_export = Export.find_by(id: @activity.export_id) %>
+
+<!-- WEBS SECTION STARTS -->
+<div class="row outer-list-row">
+  <div class="col-md-3 association-parent">
+    <table class="table details">
+      <tr><td colspan="3"><%= link_to(icon('fas', 'home', web.url ), web.url, target: '_blank')%></td></tr>
+
+      <tr>
+        <td style="width: 30%;"><%= icon('fas', 'star', web.cop) %></td>
+        <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
+        <td style="width: 30%;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
+        <td style="width: 30%;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
+      </tr>
+
+      <tr><td colspan="3"><%= icon('fas', 'car', get_brands(web)&.join(', ')) %></td></tr>
+      <tr><td colspan="3"><%= icon('fab', 'firstdraft', "#{web&.tmp_date&.strftime('%x')} #{web.temp_sts} #{web.temp_name}" )%></td></tr>
+      <tr><td colspan="3"><%= icon('fas', 'link', "#{web&.page_date&.strftime('%x')} #{web.page_sts}" )%></td></tr>
+
+      <tr>
+        <td colspan="3"><%= icon('fas', 'users', "#{web&.cs_date&.strftime('%x')} #{web.cs_sts}" )%>
+          <% cont_count = web.conts&.count %>
+          <% if cont_count > 0 %>
+          | <a href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3"><%= icon('fas', 'calendar-alt', "#{web&.created_at&.strftime('%x')} Created")%>
+          <% if web.web_changed.present? %>
+          | <%= web&.web_changed&.strftime('%x')%>: Updated
+          <% end %>
+        </td>
+      </tr>
+
+      <tr><td colspan="3"><%= icon('fas', 'download', "#{web_export&.export_date&.strftime('%x')} #{web_export&.file_name}" )%></td></tr>
+    </table>
+  </div>
+
+
+  <!-- ACTS SECTION BEGINS -->
+  <div class="col-md-9 outer-list-col">
+    <% web.acts.each do |act| %>
+    <!-- FIND OR CREATE web_activity -->
+    <% @activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
+    <% act_export = Export.find_by(id: @activity.export_id) %>
+
+      <div class="row association-row">
+
+        <table class="table details">
+          <tr>
+            <td colspan="2" style="width: 40%;"><%= icon('fas', 'building', act.act_name) %></p>
+            <td style="width: 40%;"><%= icon('fab', 'google', "Places: #{act.gp_sts}")%>: <%= act.gp_date&.strftime('%x')%></td>
+            <td style="width: 20%;"><%= icon('fas', 'calendar-alt', "Name Updated: #{act.act_changed&.strftime('%x')}" ) %></td>
+          </tr>
+
+          <tr>
+            <td colspan="2" style="width: 40%;"><%= icon('fas', 'address-card', act.full_address) %></td>
+            <td style="width: 40%;"><%= icon('fab', 'google', "# #{act.gp_id}") %></td>
+            <td style="width: 20%;"><%= icon('fas', 'calendar-alt', "Address Updated: #{act.adr_changed&.strftime('%x')}" ) %></td>
+          </tr>
+
+          <tr>
+            <td colspan="2" style="width: 40%;"><%= icon('fas', 'phone', act.phone) %></td>
+            <td style="width: 40%;"><%= icon('fas', 'map-marker-alt', "#{act.lat}, #{act.lon}") %></td>
+            <td style="width: 20%;"><%= icon('fas', 'calendar-alt', "Created: #{act.created_at.strftime('%x')}" ) %></td>
+          </tr>
+
+          <tr>
+            <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
+            <td style="width: 100px;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
+            <td style="width: 100px;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
+            <td colspan="2" style="width: 33%;"><%= icon('fas', 'download', "#{act_export&.export_date&.strftime('%x')} #{act_export&.file_name}" )%></td>
+          </tr>
+        </table>
+
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+<div class='row contWrap' style="display:none" id="<%= web.id %>">
+  <% if web.conts.any? %>
+    <% @conts = web.conts %>
+    <%= render 'conts/conts_list', conts: @conts %>
+  <% end %>
+</div>

@@ -119,13 +119,31 @@ a, a:hover, a:focus, a:visited {
 }
 
 // CONTS-LIST VIEW CSS - STARTS
-
 .list-view td, .list-view th {
   font-size: 12px;
   // line-height: .8em;
   margin: 3px;
   padding:3px;
 }
+
+// MODAL BODY STARTS
+// .modal {
+//   background: blue;
+//   // width: 1500px;
+// }
+
+.modal-dialog{
+  margin-left: 20px;
+  margin-top: 400px;
+}
+
+.modal-content {
+  background-color: transparent;
+  width: 98vw;
+  padding: 0;
+}
+
+
 
 
 

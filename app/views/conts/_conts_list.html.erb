@@ -10,27 +10,35 @@
       <th>Description</th>
       <th>Phone</th>
       <th>email</th>
-      <th>URL</th>
       <th>Created</th>
       <th>Verified</th>
       <th>Email 𝚫</th>
       <th>Job 𝚫</th>
+      <th> <%= icon('fas', 'download', 'CSV') %> </th>
+      <th colspan="2">Manage</th>
     </tr>
   </thead>
 
   <tbody>
     <% @conts&.each do |cont| %>
+    <% @activity = current_user.activities.find_or_create_by(mod_name: 'Cont', mod_id: cont.id) %>
+    <% cont_export = Export.find_by(id: @activity.export_id) %>
+
       <tr>
-        <td><%= cont.full_name %></td>
-        <td><%= cont.job_title %></td>
-        <td><%= cont.job_desc %></td>
-        <td><%= cont.phone %></td>
-        <td><%= cont.email %></td>
-        <td><%= cont.web.url %></td>
-        <td><%= cont.created_at&.strftime('%x') %></td>
-        <td><%= cont.cs_date&.strftime('%x') %></td>
-        <td><%= cont.email_changed&.strftime('%x') %></td>
-        <td><%= cont.job_changed&.strftime('%x') %></td>
+        <td style="width: 10%;"><%= cont.full_name %></td>
+        <td style="width: 10%;"><%= cont.job_title %></td>
+        <td style="width: 10%;"><%= cont.job_desc %></td>
+        <td style="width: 5%;"><%= cont.phone %></td>
+        <td style="width: 10%;"><%= cont.email %></td>
+        <td style="width: 5%;"><%= cont.created_at&.strftime('%x') %></td>
+        <td style="width: 5%;"><%= cont.cs_date&.strftime('%x') %></td>
+        <td style="width: 5%;"><%= cont.email_changed&.strftime('%x') %></td>
+        <td style="width: 5%;"><%= cont.job_changed&.strftime('%x') %></td>
+
+        <td style="width: 10%;"><%= "#{cont_export&.export_date&.strftime('%x')} #{cont_export&.file_name}" %></td>
+
+        <td style="width: 5%;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
+        <td style="width: 5%;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
       </tr>
     <% end %>
   </tbody>

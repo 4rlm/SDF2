@@ -1,0 +1,68 @@
+<% cont = @cont %>
+<% @activity = current_user.activities.find_or_create_by(mod_name: 'Cont', mod_id: cont.id) %>
+<% cont_export = Export.find_by(id: @activity.export_id) %>
+
+<div class="row outer-list-row">
+  <table class="table details">
+    <tr>
+      <td style="width: 60%;"><%= icon('fas', 'user', cont.full_name) %></td>
+
+      <td style="width: 10%;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
+      <td style="width: 10%;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
+      <td style="width: 10%;">Created:</td>
+      <td style="width: 10%;"><%= cont.created_at&.strftime('%x') %></td>
+    </tr>
+
+    <tr>
+      <td colspan="3" style="width: 80%;"><%= icon('fas', 'briefcase', "#{cont.job_title} | #{cont.job_desc}") %> </td>
+      <td style="width: 10%;">Verified:</td>
+      <td style="width: 10%;"><%= cont.cs_date&.strftime('%x') %></td>
+    </tr>
+
+
+    <tr>
+      <td colspan="3" style="width: 80%;">
+        <% cont.phone.present? ? cont_phone = cont.phone : cont_phone = "no phone"%>
+        <% cont.email.present? ? cont_email = cont.email : cont_email = "no email"%>
+
+        <%= icon('fas', 'phone', cont_phone) %> |
+        <%= icon('fas', 'at', cont_email) %>
+      </td>
+      <td style="width: 10%;">Email 𝚫:</td>
+      <td style="width: 10%;"><%= cont.email_changed&.strftime('%x') %></td>
+    </tr>
+
+    <tr>
+      <td colspan="3" style="width: 80%;"><%= link_to(icon('fas', 'home', cont.web.url ), cont.web.url, target: '_blank')%></td>
+      <td style="width: 10%;">Job 𝚫:</td>
+      <td style="width: 10%;"><%= cont.job_changed&.strftime('%x') %></td>
+    </tr>
+
+    <tr>
+      <td colspan="2" style="width: 33%;"><%= icon('fas', 'download', "#{cont_export&.export_date&.strftime('%x')} #{cont_export&.file_name}" )%></td>
+    </tr>
+  </table>
+
+  <% acts = cont.acts %>
+  <% acts&.each do |act| %>
+
+    <!-- FIND OR CREATE act_activity -->
+    <% @activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
+    <% act_export = Export.find_by(id: @activity.export_id) %>
+    <table class="table details">
+      <tr class="cont-acts">
+        <td class="cont-acts w70"><%= act.act_name %> | <%= act.full_address %> </td>
+        <td class="cont-acts w10"><a href="#" class="btn btn-sm" data-toggle="modal" data-target="#viewWebModal">Details</a></td>
+        <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
+        <td class="cont-acts w10"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
+        <td class="cont-acts w10"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
+      </tr>
+    </table>
+  <% end %>
+
+</div>
+
+<div id="view-web"> <!-- MODAL -->
+  <% @web = cont.web %>
+  <%= render 'webs/web_modal', web: @web %>
+</div>

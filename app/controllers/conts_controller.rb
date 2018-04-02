@@ -20,7 +20,7 @@ class ContsController < ApplicationController
       format.json # show.js.erb
       format.html # show.html.erb
     end
-    
+
   end
 
   def generate_csv

@@ -1,6 +1,7 @@
 <nav class="container sidebar">
 
   <% if @cq.present? %>
+  
     <%= search_form_for(@cq, url: search_conts_path, html: {method: :post, class: 'form'}) do |f| %>
 
       <!-- SEARCH SECTION - START -->
