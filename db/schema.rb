@@ -10,12 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180402194532) do
+ActiveRecord::Schema.define(version: 20180402200124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
   enable_extension "citext"
+
+  create_table "act_activities", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "act_id", null: false
+    t.integer "export_id"
+    t.string "fav_sts"
+    t.string "hide_sts"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["act_id"], name: "index_act_activities_on_act_id"
+    t.index ["user_id"], name: "index_act_activities_on_user_id"
+  end
 
   create_table "act_webs", force: :cascade do |t|
     t.bigint "act_id", null: false
@@ -87,6 +99,18 @@ ActiveRecord::Schema.define(version: 20180402194532) do
     t.string "brand_name", null: false
     t.string "dealer_type"
     t.index ["brand_name"], name: "index_brands_on_brand_name"
+  end
+
+  create_table "cont_activities", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "cont_id", null: false
+    t.integer "export_id"
+    t.string "fav_sts"
+    t.string "hide_sts"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cont_id"], name: "index_cont_activities_on_cont_id"
+    t.index ["user_id"], name: "index_cont_activities_on_user_id"
   end
 
   create_table "conts", force: :cascade do |t|

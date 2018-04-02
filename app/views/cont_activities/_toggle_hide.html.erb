@@ -1,0 +1,15 @@
+<%= form_with(model: @cont_activity) do |f| %>
+  <%= f.hidden_field :form_id, value: 'toggle_hide_form' %>
+
+  <% if @cont_activity.hide_sts == 'hide' %>
+    <% hide_btn = 'active-sts' %>
+    <% submit_label = 'Hidden' %>
+    <%= f.hidden_field :hide_sts, value: 'none' %>
+  <% else %>
+    <% hide_btn = 'btn-danger' %>
+    <% submit_label = 'Hide' %>
+    <%= f.hidden_field :hide_sts, value: 'hide' %>
+  <% end %>
+
+  <%= f.submit "#{submit_label}", class: "btn btn-sm #{hide_btn}" %>
+<% end %>

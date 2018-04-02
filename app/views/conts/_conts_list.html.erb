@@ -21,8 +21,8 @@
 
   <tbody>
     <% @conts&.each do |cont| %>
-    <% @activity = current_user.activities.find_or_create_by(mod_name: 'Cont', mod_id: cont.id) %>
-    <% cont_export = Export.find_by(id: @activity.export_id) %>
+    <% @cont_activity = current_user.cont_activities.find_or_create_by(cont_id: cont.id) %>
+    <% cont_export = Export.find_by(id: @cont_activity.export_id) %>
 
       <tr>
         <td style="width: 10%;"><%= cont.full_name %></td>
@@ -37,8 +37,8 @@
 
         <td style="width: 10%;"><%= "#{cont_export&.export_date&.strftime('%x')} #{cont_export&.file_name}" %></td>
 
-        <td style="width: 5%;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
-        <td style="width: 5%;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
+        <td style="width: 5%;"><%= render 'cont_activities/toggle_fav_wrap', locals: {cont_activity: @cont_activity} %></td>
+        <td style="width: 5%;"><%= render 'cont_activities/toggle_hide_wrap', locals: {cont_activity: @cont_activity} %></td>
       </tr>
     <% end %>
   </tbody>

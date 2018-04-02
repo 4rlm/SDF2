@@ -1,10 +1,6 @@
 <!-- FIND OR CREATE @activity -->
 <% web = @web %>
-<!-- <% @activity = current_user.activities.find_or_create_by(mod_name: 'Web', mod_id: web.id) %> -->
-<!-- <% web_export = Export.find_by(id: @activity.export_id) %> -->
-
 <% @web_activity = current_user.web_activities.find_or_create_by(web_id: web.id) %>
-<%#= binding.pry %>
 <% web_export = Export.find_by(id: @web_activity.export_id) %>
 
 <!-- WEBS SECTION STARTS -->
@@ -50,8 +46,9 @@
   <div class="col-md-9 outer-list-col">
     <% web.acts.each do |act| %>
     <!-- FIND OR CREATE web_activity -->
-    <% @activity = current_user.activities.find_or_create_by(mod_name: 'Act', mod_id: act.id) %>
-    <% act_export = Export.find_by(id: @activity.export_id) %>
+
+    <% @act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
+    <% act_export = Export.find_by(id: @act_activity.export_id) %>
 
       <div class="row association-row">
 
@@ -76,8 +73,8 @@
 
           <tr>
             <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-            <td style="width: 100px;"><%= render 'activities/toggle_fav_wrap', locals: {activity: @activity} %></td>
-            <td style="width: 100px;"><%= render 'activities/toggle_hide_wrap', locals: {activity: @activity} %></td>
+            <td style="width: 100px;"><%= render 'act_activities/toggle_fav_wrap', locals: {act_activity: @act_activity} %></td>
+            <td style="width: 100px;"><%= render 'act_activities/toggle_hide_wrap', locals: {act_activity: @act_activity} %></td>
             <td colspan="2" style="width: 33%;"><%= icon('fas', 'download', "#{act_export&.export_date&.strftime('%x')} #{act_export&.file_name}" )%></td>
           </tr>
         </table>

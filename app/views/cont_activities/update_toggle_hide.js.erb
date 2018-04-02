@@ -1,0 +1,2 @@
+var toggle_hide_div = $('div.cont_toggle_hide[data-id="<%= @cont_activity.id %>"]');
+$(toggle_hide_div).html("<%= j (render 'toggle_hide', cont_activity: @cont_activity) %>");

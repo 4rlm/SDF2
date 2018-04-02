@@ -8,4 +8,7 @@ class Cont < ApplicationRecord
   has_many :links, through: :web
   has_many :brands, through: :web
 
+  has_many :cont_activities, dependent: :destroy
+  accepts_nested_attributes_for :cont_activities
+
 end
