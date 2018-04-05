@@ -4,232 +4,246 @@
 
     <%= search_form_for(@wq, url: search_webs_path, html: {method: :post, class: 'form'}) do |f| %>
       <!-- WEBS CHECK BOX OPTIONS -->
-      <% temps = @webs.select(:temp_name).where.not(temp_name: nil).pluck(:temp_name).uniq.sort %>
-      <% brands = get_brands_for_select(@webs) %>
-      <% cops = [true, false] %>
-      <% url_stss = @webs.select(:url_sts).where.not(url_sts: nil).pluck(:url_sts).uniq.sort %>
-      <% temp_stss = @webs.select(:temp_sts).where.not(temp_sts: nil).pluck(:temp_sts).uniq.sort %>
-      <% page_stss = @webs.select(:page_sts).where.not(page_sts: nil).pluck(:page_sts).uniq.sort %>
-      <% cs_stss = @webs.select(:cs_sts).where.not(cs_sts: nil).pluck(:cs_sts).uniq.sort %>
 
-
-      <!-- ACCOUNTS CHECK BOX OPTIONS -->
-      <% states = get_states_for_select(@webs) %>
-      <% gp_stss = get_gp_stss_for_select(@webs) %>
-      <% gp_induss = get_gp_induss_for_select(@webs) %>
-
+      <% web_opts = get_ransack_web_opts %>
+      <% temps = web_opts['temps'] %>
+      <% brands = web_opts['brands'] %>
+      <% cops = web_opts['cops'] %>
+      <% states = web_opts['states'] %>
+      <% url_stss = web_opts['url_stss'] %>
+      <% temp_stss = web_opts['temp_stss'] %>
+      <% page_stss = web_opts['page_stss'] %>
+      <% cs_stss = web_opts['cs_stss'] %>
+      <% gp_stss = web_opts['gp_stss'] %>
 
       <!-- SEARCH SECTION - START -->
-      <h5 class="text-center sidebar-header">Search Criteria</h5>
+      <h6 class="text-center sidebar-header">Search Criteria</h6>
       <ul class="components">
-
-        <!-- user: <%#= current_user.id %> -->
-        <td><%= f.hidden_field :web_activities_user_id_eq, value: current_user.id  %></td>
-        <tr>
-          <td>Web Activities: Fav</td>
-          <td><%= f.search_field :web_activities_fav_sts_eq %></td>
-        </tr>
-        <tr>
-          <td>Web Activities: Hide</td>
-          <td><%= f.search_field :web_activities_hide_sts_eq %></td>
-        </tr>
-
-
-
-        <td><%= f.hidden_field :act_activities_user_id_eq, value: current_user.id  %></td>
-        <tr>
-          <td>Web Activities: Fav</td>
-          <td><%= f.search_field :act_activities_fav_sts_eq %></td>
-        </tr>
-
-        <tr>
-          <td>Web Activities: Hide</td>
-          <td><%= f.search_field :act_activities_hide_sts_eq %></td>
-        </tr>
-
-
-
-
-
-
-
-
-
-
         <!-- SEARCH WEBS - START -->
+
         <li>
           <a class="dropdown-toggle" href="#web-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'external-link-alt', 'Web Criteria') %>
           </a>
           <ul class="collapse" id="web-criteria">
             <div class="panel sidebar-panel">
+
+
+              <table class="ransack-table table text-nowrap">
+                <%= f.hidden_field :web_activities_user_id_eq, value: current_user.id  %>
+                <tr>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_fav_sts_in][]', true ) %>
+                    <%= 'Following' %>
+                  </td>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_fav_sts_not_in][]', true ) %>
+                    <%= 'None' %>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_hide_sts_in][]', true ) %>
+                    <%= 'Hidden' %>
+                  </td>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_hide_sts_not_in][]', true ) %>
+                    <%= 'None' %>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="w50">
+                    <%= check_box_tag('q[cop_in][]', true) %>
+                    <%= 'CoPilot' %>
+                  </td>
+                  <td class="w50">
+                    <%= check_box_tag('q[cop_not_in][]', true) %>
+                    <%= 'None' %>
+                  </td>
+                </tr>
+              </table>
+
+
               <!-- Search Webs (General-Table) -->
-              <table class="ransack-table table table-bordered text-nowrap text-center">
-                  <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Criteria</th>
-                    </tr>
-                  </thead>
+              <table class="ransack-table table text-nowrap">
 
-                  <!-- Search Webs (URL) -->
+                <!-- Search Webs (URL) -->
+                <tr>
+                  <td class="w20">URL</td>
+                  <td class="w80"><%= f.search_field :url_cont_any, class: "form-control ransack-input" %></td>
+                </tr>
+                <!-- Search Webs (FWD URL) -->
+                <tr>
+                  <td class="w20">FWD URL</td>
+                  <td class="w80"><%= f.search_field :fwd_url_cont_any, class: "form-control ransack-input" %></td>
+
+                </tr>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
                   <tr>
-                    <td>URL</td>
-                    <td><%= f.search_field :url_cont_any %></td>
+                    <th colspan="2" class="text-center">Template</th>
                   </tr>
-
-                  <!-- Search Webs (FWD URL) -->
-                  <tr>
-                    <td>FWD URL</td>
-                    <td><%= f.search_field :fwd_url_cont_any %></td>
-                  </tr>
-
-                </table>
-
-              <!-- Search Webs (Template Check Boxes) -->
-              <p class="text-center"><strong>Template</strong></p>
-              <div class="row form-check-row">
+                </thead>
                 <% temps&.each_with_index do |temp_name, index| %>
-                  <% if index.odd? %>
-                    <!-- LEFT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                      <%= temp_name %>
-                    </div>
-                  <% else %>
-                    <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[temp_name_in][]', temp_name) %>
-                      <%= temp_name %>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
-
-              <!-- Search Webs (Franchise Brand Check Boxes) -->
-              <p class="text-center"><strong>Brand</strong></p>
-              <div class="row form-check-row">
-                  <% brands&.each_with_index do |brand_name, index| %>
-                    <% if index.odd? %>
+                  <% if index.even? %>
+                    <tr>
                       <!-- LEFT -->
-                      <div class="col-md-6 form-check">
-                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
-                        <%= brand_name %>
-                      </div>
+                      <td>
+                        <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                        <%= temp_name %>
+                      </td>
                     <% else %>
                       <!-- RIGHT -->
-                      <div class="col-md-6 form-check">
+                      <td>
+                        <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                        <%= temp_name %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Brand</th>
+                  </tr>
+                </thead>
+                <% brands&.each_with_index do |brand_name, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
                         <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
                         <%= brand_name %>
-                      </div>
-                    <% end %>
-                  <% end %>
-                </div>
-
-              <!-- Search Webs (Cop Check Boxes) -->
-              <p class="text-center"><strong>CoPilot</strong></p>
-              <div class="row form-check-row">
-                <% cops&.each_with_index do |cop, index| %>
-                  <% if index.odd? %>
-                    <!-- LEFT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[cop_in][]', cop) %>
-                      <%= cop %>
-                    </div>
-                  <% else %>
-                    <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[cop_in][]', cop) %>
-                      <%= cop %>
-                    </div>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                        <%= brand_name %>
+                      </td>
+                    </tr>
                   <% end %>
                 <% end %>
-              </div>
+              </table>
 
-              <!-- Search Webs (url_sts Check Boxes) -->
-              <p class="text-center"><strong>URL Status</strong></p>
-              <div class="row form-check-row">
-                    <% url_stss&.each_with_index do |url_sts, index| %>
-                      <% if index.odd? %>
-                        <!-- LEFT -->
-                        <div class="col-md-6 form-check">
-                          <%= check_box_tag('q[url_sts_in][]', url_sts) %>
-                          <%= url_sts %>
-                        </div>
-                      <% else %>
-                        <!-- RIGHT -->
-                        <div class="col-md-6 form-check">
-                          <%= check_box_tag('q[url_sts_in][]', url_sts) %>
-                          <%= url_sts %>
-                        </div>
-                      <% end %>
-                    <% end %>
-                  </div>
 
-              <!-- Search Webs (temp_sts Check Boxes) -->
-              <p class="text-center"><strong>Template Status</strong></p>
-              <div class="row form-check-row">
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">URL Status</th>
+                  </tr>
+                </thead>
+                <% url_stss&.each_with_index do |url_sts, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                        <%= url_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                        <%= url_sts %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Template Status</th>
+                  </tr>
+                </thead>
                 <% temp_stss&.each_with_index do |temp_sts, index| %>
-                  <% if index.odd? %>
-                    <!-- LEFT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
-                      <%= temp_sts %>
-                    </div>
-                  <% else %>
-                    <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
-                      <%= temp_sts %>
-                    </div>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                        <%= temp_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                        <%= temp_sts %>
+                      </td>
+                    </tr>
                   <% end %>
                 <% end %>
-              </div>
+              </table>
 
-              <!-- Search Webs (page_sts Check Boxes) -->
-              <p class="text-center"><strong>Staff Page Status</strong></p>
-              <div class="row form-check-row">
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Staff Page Status</th>
+                  </tr>
+                </thead>
                 <% page_stss&.each_with_index do |page_sts, index| %>
-                  <% if index.odd? %>
-                    <!-- LEFT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[page_sts_in][]', page_sts) %>
-                      <%= page_sts %>
-                    </div>
-                  <% else %>
-                    <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[page_sts_in][]', page_sts) %>
-                      <%= page_sts %>
-                    </div>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                        <%= page_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                        <%= page_sts %>
+                      </td>
+                    </tr>
                   <% end %>
                 <% end %>
-              </div>
+              </table>
 
-              <!-- Search Webs (cs_sts Check Boxes) -->
-              <p class="text-center"><strong>Staff Mined Status</strong></p>
-              <div class="row form-check-row">
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Staff Mined Status</th>
+                  </tr>
+                </thead>
                 <% cs_stss&.each_with_index do |cs_sts, index| %>
-                  <% if index.odd? %>
-                    <!-- LEFT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
-                      <%= cs_sts %>
-                    </div>
-                  <% else %>
-                    <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
-                      <%= cs_sts %>
-                    </div>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                        <%= cs_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                        <%= cs_sts %>
+                      </td>
+                    </tr>
                   <% end %>
                 <% end %>
-              </div>
+              </table>
+
 
               <!-- Search Webs (Dates-Table) -->
-              <p class="text-center"><strong>Dates</strong></p>
+              <!-- <p class="text-center"><strong>Dates</strong></p> -->
               <div class="row">
-                <table class="ransack-table table table-bordered text-nowrap text-center">
+                <table class="ransack-table table  text-nowrap text-center">
                   <thead>
                     <tr>
                       <th>Category</th>
@@ -293,7 +307,6 @@
                     <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
                     <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
-
                 </table>
               </div>
             </div>
@@ -308,136 +321,155 @@
           </a>
           <ul class="collapse" id="act-criteria">
             <div class="panel sidebar-panel">
+
+
               <!-- Search Acts (General-1) -->
-              <!-- Search Acts (General-Table) -->
-              <table class="ransack-table table table-bordered text-nowrap text-center">
-                  <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Criteria</th>
-                    </tr>
-                  </thead>
+            <table class="ransack-table table  text-nowrap">
+              <%= f.hidden_field :act_activities_user_id_eq, value: current_user.id  %>
 
-                  <!-- Search Acts (Account Name) -->
+              <tr>
+                <td>
+                  <%= check_box_tag('q[act_activities_fav_sts_in][]', true ) %>
+                  <%= 'Following' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[act_activities_fav_sts_not_in][]', true ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <%= check_box_tag('q[act_activities_hide_sts_in][]', true ) %>
+                  <%= 'Hidden' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[act_activities_hide_sts_not_in][]', true ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
+            </table>
+
+
+            <!-- Search Acts (General-Table) -->
+            <table class="ransack-table table  text-nowrap">
+              <thead>
+                <tr class="text-center">
+                  <th>Category</th>
+                  <th>Criteria</th>
+                </tr>
+              </thead>
+
+              <!-- Search Acts (Account Name) -->
+              <tr>
+                <td class="w20">Account Name</td>
+                <td class="w80"><%= f.search_field :acts_act_name_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Full Address) -->
+              <tr>
+                <td class="w20">Full Address</td>
+                <td class="w80"><%= f.search_field :acts_full_address_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Street) -->
+              <tr>
+                <td class="w20">Street</td>
+                <td class="w80"><%= f.search_field :acts_street_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (City) -->
+              <tr>
+                <td class="w20">City</td>
+                <td class="w80"><%= f.search_field :acts_city_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Zip) -->
+              <tr>
+                <td class="w20">Zip</td>
+                <td class="w80"><%= f.search_field :acts_zip_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Phone) -->
+              <tr>
+                <td class="w20">Phone</td>
+                <td class="w80"><%= f.search_field :acts_phone_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Lat) -->
+              <tr>
+                <td class="w20">Lat</td>
+                <td class="w80"><%= f.search_field :acts_lat_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Lon) -->
+              <tr>
+                <td class="w20">Lon</td>
+                <td class="w80"><%= f.search_field :acts_lon_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (GP ID) -->
+              <tr>
+                <td class="w20">GP ID</td>
+                <td class="w80"><%= f.search_field :acts_gp_id_eq_any, class: "form-control ransack-input" %></td>
+              </tr>
+            </table>
+
+
+            <table class="ransack-table table  text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">State</th>
+                </tr>
+              </thead>
+              <% states&.each_with_index do |state, index| %>
+                <% if index.even? %>
                   <tr>
-                    <td>Account Name</td>
-                    <td><%= f.search_field :acts_act_name_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (Full Address) -->
-                  <tr>
-                    <td>Full Address</td>
-                    <td><%= f.search_field :acts_act_name_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (Street) -->
-                  <tr>
-                    <td>Street</td>
-                    <td><%= f.search_field :acts_street_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (City) -->
-                  <tr>
-                    <td>City</td>
-                    <td><%= f.search_field :acts_city_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (Zip) -->
-                  <tr>
-                    <td>Zip</td>
-                    <td><%= f.search_field :acts_zip_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (Phone) -->
-                  <tr>
-                    <td>Phone</td>
-                    <td><%= f.search_field :acts_phone_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (Lat) -->
-                  <tr>
-                    <td>Lat</td>
-                    <td><%= f.search_field :acts_lat_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (Lon) -->
-                  <tr>
-                    <td>Lon</td>
-                    <td><%= f.search_field :acts_lon_cont_any %></td>
-                  </tr>
-
-                  <!-- Search Acts (GP ID) -->
-                  <tr>
-                    <td>GP ID</td>
-                    <td><%= f.search_field :acts_gp_id_eq_any %></td>
-                  </tr>
-
-                </table>
-
-              <!-- Search Acts (State Check Boxes) -->
-              <p class="text-center"><strong>State</strong></p>
-              <div class="row form-check-row">
-                <% states&.each_with_index do |state, index| %>
-                  <% if index.odd? %>
                     <!-- LEFT -->
-                    <div class="col-md-6 form-check">
+                    <td>
                       <%= check_box_tag('q[acts_state_in][]', state) %>
                       <%= state %>
-                    </div>
+                    </td>
                   <% else %>
                     <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
+                    <td>
                       <%= check_box_tag('q[acts_state_in][]', state) %>
                       <%= state %>
-                    </div>
-                  <% end %>
+                    </td>
+                  </tr>
                 <% end %>
-              </div>
+              <% end %>
+            </table>
 
-              <!-- Search Acts (Status-2) -->
-              <!-- Search Acts (gp_sts Check Boxes) -->
-              <p class="text-center"><strong>GP Status</strong></p>
-              <div class="row form-check-row">
-                <% gp_stss&.each_with_index do |gp_sts, index| %>
-                  <% if index.odd? %>
+
+            <table class="ransack-table table  text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">GP Status</th>
+                </tr>
+              </thead>
+              <% gp_stss&.each_with_index do |gp_sts, index| %>
+                <% if index.even? %>
+                  <tr>
                     <!-- LEFT -->
-                    <div class="col-md-6 form-check">
+                    <td>
                       <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
                       <%= gp_sts %>
-                    </div>
+                    </td>
                   <% else %>
                     <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
+                    <td>
                       <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
                       <%= gp_sts %>
-                    </div>
-                  <% end %>
+                    </td>
+                  </tr>
                 <% end %>
-              </div>
-
-              <!-- Search Acts (gp_indus Check Boxes) -->
-              <p class="text-center"><strong>GP Indus</strong></p>
-              <div class="row form-check-row">
-                <% gp_induss&.each_with_index do |gp_indus, index| %>
-                  <% if index.odd? %>
-                    <!-- LEFT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
-                      <%= gp_indus %>
-                    </div>
-                  <% else %>
-                    <!-- RIGHT -->
-                    <div class="col-md-6 form-check">
-                      <%= check_box_tag('q[acts_gp_indus_in][]', gp_indus) %>
-                      <%= gp_indus %>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
+              <% end %>
+            </table>
 
               <!-- Search Acts (Dates-3) -->
               <div class="row">
-                <table class="ransack-table table table-bordered text-nowrap text-center">
+                <table class="ransack-table table  text-nowrap text-center">
                   <thead>
                     <tr>
                       <th>Category</th>
@@ -500,9 +532,9 @@
 
 
       <!-- SORT SECTION - START -->
-      <h5 class="text-center sidebar-header">
+      <h6 class="text-center sidebar-header">
         <%= icon('fas', 'sort', 'Sort Options', class: 'fa-pull-right') %>
-      </h5>
+      </h6>
 
       <ul class="components">
 
@@ -513,7 +545,7 @@
           </a>
           <ul class="collapse" id="sort-options-webs">
             <!-- Sort Webs (General-1) -->
-            <table class="ransack-table table table-bordered text-nowrap">
+            <table class="ransack-table table  text-nowrap">
               <thead>
                 <tr>
                   <th colspan="2" class="text-center">General</th>
@@ -549,7 +581,7 @@
             </table>
 
             <!-- Sort Webs (Status-2) -->
-            <table class="ransack-table table table-bordered text-nowrap">
+            <table class="ransack-table table  text-nowrap">
               <thead>
                 <tr>
                   <th colspan="2" class="text-center">Status</th>
@@ -595,7 +627,7 @@
             </table>
 
             <!-- Sort Webs (Dates-3) -->
-            <table class="ransack-table table table-bordered text-nowrap">
+            <table class="ransack-table table  text-nowrap">
               <thead>
                 <tr>
                   <th colspan="2" class="text-center">Dates</th>
@@ -669,7 +701,7 @@
           </a>
           <ul class="collapse" id="sort-options-acts">
             <!-- Sort Acts (General-1) -->
-            <table class="ransack-table table table-bordered text-nowrap">
+            <table class="ransack-table table  text-nowrap">
               <thead>
                 <tr>
                   <th colspan="2" class="text-center">General</th>
@@ -747,7 +779,7 @@
             </table>
 
             <!-- Sort Acts (Status-2) -->
-            <table class="ransack-table table table-bordered text-nowrap">
+            <table class="ransack-table table  text-nowrap">
               <thead>
                 <tr>
                   <th colspan="2" class="text-center">Status</th>
@@ -766,7 +798,7 @@
             </table>
 
             <!-- Sort Acts (Dates-3) -->
-            <table class="ransack-table table table-bordered text-nowrap">
+            <table class="ransack-table table  text-nowrap">
               <thead>
                 <tr>
                   <th colspan="2" class="text-center">Dates</th>
@@ -823,13 +855,13 @@
 
       <!-- Save & Name Search Field -->
       <div class="form-group">
-        <%= f.text_field :q_name_cont_any, placeholder: "Save search as ..", class: "form-control" %>
+        <%= f.text_field :q_name_cont_any, placeholder: "Save search as ..", class: "form-control save-search-as" %>
       </div>
 
 
       <div class="row">
-        <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary btn-xs"%></div>
-        <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger btn-xs" %></div>
+        <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary search-btns"%></div>
+        <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger search-btns" %></div>
       </div>
 
 
@@ -837,7 +869,7 @@
 
 
     <!-- SAVED SEARCHES SECTION - START -->
-    <h5 class="text-center sidebar-header">Saved Searches</h5>
+    <!-- <h6 class="text-center sidebar-header">Saved Searches</h6> -->
     <ul class="components">
       <li>
         <a class="dropdown-toggle" href="#saved-search-webs" data-toggle="collapse" aria-expanded="false">

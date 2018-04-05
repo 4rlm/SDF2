@@ -9,10 +9,10 @@ class WebsController < ApplicationController
   def index
 
     ## Splits 'cont_any' strings into array, if string and has ','
-    if !params[:q].nil?
-      webs_helper = Object.new.extend(WebsHelper)
-      params[:q] = webs_helper.split_ransack_params(params[:q])
-    end
+    # if !params[:q].nil?
+    #   webs_helper = Object.new.extend(WebsHelper)
+    #   params[:q] = webs_helper.split_ransack_params(params[:q])
+    # end
 
     @wq = Web.ransack(params[:q])
     @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)

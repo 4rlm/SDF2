@@ -4,128 +4,231 @@
 
     <%= search_form_for(@cq, url: search_conts_path, html: {method: :post, class: 'form'}) do |f| %>
 
+    <% job_titles = @conts.select(:job_title).where.not(job_title: nil).pluck(:job_title).uniq.sort %>
+    <% cs_stss = @conts.select(:cs_sts).where.not(cs_sts: nil).pluck(:cs_sts).uniq.sort %>
+
+
       <!-- SEARCH SECTION - START -->
-      <h5 class="text-center sidebar-header">Search Criteria</h5>
+      <h6 class="text-center sidebar-header">Search Criteria</h6>
       <ul class="components">
         <!-- SEARCH CONTCONTS - START -->
-
-
-        <!-- user: <%#= current_user.id %> -->
-        <td><%= f.hidden_field :cont_activities_user_id_eq, value: current_user.id  %></td>
-        <tr>
-          <td>Cont Activities: Fav</td>
-          <td><%= f.search_field :cont_activities_fav_sts_eq %></td>
-        </tr>
-        <tr>
-          <td>Cont Activities: Hide</td>
-          <td><%= f.search_field :cont_activities_hide_sts_eq %></td>
-        </tr>
-
-
-
-        <td><%= f.hidden_field :act_activities_user_id_eq, value: current_user.id  %></td>
-        <tr>
-          <td>Act Activities: Fav</td>
-          <td><%= f.search_field :act_activities_fav_sts_eq %></td>
-        </tr>
-
-        <tr>
-          <td>Act Activities: Hide</td>
-          <td><%= f.search_field :act_activities_hide_sts_eq %></td>
-        </tr>
-
-
-
 
         <li>
           <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'users', 'Contact Criteria') %>
           </a>
           <ul class="collapse list-unstyled" id="cont-criteria">
-            <!-- Search Contacts (General-1) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-conts-general" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'list-alt', 'General') %>
-              </a>
 
-              <ul class="collapse list-unstyled" id="search-criteria-conts-general">
-                <!-- Search Criteria Here -->
-              </ul>
-            </li>
+            <table class="ransack-table table table-bordered text-nowrap">
+              <%= f.hidden_field :cont_activities_user_id_eq, value: current_user.id  %>
+              <tr>
+                <td>
+                  <%= check_box_tag('q[cont_activities_fav_sts_in][]', true ) %>
+                  <%= 'Following' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[cont_activities_fav_sts_not_in][]', true ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
 
-            <!-- Search Contacts (Status-2) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-conts-status" data-toggle="collapse" aria-expanded="false">
-                <%= icon('far', 'check-square', 'Status') %>
-              </a>
+              <tr>
+                <td>
+                  <%= check_box_tag('q[cont_activities_hide_sts_in][]', true ) %>
+                  <%= 'Hidden' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[cont_activities_hide_sts_not_in][]', true ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
 
-              <ul class="collapse list-unstyled" id="search-criteria-conts-status">
-                  <!-- Search Criteria Here -->
-              </ul>
-            </li>
+              <tr>
+                <td>
+                  <%= check_box_tag('q[email_not_null]' ) %>
+                  <%= 'Email' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[email_null]' ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
 
-            <!-- Search Contacts (Dates-3) -->
-            <li>
-              <a class="dropdown-toggle" href="#search-criteria-conts-dates" data-toggle="collapse" aria-expanded="false">
-                <%= icon('fas', 'calendar-alt', 'Dates') %>
-              </a>
-              <ul class="collapse list-unstyled" id="search-criteria-conts-dates">
-                <!-- Search Conts (Dates-Table) -->
-                <div class="row">
-                  <table class="ransack-table table table-bordered text-nowrap text-center">
-                    <thead>
-                      <tr>
-                        <th>Category</th>
-                        <th>Start</th>
-                        <th>End</th>
-                      </tr>
-                    </thead>
+              <tr>
+                <td>
+                  <%= check_box_tag('q[cont_changed_not_null]' ) %>
+                  <%= 'Contact Changed' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[cont_changed_null]' ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
 
-                    <!-- cs_date -->
-                    <tr>
-                      <td>email_changed</td>
-                      <td><%= f.date_field :email_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :email_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
+              <tr>
+                <td>
+                  <%= check_box_tag('q[email_changed_not_null]' ) %>
+                  <%= 'Email Changed' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[email_changed_null]' ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
 
-                    <!-- cont_changed -->
-                    <tr>
-                      <td>cont_changed</td>
-                      <td><%= f.date_field :cont_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :cont_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
+              <tr>
+                <td>
+                  <%= check_box_tag('q[job_changed_not_null]' ) %>
+                  <%= 'Job Changed' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[job_changed_null]' ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
 
-                    <!-- job_changed -->
-                    <tr>
-                      <td>job_changed</td>
-                      <td><%= f.date_field :job_changed_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :job_changed_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
+              <tr>
+                <td>
+                  <%= check_box_tag('q[cx_date_not_null]' ) %>
+                  <%= 'Contact X' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[cx_date_null]' ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
+            </table>
 
-                    <!-- cx_date -->
-                    <tr>
-                      <td>cx_date</td>
-                      <td><%= f.date_field :cx_date_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :cx_date_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
 
-                    <!-- updated_at -->
-                    <tr>
-                      <td>Contact Updated</td>
-                      <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
 
-                    <!-- created_at -->
-                    <tr>
-                      <td>Contact Created</td>
-                      <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
-                      <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
-                    </tr>
-                  </table>
-                </div>
-              </ul>
-            </li>
+
+
+            <!-- Search Conts (General-Table) -->
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr class="text-center">
+                  <th>Category</th>
+                  <th>Criteria</th>
+                </tr>
+              </thead>
+
+              <tr>
+                <td class="w10">Full Name</td>
+                <td class="w90"><%= f.search_field :full_name_cont_any %></td>
+              </tr>
+
+              <tr>
+                <td class="w10">First Name</td>
+                <td class="w90"><%= f.search_field :first_name_cont_any %></td>
+              </tr>
+
+              <tr>
+                <td class="w10">Last Name</td>
+                <td class="w90"><%= f.search_field :last_name_cont_any %></td>
+              </tr>
+
+              <tr>
+                <td class="w10">Job Title</td>
+                <td class="w90"><%= f.search_field :job_title_cont_any %></td>
+              </tr>
+
+              <tr>
+                <td class="w10">Job Desc</td>
+                <td class="w90"><%= f.search_field :job_desc_cont_any %></td>
+              </tr>
+
+              <tr>
+                <td class="w10">Email</td>
+                <td class="w90"><%= f.search_field :email_cont_any %></td>
+              </tr>
+
+              <tr>
+                <td class="w10">Phone</td>
+                <td class="w90"><%= f.search_field :phone_cont_any %></td>
+              </tr>
+            </table>
+
+
+
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Job Titles</th>
+                </tr>
+              </thead>
+              <% job_titles&.each_with_index do |job_title, index| %>
+                <% if index.even? %>
+                  <tr>
+                    <!-- LEFT -->
+                    <td>
+                      <%= check_box_tag('q[job_title_in][]', job_title) %>
+                      <%= job_title %>
+                    </td>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <td>
+                      <%= check_box_tag('q[job_title_in][]', job_title) %>
+                      <%= job_title %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </table>
+
+
+
+            <!-- Search Conts (Dates-Table) -->
+            <table class="ransack-table table table-bordered text-nowrap text-center">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Start</th>
+                  <th>End</th>
+                </tr>
+              </thead>
+
+              <!-- cs_date -->
+              <tr>
+                <td>Email Changed</td>
+                <td><%= f.date_field :email_changed_gteq, {class: 'ransack-date-input'} %></td>
+                <td><%= f.date_field :email_changed_lteq, {class: 'ransack-date-input'} %></td>
+              </tr>
+
+              <!-- cont_changed -->
+              <tr>
+                <td>Contact Changed</td>
+                <td><%= f.date_field :cont_changed_gteq, {class: 'ransack-date-input'} %></td>
+                <td><%= f.date_field :cont_changed_lteq, {class: 'ransack-date-input'} %></td>
+              </tr>
+
+              <!-- job_changed -->
+              <tr>
+                <td>Job Changed</td>
+                <td><%= f.date_field :job_changed_gteq, {class: 'ransack-date-input'} %></td>
+                <td><%= f.date_field :job_changed_lteq, {class: 'ransack-date-input'} %></td>
+              </tr>
+
+              <!-- cx_date -->
+              <tr>
+                <td>Contact X</td>
+                <td><%= f.date_field :cx_date_gteq, {class: 'ransack-date-input'} %></td>
+                <td><%= f.date_field :cx_date_lteq, {class: 'ransack-date-input'} %></td>
+              </tr>
+
+              <!-- updated_at -->
+              <tr>
+                <td>Contact Updated</td>
+                <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
+              </tr>
+
+              <!-- created_at -->
+              <tr>
+                <td>Contact Created</td>
+                <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
+                <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
+              </tr>
+            </table>
 
           </ul>
         </li>
@@ -134,9 +237,9 @@
 
 
       <!-- SORT SECTION - START -->
-      <h5 class="text-center sidebar-header">
+      <h6 class="text-center sidebar-header">
         <%= icon('fas', 'sort', 'Sort Options', class: 'fa-pull-right') %>
-      </h5>
+      </h6>
 
       <ul class="components">
 
@@ -157,13 +260,13 @@
               <tr>
                 <td>
                   <%= sort_link(@cq, :full_name) do %>
-                    <span><%= icon('fas', 'user', 'full_name') %></span>
+                    <span><%= icon('fas', 'user', 'Full Name') %></span>
                   <% end %>
                 </td>
 
                 <td>
                   <%= sort_link(@cq, :last_name) do %>
-                    <span><%= icon('fas', 'user', 'last_name') %></span>
+                    <span><%= icon('fas', 'user', 'Last Name') %></span>
                   <% end %>
                 </td>
               </tr>
@@ -171,13 +274,13 @@
               <tr>
                 <td>
                   <%= sort_link(@cq, :job_title) do %>
-                    <span><%= icon('fas', 'user', 'job_title') %></span>
+                    <span><%= icon('fas', 'briefcase', 'Job Title') %></span>
                   <% end %>
                 </td>
 
                 <td>
                   <%= sort_link(@cq, :job_desc) do %>
-                    <span><%= icon('fas', 'star', 'job_desc') %></span>
+                    <span><%= icon('fas', 'briefcase', 'Job Desc') %></span>
                   <% end %>
                 </td>
               </tr>
@@ -185,13 +288,13 @@
               <tr>
                 <td>
                   <%= sort_link(@cq, :email) do %>
-                    <span><%= icon('fas', 'star', 'email') %></span>
+                    <span><%= icon('fas', 'at', 'Email') %></span>
                   <% end %>
                 </td>
 
                 <td>
                   <%= sort_link(@cq, :phone) do %>
-                    <span><%= icon('fas', 'star', 'phone') %></span>
+                    <span><%= icon('fas', 'phone', 'Phone') %></span>
                   <% end %>
                 </td>
               </tr>
@@ -199,23 +302,6 @@
               </tr>
             </table>
 
-            <!-- Sort Conts (Status-2) -->
-            <table class="ransack-table table table-bordered text-nowrap">
-              <thead>
-                <tr>
-                  <th colspan="2" class="text-center">Status</th>
-                </tr>
-              </thead>
-              <tr>
-                <td>
-                  <%= sort_link(@cq, :cs_sts) do %>
-                    <span><%= icon('fas', 'user', 'cs_sts') %></span>
-                  <% end %>
-                </td>
-
-                <td></td>
-              </tr>
-            </table>
 
             <!-- Sort Conts (Dates-3) -->
             <table class="ransack-table table table-bordered text-nowrap">
@@ -227,13 +313,13 @@
               <tr>
                 <td>
                   <%= sort_link(@cq, :cs_date) do %>
-                    <span><%= icon('fas', 'user', 'cs_date') %></span>
+                    <span><%= icon('fas', 'user', 'Scraped') %></span>
                   <% end %>
                 </td>
 
                 <td>
                   <%= sort_link(@cq, :email_changed) do %>
-                    <span><%= icon('fas', 'user', 'email_changed') %></span>
+                    <span><%= icon('fas', 'at', 'Email Changed') %></span>
                   <% end %>
                 </td>
               </tr>
@@ -241,13 +327,13 @@
               <tr>
                 <td>
                   <%= sort_link(@cq, :cont_changed) do %>
-                    <span><%= icon('fas', 'user', 'cont_changed') %></span>
+                    <span><%= icon('fas', 'user', 'Cont Changed') %></span>
                   <% end %>
                 </td>
 
                 <td>
                   <%= sort_link(@cq, :job_changed) do %>
-                    <span><%= icon('fas', 'user', 'job_changed') %></span>
+                    <span><%= icon('fas', 'briefcase', 'Job Changed') %></span>
                   <% end %>
                 </td>
               </tr>
@@ -255,13 +341,13 @@
               <tr>
                 <td>
                   <%= sort_link(@cq, :cx_date) do %>
-                    <span><%= icon('fas', 'user', 'cx_date') %></span>
+                    <span><%= icon('fas', 'user', 'Contact X') %></span>
                   <% end %>
                 </td>
 
                 <td>
                   <%= sort_link(@cq, :created_at) do %>
-                    <span><%= icon('fas', 'user', 'created_at') %></span>
+                    <span><%= icon('fas', 'user', 'Created') %></span>
                   <% end %>
                 </td>
               </tr>
@@ -269,7 +355,7 @@
               <tr>
                 <td>
                   <%= sort_link(@cq, :updated_at) do %>
-                    <span><%= icon('fas', 'user', 'updated_at') %></span>
+                    <span><%= icon('fas', 'user', 'Updated') %></span>
                   <% end %>
                 </td>
 
@@ -288,8 +374,8 @@
       </div>
 
       <div class="row">
-        <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary btn-xs"%></div>
-        <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger btn-xs" %></div>
+        <div class="actions col-md-6"><%= f.submit "Search", class: "btn btn-primary search-btns"%></div>
+        <div class="col-md-6"><%= button_tag "Reset", type: :reset, class: "btn btn-danger search-btns" %></div>
       </div>
 
 
@@ -298,7 +384,7 @@
 
 
     <!-- SAVED SEARCHES SECTION - START -->
-    <h5 class="text-center sidebar-header">Saved Searches</h5>
+    <!-- <h6 class="text-center sidebar-header">Saved Searches</h6> -->
     <ul class="components">
       <li>
         <a class="dropdown-toggle" href="#saved-search-conts" data-toggle="collapse" aria-expanded="false">

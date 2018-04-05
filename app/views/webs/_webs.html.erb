@@ -3,18 +3,23 @@
 <p id="notice"><%= notice %></p>
 
 <div class="row">
-  <div class="col-md-12">
-    <h5>Web Based View (Results: <%= @webs.count %>)</h5>
+  <div class="col-md-3">
+    <h5>Accounts <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@webs.count, :delimiter => ',') %> )</span></h5>
   </div>
-</div>
 
-<% if params[:q].present? %>
-  <div class="row">
-    <%= link_to generate_csv_webs_path(params), class: 'btn btn-primary btn-xs' do %>
-      <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+
+  <div class="col-md-3">
+    <% if params[:q].present? %>
+      <%= link_to generate_csv_webs_path(params), class: 'btn btn-primary btn-md' do %>
+        <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+      <% end %>
     <% end %>
   </div>
-<% end %>
+
+  <div class="col-md-6"></div>
+</div>
+
+
 
 
 

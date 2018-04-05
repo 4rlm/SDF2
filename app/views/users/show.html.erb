@@ -1,3 +1,7 @@
 <p id="notice"><%= notice %></p>
 
+<h3>User Profile</h3>
+
+<% create_all_activities(current_user.id) %>
+
 <%= link_to 'Back', users_path %>

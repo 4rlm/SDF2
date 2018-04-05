@@ -13,4 +13,6 @@ class Cont < ApplicationRecord
   has_many :cont_activities, dependent: :destroy
   accepts_nested_attributes_for :cont_activities
 
+  # scope :is_email, ->{ where.not(email: nil) }
+
 end

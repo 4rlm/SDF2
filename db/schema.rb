@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180402200124) do
+ActiveRecord::Schema.define(version: 20180404232112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,11 +21,14 @@ ActiveRecord::Schema.define(version: 20180402200124) do
     t.bigint "user_id", null: false
     t.bigint "act_id", null: false
     t.integer "export_id"
-    t.string "fav_sts"
-    t.string "hide_sts"
+    t.boolean "fav_sts", default: false, null: false
+    t.boolean "hide_sts", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["act_id"], name: "index_act_activities_on_act_id"
+    t.index ["fav_sts"], name: "index_act_activities_on_fav_sts"
+    t.index ["hide_sts"], name: "index_act_activities_on_hide_sts"
+    t.index ["user_id", "act_id"], name: "index_act_activities_on_user_id_and_act_id", unique: true
     t.index ["user_id"], name: "index_act_activities_on_user_id"
   end
 
@@ -105,11 +108,14 @@ ActiveRecord::Schema.define(version: 20180402200124) do
     t.bigint "user_id", null: false
     t.bigint "cont_id", null: false
     t.integer "export_id"
-    t.string "fav_sts"
-    t.string "hide_sts"
+    t.boolean "fav_sts", default: false, null: false
+    t.boolean "hide_sts", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cont_id"], name: "index_cont_activities_on_cont_id"
+    t.index ["fav_sts"], name: "index_cont_activities_on_fav_sts"
+    t.index ["hide_sts"], name: "index_cont_activities_on_hide_sts"
+    t.index ["user_id", "cont_id"], name: "index_cont_activities_on_user_id_and_cont_id", unique: true
     t.index ["user_id"], name: "index_cont_activities_on_user_id"
   end
 
@@ -186,6 +192,15 @@ ActiveRecord::Schema.define(version: 20180402200124) do
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
   end
 
+  create_table "options", force: :cascade do |t|
+    t.string "mod_name", null: false
+    t.jsonb "option_hsh", default: "{}", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mod_name"], name: "index_options_on_mod_name"
+    t.index ["option_hsh"], name: "index_options_on_option_hsh", using: :gin
+  end
+
   create_table "queries", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "q_name", null: false
@@ -197,6 +212,15 @@ ActiveRecord::Schema.define(version: 20180402200124) do
     t.index ["params"], name: "index_queries_on_params", using: :gin
     t.index ["q_name"], name: "index_queries_on_q_name"
     t.index ["user_id"], name: "index_queries_on_user_id"
+  end
+
+  create_table "ransack_options", force: :cascade do |t|
+    t.string "mod_name", null: false
+    t.jsonb "option_hsh", default: "{}", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mod_name"], name: "index_ransack_options_on_mod_name"
+    t.index ["option_hsh"], name: "index_ransack_options_on_option_hsh", using: :gin
   end
 
   create_table "tallies", force: :cascade do |t|
@@ -331,10 +355,13 @@ ActiveRecord::Schema.define(version: 20180402200124) do
     t.bigint "user_id", null: false
     t.bigint "web_id", null: false
     t.integer "export_id"
-    t.string "fav_sts"
-    t.string "hide_sts"
+    t.boolean "fav_sts", default: false, null: false
+    t.boolean "hide_sts", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["fav_sts"], name: "index_web_activities_on_fav_sts"
+    t.index ["hide_sts"], name: "index_web_activities_on_hide_sts"
+    t.index ["user_id", "web_id"], name: "index_web_activities_on_user_id_and_web_id", unique: true
     t.index ["user_id"], name: "index_web_activities_on_user_id"
     t.index ["web_id"], name: "index_web_activities_on_web_id"
   end
@@ -365,7 +392,7 @@ ActiveRecord::Schema.define(version: 20180402200124) do
   create_table "webs", force: :cascade do |t|
     t.string "url", null: false
     t.string "url_sts_code"
-    t.boolean "cop", default: false
+    t.boolean "cop", default: false, null: false
     t.string "temp_name"
     t.string "url_sts"
     t.string "temp_sts"
@@ -386,6 +413,7 @@ ActiveRecord::Schema.define(version: 20180402200124) do
     t.datetime "updated_at", null: false
     t.index ["brand_date"], name: "index_webs_on_brand_date"
     t.index ["brand_sts"], name: "index_webs_on_brand_sts"
+    t.index ["cop"], name: "index_webs_on_cop"
     t.index ["cs_date"], name: "index_webs_on_cs_date"
     t.index ["cs_sts"], name: "index_webs_on_cs_sts"
     t.index ["page_date"], name: "index_webs_on_page_date"

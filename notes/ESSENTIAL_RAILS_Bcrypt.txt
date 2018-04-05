@@ -227,6 +227,11 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
   $ rails g migration add_hide_sts_to_activities hide_sts:string
 
 
+--ADD INDEX
+  $ rails g migration add_index_to_web_activities
+    add_index :web_activities, [:user_id, :web_id], unique: true
+
+
 --CHANGE
   $ rails g migration ChangeColumnName1
   rename_column :acts, :aq_name, :q_name

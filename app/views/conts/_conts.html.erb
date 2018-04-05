@@ -3,19 +3,25 @@
 <p id="notice"><%= notice %></p>
 
 <div class="row">
-  <div class="col-md-12">
-    <h5>Contacts (Results: <%= @conts.count %>)</h5>
+  <div class="col-md-3">
+    <h5>Contacts <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@conts.count, :delimiter => ',') %> )</span></h5>
   </div>
+
+  <div class="col-md-3">
+    <% if params[:q].present? %>
+      <%= link_to generate_csv_conts_path(params), class: 'btn btn-primary btn-md' do %>
+        <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+      <% end %>
+    <% end %>
+  </div>
+
+
+  <div class="col-md-6"></div>
+
 </div>
 
 
-<% if params[:q].present? %>
-  <div class="row">
-    <%= link_to generate_csv_conts_path(params), class: 'btn btn-primary btn-xs' do %>
-      <i class="fa fa-download" aria-hidden="true"></i> Download CSV
-    <% end %>
-  </div>
-<% end %>
+
 
 
 <div class="row">
@@ -42,14 +48,6 @@
     <% end %>
 
 
-<!-- THIS WILL BE JS PARTIAL OF CONT'S WEB AND ACTS WHEN CLICKED -->
-<!-- <div class='webWrap' style="display:none" id="<%#= cont.id %>"> -->
-  <%# @web = cont.web %>
-  <%#= render 'webs/web_details', web: @web %>
-<!-- </div> -->
-
-
-
 <% end %>
 </div>
 
@@ -58,6 +56,6 @@
 
 
 <br>
-<%#= will_paginate @conts if @conts&.present? %>
+<%= will_paginate @conts if @conts&.present? %>
 <br>
 <br>

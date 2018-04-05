@@ -4,7 +4,10 @@
 
 .ransack-table {
   padding-right: 2px;
-  // margin: 0px;
+  margin-left: -15px;
+}
+
+.ransack-table tr {
 }
 
 .ransack-table td {
@@ -13,21 +16,65 @@
   margin: 0px;
 }
 
+
+.ransack-table th, .ransack-table td, .ransack-table a {
+  background: #343a40;
+  // margin-left: 2px;
+  // margin-right: 2px;
+}
+
+.ransack-table a:hover {
+  background: black;
+}
+
+
+
 .ransack-date-input {
   width: 90px;
   font-size: 10px;
+}
+
+.ransack-input {
+  font-size: 12px;
+  height: 20px;
+  border-radius: 5px;
+}
+
+.save-search-as {
+  font-size: 12px;
+  height: 25px;
 }
 
 
 /* ---------------------------------------------------
   SIDEBAR TOGGLE BUTTON STYLE
 ----------------------------------------------------- */
+// .navbar-btn {
+//   // box-shadow: none;
+//   // outline: none !important;
+//   // border: none;
+//   margin-top: 60px;
+//   height: 50px;
+//   width: 50px;
+//   position: fixed;
+//   top: 0;
+//   // right: -5px;
+//   right: 0px;
+//   z-index: 10000;
+//   // background: #262930;
+//   background: #343a40;
+//   color: #fff;
+//   transition: all 0.3s;
+//   overflow-y: scroll;
+//   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+// }
+
 .navbar-btn {
   // box-shadow: none;
   // outline: none !important;
   // border: none;
-  margin-top: 60px;
-  height: 50px;
+  margin-top: 65px;
+  height: 35px;
   width: 50px;
   position: fixed;
   top: 0;
@@ -41,6 +88,7 @@
   overflow-y: scroll;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
+
 
 /* ---------------------------------------------------
   SIDEBAR STYLE
@@ -85,9 +133,17 @@ div.form-check {
   font-size: 11px;
 }
 
+// .sidebar-header {
+//   margin: -10px;
+//   padding: 10.5px;
+//   background: #343a40;
+//   color: #fff;
+//   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+// }
+
 .sidebar-header {
-  margin: -10px;
-  padding: 10.5px;
+  margin: -9px;
+  padding: 8.5px;
   background: #343a40;
   color: #fff;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
@@ -160,10 +216,10 @@ ul ul a {
 }
 
 .sidebar-panel {
-  border: 1px solid white;
-  margin: 2px 0px 2px -15px;
-  padding: 5px;
-  border-radius: 5px;
+  // border: 2px solid #5a6172;
+  margin: 2px 0px 2px -25px;
+  padding: 2px;
+  border-radius: 0px;
 }
 
 /* ---------------------------------------------------

@@ -5,7 +5,7 @@ class CreateWebs < ActiveRecord::Migration[5.1]
       t.string  :url, index: true, unique: true, null: false
       # t.string  :url, index: true, unique: true, null: true
       t.string  :url_sts_code, index: true
-      t.boolean :cop, default: false
+      t.boolean :cop, index: true, null: false, default: FALSE
       t.string  :temp_name, index: true
 
       ## Statuses

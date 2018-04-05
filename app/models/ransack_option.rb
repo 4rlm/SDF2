@@ -1,0 +1,2 @@
+class RansackOption < ApplicationRecord
+end
