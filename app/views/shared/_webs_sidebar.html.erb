@@ -9,18 +9,20 @@
       <% temps = web_opts['temps'] %>
       <% brands = web_opts['brands'] %>
       <% cops = web_opts['cops'] %>
-      <% states = web_opts['states'] %>
       <% url_stss = web_opts['url_stss'] %>
       <% temp_stss = web_opts['temp_stss'] %>
       <% page_stss = web_opts['page_stss'] %>
       <% cs_stss = web_opts['cs_stss'] %>
-      <% gp_stss = web_opts['gp_stss'] %>
+
+      <% act_opts = get_ransack_act_opts %>
+      <% states = act_opts['states'] %>
+      <% gp_stss = act_opts['gp_stss'] %>
 
       <!-- SEARCH SECTION - START -->
       <h6 class="text-center sidebar-header">Search Criteria</h6>
       <ul class="components">
-        <!-- SEARCH WEBS - START -->
 
+        <!-- SEARCH WEBS - START -->
         <li>
           <a class="dropdown-toggle" href="#web-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'external-link-alt', 'Web Criteria') %>

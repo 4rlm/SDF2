@@ -93,73 +93,51 @@ module ApplicationHelper
       brands: ['Acura', 'Alfa Romeo', 'Aston Martin', 'Audi', 'BMW', 'Bentley', 'Bugatti', 'Buick', 'CDJR', 'Cadillac', 'Chevrolet', 'Chrysler', 'Dodge', 'Ferrari', 'Fiat', 'Ford', 'GMC', 'Group', 'Honda', 'Hummer', 'Hyundai', 'Infiniti', 'Isuzu', 'Jaguar', 'Jeep', 'Kia', 'Lamborghini', 'Land Rover', 'Lexus', 'Lincoln', 'Lotus', 'MINI', 'Maserati', 'Mazda', 'Mclaren', 'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Porsche', 'Ram', 'Rolls-Royce', 'Saab', 'Scion', 'Smart', 'Subaru', 'Suzuki', 'Toyota', 'Volkswagen', 'Volvo'],
 
       cops: [true, false],
-
-      states: %w(AK AL AR AZ CA CO CT DC DE FL GA GU HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA PR RI SC SD TN TX UT VA VT WA WI WV WY),
-
       url_stss: Web.all.map(&:url_sts).uniq.compact.sort,
       temp_stss: Web.all.map(&:temp_sts).uniq.compact.sort,
       page_stss: Web.all.map(&:page_sts).uniq.compact.sort,
-      cs_stss: Web.all.map(&:cs_sts).uniq.compact.sort,
-      gp_stss: Act.all.map(&:gp_sts).uniq.compact.sort,
+      cs_stss: Web.all.map(&:cs_sts).uniq.compact.sort
     }
   end
 
   def get_ransack_web_opts
     ransack_web_options = RansackOption.find_by(mod_name: 'Web')
-
-    if !ransack_web_options.present?
-      ransack_web_options = RansackOption.create(mod_name: 'Web', option_hsh: generate_ransack_web_options)
-    end
-
+    ransack_web_options = RansackOption.create(mod_name: 'Web', option_hsh: generate_ransack_web_options) if !ransack_web_options.present?
     web_opts = ransack_web_options[:option_hsh]
   end
 
 
 
+  def generate_ransack_act_options
+    act_opts = {
+      states: %w(AK AL AR AZ CA CO CT DC DE FL GA GU HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA PR RI SC SD TN TX UT VA VT WA WI WV WY),
+      gp_stss: Act.all.map(&:gp_sts).uniq.compact.sort
+    }
+  end
 
 
+  def get_ransack_act_opts
+    ransack_act_options = RansackOption.find_by(mod_name: 'Act')
+    ransack_act_options = RansackOption.create(mod_name: 'Act', option_hsh: generate_ransack_act_options) if !ransack_act_options.present?
+    act_opts = ransack_act_options[:option_hsh]
+  end
 
 
-
-
-
-
-
-
-
-
-
-
-  # ApplicationHelper.generate_ransack_cont_options
   def generate_ransack_cont_options
-    # job_titles_above_10 = col_tallies_hsh[:job_title].select { |hsh| hsh[:size] > 10 }
-    # job_titles_above_10.map { |k,v| k }
-    # job_titles = job_titles_above_10.map { |h| h.slice(:item) }
-    # job_titles2 = job_titles.map {|h| h[:item] }
-
     col_tallies_hsh = GenTally.get_col_tally2('Cont', 'job_title')
     common_titles_hsh =  col_tallies_hsh[:job_title][0..29]
     hsh = common_titles_hsh.map { |h| h.slice(:item) }
     common_titles = hsh.map {|h| h[:item] }
 
     web_opts = {
-      states: %w(AK AL AR AZ CA CO CT DC DE FL GA GU HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA PR RI SC SD TN TX UT VA VT WA WI WV WY),
-
-      gp_stss: Act.all.map(&:gp_sts).uniq.compact.sort,
-
       target_titles: ['BDC Manager', 'COO', 'Director', 'Executive', 'Fixed Operations', 'Fixed Operations Director', 'Fixed Operations Manager', 'General Manager', 'Manager', 'Marketing Director', 'Marketing Manager', 'New Car Director', 'New Car Manager', 'Operations Director', 'Operations Manager', 'Owner/Prin/Pres', 'Sales Director', 'Sales Manager', 'Used Car Director', 'Used Car Manager', 'Used Car Manager (Asst)', 'VP Operations', 'Variable Operations Director', 'Vice President'],
-
       common_titles: common_titles
     }
   end
 
   def get_ransack_cont_opts
     ransack_cont_options = RansackOption.find_by(mod_name: 'Cont')
-
-    if !ransack_cont_options.present?
-      ransack_cont_options = RansackOption.create(mod_name: 'Cont', option_hsh: generate_ransack_cont_options)
-    end
-
+    ransack_cont_options = RansackOption.create(mod_name: 'Cont', option_hsh: generate_ransack_cont_options) if !ransack_cont_options.present?
     cont_opts = ransack_cont_options[:option_hsh]
   end
 

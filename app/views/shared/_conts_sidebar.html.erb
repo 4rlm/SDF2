@@ -4,20 +4,29 @@
 
     <%= search_form_for(@cq, url: search_conts_path, html: {method: :post, class: 'form'}) do |f| %>
 
-
     <% cont_opts = get_ransack_cont_opts %>
-
     <% target_titles = cont_opts['target_titles'] %>
     <% common_titles = cont_opts['common_titles'] %>
-    <% states = cont_opts['states'] %>
-    <% gp_stss = cont_opts['gp_stss'] %>
+
+    <% act_opts = get_ransack_act_opts %>
+    <% states = act_opts['states'] %>
+    <% gp_stss = act_opts['gp_stss'] %>
+
+    <% web_opts = get_ransack_web_opts %>
+    <% temps = web_opts['temps'] %>
+    <% brands = web_opts['brands'] %>
+    <% cops = web_opts['cops'] %>
+    <% url_stss = web_opts['url_stss'] %>
+    <% temp_stss = web_opts['temp_stss'] %>
+    <% page_stss = web_opts['page_stss'] %>
+    <% cs_stss = web_opts['cs_stss'] %>
 
       <!-- SEARCH SECTION - START -->
       <h6 class="text-center sidebar-header">Search Criteria</h6>
       <ul class="components">
 
 
-        <!-- SEARCH CONTCONTS - START -->
+        <!-- SEARCH CONTS - START -->
         <li>
           <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'users', 'Contact Criteria') %>
@@ -268,6 +277,304 @@
 
 
 
+
+        <!-- SEARCH WEBS - START -->
+        <li>
+          <a class="dropdown-toggle" href="#web-criteria" data-toggle="collapse" aria-expanded="false">
+            <%= icon('fas', 'external-link-alt', 'Web Criteria') %>
+          </a>
+          <ul class="collapse" id="web-criteria">
+            <div class="panel sidebar-panel">
+
+
+              <table class="ransack-table table text-nowrap">
+                <%= f.hidden_field :web_activities_user_id_eq, value: current_user.id  %>
+                <tr>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_fav_sts_in][]', true ) %>
+                    <%= 'Following' %>
+                  </td>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_fav_sts_not_in][]', true ) %>
+                    <%= 'None' %>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_hide_sts_in][]', true ) %>
+                    <%= 'Hidden' %>
+                  </td>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_activities_hide_sts_not_in][]', true ) %>
+                    <%= 'None' %>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_cop_in][]', true) %>
+                    <%= 'CoPilot' %>
+                  </td>
+                  <td class="w50">
+                    <%= check_box_tag('q[web_cop_not_in][]', true) %>
+                    <%= 'None' %>
+                  </td>
+                </tr>
+              </table>
+
+
+              <!-- Search Webs (General-Table) -->
+              <table class="ransack-table table text-nowrap">
+
+                <!-- Search Webs (URL) -->
+                <tr>
+                  <td class="w20">URL</td>
+                  <td class="w80"><%= f.search_field :web_url_cont_any, class: "form-control ransack-input" %></td>
+                </tr>
+                <!-- Search Webs (FWD URL) -->
+                <tr>
+                  <td class="w20">FWD URL</td>
+                  <td class="w80"><%= f.search_field :web_fwd_url_cont_any, class: "form-control ransack-input" %></td>
+
+                </tr>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Template</th>
+                  </tr>
+                </thead>
+                <% temps&.each_with_index do |temp_name, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[web_temp_name_in][]', temp_name) %>
+                        <%= temp_name %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[web_temp_name_in][]', temp_name) %>
+                        <%= temp_name %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Brand</th>
+                  </tr>
+                </thead>
+                <% brands&.each_with_index do |brand_name, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[web_brands_brand_name_in][]', brand_name) %>
+                        <%= brand_name %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[web_brands_brand_name_in][]', brand_name) %>
+                        <%= brand_name %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">URL Status</th>
+                  </tr>
+                </thead>
+                <% url_stss&.each_with_index do |url_sts, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[web_url_sts_in][]', url_sts) %>
+                        <%= url_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[web_url_sts_in][]', url_sts) %>
+                        <%= url_sts %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Template Status</th>
+                  </tr>
+                </thead>
+                <% temp_stss&.each_with_index do |temp_sts, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[web_temp_sts_in][]', temp_sts) %>
+                        <%= temp_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[web_temp_sts_in][]', temp_sts) %>
+                        <%= temp_sts %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Staff Page Status</th>
+                  </tr>
+                </thead>
+                <% page_stss&.each_with_index do |page_sts, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[web_page_sts_in][]', page_sts) %>
+                        <%= page_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[web_page_sts_in][]', page_sts) %>
+                        <%= page_sts %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+
+              <table class="ransack-table table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">Staff Mined Status</th>
+                  </tr>
+                </thead>
+                <% cs_stss&.each_with_index do |cs_sts, index| %>
+                  <% if index.even? %>
+                    <tr>
+                      <!-- LEFT -->
+                      <td>
+                        <%= check_box_tag('q[web_cs_sts_in][]', cs_sts) %>
+                        <%= cs_sts %>
+                      </td>
+                    <% else %>
+                      <!-- RIGHT -->
+                      <td>
+                        <%= check_box_tag('q[web_cs_sts_in][]', cs_sts) %>
+                        <%= cs_sts %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+
+
+              <!-- Search Webs (Dates-Table) -->
+              <!-- <p class="text-center"><strong>Dates</strong></p> -->
+              <div class="row">
+                <table class="ransack-table table  text-nowrap text-center">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Start</th>
+                      <th>End</th>
+                    </tr>
+                  </thead>
+
+                  <!-- URL Verified -->
+                  <tr>
+                    <td>URL Verified</td>
+                    <td><%= f.date_field :web_url_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_url_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Template -->
+                  <tr>
+                    <td>Template Verified</td>
+                    <td><%= f.date_field :web_tmp_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_tmp_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Staff Page -->
+                  <tr>
+                    <td>Staff Page Verified</td>
+                    <td><%= f.date_field :web_page_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_page_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Staff Mined -->
+                  <tr>
+                    <td>Staff Verified</td>
+                    <td><%= f.date_field :web_cs_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_cs_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- URL Updated -->
+                  <tr>
+                    <td>URL Updated</td>
+                    <td><%= f.date_field :web_web_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_web_changed_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- URL Inactive -->
+                  <tr>
+                    <td>URL Inactive</td>
+                    <td><%= f.date_field :web_wx_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_wx_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Web Updated -->
+                  <tr>
+                    <td>Web Updated</td>
+                    <td><%= f.date_field :web_updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- Web Created -->
+                  <tr>
+                    <td>Web Created</td>
+                    <td><%= f.date_field :web_created_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :web_created_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </ul>
+        </li>
+
+
+
+
+
         <!-- SEARCH ACCOUNTS - START -->
         <li>
           <a class="dropdown-toggle" href="#act-criteria" data-toggle="collapse" aria-expanded="false">
@@ -479,6 +786,7 @@
             </div>
           </ul>
         </li>
+
 
 
       </ul>

@@ -8,10 +8,11 @@ class Cont < ApplicationRecord
   has_many :brands, through: :web
 
   has_many :acts, through: :web
+  has_many :web_activities, through: :web
   has_many :act_activities, through: :acts
 
   has_many :cont_activities, dependent: :destroy
-  accepts_nested_attributes_for :cont_activities
+  accepts_nested_attributes_for :cont_activities, :web_activities, :act_activities
 
   # scope :is_email, ->{ where.not(email: nil) }
 
