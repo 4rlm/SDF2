@@ -30,11 +30,11 @@ module ApplicationHelper
     end
   end
 
-  def get_brands_for_select(webs)
-    if webs.present?
-      brands = webs.is_franchise&.map {|web| get_brands(web)}&.flatten&.uniq&.sort
-    end
-  end
+  # def get_brands_for_select(webs)
+  #   if webs.present?
+  #     brands = webs.is_franchise&.map {|web| get_brands(web)}&.flatten&.uniq&.sort
+  #   end
+  # end
 
 
   ## GET_STATES_FOR_SELECT - STARTS
@@ -45,14 +45,14 @@ module ApplicationHelper
     end
   end
 
-  def get_states_for_select(webs)
-    if webs.present?
-      # states = webs.map { |web| get_state(web.acts) }&.flatten&.uniq&.compact&.sort
-      states = webs.map { |web| web.acts&.map(&:state) }&.flatten&.uniq&.compact&.sort
-      binding.pry
-      return states
-    end
-  end
+  # def get_states_for_select(webs)
+  #   if webs.present?
+  #     # states = webs.map { |web| get_state(web.acts) }&.flatten&.uniq&.compact&.sort
+  #     states = webs.map { |web| web.acts&.map(&:state) }&.flatten&.uniq&.compact&.sort
+  #     binding.pry
+  #     return states
+  #   end
+  # end
 
 
   ## GET_GP_STS - STARTS
@@ -62,12 +62,12 @@ module ApplicationHelper
     end
   end
 
-  def get_gp_stss_for_select(webs)
-    if webs.present?
-      gp_stss = webs.map { |web| get_gp_stss(web.acts) }&.flatten&.uniq&.compact&.sort
-      # gp_stss = webs.web_act_gp_sts&.map {|web| get_gp_stss(web&.acts)}&.flatten&.uniq&.sort
-    end
-  end
+  # def get_gp_stss_for_select(webs)
+  #   if webs.present?
+  #     gp_stss = webs.map { |web| get_gp_stss(web.acts) }&.flatten&.uniq&.compact&.sort
+  #     # gp_stss = webs.web_act_gp_sts&.map {|web| get_gp_stss(web&.acts)}&.flatten&.uniq&.sort
+  #   end
+  # end
 
 
   ## GET_GP_INDUSS - STARTS
@@ -77,17 +77,16 @@ module ApplicationHelper
     end
   end
 
-  def get_gp_induss_for_select(webs)
-    if webs.present?
-      gp_induss = webs.map { |web| get_gp_induss(web.acts) }&.flatten&.uniq&.compact&.sort
-      # gp_induss = webs.web_act_gp_indus&.map {|web| get_gp_induss(web&.acts)}&.join(' ')&.split(' ')&.uniq&.sort
-    end
-  end
+  # def get_gp_induss_for_select(webs)
+  #   if webs.present?
+  #     gp_induss = webs.map { |web| get_gp_induss(web.acts) }&.flatten&.uniq&.compact&.sort
+  #     # gp_induss = webs.web_act_gp_indus&.map {|web| get_gp_induss(web&.acts)}&.join(' ')&.split(' ')&.uniq&.sort
+  #   end
+  # end
 
 
 
   def generate_ransack_web_options
-    webs = Web.all
     web_opts = {
       temps: ['All Auto Network', 'AutoJini', 'Autofunds', 'Autofusion', 'Chapman.co', 'Cobalt', 'DEALER eProcess', 'DLD Websites', 'Dealer Direct', 'Dealer Inspire', 'Dealer Socket', 'Dealer Spike', 'Dealer.com', 'DealerCar Search', 'DealerFire', 'DealerOn', 'DealerPeak', 'DealerTrend', 'Dominion', 'Drive Website', 'Driving Force', 'FoxDealer', 'I/O COM', 'Jazel Auto', 'Motion Fuze', 'Motorwebs', 'Pixel Motion', 'Remora', 'SERPCOM', 'Search Optics', 'Slip Stream', 'VinSolutions', 'eBizAutos', 'fusionZONE', 'fusionZone'],
 
@@ -103,7 +102,6 @@ module ApplicationHelper
       cs_stss: Web.all.map(&:cs_sts).uniq.compact.sort,
       gp_stss: Act.all.map(&:gp_sts).uniq.compact.sort,
     }
-
   end
 
   def get_ransack_web_opts
@@ -116,6 +114,54 @@ module ApplicationHelper
     web_opts = ransack_web_options[:option_hsh]
   end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # ApplicationHelper.generate_ransack_cont_options
+  def generate_ransack_cont_options
+    # job_titles_above_10 = col_tallies_hsh[:job_title].select { |hsh| hsh[:size] > 10 }
+    # job_titles_above_10.map { |k,v| k }
+    # job_titles = job_titles_above_10.map { |h| h.slice(:item) }
+    # job_titles2 = job_titles.map {|h| h[:item] }
+
+    col_tallies_hsh = GenTally.get_col_tally2('Cont', 'job_title')
+    common_titles_hsh =  col_tallies_hsh[:job_title][0..29]
+    hsh = common_titles_hsh.map { |h| h.slice(:item) }
+    common_titles = hsh.map {|h| h[:item] }
+
+    web_opts = {
+      states: %w(AK AL AR AZ CA CO CT DC DE FL GA GU HI IA ID IL IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV NY OH OK OR PA PR RI SC SD TN TX UT VA VT WA WI WV WY),
+
+      gp_stss: Act.all.map(&:gp_sts).uniq.compact.sort,
+
+      target_titles: ['BDC Manager', 'COO', 'Director', 'Executive', 'Fixed Operations', 'Fixed Operations Director', 'Fixed Operations Manager', 'General Manager', 'Manager', 'Marketing Director', 'Marketing Manager', 'New Car Director', 'New Car Manager', 'Operations Director', 'Operations Manager', 'Owner/Prin/Pres', 'Sales Director', 'Sales Manager', 'Used Car Director', 'Used Car Manager', 'Used Car Manager (Asst)', 'VP Operations', 'Variable Operations Director', 'Vice President'],
+
+      common_titles: common_titles
+    }
+  end
+
+  def get_ransack_cont_opts
+    ransack_cont_options = RansackOption.find_by(mod_name: 'Cont')
+
+    if !ransack_cont_options.present?
+      ransack_cont_options = RansackOption.create(mod_name: 'Cont', option_hsh: generate_ransack_cont_options)
+    end
+
+    cont_opts = ransack_cont_options[:option_hsh]
+  end
 
 
 

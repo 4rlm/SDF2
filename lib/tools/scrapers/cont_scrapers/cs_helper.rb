@@ -18,22 +18,22 @@ class CsHelper # Contact Scraper Helper Method
           inner.traverse {|node| nodes << node.text }
           nodes.reject!(&:blank?)
           nodes.uniq!
-  
+
           nodes = nodes.join(", ").split(' - ').join(", ").split(', ')
           nodes.map! do |nod|
             # nod = nod.delete("^\u{0000}-\u{007F}")&.strip
             nod = nod.gsub("^\u{0000}-\u{007F}", " ")&.strip
-  
+
             if nod.present?
               nod_nums = nod.scan(/[0-9]/)
               nod = nil if nod_nums.any? && (nod_nums.count > 11 || nod_nums.count < 10)
             end
-  
+
             nod = nil if (nod.length < 3 || nod.length > 30) if nod
             nod = nil if junk_detector(nod) if nod
             nod
           end
-  
+
           nodes.map! {|nod| nod&.strip}
           nodes.reject!(&:blank?)
           nodes.uniq!
@@ -283,8 +283,15 @@ class CsHelper # Contact Scraper Helper Method
       job_title&.gsub!('BDC Service', 'BDC')
       job_title&.gsub!('Accounting Clerk', 'Accounting')
 
-      return job_title
+      job_title = normalize_job_title(job_title)
     end
+  end
+
+  # CsHelper.new.normalize_job_title(current_job_title)
+  def normalize_job_title(current_job_title)
+    job_titles_hsh = {'Sales Mgr': 'Sales Manager', 'Mgr': 'Manager', 'General Mgr': 'General Manager', 'General Sales Mgr': 'General Manager', 'Used Car Mgr': 'Used Car Manager', 'New Car Mgr': 'New Car Manager', 'Owner': 'Owner/Prin/Pres', 'President': 'Owner/Prin/Pres', 'BDC Dir': 'BDC Manager', 'Dir': 'Director', 'Vice President': 'Vice President', 'Fixed Operations': 'Fixed Operations', 'Fixed Operations Dir': 'Fixed Operations Director', 'Sales Dir': 'Sales Director', 'Principal': 'Owner/Prin/Pres', 'Mktg Dir': 'Marketing Director', 'Mktg Mgr': 'Marketing Manager', 'Operations Mgr': 'Operations Manager', 'Used Car Dir': 'Used Car Director', 'Executive': 'Executive', 'Fixed Operations Mgr': 'Fixed Operations Manager', 'Operations Dir': 'Operations Director', 'Executive Sales': 'Sales Manager', 'Executive Mgr': 'General Manager', 'New Sales Mgr': 'New Car Manager', 'General Mgr Owner': 'Owner/Prin/Pres', 'Mgr Owner': 'Owner/Prin/Pres', 'Car Mgr': 'Sales Manager', 'President Owner': 'Owner/Prin/Pres', 'New Car Dir': 'New Car Director', 'Used Car Sales Dir': 'Used Car Director', 'Digital Mktg Mgr': 'Marketing Manager', 'Sales Mgr Rep': 'Sales Manager', 'New Car Sales Dir': 'New Car Director', 'Executive Sales Rep': 'Sales Manager', 'President General Mgr': 'Owner/Prin/Pres', 'Vice President Operations': 'VP Operations', 'E-Commerce Dir': 'Marketing Director', 'Fixed Dir': 'Fixed Operations Director', 'BDC Mktg Mgr': 'BDC Manager', 'Digital Mktg Dir': 'Marketing Director', 'Vice President Executive': 'Vice President', 'General Executive Mgr': 'General Manager', 'Owner Rep': 'Owner/Prin/Pres', 'Sales Dir Mgr': 'Sales Director', 'Owner Principal': 'Owner/Prin/Pres', 'General': 'General Manager', 'Fixed Mgr': 'Fixed Operations Manager', 'Used Sales Mgr': 'Used Car Manager', 'Digital Mgr': 'Marketing Manager', 'Sales Dir Rep': 'Sales Director', 'Vice President General Mgr': 'General Manager', 'Variable Operations Dir': 'Variable Operations Director', 'Digital Dir': 'Marketing Director', 'Used New Car Mgr': 'Used Car Manager', 'Vice President Owner': 'Owner/Prin/Pres', 'Asst Used Car Mgr': 'Used Car Manager (Asst)', 'New Mgr': 'New Car Manager', 'Sales Operations Dir': 'Sales Director'}
+
+    job_titles_hsh[current_job_title.to_sym]
   end
 
 

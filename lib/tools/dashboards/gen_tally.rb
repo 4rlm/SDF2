@@ -95,6 +95,33 @@ module GenTally
   end
 
 
+  ## Adapted to get most common job_titles (except for target titles)
+  # GenTally.get_col_tally2('Cont', 'job_title')
+  def self.get_col_tally2(mod_name, col)
+    mod = mod_name.classify.constantize
+
+    target_titles = ['BDC Manager', 'COO', 'Director', 'Executive', 'Fixed Operations', 'Fixed Operations Director', 'Fixed Operations Manager', 'General Manager', 'Manager', 'Marketing Director', 'Marketing Manager', 'New Car Director', 'New Car Manager', 'Operations Director', 'Operations Manager', 'Owner/Prin/Pres', 'Sales Director', 'Sales Manager', 'Used Car Director', 'Used Car Manager', 'Used Car Manager (Asst)', 'VP Operations', 'Variable Operations Director', 'Vice President']
+
+    selected_fields = mod.select(col.to_sym).pluck(col.to_sym).compact
+    selected_fields -= target_titles
+
+    field_groups_hsh = selected_fields.group_by {|x| x}.map {|k,v| [k,v.count]}.to_h
+    ranked_field_groups = field_groups_hsh.sort_by{|k,v| v}.reverse.to_h
+
+    col_tallies_arr = ranked_field_groups.map do |field_group_arr|
+      field_name = field_group_arr.first
+      count = field_group_arr.last
+      tallied_field_hsh = {item: field_name, size: count}
+    end
+
+    col_tallies_hsh = {"#{col}": col_tallies_arr}
+    return col_tallies_hsh
+  end
+
+  # job_titles_above_2 = col_tallies_hsh['job_title'].select { |hsh| hsh["size"] > 2 }
+  # col_tallies_arr.select { |hsh| hsh["size"] > 2 }
+
+
   # # SAVE: Works well, but not needed now.
   # def self.get_mod_cols(mod_name)
   #   mod = mod_name.classify.constantize

@@ -4,15 +4,20 @@
 
     <%= search_form_for(@cq, url: search_conts_path, html: {method: :post, class: 'form'}) do |f| %>
 
-    <% job_titles = @conts.select(:job_title).where.not(job_title: nil).pluck(:job_title).uniq.sort %>
-    <% cs_stss = @conts.select(:cs_sts).where.not(cs_sts: nil).pluck(:cs_sts).uniq.sort %>
 
+    <% cont_opts = get_ransack_cont_opts %>
+
+    <% target_titles = cont_opts['target_titles'] %>
+    <% common_titles = cont_opts['common_titles'] %>
+    <% states = cont_opts['states'] %>
+    <% gp_stss = cont_opts['gp_stss'] %>
 
       <!-- SEARCH SECTION - START -->
       <h6 class="text-center sidebar-header">Search Criteria</h6>
       <ul class="components">
-        <!-- SEARCH CONTCONTS - START -->
 
+
+        <!-- SEARCH CONTCONTS - START -->
         <li>
           <a class="dropdown-toggle" href="#cont-criteria" data-toggle="collapse" aria-expanded="false">
             <%= icon('fas', 'users', 'Contact Criteria') %>
@@ -113,38 +118,38 @@
               </thead>
 
               <tr>
-                <td class="w10">Full Name</td>
-                <td class="w90"><%= f.search_field :full_name_cont_any %></td>
+                <td class="w20">Full Name</td>
+                <td class="w80"><%= f.search_field :full_name_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <tr>
-                <td class="w10">First Name</td>
-                <td class="w90"><%= f.search_field :first_name_cont_any %></td>
+                <td class="w20">First Name</td>
+                <td class="w80"><%= f.search_field :first_name_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <tr>
-                <td class="w10">Last Name</td>
-                <td class="w90"><%= f.search_field :last_name_cont_any %></td>
+                <td class="w20">Last Name</td>
+                <td class="w80"><%= f.search_field :last_name_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <tr>
-                <td class="w10">Job Title</td>
-                <td class="w90"><%= f.search_field :job_title_cont_any %></td>
+                <td class="w20">Job Title</td>
+                <td class="w80"><%= f.search_field :job_title_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <tr>
-                <td class="w10">Job Desc</td>
-                <td class="w90"><%= f.search_field :job_desc_cont_any %></td>
+                <td class="w20">Job Desc</td>
+                <td class="w80"><%= f.search_field :job_desc_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <tr>
-                <td class="w10">Email</td>
-                <td class="w90"><%= f.search_field :email_cont_any %></td>
+                <td class="w20">Email</td>
+                <td class="w80"><%= f.search_field :email_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <tr>
-                <td class="w10">Phone</td>
-                <td class="w90"><%= f.search_field :phone_cont_any %></td>
+                <td class="w20">Phone</td>
+                <td class="w80"><%= f.search_field :phone_cont_any, class: "form-control ransack-input" %></td>
               </tr>
             </table>
 
@@ -153,27 +158,55 @@
             <table class="ransack-table table table-bordered text-nowrap">
               <thead>
                 <tr>
-                  <th colspan="2" class="text-center">Job Titles</th>
+                  <th colspan="2" class="text-center">Target Job Titles</th>
                 </tr>
               </thead>
-              <% job_titles&.each_with_index do |job_title, index| %>
+              <% target_titles&.each_with_index do |target_title, index| %>
                 <% if index.even? %>
                   <tr>
                     <!-- LEFT -->
                     <td>
-                      <%= check_box_tag('q[job_title_in][]', job_title) %>
-                      <%= job_title %>
+                      <%= check_box_tag('q[job_title_in][]', target_title) %>
+                      <%= target_title %>
                     </td>
                   <% else %>
                     <!-- RIGHT -->
                     <td>
-                      <%= check_box_tag('q[job_title_in][]', job_title) %>
-                      <%= job_title %>
+                      <%= check_box_tag('q[job_title_in][]', target_title) %>
+                      <%= target_title %>
                     </td>
                   </tr>
                 <% end %>
               <% end %>
             </table>
+
+
+
+            <table class="ransack-table table table-bordered text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">Common Job Titles</th>
+                </tr>
+              </thead>
+              <% common_titles&.each_with_index do |common_title, index| %>
+                <% if index.even? %>
+                  <tr>
+                    <!-- LEFT -->
+                    <td>
+                      <%= check_box_tag('q[job_title_in][]', common_title) %>
+                      <%= common_title %>
+                    </td>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <td>
+                      <%= check_box_tag('q[job_title_in][]', common_title) %>
+                      <%= common_title %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </table>
+
 
 
 
@@ -232,6 +265,221 @@
 
           </ul>
         </li>
+
+
+
+        <!-- SEARCH ACCOUNTS - START -->
+        <li>
+          <a class="dropdown-toggle" href="#act-criteria" data-toggle="collapse" aria-expanded="false">
+            <%= icon('fas', 'building', 'Account Criteria') %>
+          </a>
+          <ul class="collapse" id="act-criteria">
+            <div class="panel sidebar-panel">
+
+
+              <!-- Search Acts (General-1) -->
+            <table class="ransack-table table  text-nowrap">
+              <%= f.hidden_field :act_activities_user_id_eq, value: current_user.id  %>
+
+              <tr>
+                <td>
+                  <%= check_box_tag('q[act_activities_fav_sts_in][]', true ) %>
+                  <%= 'Following' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[act_activities_fav_sts_not_in][]', true ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <%= check_box_tag('q[act_activities_hide_sts_in][]', true ) %>
+                  <%= 'Hidden' %>
+                </td>
+                <td>
+                  <%= check_box_tag('q[act_activities_hide_sts_not_in][]', true ) %>
+                  <%= 'None' %>
+                </td>
+              </tr>
+            </table>
+
+
+            <!-- Search Acts (General-Table) -->
+            <table class="ransack-table table  text-nowrap">
+              <thead>
+                <tr class="text-center">
+                  <th>Category</th>
+                  <th>Criteria</th>
+                </tr>
+              </thead>
+
+              <!-- Search Acts (Account Name) -->
+              <tr>
+                <td class="w20">Account Name</td>
+                <td class="w80"><%= f.search_field :acts_act_name_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Full Address) -->
+              <tr>
+                <td class="w20">Full Address</td>
+                <td class="w80"><%= f.search_field :acts_full_address_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Street) -->
+              <tr>
+                <td class="w20">Street</td>
+                <td class="w80"><%= f.search_field :acts_street_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (City) -->
+              <tr>
+                <td class="w20">City</td>
+                <td class="w80"><%= f.search_field :acts_city_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Zip) -->
+              <tr>
+                <td class="w20">Zip</td>
+                <td class="w80"><%= f.search_field :acts_zip_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Phone) -->
+              <tr>
+                <td class="w20">Phone</td>
+                <td class="w80"><%= f.search_field :acts_phone_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Lat) -->
+              <tr>
+                <td class="w20">Lat</td>
+                <td class="w80"><%= f.search_field :acts_lat_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (Lon) -->
+              <tr>
+                <td class="w20">Lon</td>
+                <td class="w80"><%= f.search_field :acts_lon_cont_any, class: "form-control ransack-input" %></td>
+              </tr>
+
+              <!-- Search Acts (GP ID) -->
+              <tr>
+                <td class="w20">GP ID</td>
+                <td class="w80"><%= f.search_field :acts_gp_id_eq_any, class: "form-control ransack-input" %></td>
+              </tr>
+            </table>
+
+
+            <table class="ransack-table table  text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">State</th>
+                </tr>
+              </thead>
+              <% states&.each_with_index do |state, index| %>
+                <% if index.even? %>
+                  <tr>
+                    <!-- LEFT -->
+                    <td>
+                      <%= check_box_tag('q[acts_state_in][]', state) %>
+                      <%= state %>
+                    </td>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <td>
+                      <%= check_box_tag('q[acts_state_in][]', state) %>
+                      <%= state %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </table>
+
+
+            <table class="ransack-table table  text-nowrap">
+              <thead>
+                <tr>
+                  <th colspan="2" class="text-center">GP Status</th>
+                </tr>
+              </thead>
+              <% gp_stss&.each_with_index do |gp_sts, index| %>
+                <% if index.even? %>
+                  <tr>
+                    <!-- LEFT -->
+                    <td>
+                      <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                      <%= gp_sts %>
+                    </td>
+                  <% else %>
+                    <!-- RIGHT -->
+                    <td>
+                      <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                      <%= gp_sts %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            </table>
+
+              <!-- Search Acts (Dates-3) -->
+              <div class="row">
+                <table class="ransack-table table  text-nowrap text-center">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Start</th>
+                      <th>End</th>
+                    </tr>
+                  </thead>
+
+                  <!-- gp_date -->
+                  <tr>
+                    <td>GP Verified</td>
+                    <td><%= f.date_field :acts_gp_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_gp_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- adr_changed -->
+                  <tr>
+                    <td>Address Updated</td>
+                    <td><%= f.date_field :acts_adr_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_adr_changed_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- act_changed -->
+                  <tr>
+                    <td>Acct-Name Updated</td>
+                    <td><%= f.date_field :acts_act_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_act_changed_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- ax_date -->
+                  <tr>
+                    <td>Account Inactive</td>
+                    <td><%= f.date_field :acts_ax_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_ax_date_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- updated_at -->
+                  <tr>
+                    <td>Account Updated</td>
+                    <td><%= f.date_field :acts_updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                  <!-- created_at -->
+                  <tr>
+                    <td>Account Created</td>
+                    <td><%= f.date_field :acts_created_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :acts_created_at_lteq, {class: 'ransack-date-input'} %></td>
+                  </tr>
+
+                </table>
+              </div>
+            </div>
+          </ul>
+        </li>
+
 
       </ul>
 
