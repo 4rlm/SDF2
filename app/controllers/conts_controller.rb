@@ -7,21 +7,36 @@ class ContsController < ApplicationController
   # GET /conts.json
   def index
 
-    ## Splits 'cont_any' strings into array, if string and has ','
-    if !params[:q].nil?
-      conts_helper = Object.new.extend(ContsHelper)
-      params[:q] = conts_helper.split_ransack_params(params[:q])
+    if params[:bypass_cont_ids]&.any?
+      @conts = Cont.where(id: [params[:bypass_cont_ids]]).paginate(page: params[:page], per_page: 20)
+    else
+      ## Splits 'cont_any' strings into array, if string and has ','
+      if !params[:q].nil?
+        conts_helper = Object.new.extend(ContsHelper)
+        params[:q] = conts_helper.split_ransack_params(params[:q])
+      end
+
+      @cq = Cont.ransack(params[:q])
+      @conts = @cq.result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).paginate(page: params[:page], per_page: 50)
     end
 
-    @cq = Cont.ransack(params[:q])
-    @conts = @cq.result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).paginate(page: params[:page], per_page: 50)
-
-    respond_to do |format|
-      format.json # show.js.erb
-      format.html # show.html.erb
-    end
-
+    # respond_to do |format|
+    #   format.json # show.js.erb
+    #   format.html # show.html.erb
+    # end
   end
+
+
+  def followed
+    params[:bypass_cont_ids] = helpers.get_followed_cont_ids(nil)
+    redirect_to conts_path(params)
+  end
+
+  def hidden
+    params[:bypass_cont_ids] = helpers.get_hidden_cont_ids(nil)
+    redirect_to conts_path(params)
+  end
+
 
   def generate_csv
     if params[:q].present?

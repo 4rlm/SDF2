@@ -7,31 +7,47 @@ class WebsController < ApplicationController
   # GET /webs
   # GET /webs.json
   def index
-    # binding.pry
 
-    if params[:fav_hide_web_ids].present?
-      @webs = Web.where(id: [params[:fav_hide_web_ids]]).paginate(page: params[:page], per_page: 20)
+    if params[:bypass_web_ids]&.any?
+      @webs = Web.where(id: [params[:bypass_web_ids]]).paginate(page: params[:page], per_page: 20)
     else
       ## Splits 'cont_any' strings into array, if string and has ','
-      # if !params[:q].nil?
-      #   webs_helper = Object.new.extend(WebsHelper)
-      #   params[:q] = webs_helper.split_ransack_params(params[:q])
-      # end
+      if !params[:q].nil?
+        webs_helper = Object.new.extend(WebsHelper)
+        params[:q] = webs_helper.split_ransack_params(params[:q])
+      end
 
       @wq = Web.ransack(params[:q])
       @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)
     end
 
     # respond_to do |format|
-    #   format.json # show.js.erb
     #   format.html # show.html.erb
+    #   format.json # show.js.erb
     # end
-
   end
 
-  def master
-    index
-    binding.pry
+
+  def followed
+    params[:bypass_web_ids] = helpers.get_followed_web_ids(nil)
+    redirect_to webs_path(params)
+  end
+
+  def hidden
+    params[:bypass_web_ids] = helpers.get_hidden_web_ids(nil)
+    redirect_to webs_path(params)
+  end
+
+  def followed_acts
+    act_ids = helpers.get_followed_act_ids(nil)
+    params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+    redirect_to webs_path(params)
+  end
+
+  def hidden_acts
+    act_ids = helpers.get_hidden_act_ids(nil)
+    params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+    redirect_to webs_path(params)
   end
 
 

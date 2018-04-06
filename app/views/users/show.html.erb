@@ -55,12 +55,12 @@
         </thead>
         <tbody>
           <tr>
-            <td><%= link_to "View Followed: #{get_followed_act_ids_count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "View Followed: #{get_followed_act_ids_count}", followed_acts_webs_path(params), class: 'btn btn-primary btn-md' %></td>
             <td><%= link_to "UnFollow All: #{get_followed_act_ids_count}", unfollow_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
 
           <tr>
-            <td><%= link_to "View Hidden: #{get_hidden_act_ids_count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "View Hidden: #{get_hidden_act_ids_count}", hidden_acts_webs_path(params), class: 'btn btn-primary btn-md' %></td>
             <td><%= link_to "UnHide All: #{get_hidden_act_ids_count}", unhide_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
         </tbody>
@@ -76,12 +76,12 @@
         </thead>
         <tbody>
           <tr>
-            <td><%= link_to "View Followed: #{get_followed_cont_ids_count}", conts_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "View Followed: #{get_followed_cont_ids_count}", followed_conts_path(params), class: 'btn btn-primary btn-md' %></td>
             <td><%= link_to "UnFollow All: #{get_followed_cont_ids_count}", unfollow_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
 
           <tr>
-            <td><%= link_to "View Hidden: #{get_hidden_cont_ids_count}", conts_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "View Hidden: #{get_hidden_cont_ids_count}", hidden_conts_path(params), class: 'btn btn-primary btn-md' %></td>
             <td><%= link_to "UnHide All: #{get_hidden_cont_ids_count}", unhide_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
         </tbody>
@@ -97,12 +97,12 @@
         </thead>
         <tbody>
           <tr>
-            <td><%= link_to "View Followed: #{get_followed_web_ids_count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "View Followed: #{get_followed_web_ids_count}", followed_webs_path(params), class: 'btn btn-primary btn-md' %></td>
             <td><%= link_to "UnFollow All: #{get_followed_web_ids_count}", unfollow_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
 
           <tr>
-            <td><%= link_to "View Hidden: #{get_hidden_web_ids_count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "View Hidden: #{get_hidden_web_ids_count}", hidden_webs_path(params), class: 'btn btn-primary btn-md' %></td>
             <td><%= link_to "UnHide All: #{get_hidden_web_ids_count}", unhide_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
         </tbody>
