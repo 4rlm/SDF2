@@ -25,14 +25,32 @@ Rails.application.routes.draw do
     end
   end
 
-  # resources :activities do
-  #   collection do
-  #     match 'toggle_fav' => 'activities#toggle_fav', via: [:get, :post], as: :toggle_fav
-  #     match 'toggle_hide' => 'activities#toggle_hide', via: [:get, :post], as: :toggle_hide
-  #     match 'toggle_sts' => 'activities#toggle_sts', via: [:get, :post], as: :toggle_sts
-  #   end
-  # end
-  # get :toggle_sts, to: 'activities#toggle_sts'
+  resources :act_activities do
+    collection do
+      match 'follow_all' => 'act_activities#follow_all', via: [:get, :post], as: :follow_all
+      match 'unfollow_all' => 'act_activities#unfollow_all', via: [:get, :post], as: :unfollow_all
+      match 'hide_all' => 'act_activities#hide_all', via: [:get, :post], as: :hide_all
+      match 'unhide_all' => 'act_activities#unhide_all', via: [:get, :post], as: :unhide_all
+    end
+  end
+
+  resources :cont_activities do
+    collection do
+      match 'follow_all' => 'cont_activities#follow_all', via: [:get, :post], as: :follow_all
+      match 'unfollow_all' => 'cont_activities#unfollow_all', via: [:get, :post], as: :unfollow_all
+      match 'hide_all' => 'cont_activities#hide_all', via: [:get, :post], as: :hide_all
+      match 'unhide_all' => 'cont_activities#unhide_all', via: [:get, :post], as: :unhide_all
+    end
+  end
+
+  resources :web_activities do
+    collection do
+      match 'follow_all' => 'web_activities#follow_all', via: [:get, :post], as: :follow_all
+      match 'unfollow_all' => 'web_activities#unfollow_all', via: [:get, :post], as: :unfollow_all
+      match 'hide_all' => 'web_activities#hide_all', via: [:get, :post], as: :hide_all
+      match 'unhide_all' => 'web_activities#unhide_all', via: [:get, :post], as: :unhide_all
+    end
+  end
 
   resources :acts, :terms, :links, :activities, :act_activities, :cont_activities, :web_activities
 end

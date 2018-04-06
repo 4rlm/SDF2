@@ -7,6 +7,61 @@ class WebActivitiesController < ApplicationController
     @web_activities = WebActivity.all
   end
 
+  def send_master
+    respond_to do |format|
+      format.js { render :update_toggle_fav, status: :ok, location: @web_activity }
+    end
+  end
+
+  def follow_all
+    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], fav_sts: false).each do |web_activity|
+      web_activity.update(fav_sts: true)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+  end
+
+  def unfollow_all
+    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], fav_sts: true).each do |web_activity|
+      web_activity.update(fav_sts: false)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+  end
+
+  def hide_all
+    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], hide_sts: false).each do |web_activity|
+      web_activity.update(hide_sts: true)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+  end
+
+  def unhide_all
+    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], hide_sts: true).each do |web_activity|
+      web_activity.update(hide_sts: false)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+  end
+
+
   # GET /web_activities/1
   # GET /web_activities/1.json
   def show
@@ -37,25 +92,13 @@ class WebActivitiesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /web_activities/1
-  # PATCH/PUT /web_activities/1.json
-  # def update
-  #   respond_to do |format|
-  #     if @web_activity.update(web_activity_params)
-  #       format.html { redirect_to @web_activity, notice: 'Web web_activity was successfully updated.' }
-  #       format.json { render :show, status: :ok, location: @web_activity }
-  #     else
-  #       format.html { render :edit }
-  #       format.json { render json: @web_activity.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
 
   def update
-    # binding.pry
+    binding.pry
     if @web_activity.update(web_activity_params)
       respond_to do |format|
         if params[:web_activity][:form_id] == 'toggle_fav_form'
+          binding.pry
           format.js { render :update_toggle_fav, status: :ok, location: @web_activity }
         elsif params[:web_activity][:form_id] == 'toggle_hide_form'
           format.js { render :update_toggle_hide, status: :ok, location: @web_activity }

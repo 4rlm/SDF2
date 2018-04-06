@@ -1,0 +1,5 @@
+<%= form_with(model: @web_activities) do |f| %>
+  <%= f.hidden_field :form_id, value: 'favs_form' %>
+  <%= f.hidden_field :fav_sts, value: false %>
+  <%= f.submit "Follow", class: "btn btn-sm btn-primary" %>
+<% end %>

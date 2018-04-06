@@ -7,6 +7,56 @@ class ActActivitiesController < ApplicationController
     @act_activities = ActActivity.all
   end
 
+  def follow_all
+    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], fav_sts: false).each do |act_activity|
+      act_activity.update(fav_sts: true)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+
+  end
+
+  def unfollow_all
+    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], fav_sts: true).each do |act_activity|
+      act_activity.update(fav_sts: false)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+  end
+
+  def hide_all
+    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], hide_sts: false).each do |act_activity|
+      act_activity.update(hide_sts: true)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+  end
+
+  def unhide_all
+    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], hide_sts: true).each do |act_activity|
+      act_activity.update(hide_sts: false)
+    end
+
+    if params['source_path'] == 'webs_path'
+      redirect_to webs_path
+    else
+      redirect_to conts_path
+    end
+  end
+
+
   # GET /act_activities/1
   # GET /act_activities/1.json
   def show
