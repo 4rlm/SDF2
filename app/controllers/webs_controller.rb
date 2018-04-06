@@ -7,7 +7,7 @@ class WebsController < ApplicationController
   # GET /webs
   # GET /webs.json
   def index
-    binding.pry
+    # binding.pry
 
     if params[:fav_hide_web_ids].present?
       @webs = Web.where(id: [params[:fav_hide_web_ids]]).paginate(page: params[:page], per_page: 20)

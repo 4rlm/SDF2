@@ -18,6 +18,35 @@ module ApplicationHelper
 
 
 
+  ## GET ACT IDS
+  def get_followed_act_ids(act_ids)
+    act_ids = current_user.act_activities.where(fav_sts: true).map(&:act_id) unless act_ids.present?
+  end
+
+  def get_hidden_act_ids(act_ids)
+    act_ids = current_user.act_activities.where(hide_sts: true).map(&:act_id) unless act_ids.present?
+  end
+
+  ## GET CONT IDS
+  def get_followed_cont_ids(cont_ids)
+    cont_ids = current_user.cont_activities.where(fav_sts: true).map(&:cont_id) unless cont_ids.present?
+  end
+
+  def get_hidden_cont_ids(cont_ids)
+    cont_ids = current_user.cont_activities.where(hide_sts: true).map(&:cont_id) unless cont_ids.present?
+  end
+
+  ## GET WEB IDS
+  def get_followed_web_ids(web_ids)
+    web_ids = current_user.web_activities.where(fav_sts: true).map(&:web_id) unless web_ids.present?
+  end
+
+  def get_hidden_web_ids(web_ids)
+    web_ids = current_user.web_activities.where(hide_sts: true).map(&:web_id) unless web_ids.present?
+  end
+
+
+
 
   def switch_act_fav_hide(act_ids, sts_type, sts)
     ActActivity.where(user_id: current_user.id, act_id: [act_ids]).each do |activity|

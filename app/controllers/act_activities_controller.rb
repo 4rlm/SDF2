@@ -15,7 +15,7 @@ class ActActivitiesController < ApplicationController
   end
 
   def unfollow_all
-    params[:followed_act_ids].present? ? act_ids = params[:followed_act_ids] : act_ids = params[:act_ids]
+    act_ids = helpers.get_followed_act_ids(params[:act_ids])
     helpers.switch_act_fav_hide(act_ids, 'fav_sts', false)
     after_fav_hide_switch
   end
@@ -26,7 +26,7 @@ class ActActivitiesController < ApplicationController
   end
 
   def unhide_all
-    params[:hidden_act_ids].present? ? act_ids = params[:hidden_act_ids] : act_ids = params[:act_ids]
+    act_ids = helpers.get_hidden_act_ids(params[:act_ids])
     helpers.switch_act_fav_hide(act_ids, 'hide_sts', false)
     after_fav_hide_switch
   end

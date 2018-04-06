@@ -15,7 +15,7 @@ class ContActivitiesController < ApplicationController
   end
 
   def unfollow_all
-    params[:followed_cont_ids].present? ? cont_ids = params[:followed_cont_ids] : cont_ids = params[:cont_ids]
+    cont_ids = helpers.get_followed_cont_ids(params[:cont_ids])
     helpers.switch_cont_fav_hide(cont_ids, 'fav_sts', false)
     after_fav_hide_switch
   end
@@ -26,7 +26,7 @@ class ContActivitiesController < ApplicationController
   end
 
   def unhide_all
-    params[:hidden_cont_ids].present? ? cont_ids = params[:hidden_cont_ids] : cont_ids = params[:cont_ids]
+    cont_ids = helpers.get_hidden_cont_ids(params[:cont_ids])
     helpers.switch_cont_fav_hide(cont_ids, 'hide_sts', false)
     after_fav_hide_switch
   end

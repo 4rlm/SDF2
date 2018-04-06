@@ -20,7 +20,7 @@ class WebActivitiesController < ApplicationController
   end
 
   def unfollow_all
-    params[:followed_web_ids].present? ? web_ids = params[:followed_web_ids] : web_ids = params[:web_ids]
+    web_ids = helpers.get_followed_web_ids(params[:web_ids])
     helpers.switch_web_fav_hide(web_ids, 'fav_sts', false)
     after_fav_hide_switch
   end
@@ -31,7 +31,7 @@ class WebActivitiesController < ApplicationController
   end
 
   def unhide_all
-    params[:hidden_web_ids].present? ? web_ids = params[:hidden_web_ids] : web_ids = params[:web_ids]
+    web_ids = helpers.get_hidden_web_ids(params[:web_ids])
     helpers.switch_web_fav_hide(web_ids, 'hide_sts', false)
     after_fav_hide_switch
   end

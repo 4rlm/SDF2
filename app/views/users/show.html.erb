@@ -38,6 +38,13 @@
   <div class="row">
 
     <div class="col-md-4">
+      <% get_followed_act_ids_count = get_followed_act_ids(nil)&.count %>
+      <% get_hidden_act_ids_count = get_hidden_act_ids(nil)&.count %>
+      <% get_followed_cont_ids_count = get_followed_cont_ids(nil)&.count %>
+      <% get_hidden_cont_ids_count = get_hidden_cont_ids(nil)&.count %>
+      <% get_followed_web_ids_count = get_followed_web_ids(nil)&.count %>
+      <% get_hidden_web_ids_count = get_hidden_web_ids(nil)&.count %>
+      <% params[:source_path] = 'user_path' %>
 
       <!-- Followed & Hidden Acts -->
       <table class="table">
@@ -47,20 +54,14 @@
           </tr>
         </thead>
         <tbody>
-          <% followed_act_activities = @user.act_activities.where(fav_sts: true) %>
-          <% hidden_act_activities = @user.act_activities.where(hide_sts: true) %>
-          <% params[:followed_act_ids] = followed_act_activities.map(&:act_id) %>
-          <% params[:hidden_act_ids] = hidden_act_activities.map(&:act_id) %>
-          <% params[:source_path] = 'user_path' %>
-
           <tr>
-            <td><%= link_to "View Followed: #{followed_act_activities.count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
-            <td><%= link_to "UnFollow All: #{followed_act_activities.count}", unfollow_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
+            <td><%= link_to "View Followed: #{get_followed_act_ids_count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "UnFollow All: #{get_followed_act_ids_count}", unfollow_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
 
           <tr>
-            <td><%= link_to "View Hidden: #{hidden_act_activities.count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
-            <td><%= link_to "UnHide All: #{hidden_act_activities.count}", unhide_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
+            <td><%= link_to "View Hidden: #{get_hidden_act_ids_count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "UnHide All: #{get_hidden_act_ids_count}", unhide_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
         </tbody>
       </table>
@@ -74,20 +75,14 @@
           </tr>
         </thead>
         <tbody>
-          <% followed_cont_activities = @user.cont_activities.where(fav_sts: true) %>
-          <% hidden_cont_activities = @user.cont_activities.where(hide_sts: true) %>
-          <% params[:followed_cont_ids] = followed_cont_activities.map(&:cont_id) %>
-          <% params[:hidden_cont_ids] = hidden_cont_activities.map(&:cont_id) %>
-          <% params[:source_path] = 'user_path' %>
-
           <tr>
-            <td><%= link_to "View Followed: #{followed_cont_activities.count}", conts_path(params), class: 'btn btn-primary btn-md' %></td>
-            <td><%= link_to "UnFollow All: #{followed_cont_activities.count}", unfollow_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
+            <td><%= link_to "View Followed: #{get_followed_cont_ids_count}", conts_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "UnFollow All: #{get_followed_cont_ids_count}", unfollow_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
 
           <tr>
-            <td><%= link_to "View Hidden: #{hidden_cont_activities.count}", conts_path(params), class: 'btn btn-danger btn-md' %></td>
-            <td><%= link_to "UnHide All: #{hidden_cont_activities.count}", unhide_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
+            <td><%= link_to "View Hidden: #{get_hidden_cont_ids_count}", conts_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "UnHide All: #{get_hidden_cont_ids_count}", unhide_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
         </tbody>
       </table>
@@ -101,20 +96,14 @@
           </tr>
         </thead>
         <tbody>
-          <% followed_web_activities = @user.web_activities.where(fav_sts: true) %>
-          <% hidden_web_activities = @user.web_activities.where(hide_sts: true) %>
-          <% params[:followed_web_ids] = followed_web_activities.map(&:web_id) %>
-          <% params[:hidden_web_ids] = hidden_web_activities.map(&:web_id) %>
-          <% params[:source_path] = 'user_path' %>
-
           <tr>
-            <td><%= link_to "View Followed: #{followed_web_activities.count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
-            <td><%= link_to "UnFollow All: #{followed_web_activities.count}", unfollow_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
+            <td><%= link_to "View Followed: #{get_followed_web_ids_count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "UnFollow All: #{get_followed_web_ids_count}", unfollow_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
 
           <tr>
-            <td><%= link_to "View Hidden: #{hidden_web_activities.count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
-            <td><%= link_to "UnHide All: #{hidden_web_activities.count}", unhide_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
+            <td><%= link_to "View Hidden: #{get_hidden_web_ids_count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "UnHide All: #{get_hidden_web_ids_count}", unhide_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
         </tbody>
       </table>
