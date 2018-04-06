@@ -25,8 +25,8 @@ class ContsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      ContCsvTool.new(params, current_user).delay.start_cont_web_csv_and_log
-      # ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
+      # ContCsvTool.new(params, current_user).delay.start_cont_web_csv_and_log
+      ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
       params['action'] = 'index'
       redirect_to conts_path(params)
     end

@@ -8,27 +8,36 @@ class WebsController < ApplicationController
   # GET /webs.json
   def index
 
-    ## Splits 'cont_any' strings into array, if string and has ','
-    # if !params[:q].nil?
-    #   webs_helper = Object.new.extend(WebsHelper)
-    #   params[:q] = webs_helper.split_ransack_params(params[:q])
-    # end
+    if params[:fav_hide_web_ids].present?
+      @webs = Web.where(id: [params[:fav_hide_web_ids]]).paginate(page: params[:page], per_page: 20)
+    else
+      ## Splits 'cont_any' strings into array, if string and has ','
+      # if !params[:q].nil?
+      #   webs_helper = Object.new.extend(WebsHelper)
+      #   params[:q] = webs_helper.split_ransack_params(params[:q])
+      # end
 
-    @wq = Web.ransack(params[:q])
-    @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)
-
-    respond_to do |format|
-      format.json # show.js.erb
-      format.html # show.html.erb
+      @wq = Web.ransack(params[:q])
+      @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)
     end
 
+    # respond_to do |format|
+    #   format.json # show.js.erb
+    #   format.html # show.html.erb
+    # end
+
+  end
+
+  def master
+    index
+    binding.pry
   end
 
 
   def generate_csv
     if params[:q].present?
-      WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
-      # WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
+      # WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
+      WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
       params['action'] = 'index'
       redirect_to webs_path(params)
     end

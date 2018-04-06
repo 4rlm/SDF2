@@ -52,5 +52,11 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :webs do
+    collection do
+      match 'master' => 'webs#master', via: [:get, :post], as: :master
+    end
+  end
+
   resources :acts, :terms, :links, :activities, :act_activities, :cont_activities, :web_activities
 end
