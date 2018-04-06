@@ -93,9 +93,15 @@
 
             <!-- <td><%#= link_to web_activities_fav_true.count, master_webs_path %></td> -->
             <% params[:fav_hide_web_ids] = web_ids %>
-            <td><%= link_to 'Web Favs', webs_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "View #{web_activities_fav_true.count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
 
             <td><%= web_activities_hide_true.count %></td>
+
+
+            <% params[:web_ids] = web_ids %>
+            <% params[:source_path] = 'user_path' %>
+            <%= link_to "UnFollow All Webs", unfollow_all_web_activities_path(params), class: 'btn btn-default btn-md' %>
+            <%= link_to "UnHide All Webs", unhide_all_web_activities_path(params), class: 'btn btn-default btn-md' %>
           </tr>
         </tbody>
       </table>

@@ -14,9 +14,7 @@ class WebActivitiesController < ApplicationController
   end
 
   def follow_all
-    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], fav_sts: false).each do |web_activity|
-      web_activity.update(fav_sts: true)
-    end
+    helpers.switch_web_fav_hide([params[:web_ids]], 'fav_sts', true)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -26,21 +24,19 @@ class WebActivitiesController < ApplicationController
   end
 
   def unfollow_all
-    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], fav_sts: true).each do |web_activity|
-      web_activity.update(fav_sts: false)
-    end
+    helpers.switch_web_fav_hide([params[:web_ids]], 'fav_sts', false)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
+    elsif params['source_path'] == 'user_path'
+      redirect_to current_user
     else
       redirect_to conts_path
     end
   end
 
   def hide_all
-    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], hide_sts: false).each do |web_activity|
-      web_activity.update(hide_sts: true)
-    end
+    helpers.switch_web_fav_hide([params[:web_ids]], 'hide_sts', true)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -50,12 +46,12 @@ class WebActivitiesController < ApplicationController
   end
 
   def unhide_all
-    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]], hide_sts: true).each do |web_activity|
-      web_activity.update(hide_sts: false)
-    end
+    helpers.switch_web_fav_hide([params[:web_ids]], 'hide_sts', false)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
+    elsif params['source_path'] == 'user_path'
+      redirect_to current_user
     else
       redirect_to conts_path
     end

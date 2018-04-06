@@ -8,9 +8,7 @@ class ContActivitiesController < ApplicationController
   end
 
   def follow_all
-    ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]], fav_sts: false).each do |cont_activity|
-      cont_activity.update(fav_sts: true)
-    end
+    helpers.switch_cont_fav_hide([params[:cont_ids]], 'fav_sts', false)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -20,9 +18,7 @@ class ContActivitiesController < ApplicationController
   end
 
   def unfollow_all
-    ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]], fav_sts: true).each do |cont_activity|
-      cont_activity.update(fav_sts: false)
-    end
+    helpers.switch_cont_fav_hide([params[:cont_ids]], 'hide_sts', true)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -32,9 +28,7 @@ class ContActivitiesController < ApplicationController
   end
 
   def hide_all
-    ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]], hide_sts: false).each do |cont_activity|
-      cont_activity.update(hide_sts: true)
-    end
+    helpers.switch_cont_fav_hide([params[:cont_ids]], 'hide_sts', false)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -44,9 +38,7 @@ class ContActivitiesController < ApplicationController
   end
 
   def unhide_all
-    ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]], hide_sts: true).each do |cont_activity|
-      cont_activity.update(hide_sts: false)
-    end
+    helpers.switch_cont_fav_hide([params[:cont_ids]], 'fav_sts', true)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path

@@ -8,9 +8,7 @@ class ActActivitiesController < ApplicationController
   end
 
   def follow_all
-    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], fav_sts: false).each do |act_activity|
-      act_activity.update(fav_sts: true)
-    end
+    helpers.switch_act_fav_hide([params[:act_ids]], 'fav_sts', true)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -21,9 +19,7 @@ class ActActivitiesController < ApplicationController
   end
 
   def unfollow_all
-    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], fav_sts: true).each do |act_activity|
-      act_activity.update(fav_sts: false)
-    end
+    helpers.switch_act_fav_hide([params[:act_ids]], 'fav_sts', false)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -33,9 +29,7 @@ class ActActivitiesController < ApplicationController
   end
 
   def hide_all
-    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], hide_sts: false).each do |act_activity|
-      act_activity.update(hide_sts: true)
-    end
+    helpers.switch_act_fav_hide([params[:act_ids]], 'hide_sts', true)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
@@ -45,9 +39,7 @@ class ActActivitiesController < ApplicationController
   end
 
   def unhide_all
-    ActActivity.where(user_id: current_user.id, act_id: [params[:act_ids]], hide_sts: true).each do |act_activity|
-      act_activity.update(hide_sts: false)
-    end
+    helpers.switch_act_fav_hide([params[:act_ids]], 'hide_sts', false)
 
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
