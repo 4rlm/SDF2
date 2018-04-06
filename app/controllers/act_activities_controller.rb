@@ -7,46 +7,42 @@ class ActActivitiesController < ApplicationController
     @act_activities = ActActivity.all
   end
 
+
+
   def follow_all
     helpers.switch_act_fav_hide([params[:act_ids]], 'fav_sts', true)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
-
+    after_fav_hide_switch
   end
 
   def unfollow_all
-    helpers.switch_act_fav_hide([params[:act_ids]], 'fav_sts', false)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
+    params[:followed_act_ids].present? ? act_ids = params[:followed_act_ids] : act_ids = params[:act_ids]
+    helpers.switch_act_fav_hide(act_ids, 'fav_sts', false)
+    after_fav_hide_switch
   end
 
   def hide_all
     helpers.switch_act_fav_hide([params[:act_ids]], 'hide_sts', true)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
+    after_fav_hide_switch
   end
 
   def unhide_all
-    helpers.switch_act_fav_hide([params[:act_ids]], 'hide_sts', false)
+    params[:hidden_act_ids].present? ? act_ids = params[:hidden_act_ids] : act_ids = params[:act_ids]
+    helpers.switch_act_fav_hide(act_ids, 'hide_sts', false)
+    after_fav_hide_switch
+  end
 
+
+  def after_fav_hide_switch
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
-    else
+    elsif params['source_path'] == 'user_path'
+      redirect_to current_user
+    elsif params['source_path'] == 'conts_path'
       redirect_to conts_path
     end
   end
+
+
 
 
   # GET /act_activities/1

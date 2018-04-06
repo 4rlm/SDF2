@@ -7,52 +7,41 @@ class WebActivitiesController < ApplicationController
     @web_activities = WebActivity.all
   end
 
-  def send_master
-    respond_to do |format|
-      format.js { render :update_toggle_fav, status: :ok, location: @web_activity }
-    end
-  end
+  # def send_master
+  #   respond_to do |format|
+  #     format.js { render :update_toggle_fav, status: :ok, location: @web_activity }
+  #   end
+  # end
+
 
   def follow_all
     helpers.switch_web_fav_hide([params[:web_ids]], 'fav_sts', true)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
+    after_fav_hide_switch
   end
 
   def unfollow_all
-    helpers.switch_web_fav_hide([params[:web_ids]], 'fav_sts', false)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    elsif params['source_path'] == 'user_path'
-      redirect_to current_user
-    else
-      redirect_to conts_path
-    end
+    params[:followed_web_ids].present? ? web_ids = params[:followed_web_ids] : web_ids = params[:web_ids]
+    helpers.switch_web_fav_hide(web_ids, 'fav_sts', false)
+    after_fav_hide_switch
   end
 
   def hide_all
     helpers.switch_web_fav_hide([params[:web_ids]], 'hide_sts', true)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
+    after_fav_hide_switch
   end
 
   def unhide_all
-    helpers.switch_web_fav_hide([params[:web_ids]], 'hide_sts', false)
+    params[:hidden_web_ids].present? ? web_ids = params[:hidden_web_ids] : web_ids = params[:web_ids]
+    helpers.switch_web_fav_hide(web_ids, 'hide_sts', false)
+    after_fav_hide_switch
+  end
 
+  def after_fav_hide_switch
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
     elsif params['source_path'] == 'user_path'
       redirect_to current_user
-    else
+    elsif params['source_path'] == 'conts_path'
       redirect_to conts_path
     end
   end

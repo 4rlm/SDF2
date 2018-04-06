@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def switch_cont_fav_hide(cont_ids, sts_type, sts)
-    ContActivity.where(user_id: current_user.id, web_id: [cont_ids]).each do |activity|
+    ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).each do |activity|
       activity.update("#{sts_type}": sts)
     end
   end

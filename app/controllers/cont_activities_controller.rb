@@ -7,45 +7,41 @@ class ContActivitiesController < ApplicationController
     @cont_activities = ContActivity.all
   end
 
-  def follow_all
-    helpers.switch_cont_fav_hide([params[:cont_ids]], 'fav_sts', false)
 
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
+
+  def follow_all
+    helpers.switch_cont_fav_hide([params[:cont_ids]], 'fav_sts', true)
+    after_fav_hide_switch
   end
 
   def unfollow_all
-    helpers.switch_cont_fav_hide([params[:cont_ids]], 'hide_sts', true)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
+    params[:followed_cont_ids].present? ? cont_ids = params[:followed_cont_ids] : cont_ids = params[:cont_ids]
+    helpers.switch_cont_fav_hide(cont_ids, 'fav_sts', false)
+    after_fav_hide_switch
   end
 
   def hide_all
-    helpers.switch_cont_fav_hide([params[:cont_ids]], 'hide_sts', false)
-
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    else
-      redirect_to conts_path
-    end
+    helpers.switch_cont_fav_hide([params[:cont_ids]], 'hide_sts', true)
+    after_fav_hide_switch
   end
 
   def unhide_all
-    helpers.switch_cont_fav_hide([params[:cont_ids]], 'fav_sts', true)
+    params[:hidden_cont_ids].present? ? cont_ids = params[:hidden_cont_ids] : cont_ids = params[:cont_ids]
+    helpers.switch_cont_fav_hide(cont_ids, 'hide_sts', false)
+    after_fav_hide_switch
+  end
 
+  def after_fav_hide_switch
     if params['source_path'] == 'webs_path'
       redirect_to webs_path
-    else
+    elsif params['source_path'] == 'user_path'
+      redirect_to current_user
+    elsif params['source_path'] == 'conts_path'
       redirect_to conts_path
     end
   end
+
+
 
 
   # GET /cont_activities/1

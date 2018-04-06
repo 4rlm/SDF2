@@ -38,74 +38,100 @@
   <div class="row">
 
     <div class="col-md-4">
+
+      <!-- Followed & Hidden Acts -->
       <table class="table">
         <thead>
           <tr>
-            <th>Acts Followed</th>
-            <th>Acts Hidden</th>
+            <th colspan="2" class="text-center">Followed & Hidden Acts</th>
           </tr>
         </thead>
         <tbody>
+          <% followed_act_activities = @user.act_activities.where(fav_sts: true) %>
+          <% hidden_act_activities = @user.act_activities.where(hide_sts: true) %>
+          <% params[:followed_act_ids] = followed_act_activities.map(&:act_id) %>
+          <% params[:hidden_act_ids] = hidden_act_activities.map(&:act_id) %>
+          <% params[:source_path] = 'user_path' %>
+
           <tr>
-            <% act_activities_fav_true = @user.act_activities.where(fav_sts: true) %>
-            <% act_activities_hide_true = @user.act_activities.where(hide_sts: true) %>
-            <td><%= act_activities_fav_true.count %></td>
-            <td><%= act_activities_hide_true.count %></td>
+            <td><%= link_to "View Followed: #{followed_act_activities.count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "UnFollow All: #{followed_act_activities.count}", unfollow_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
+          </tr>
+
+          <tr>
+            <td><%= link_to "View Hidden: #{hidden_act_activities.count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "UnHide All: #{hidden_act_activities.count}", unhide_all_act_activities_path(params), class: 'btn btn-default btn-md' %></td>
           </tr>
         </tbody>
       </table>
+
+
+      <!-- Followed & Hidden Conts -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="2" class="text-center">Followed & Hidden Conts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% followed_cont_activities = @user.cont_activities.where(fav_sts: true) %>
+          <% hidden_cont_activities = @user.cont_activities.where(hide_sts: true) %>
+          <% params[:followed_cont_ids] = followed_cont_activities.map(&:cont_id) %>
+          <% params[:hidden_cont_ids] = hidden_cont_activities.map(&:cont_id) %>
+          <% params[:source_path] = 'user_path' %>
+
+          <tr>
+            <td><%= link_to "View Followed: #{followed_cont_activities.count}", conts_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "UnFollow All: #{followed_cont_activities.count}", unfollow_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
+          </tr>
+
+          <tr>
+            <td><%= link_to "View Hidden: #{hidden_cont_activities.count}", conts_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "UnHide All: #{hidden_cont_activities.count}", unhide_all_cont_activities_path(params), class: 'btn btn-default btn-md' %></td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <!-- Followed & Hidden Webs -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="2" class="text-center">Followed & Hidden Webs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% followed_web_activities = @user.web_activities.where(fav_sts: true) %>
+          <% hidden_web_activities = @user.web_activities.where(hide_sts: true) %>
+          <% params[:followed_web_ids] = followed_web_activities.map(&:web_id) %>
+          <% params[:hidden_web_ids] = hidden_web_activities.map(&:web_id) %>
+          <% params[:source_path] = 'user_path' %>
+
+          <tr>
+            <td><%= link_to "View Followed: #{followed_web_activities.count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
+            <td><%= link_to "UnFollow All: #{followed_web_activities.count}", unfollow_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
+          </tr>
+
+          <tr>
+            <td><%= link_to "View Hidden: #{hidden_web_activities.count}", webs_path(params), class: 'btn btn-danger btn-md' %></td>
+            <td><%= link_to "UnHide All: #{hidden_web_activities.count}", unhide_all_web_activities_path(params), class: 'btn btn-default btn-md' %></td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
+
 
     <div class="col-md-4">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Conts Followed</th>
-            <th>Conts Hidden</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <% cont_activities_fav_true = @user.cont_activities.where(fav_sts: true) %>
-            <% cont_activities_hide_true = @user.cont_activities.where(hide_sts: true) %>
-            <td><%= cont_activities_fav_true.count %></td>
-            <td><%= cont_activities_hide_true.count %></td>
-          </tr>
-        </tbody>
-      </table>
     </div>
+
+
 
     <div class="col-md-4">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Webs Followed</th>
-            <th>Webs Hidden</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <% web_activities_fav_true = @user.web_activities.where(fav_sts: true) %>
-            <% web_activities_hide_true = @user.web_activities.where(hide_sts: true) %>
-
-            <% web_ids = web_activities_fav_true.map(&:web_id) %>
-            <% @webs = Web.where(id: [web_ids]) %>
-
-            <!-- <td><%#= link_to web_activities_fav_true.count, master_webs_path %></td> -->
-            <% params[:fav_hide_web_ids] = web_ids %>
-            <td><%= link_to "View #{web_activities_fav_true.count}", webs_path(params), class: 'btn btn-primary btn-md' %></td>
-
-            <td><%= web_activities_hide_true.count %></td>
-
-
-            <% params[:web_ids] = web_ids %>
-            <% params[:source_path] = 'user_path' %>
-            <%= link_to "UnFollow All Webs", unfollow_all_web_activities_path(params), class: 'btn btn-default btn-md' %>
-            <%= link_to "UnHide All Webs", unhide_all_web_activities_path(params), class: 'btn btn-default btn-md' %>
-          </tr>
-        </tbody>
-      </table>
     </div>
+
+
+
 
   </div>
 </div>
