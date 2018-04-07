@@ -21,34 +21,6 @@
 </div>
 
 
-
-<div class="row">
-  <div class="col-md-6">
-    <% params[:cont_ids] = @conts.map(&:id) %>
-    <% params[:source_path] = 'conts_path' %>
-
-    <%= link_to "Follow All Conts", follow_all_cont_activities_path(params), class: 'btn btn-primary btn-md' %>
-    <%= link_to "UnFollow All Conts", unfollow_all_cont_activities_path(params), class: 'btn btn-default btn-md' %>
-    <%= link_to "Hide All Conts", hide_all_cont_activities_path(params), class: 'btn btn-danger btn-md' %>
-    <%= link_to "UnHide All Conts", unhide_all_cont_activities_path(params), class: 'btn btn-default btn-md' %>
-  </div>
-
-  <div class="col-md-6">
-    <% params[:act_ids] = @conts.map {|cont| cont.acts.map(&:id)}.flatten.uniq %>
-    <% params[:source_path] = 'conts_path' %>
-
-    <%= link_to "Follow All Acts", follow_all_act_activities_path(params), class: 'btn btn-primary btn-md' %>
-    <%= link_to "UnFollow All Acts", unfollow_all_act_activities_path(params), class: 'btn btn-default btn-md' %>
-    <%= link_to "Hide All Acts", hide_all_act_activities_path(params), class: 'btn btn-danger btn-md' %>
-    <%= link_to "UnHide All Acts", unhide_all_act_activities_path(params), class: 'btn btn-default btn-md' %>
-  </div>
-</div>
-
-
-
-
-
-
 <div class="row">
   <% @conts&.each_with_index do |cont, index| %>
     <% if index.even? %>
