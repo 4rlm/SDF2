@@ -59,5 +59,14 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :acts, :terms, :links, :activities, :act_activities, :cont_activities, :web_activities
+  resources :queries do
+    collection do
+      match 'follow_all' => 'queries#follow_all', via: [:get, :post], as: :follow_all
+      match 'unfollow_all' => 'queries#unfollow_all', via: [:get, :post], as: :unfollow_all
+      match 'hide_all' => 'queries#hide_all', via: [:get, :post], as: :hide_all
+      match 'unhide_all' => 'queries#unhide_all', via: [:get, :post], as: :unhide_all
+    end
+  end
+
+  resources :acts, :terms, :links, :activities, :act_activities, :cont_activities, :web_activities, :queries
 end

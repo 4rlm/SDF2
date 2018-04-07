@@ -7,32 +7,26 @@ class WebActivitiesController < ApplicationController
     @web_activities = WebActivity.all
   end
 
-  # def send_master
-  #   respond_to do |format|
-  #     format.js { render :update_toggle_fav, status: :ok, location: @web_activity }
-  #   end
-  # end
-
 
   def follow_all
-    helpers.switch_web_fav_hide([params[:web_ids]], 'fav_sts', true)
+    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(fav_sts: true)
     after_fav_hide_switch
   end
 
   def unfollow_all
     web_ids = helpers.get_followed_web_ids(params[:web_ids])
-    helpers.switch_web_fav_hide(web_ids, 'fav_sts', false)
+    WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(fav_sts: false)
     after_fav_hide_switch
   end
 
   def hide_all
-    helpers.switch_web_fav_hide([params[:web_ids]], 'hide_sts', true)
+    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(hide_sts: true)
     after_fav_hide_switch
   end
 
   def unhide_all
     web_ids = helpers.get_hidden_web_ids(params[:web_ids])
-    helpers.switch_web_fav_hide(web_ids, 'hide_sts', false)
+    WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(hide_sts: false)
     after_fav_hide_switch
   end
 

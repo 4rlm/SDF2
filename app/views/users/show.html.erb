@@ -109,21 +109,31 @@
     </div>
 
     <!-- Saved Searches -->
-    <div class="col-md-4">
+    <div class="col-md-8">
       <!-- Saved Account Searches -->
       <h6 class="text-center">Saved Account Searches</h6>
       <table class="table">
         <thead>
           <tr>
             <th>Search Name</th>
+            <th colspan="4">Actions</th>
             <th>Created</th>
           </tr>
         </thead>
         <tbody>
           <% web_queries = @user.queries.where(mod_name: 'Web').order("updated_at DESC") %>
           <% web_queries&.each do |web_query| %>
+            <% params[:query_id] = web_query.id %>
+
             <tr>
               <td><%= link_to web_query.q_name, search_webs_path({q: web_query.params['q']}) %></td>
+
+              <td><%= link_to "Follow All", follow_all_queries_path(params), class: 'btn btn-primary btn-md' %></td>
+              <td><%= link_to "UnFollow All", unfollow_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
+
+              <td><%= link_to "Hide All", hide_all_queries_path(params), class: 'btn btn-danger btn-md' %></td>
+              <td><%= link_to "UnHide All", unhide_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
+
               <td><%= web_query.created_at.strftime('%x') %></td>
             </tr>
           <% end %>
@@ -136,14 +146,24 @@
         <thead>
           <tr>
             <th>Search Name</th>
+            <th colspan="4">Actions</th>
             <th>Created</th>
           </tr>
         </thead>
         <tbody>
           <% cont_queries = @user.queries.where(mod_name: 'Cont').order("updated_at DESC") %>
           <% cont_queries&.each do |cont_query| %>
+            <% params[:query_id] = cont_query.id %>
+
             <tr>
               <td><%= link_to cont_query.q_name, search_conts_path({q: cont_query.params['q']}) %></td>
+
+              <td><%= link_to "Follow All", follow_all_queries_path(params), class: 'btn btn-primary btn-md' %></td>
+              <td><%= link_to "UnFollow All", unfollow_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
+
+              <td><%= link_to "Hide All", hide_all_queries_path(params), class: 'btn btn-danger btn-md' %></td>
+              <td><%= link_to "UnHide All", unhide_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
+
               <td><%= cont_query.created_at.strftime('%x') %></td>
             </tr>
           <% end %>
@@ -151,29 +171,38 @@
       </table>
     </div>
 
-    <!-- Exports -->
-    <div class="col-md-4">
-      <h6 class="text-center">Exports</h6>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>file_name</th>
-            <th>export_date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% exports = @user.exports %>
-          <% exports.each do |export| %>
-          <tr>
-            <td><%= export.file_name %></td>
-            <td><%= export.export_date.strftime('%x') %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+</div>
 
+
+<!-- Exports -->
+<div class="panel">
+  <div class="row">
+
+      <!-- Exports -->
+      <div class="col-md-4">
+        <h6 class="text-center">Exports</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>file_name</th>
+              <th>export_date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% exports = @user.exports %>
+            <% exports.each do |export| %>
+            <tr>
+              <td><%= export.file_name %></td>
+              <td><%= export.export_date.strftime('%x') %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
   </div>
+
 </div>
 
 
