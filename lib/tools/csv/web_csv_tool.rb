@@ -19,6 +19,7 @@ class WebCsvTool
   def save_web_queries(q_name)
     query = @user.queries.find_or_initialize_by(mod_name: 'Web', q_name: q_name)
     query.params = @params
+    query.row_count = @webs.count
     query.save
   end
 

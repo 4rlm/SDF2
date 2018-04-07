@@ -5,6 +5,7 @@ class CreateQueries < ActiveRecord::Migration[5.1]
       t.references :user, index: true, null: false
       t.string :q_name, index: true, null: false
       t.string :mod_name, index: true, null: false
+      t.integer :row_count
       t.jsonb :params, null: false, default: '{}'
 
       t.timestamps

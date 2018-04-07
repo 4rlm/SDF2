@@ -226,6 +226,8 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
   $ rails g migration add_hide_sts_to_conts hide_sts:string
   $ rails g migration add_hide_sts_to_activities hide_sts:string
 
+  $ rails g migration add_row_count_to_queries row_count:integer
+
 
 --ADD INDEX
   $ rails g migration add_index_to_web_activities

@@ -111,64 +111,59 @@
     <!-- Saved Searches -->
     <div class="col-md-8">
       <!-- Saved Account Searches -->
-      <h6 class="text-center">Saved Account Searches</h6>
+      <!-- <h6 class="text-center">Saved Account Searches</h6> -->
       <table class="table">
         <thead>
           <tr>
+            <th>Category</th>
             <th>Search Name</th>
-            <th colspan="4">Actions</th>
+            <th>Size</th>
             <th>Created</th>
+            <th colspan="2" class="text-center">Follow</th>
+            <th colspan="2" class="text-center">Hide</th>
           </tr>
         </thead>
         <tbody>
-          <% web_queries = @user.queries.where(mod_name: 'Web').order("updated_at DESC") %>
-          <% web_queries&.each do |web_query| %>
-            <% params[:query_id] = web_query.id %>
 
-            <tr>
-              <td><%= link_to web_query.q_name, search_webs_path({q: web_query.params['q']}) %></td>
-
-              <td><%= link_to "Follow All", follow_all_queries_path(params), class: 'btn btn-primary btn-md' %></td>
-              <td><%= link_to "UnFollow All", unfollow_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
-
-              <td><%= link_to "Hide All", hide_all_queries_path(params), class: 'btn btn-danger btn-md' %></td>
-              <td><%= link_to "UnHide All", unhide_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
-
-              <td><%= web_query.created_at.strftime('%x') %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-
-      <!-- Saved Contact Searches -->
-      <h6 class="text-center">Saved Contact Searches</h6>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Search Name</th>
-            <th colspan="4">Actions</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody>
           <% cont_queries = @user.queries.where(mod_name: 'Cont').order("updated_at DESC") %>
           <% cont_queries&.each do |cont_query| %>
             <% params[:query_id] = cont_query.id %>
 
             <tr>
+              <td>Contacts</td>
               <td><%= link_to cont_query.q_name, search_conts_path({q: cont_query.params['q']}) %></td>
-
-              <td><%= link_to "Follow All", follow_all_queries_path(params), class: 'btn btn-primary btn-md' %></td>
-              <td><%= link_to "UnFollow All", unfollow_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
-
-              <td><%= link_to "Hide All", hide_all_queries_path(params), class: 'btn btn-danger btn-md' %></td>
-              <td><%= link_to "UnHide All", unhide_all_queries_path(params), class: 'btn btn-default btn-md' %></td>
-
+              <td><%= number_with_delimiter(cont_query.row_count, :delimiter => ',') %></td>
               <td><%= cont_query.created_at.strftime('%x') %></td>
+
+              <td><%= link_to "Follow", follow_all_queries_path(params), class: 'btn btn-primary btn-sm' %></td>
+              <td><%= link_to "UnFollow", unfollow_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
+              <td><%= link_to "Hide", hide_all_queries_path(params), class: 'btn btn-danger btn-sm' %></td>
+              <td><%= link_to "UnHide", unhide_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
             </tr>
           <% end %>
+
+
+          <% web_queries = @user.queries.where(mod_name: 'Web').order("updated_at DESC") %>
+          <% web_queries&.each do |web_query| %>
+            <% params[:query_id] = web_query.id %>
+
+            <tr>
+              <td>Websites</td>
+              <td><%= link_to web_query.q_name, search_webs_path({q: web_query.params['q']}) %></td>
+              <td><%= number_with_delimiter(web_query.row_count, :delimiter => ',') %></td>
+              <td><%= web_query.created_at.strftime('%x') %></td>
+
+              <td><%= link_to "Follow", follow_all_queries_path(params), class: 'btn btn-primary btn-sm' %></td>
+              <td><%= link_to "UnFollow", unfollow_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
+              <td><%= link_to "Hide", hide_all_queries_path(params), class: 'btn btn-danger btn-sm' %></td>
+              <td><%= link_to "UnHide", unhide_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
+
+            </tr>
+          <% end %>
+
         </tbody>
       </table>
+
     </div>
 
 </div>

@@ -19,6 +19,7 @@ class ContCsvTool
   def save_cont_queries(q_name)
     query = @user.queries.find_or_initialize_by(mod_name: 'Cont', q_name: q_name)
     query.params = @params
+    query.row_count = @conts.count
     query.save
   end
 

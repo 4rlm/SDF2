@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180404232112) do
+ActiveRecord::Schema.define(version: 20180407021858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(version: 20180404232112) do
     t.jsonb "params", default: "{}", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "row_count"
     t.index ["mod_name"], name: "index_queries_on_mod_name"
     t.index ["params"], name: "index_queries_on_params", using: :gin
     t.index ["q_name"], name: "index_queries_on_q_name"
