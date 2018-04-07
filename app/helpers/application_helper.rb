@@ -54,17 +54,17 @@ module ApplicationHelper
 
 
 
-  def switch_act_fav_hide(act_ids, sts_type, sts)
-    ActActivity.where(user_id: current_user.id, act_id: [act_ids]).each do |activity|
-      activity.update("#{sts_type}": sts)
-    end
-  end
+  # def switch_act_fav_hide(act_ids, sts_type, sts)
+  #   ActActivity.where(user_id: current_user.id, act_id: [act_ids]).each do |activity|
+  #     activity.update("#{sts_type}": sts)
+  #   end
+  # end
 
-  def switch_cont_fav_hide(cont_ids, sts_type, sts)
-    ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).each do |activity|
-      activity.update("#{sts_type}": sts)
-    end
-  end
+  # def switch_cont_fav_hide(cont_ids, sts_type, sts)
+  #   ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).each do |activity|
+  #     activity.update("#{sts_type}": sts)
+  #   end
+  # end
 
   # def switch_web_fav_hide(web_ids, sts_type, sts)
   #   WebActivity.where(user_id: current_user.id, web_id: [web_ids]).each do |activity|

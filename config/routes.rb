@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :tallies
   resources :users, :only => [:index, :show]
   resources :downloads, only: [:show]
   # resources :activities, only: [:toggle_sts]
