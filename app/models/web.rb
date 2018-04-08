@@ -36,11 +36,34 @@ class Web < ApplicationRecord
   scope :web_act_state, ->{ joins(:acts).merge(Act.where.not(state: nil)) }
   scope :web_act_gp_sts, ->{ joins(:acts).merge(Act.where.not(gp_sts: nil)) }
   scope :web_act_gp_indus, ->{ joins(:acts).merge(Act.where.not(gp_indus: nil)) }
-  # merged = Web.is_cop.merge(Web.is_franchise)
-  # scope :act_names, ->(ids_ary) { joins(:acts).where("locations.id" => ids_ary) }
-  # scope :unsent, -> { joins(:user).merge(User.unsent) }
-  # scope :sent, -> { joins(:user).merge(User.sent) }
-  # scope :accepted, -> { joins(:user).merge(User.accepted) }
-  # scope :containing_blog_keyword_with_id_greater_than, ->(id) { contains_blog_keyword.or(id_greater_than(id)) }
+
+  scope :created_between, lambda {|start_date, end_date| where("created_at >= ? AND created_at <= ?", start_date, end_date )}
+  scope :web_changed_between, lambda {|start_date, end_date| where("web_changed >= ? AND web_changed <= ?", start_date, end_date )}
+  scope :wx_date_between, lambda {|start_date, end_date| where("wx_date >= ? AND wx_date <= ?", start_date, end_date )}
+
+  # created_at TALLY SCOPES
+  # scope :created_between_days_45_35, -> {where("created_at >= ? AND created_at <= ?", 45.days.ago, 35.days.ago )}
+  scope :created_between_week_1_0, -> {where("created_at >= ? AND created_at <= ?", 1.week.ago, Time.now )}
+  scope :created_between_week_2_1, -> {where("created_at >= ? AND created_at <= ?", 2.weeks.ago, 1.week.ago )}
+  scope :created_between_week_3_2, -> {where("created_at >= ? AND created_at <= ?", 3.weeks.ago, 2.weeks.ago )}
+  scope :created_between_week_4_3, -> {where("created_at >= ? AND created_at <= ?", 4.weeks.ago, 3.weeks.ago )}
+  scope :created_between_mo_2_1, -> {where("created_at >= ? AND created_at <= ?", 2.months.ago, 1.month.ago )}
+  scope :created_between_mo_3_2, -> {where("created_at >= ? AND created_at <= ?", 3.months.ago, 2.month.ago )}
+
+  # web_changed TALLY SCOPES
+  scope :web_changed_between_week_1_0, -> {where("web_changed >= ? AND web_changed <= ?", 1.week.ago, Time.now )}
+  scope :web_changed_between_week_2_1, -> {where("web_changed >= ? AND web_changed <= ?", 2.weeks.ago, 1.week.ago )}
+  scope :web_changed_between_week_3_2, -> {where("web_changed >= ? AND web_changed <= ?", 3.weeks.ago, 2.weeks.ago )}
+  scope :web_changed_between_week_4_3, -> {where("web_changed >= ? AND web_changed <= ?", 4.weeks.ago, 3.weeks.ago )}
+  scope :web_changed_between_mo_2_1, -> {where("web_changed >= ? AND web_changed <= ?", 2.months.ago, 1.month.ago )}
+  scope :web_changed_between_mo_3_2, -> {where("web_changed >= ? AND web_changed <= ?", 3.months.ago, 2.month.ago )}
+
+  # wx_date TALLY SCOPES
+  scope :wx_date_between_week_1_0, -> {where("wx_date >= ? AND wx_date <= ?", 1.week.ago, Time.now )}
+  scope :wx_date_between_week_2_1, -> {where("wx_date >= ? AND wx_date <= ?", 2.weeks.ago, 1.week.ago )}
+  scope :wx_date_between_week_3_2, -> {where("wx_date >= ? AND wx_date <= ?", 3.weeks.ago, 2.weeks.ago )}
+  scope :wx_date_between_week_4_3, -> {where("wx_date >= ? AND wx_date <= ?", 4.weeks.ago, 3.weeks.ago )}
+  scope :wx_date_between_mo_2_1, -> {where("wx_date >= ? AND wx_date <= ?", 2.months.ago, 1.month.ago )}
+  scope :wx_date_between_mo_3_2, -> {where("wx_date >= ? AND wx_date <= ?", 3.months.ago, 2.month.ago )}
 
 end

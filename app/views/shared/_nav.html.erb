@@ -10,12 +10,12 @@
         <li class="nav-item"><%= link_to 'Accounts', webs_path, class: "nav-link"  %></li>
         <li class="nav-item"><%= link_to 'Contacts', conts_path, class: "nav-link"  %></li>
         <li class="nav-item"><%= link_to 'Users', users_path, class: "nav-link"  %></li>
-        <li class="nav-item"><%= link_to 'Dashboard', activities_path, class: "nav-link"  %></li>
+        <li class="nav-item"><%= link_to 'Dashboard', tallies_path, class: "nav-link"  %></li>
         <li class="nav-item"><%= link_to current_user.first_name.capitalize, user_path(current_user), class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to 'Edit profile', edit_user_registration_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to 'Edit Profile', edit_user_registration_path, class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link" %></li>
       <% else %>
-        <li class="nav-item"><%= link_to "Sign up", new_user_registration_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Register", new_user_registration_path, class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "Login", new_user_session_path, class: "nav-link" %></li>
       <% end %>
 

@@ -52,12 +52,12 @@ module GenTally
   #CALL: GenTally.start_tally
   def self.start_tally
     mod_cols = [
-    {mod: 'act', cols: ['act_name', 'gp_id', 'gp_sts']},
+    {mod: 'act', cols: ['act_name', 'gp_sts', 'street', 'city', 'state', 'zip', 'full_address', 'phone', 'adr_changed', 'act_changed', 'ax_date']},
     {mod: 'act_web', cols: ['act_id', 'web_id']},
     {mod: 'link', cols: ['staff_link', 'staff_text']},
     {mod: 'web_link', cols: ['web_id', 'link_id', 'link_sts', 'cs_count']},
-    {mod: 'cont', cols: ['full_name', 'job_desc']},
-    {mod: 'web', cols: ['url', 'temp_name', 'url_sts', 'temp_sts', 'page_sts', 'cs_sts']}]
+    {mod: 'cont', cols: ['job_title', 'job_desc', 'email_changed', 'cont_changed', 'job_changed', 'cx_date']},
+    {mod: 'web', cols: ['url', 'url_sts_code', 'cop', 'temp_name', 'url_sts', 'temp_sts', 'page_sts', 'cs_sts', 'brand_sts', 'fwd_url', 'web_changed', 'wx_date']}]
     ## IMPORTANT: added conts to schema.  Include above to get full_name and job_desc query - TO ADD TO BAN LIST!
 
     db_tallies = {}

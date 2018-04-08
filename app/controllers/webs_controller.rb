@@ -8,7 +8,9 @@ class WebsController < ApplicationController
   # GET /webs.json
   def index
 
-    if params[:bypass_web_ids]&.any?
+    if params[:web_scope].present?
+      @webs = Web.send(params[:web_scope]).paginate(page: params[:page], per_page: 20)
+    elsif params[:bypass_web_ids]&.any?
       @webs = Web.where(id: [params[:bypass_web_ids]]).paginate(page: params[:page], per_page: 20)
     else
       ## Splits 'cont_any' strings into array, if string and has ','

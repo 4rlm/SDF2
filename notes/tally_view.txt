@@ -1,0 +1,103 @@
+-------- ACTS --------
+created_between
+adr_changed_between
+act_changed_between
+ax_date_between
+
+created_between_mo_0_1 = Act.created_between(1.month.ago, Time.now)
+created_between_mo_1_2 = Act.created_between(2.months.ago, 1.month.ago)
+created_between_mo_2_3 = Act.created_between(3.months.ago, 2.month.ago)
+
+
+
+
+-------- WEBS --------
+created_between
+web_changed_between
+wx_date_between
+
+
+-------- CONTS --------
+created_between
+cx_date_between
+job_changed_between
+cont_changed_between
+email_changed_between
+
+
+
+
+
+
+
+
+
+
+
+
+
+=========================
+tally = Tally.last
+tally.acts['act_name']
+tally.acts['gp_sts']
+tally.acts['street']
+tally.acts['city']
+tally.acts['zip']
+tally.acts['full_address']
+tally.acts['phone']
+tally.acts['adr_changed']
+tally.acts['act_changed']
+tally.acts['ax_date']
+
+=========================
+tally.act_webs['act_id']
+tally.act_webs['web_id']
+
+=========================
+tally.links['staff_link']
+tally.links['staff_text']
+
+=========================
+tally.web_links['web_id']
+tally.web_links['link_id']
+tally.web_links['link_sts']
+tally.web_links['cs_count']
+
+=========================
+tally.conts['job_title']
+tally.conts['job_desc']
+tally.conts['email_changed']
+tally.conts['cont_changed']
+tally.conts['job_changed']
+tally.conts['cx_date']
+
+=========================
+tally.webs['url']
+tally.webs['url_sts_code']
+tally.webs['cop']
+tally.webs['temp_name']
+tally.webs['url_sts']
+tally.webs['temp_sts']
+tally.webs['page_sts']
+tally.webs['cs_sts']
+tally.webs['brand_sts']
+tally.webs['fwd_url']
+tally.webs['web_changed']
+tally.webs['wx_date']
+
+=========================
+
+
+tally.acts.zip[5]
+
+<td><%= tally.acts.gp_sts %></td>
+<td><%= tally.acts.street %></td>
+<td><%= tally.acts.city %></td>
+<td><%= tally.acts.zip %></td>
+<td><%= tally.acts.full_address %></td>
+<td><%= tally.acts.phone %></td>
+<td><%= tally.acts.adr_changed %></td>
+<td><%= tally.acts.act_changed %></td>
+<td><%= tally.acts.ax_date %></td>
+
+=====================================
