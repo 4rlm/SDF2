@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :tallies
   resources :users, :only => [:index, :show]
   resources :downloads, only: [:show]
   # resources :activities, only: [:toggle_sts]
@@ -69,5 +68,14 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :acts, :terms, :links, :activities, :act_activities, :cont_activities, :web_activities, :queries
+  resources :tallies, only: [:index] do
+    collection do
+      match 'follow_all' => 'tallies#follow_all', via: [:get, :post], as: :follow_all
+      match 'unfollow_all' => 'tallies#unfollow_all', via: [:get, :post], as: :unfollow_all
+      match 'hide_all' => 'tallies#hide_all', via: [:get, :post], as: :hide_all
+      match 'unhide_all' => 'tallies#unhide_all', via: [:get, :post], as: :unhide_all
+    end
+  end
+
+  resources :acts, :terms, :links
 end

@@ -1,0 +1,534 @@
+
+<br>
+
+<div class="panel">
+  <div class="row">
+
+    <div class="col-md-6">
+    <h6>Accounts</h6>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>0-1 Weeks</th>
+            <th>1-2 Weeks</th>
+            <th>2-3 Weeks</th>
+            <th>3-4 Weeks</th>
+            <th>1-2 Months</th>
+            <th>2-3 Months</th>
+          </tr>
+        </thead>
+        <tbody>
+
+
+          <!-- ACTS SCOPES BEGIN -->
+          <tr>
+            <th colspan="7" class="text-center">Accounts</th>
+          </tr>
+
+          <!-- Act created_at -->
+          <tr>
+            <th>Created</th>
+            <td>
+              <%= link_to acts_path(tally_scope: 'created_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.created_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'created_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.created_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'created_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.created_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'created_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.created_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'created_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.created_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'created_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.created_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+          <!-- Act adr_changed -->
+          <tr>
+            <th>Address Changed</th>
+            <td>
+              <%= link_to acts_path(tally_scope: 'adr_changed_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.adr_changed_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'adr_changed_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.adr_changed_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'adr_changed_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.adr_changed_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'adr_changed_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.adr_changed_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'adr_changed_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.adr_changed_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'adr_changed_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.adr_changed_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+          <!-- Act act_changed -->
+          <tr>
+            <th>Profile Changed</th>
+            <td>
+              <%= link_to acts_path(tally_scope: 'act_changed_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.act_changed_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'act_changed_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.act_changed_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'act_changed_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.act_changed_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'act_changed_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.act_changed_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'act_changed_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.act_changed_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'act_changed_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.act_changed_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+          <!-- Act ax_date -->
+          <tr>
+            <th>Inactive</th>
+            <td>
+              <%= link_to acts_path(tally_scope: 'ax_date_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.ax_date_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'ax_date_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.ax_date_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'ax_date_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.ax_date_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'ax_date_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.ax_date_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'ax_date_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.ax_date_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to acts_path(tally_scope: 'ax_date_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Act.ax_date_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+
+          <!-- CONTS SCOPES BEGIN -->
+          <tr>
+            <th colspan="7" class="text-center">Contacts</th>
+          </tr>
+
+          <!-- Cont created_at -->
+          <tr>
+            <th>Created</th>
+            <td>
+              <%= link_to conts_path(tally_scope: 'created_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.created_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'created_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.created_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'created_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.created_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'created_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.created_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'created_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.created_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'created_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.created_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+          <!-- Cont job_changed -->
+          <tr>
+            <th>Job Changed</th>
+            <td>
+              <%= link_to conts_path(tally_scope: 'job_changed_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.job_changed_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'job_changed_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.job_changed_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'job_changed_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.job_changed_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'job_changed_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.job_changed_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'job_changed_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.job_changed_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'job_changed_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.job_changed_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+          <!-- Cont cont_changed -->
+          <tr>
+            <th>Profile Changed</th>
+            <td>
+              <%= link_to conts_path(tally_scope: 'cont_changed_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cont_changed_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cont_changed_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cont_changed_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cont_changed_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cont_changed_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cont_changed_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cont_changed_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cont_changed_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cont_changed_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cont_changed_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cont_changed_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+          <!-- Cont email_changed -->
+          <tr>
+            <th>Email Changed</th>
+            <td>
+              <%= link_to conts_path(tally_scope: 'email_changed_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.email_changed_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'email_changed_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.email_changed_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'email_changed_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.email_changed_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'email_changed_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.email_changed_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'email_changed_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.email_changed_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'email_changed_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.email_changed_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+          <!-- Cont cx_date -->
+          <tr>
+            <th>Inactive</th>
+            <td>
+              <%= link_to conts_path(tally_scope: 'cx_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cx_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cx_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cx_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cx_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cx_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cx_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cx_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cx_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cx_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to conts_path(tally_scope: 'cx_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Cont.cx_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+
+
+
+          <!-- WEBS SCOPES BEGIN -->
+          <tr>
+            <th colspan="7" class="text-center">Websites</th>
+          </tr>
+
+          <!-- Web created_at -->
+          <tr>
+            <th>Created</th>
+            <td>
+              <%= link_to webs_path(tally_scope: 'created_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.created_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'created_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.created_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'created_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.created_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'created_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.created_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'created_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.created_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'created_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.created_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+
+          <!-- Web web_changed -->
+          <tr>
+            <th>Changed</th>
+            <td>
+              <%= link_to webs_path(tally_scope: 'web_changed_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.web_changed_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'web_changed_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.web_changed_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'web_changed_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.web_changed_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'web_changed_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.web_changed_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'web_changed_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.web_changed_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'web_changed_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.web_changed_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+
+          <!-- Web wx_date -->
+          <tr>
+            <th>Inactive</th>
+            <td>
+              <%= link_to webs_path(tally_scope: 'wx_date_between_wk_0_1'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.wx_date_between_wk_0_1.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'wx_date_between_wk_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.wx_date_between_wk_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'wx_date_between_wk_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.wx_date_between_wk_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'wx_date_between_wk_3_4'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.wx_date_between_wk_3_4.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'wx_date_between_mo_1_2'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.wx_date_between_mo_1_2.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= link_to webs_path(tally_scope: 'wx_date_between_mo_2_3'), class: 'btn btn-default btn-sm' do %>
+                <%= number_with_delimiter(Web.wx_date_between_mo_2_3.count, :delimiter => ',') %>
+              <% end %>
+            </td>
+          </tr>
+
+
+
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

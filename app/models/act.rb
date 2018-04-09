@@ -28,19 +28,44 @@ class Act < ApplicationRecord
   scope :web_is_cop_or_franchise, -> {joins(:webs).merge(Web.is_cop_or_franchise)}
   scope :is_valid_gp, ->{ where.not(gp_id: nil) }
 
+  # LAMBDA TALLY SCOPES
   scope :created_between, lambda {|start_date, end_date| where("created_at >= ? AND created_at <= ?", start_date, end_date )}
   scope :adr_changed_between, lambda {|start_date, end_date| where("adr_changed >= ? AND adr_changed <= ?", start_date, end_date )}
   scope :act_changed_between, lambda {|start_date, end_date| where("act_changed >= ? AND act_changed <= ?", start_date, end_date )}
   scope :ax_date_between, lambda {|start_date, end_date| where("ax_date >= ? AND ax_date <= ?", start_date, end_date )}
 
-
   # created_at TALLY SCOPES
   # scope :created_between_days_45_35, -> {where("created_at >= ? AND created_at <= ?", 45.days.ago, 35.days.ago )}
-  scope :created_between_week_1_0, -> {where("created_at >= ? AND created_at <= ?", 1.week.ago, Time.now )}
-  scope :created_between_week_2_1, -> {where("created_at >= ? AND created_at <= ?", 2.weeks.ago, 1.week.ago )}
-  scope :created_between_week_3_2, -> {where("created_at >= ? AND created_at <= ?", 3.weeks.ago, 2.weeks.ago )}
-  scope :created_between_week_4_3, -> {where("created_at >= ? AND created_at <= ?", 4.weeks.ago, 3.weeks.ago )}
-  scope :created_between_mo_2_1, -> {where("created_at >= ? AND created_at <= ?", 2.months.ago, 1.month.ago )}
-  scope :created_between_mo_3_2, -> {where("created_at >= ? AND created_at <= ?", 3.months.ago, 2.month.ago )}
+  scope :created_between_wk_0_1, -> {where("created_at >= ? AND created_at <= ?", 1.week.ago, Time.now )}
+  scope :created_between_wk_1_2, -> {where("created_at >= ? AND created_at <= ?", 2.weeks.ago, 1.week.ago )}
+  scope :created_between_wk_2_3, -> {where("created_at >= ? AND created_at <= ?", 3.weeks.ago, 2.weeks.ago )}
+  scope :created_between_wk_3_4, -> {where("created_at >= ? AND created_at <= ?", 4.weeks.ago, 3.weeks.ago )}
+  scope :created_between_mo_1_2, -> {where("created_at >= ? AND created_at <= ?", 2.months.ago, 1.month.ago )}
+  scope :created_between_mo_2_3, -> {where("created_at >= ? AND created_at <= ?", 3.months.ago, 2.month.ago )}
+
+  # adr_changed TALLY SCOPES
+  scope :adr_changed_between_wk_0_1, -> {where("adr_changed >= ? AND adr_changed <= ?", 1.week.ago, Time.now )}
+  scope :adr_changed_between_wk_1_2, -> {where("adr_changed >= ? AND adr_changed <= ?", 2.weeks.ago, 1.week.ago )}
+  scope :adr_changed_between_wk_2_3, -> {where("adr_changed >= ? AND adr_changed <= ?", 3.weeks.ago, 2.weeks.ago )}
+  scope :adr_changed_between_wk_3_4, -> {where("adr_changed >= ? AND adr_changed <= ?", 4.weeks.ago, 3.weeks.ago )}
+  scope :adr_changed_between_mo_1_2, -> {where("adr_changed >= ? AND adr_changed <= ?", 2.months.ago, 1.month.ago )}
+  scope :adr_changed_between_mo_2_3, -> {where("adr_changed >= ? AND adr_changed <= ?", 3.months.ago, 2.month.ago )}
+
+  # act_changed TALLY SCOPES
+  scope :act_changed_between_wk_0_1, -> {where("act_changed >= ? AND act_changed <= ?", 1.week.ago, Time.now )}
+  scope :act_changed_between_wk_1_2, -> {where("act_changed >= ? AND act_changed <= ?", 2.weeks.ago, 1.week.ago )}
+  scope :act_changed_between_wk_2_3, -> {where("act_changed >= ? AND act_changed <= ?", 3.weeks.ago, 2.weeks.ago )}
+  scope :act_changed_between_wk_3_4, -> {where("act_changed >= ? AND act_changed <= ?", 4.weeks.ago, 3.weeks.ago )}
+  scope :act_changed_between_mo_1_2, -> {where("act_changed >= ? AND act_changed <= ?", 2.months.ago, 1.month.ago )}
+  scope :act_changed_between_mo_2_3, -> {where("act_changed >= ? AND act_changed <= ?", 3.months.ago, 2.month.ago )}
+
+
+  # ax_date TALLY SCOPES
+  scope :ax_date_between_wk_0_1, -> {where("ax_date >= ? AND ax_date <= ?", 1.week.ago, Time.now )}
+  scope :ax_date_between_wk_1_2, -> {where("ax_date >= ? AND ax_date <= ?", 2.weeks.ago, 1.week.ago )}
+  scope :ax_date_between_wk_2_3, -> {where("ax_date >= ? AND ax_date <= ?", 3.weeks.ago, 2.weeks.ago )}
+  scope :ax_date_between_wk_3_4, -> {where("ax_date >= ? AND ax_date <= ?", 4.weeks.ago, 3.weeks.ago )}
+  scope :ax_date_between_mo_1_2, -> {where("ax_date >= ? AND ax_date <= ?", 2.months.ago, 1.month.ago )}
+  scope :ax_date_between_mo_2_3, -> {where("ax_date >= ? AND ax_date <= ?", 3.months.ago, 2.month.ago )}
 
 end

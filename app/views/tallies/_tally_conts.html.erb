@@ -1,0 +1,10 @@
+<tr>
+  <td><%= fav_hide_hsh[:th] %></td>
+  <td>
+    <%= link_to conts_path(tally_scope: fav_hide_hsh[:tally_scope]), class: 'btn btn-default btn-sm' do %>
+      <%= number_with_delimiter(Cont.send(fav_hide_hsh[:tally_scope]).count, :delimiter => ',') %>
+    <% end %>
+  </td>
+
+  <%= render 'tallies/fav_hide_wrap', fav_hide_hsh: fav_hide_hsh %>
+</tr>

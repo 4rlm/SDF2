@@ -1,11 +1,39 @@
 class TalliesController < ApplicationController
-  before_action :set_tally, only: [:show, :edit, :update, :destroy]
+  # before_action :set_tally, only: [:show, :edit, :update, :destroy]
+  include TalliesHelper
+
 
   # GET /tallies
   # GET /tallies.json
   def index
     # @tallies = Tally.all
   end
+
+
+
+  def follow_all
+    follow_all_tally_helper(params)
+    redirect_to tallies_path
+  end
+
+  def unfollow_all
+    binding.pry
+    unfollow_all_tally_helper(params)
+    redirect_to tallies_path
+  end
+
+  def hide_all
+    binding.pry
+    hide_all_tally_helper(params)
+    redirect_to tallies_path
+  end
+
+  def unhide_all
+    binding.pry
+    unhide_all_tally_helper(params)
+    redirect_to tallies_path
+  end
+
 
   # GET /tallies/1
   # GET /tallies/1.json
@@ -14,7 +42,7 @@ class TalliesController < ApplicationController
 
   # GET /tallies/new
   def new
-    @tally = Tally.new
+    # @tally = Tally.new
   end
 
   # GET /tallies/1/edit
