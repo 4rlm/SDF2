@@ -1,10 +1,12 @@
 <tr>
-  <td><%= fav_hide_hsh[:th] %></td>
+  <td><%= tally_hsh[:th] %></td>
   <td>
-    <%= link_to webs_path(tally_scope: fav_hide_hsh[:tally_scope]), class: 'btn btn-default btn-sm' do %>
-      <%= number_with_delimiter(Web.send(fav_hide_hsh[:tally_scope]).count, :delimiter => ',') %>
+    <%= link_to webs_path(tally_scope: tally_hsh[:tally_scope]), class: 'btn btn-default btn-sm' do %>
+      <%= number_with_delimiter(Web.send(tally_hsh[:tally_scope]).count, :delimiter => ',') %>
     <% end %>
   </td>
 
-  <%= render 'tallies/fav_hide_wrap', fav_hide_hsh: fav_hide_hsh %>
+  <%= render 'tallies/fav_hide_wrap', tally_hsh: tally_hsh %>
+  <%= render 'tallies/csv_download_wrap', tally_hsh: tally_hsh %>
+
 </tr>

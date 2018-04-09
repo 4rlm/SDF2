@@ -3,7 +3,12 @@ class ContCsvTool
   def initialize(params, current_user)
     @params = params
     @user = current_user
-    @conts = Cont.ransack(params[:q]).result(distinct: true).includes(:acts, :web, :brands)
+
+    if params[:q].present?
+      @conts = Cont.ransack(params[:q]).result(distinct: true).includes(:acts, :web, :brands)
+    elsif params[:tally_scope].present?
+      @conts = Cont.send(params[:tally_scope])
+    end
 
     @export_date = Time.now
     @file_name = "cont_web_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
@@ -30,6 +35,9 @@ class ContCsvTool
     web_cols = %w(url url_sts cop temp_name cs_sts web_changed wx_date)
     brand_cols = %w(brand_name)
 
+    ### IMPORTANT!!! REMOVE 'TESTING-CONTS'.
+    # @conts = @conts[0..10]  ## for testing, reduce csv size.
+
     CSV.open(@path_and_file, "wb") do |csv|
       csv.add_row(cont_cols + web_cols + brand_cols)
       @conts.each do |cont|
@@ -45,20 +53,11 @@ class ContCsvTool
   ###########  LOG CONT_WEB EXPORT  ###########
   def log_cont_web_export
     export = @user.exports.create(export_date: @export_date, file_name: @file_name)
+    cont_activities = @user.cont_activities.where(cont_id: [@conts.pluck(:id)])
+    cont_activities.update_all(export_id: export.id)
 
-    @conts.each do |cont|
-      activity = @user.activities.find_or_initialize_by(mod_name: 'Cont', mod_id: cont.id)
-      activity.export_id = export.id
-      activity.save
-    end
-
-    webs = @conts.map {|cont| cont.web }&.uniq
-    webs.each do |web|
-      activity = @user.activities.find_or_initialize_by(mod_name: 'Web', mod_id: web.id)
-      activity.export_id = export.id
-      activity.save
-    end
-
+    web_activities = @user.web_activities.where(web_id: [@conts.pluck(:web_id)])
+    web_activities.update_all(export_id: export.id)
   end
 
 

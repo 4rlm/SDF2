@@ -3,7 +3,12 @@ class WebCsvTool
   def initialize(params, current_user)
     @params = params
     @user = current_user
-    @webs = Web.ransack(params[:q]).result(distinct: true).includes(:acts, :conts, :brands)
+
+    if params[:q].present?
+      @webs = Web.ransack(params[:q]).result(distinct: true).includes(:acts, :conts, :brands)
+    elsif params[:tally_scope].present?
+      @webs = Web.send(params[:tally_scope])
+    end
 
     @export_date = Time.now
     @file_name = "web_acts_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
@@ -52,20 +57,12 @@ class WebCsvTool
   #Call: WebCsvTool.new.log_web_acts_export
   def log_web_acts_export
     export = @user.exports.create(export_date: @export_date, file_name: @file_name)
-
-    @webs.each do |web|
-      activity = @user.activities.find_or_initialize_by(mod_name: 'Web', mod_id: web.id)
-      activity.export_id = export.id
-      activity.save
-    end
+    web_activities = @user.web_activities.where(web_id: [@webs.pluck(:id)])
+    web_activities.update_all(export_id: export.id)
 
     acts = @webs.map {|web| web.acts }&.flatten&.uniq
-    acts.each do |act|
-      activity = @user.activities.find_or_initialize_by(mod_name: 'Act', mod_id: act.id)
-      activity.export_id = export.id
-      activity.save
-    end
-
+    act_activities = @user.act_activities.where(act_id: [acts.pluck(:id)])
+    act_activities.update_all(export_id: export.id)
   end
 
 

@@ -74,6 +74,7 @@ Rails.application.routes.draw do
       match 'unfollow_all' => 'tallies#unfollow_all', via: [:get, :post], as: :unfollow_all
       match 'hide_all' => 'tallies#hide_all', via: [:get, :post], as: :hide_all
       match 'unhide_all' => 'tallies#unhide_all', via: [:get, :post], as: :unhide_all
+      match 'generate_csv' => 'tallies#generate_csv', via: [:get, :post], as: :generate_csv
     end
   end
 

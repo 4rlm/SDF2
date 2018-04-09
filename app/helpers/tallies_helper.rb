@@ -1,5 +1,15 @@
 module TalliesHelper
 
+  def generate_csv_tally_helper(params)
+    if params[:mod_name] == 'Act'
+      ActCsvTool.new(params, current_user).start_act_webs_csv_and_log
+    elsif params[:mod_name] == 'Cont'
+      ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
+    elsif params[:mod_name] == 'Web'
+      WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
+    end
+  end
+
   def follow_all_tally_helper(params)
     if params[:mod_name] == 'Act'
       act_ids = Act.send(params[:tally_scope]).pluck(:id)

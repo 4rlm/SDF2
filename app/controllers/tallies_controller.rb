@@ -11,6 +11,12 @@ class TalliesController < ApplicationController
 
 
 
+  def generate_csv
+    generate_csv_tally_helper(params)
+    redirect_to tallies_path
+  end
+
+
   def follow_all
     follow_all_tally_helper(params)
     redirect_to tallies_path
@@ -33,6 +39,7 @@ class TalliesController < ApplicationController
     unhide_all_tally_helper(params)
     redirect_to tallies_path
   end
+
 
 
   # GET /tallies/1
