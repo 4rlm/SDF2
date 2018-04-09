@@ -19,37 +19,37 @@ module ApplicationHelper
 
 
   ## GET ACT IDS
-  def get_followed_act_ids(act_ids)
-    act_ids = current_user.act_activities.where(fav_sts: true).map(&:act_id) if !act_ids.present?
-    act_ids
-  end
-
-  def get_hidden_act_ids(act_ids)
-    act_ids = current_user.act_activities.where(hide_sts: true).map(&:act_id) if !act_ids.present?
-    act_ids
-  end
-
-  ## GET CONT IDS
-  def get_followed_cont_ids(cont_ids)
-    cont_ids = current_user.cont_activities.where(fav_sts: true).map(&:cont_id) if !cont_ids.present?
-    cont_ids
-  end
-
-  def get_hidden_cont_ids(cont_ids)
-    cont_ids = current_user.cont_activities.where(hide_sts: true).map(&:cont_id) if !cont_ids.present?
-    cont_ids
-  end
-
-  ## GET WEB IDS
-  def get_followed_web_ids(web_ids)
-    web_ids = current_user.web_activities.where(fav_sts: true).map(&:web_id) if !web_ids.present?
-    web_ids
-  end
-
-  def get_hidden_web_ids(web_ids)
-    web_ids = current_user.web_activities.where(hide_sts: true).map(&:web_id) if !web_ids.present?
-    web_ids
-  end
+  # def get_followed_act_ids(act_ids)
+  #   act_ids = current_user.act_activities.where(fav_sts: true).map(&:act_id) if !act_ids.present?
+  #   act_ids
+  # end
+  #
+  # def get_hidden_act_ids(act_ids)
+  #   act_ids = current_user.act_activities.where(hide_sts: true).map(&:act_id) if !act_ids.present?
+  #   act_ids
+  # end
+  #
+  # ## GET CONT IDS
+  # def get_followed_cont_ids(cont_ids)
+  #   cont_ids = current_user.cont_activities.where(fav_sts: true).map(&:cont_id) if !cont_ids.present?
+  #   cont_ids
+  # end
+  #
+  # def get_hidden_cont_ids(cont_ids)
+  #   cont_ids = current_user.cont_activities.where(hide_sts: true).map(&:cont_id) if !cont_ids.present?
+  #   cont_ids
+  # end
+  #
+  # ## GET WEB IDS
+  # def get_followed_web_ids(web_ids)
+  #   web_ids = current_user.web_activities.where(fav_sts: true).map(&:web_id) if !web_ids.present?
+  #   web_ids
+  # end
+  #
+  # def get_hidden_web_ids(web_ids)
+  #   web_ids = current_user.web_activities.where(hide_sts: true).map(&:web_id) if !web_ids.present?
+  #   web_ids
+  # end
 
 
 

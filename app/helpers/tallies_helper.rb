@@ -10,6 +10,7 @@ module TalliesHelper
     end
   end
 
+
   def follow_all_tally_helper(params)
     if params[:mod_name] == 'Act'
       act_ids = Act.send(params[:tally_scope]).pluck(:id)

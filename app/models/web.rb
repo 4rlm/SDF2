@@ -37,6 +37,7 @@ class Web < ApplicationRecord
   scope :web_act_gp_sts, ->{ joins(:acts).merge(Act.where.not(gp_sts: nil)) }
   scope :web_act_gp_indus, ->{ joins(:acts).merge(Act.where.not(gp_indus: nil)) }
 
+
   scope :created_between, lambda {|start_date, end_date| where("created_at >= ? AND created_at <= ?", start_date, end_date )}
   scope :web_changed_between, lambda {|start_date, end_date| where("web_changed >= ? AND web_changed <= ?", start_date, end_date )}
   scope :wx_date_between, lambda {|start_date, end_date| where("wx_date >= ? AND wx_date <= ?", start_date, end_date )}

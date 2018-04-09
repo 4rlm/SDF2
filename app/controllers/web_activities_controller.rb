@@ -9,24 +9,24 @@ class WebActivitiesController < ApplicationController
 
 
   def follow_all
+    binding.pry
     WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(fav_sts: true)
     after_fav_hide_switch
   end
 
   def unfollow_all
-    web_ids = helpers.get_followed_web_ids(params[:web_ids])
-    WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(fav_sts: false)
+    current_user.web_activities.followed.update_all(fav_sts: false)
     after_fav_hide_switch
   end
 
   def hide_all
+    binding.pry
     WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(hide_sts: true)
     after_fav_hide_switch
   end
 
   def unhide_all
-    web_ids = helpers.get_hidden_web_ids(params[:web_ids])
-    WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(hide_sts: false)
+    current_user.web_activities.hidden.update_all(hide_sts: false)
     after_fav_hide_switch
   end
 

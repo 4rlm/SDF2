@@ -10,24 +10,24 @@ class ContActivitiesController < ApplicationController
 
 
   def follow_all
+    binding.pry
     ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]]).update_all(fav_sts: true)
     after_fav_hide_switch
   end
 
   def unfollow_all
-    cont_ids = helpers.get_followed_cont_ids(params[:cont_ids])
-    ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).update_all(fav_sts: false)
+    current_user.cont_activities.followed.update_all(fav_sts: false)
     after_fav_hide_switch
   end
 
   def hide_all
+    binding.pry
     ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]]).update_all(hide_sts: true)
     after_fav_hide_switch
   end
 
   def unhide_all
-    cont_ids = helpers.get_hidden_cont_ids(params[:cont_ids])
-    ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).update_all(hide_sts: false)
+    current_user.cont_activities.hidden.update_all(hide_sts: false)
     after_fav_hide_switch
   end
 

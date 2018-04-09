@@ -1,0 +1,52 @@
+<!-- Following & Hidden -->
+<div class="panel">
+
+  <div class="row">
+    <!-- Following & Hidden -->
+    <div class="col-md-4">
+      <h6 class="text-center">Following & Hidden</h6>
+
+      <% params[:source_path] = 'user_path' %>
+
+      <!-- Followed & Hidden Acts -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th colspan='2' class='text-center'>Followed</th>
+            <th colspan='2' class='text-center'>Hidden</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render 'users/act_totals', user: @user %>
+          <%= render 'users/cont_totals', user: @user %>
+          <%= render 'users/web_totals', user: @user %>
+        </tbody>
+      </table>
+
+    </div>
+
+    <!-- Saved Searches -->
+    <div class="col-md-8">
+      <!-- Saved Account Searches -->
+      <h6 class="text-center">Saved Searches</h6>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Size</th>
+            <th class='text-center'>Search Name</th>
+            <th>Created</th>
+            <th colspan="2" class="text-center">Follow</th>
+            <th colspan="2" class="text-center">Hide</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render 'users/cont_queries', user: @user %>
+          <%= render 'users/web_queries', user: @user %>
+        </tbody>
+      </table>
+
+    </div>
+
+</div>

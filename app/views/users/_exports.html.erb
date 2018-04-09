@@ -1,0 +1,30 @@
+<!-- Exports -->
+<div class="panel">
+  <div class="row">
+
+      <!-- Exports -->
+      <div class="col-md-4">
+        <h6 class="text-center">Exports</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>file_name</th>
+              <th>export_date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% exports = @user.exports %>
+            <% exports.each do |export| %>
+            <tr>
+              <td><%= export.file_name %></td>
+              <td><%= export.export_date.strftime('%x') %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
