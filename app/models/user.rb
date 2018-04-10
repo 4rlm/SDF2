@@ -19,4 +19,17 @@ class User < ApplicationRecord
   has_many :web_activities, dependent: :destroy
   has_many :webs, through: :web_activities
 
+
+  # User.where(id: 1).followed_web_ids
+  scope :followed_web_ids, ->{ joins(:web_activities).merge(WebActivity.followed).pluck(:web_id) }
+  scope :unfollowed_web_ids, ->{ joins(:web_activities).merge(WebActivity.unfollowed).pluck(:web_id) }
+  scope :hidden_web_ids, ->{ joins(:web_activities).merge(WebActivity.hidden).pluck(:web_id) }
+  scope :unhidden_web_ids, ->{ joins(:web_activities).merge(WebActivity.unhidden).pluck(:web_id) }
+
+
+
+
+
+  # scope :is_franchise, ->{ joins(:brands).merge(Brand.is_franchise) }
+
 end

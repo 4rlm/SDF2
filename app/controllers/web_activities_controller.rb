@@ -9,7 +9,6 @@ class WebActivitiesController < ApplicationController
 
 
   def follow_all
-    binding.pry
     WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(fav_sts: true)
     after_fav_hide_switch
   end
@@ -20,7 +19,6 @@ class WebActivitiesController < ApplicationController
   end
 
   def hide_all
-    binding.pry
     WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(hide_sts: true)
     after_fav_hide_switch
   end
@@ -73,11 +71,9 @@ class WebActivitiesController < ApplicationController
 
 
   def update
-    binding.pry
     if @web_activity.update(web_activity_params)
       respond_to do |format|
         if params[:web_activity][:form_id] == 'toggle_fav_form'
-          binding.pry
           format.js { render :update_toggle_fav, status: :ok, location: @web_activity }
         elsif params[:web_activity][:form_id] == 'toggle_hide_form'
           format.js { render :update_toggle_hide, status: :ok, location: @web_activity }

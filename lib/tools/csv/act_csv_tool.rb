@@ -38,6 +38,18 @@ class ActCsvTool
     # TESTING ONLY.  COMMENT OUT AFTER TESTING.  LIMITIS ACT SIZE FOR TESTING.
     # @acts = @acts[0..10]
 
+    # binding.pry
+    ## Try to exclude acts marked as hidden true.
+    # @exclude_hidden = true
+    # if @exclude_hidden == true
+    #   binding.pry
+    #   unhidden_act_ids = ActActivity.where(user_id: current_user, act_id: [@acts.map(&:id)], hide_sts: false).pluck(:act_id)
+    #   binding.pry
+    #   @acts = Act.where(id: [unhidden_act_ids])
+    #   binding.pry
+    # end
+
+
     CSV.open(@path_and_file, "wb") do |csv|
       csv.add_row(act_cols + brand_cols + web_cols)
       @acts.each do |act|

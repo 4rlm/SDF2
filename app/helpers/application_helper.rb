@@ -78,9 +78,7 @@ module ApplicationHelper
 
 
   # def current_url(new_params)
-  #   binding.pry
   #   url_for :params => params.merge(new_params)
-  #   binding.pry
   # end
 
 
@@ -110,7 +108,6 @@ module ApplicationHelper
   #   if webs.present?
   #     # states = webs.map { |web| get_state(web.acts) }&.flatten&.uniq&.compact&.sort
   #     states = webs.map { |web| web.acts&.map(&:state) }&.flatten&.uniq&.compact&.sort
-  #     binding.pry
   #     return states
   #   end
   # end
