@@ -11,25 +11,21 @@ class QueriesController < ApplicationController
 
 
   def follow_all
-    binding.pry
     follow_all_query_helper(params[:query_id])
     redirect_to current_user
   end
 
   def unfollow_all
-    binding.pry
     unfollow_all_query_helper(params[:query_id])
     redirect_to current_user
   end
 
   def hide_all
-    binding.pry
     hide_all_query_helper(params[:query_id])
     redirect_to current_user
   end
 
   def unhide_all
-    binding.pry
     unhide_all_query_helper(params[:query_id])
     redirect_to current_user
   end

@@ -1,5 +1,4 @@
-<% web_queries = @user.queries.where(mod_name: 'Web').order("updated_at DESC") %>
-<% web_queries&.each do |web_query| %>
+<% @user.queries.web_queries&.each do |web_query| %>
   <% params[:query_id] = web_query.id %>
 
   <tr>

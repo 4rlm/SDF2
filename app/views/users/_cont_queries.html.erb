@@ -1,5 +1,4 @@
-<% cont_queries = @user.queries.where(mod_name: 'Cont').order("updated_at DESC") %>
-<% cont_queries&.each do |cont_query| %>
+<% @user.queries.cont_queries&.each do |cont_query| %>
   <% params[:query_id] = cont_query.id %>
 
   <tr>
