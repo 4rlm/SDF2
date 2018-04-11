@@ -1,10 +1,10 @@
 <nav class="container sidebar">
 
-  <% if @wq.present? %>
+  <% if @aq.present? %>
 
-    <%= search_form_for(@wq, url: search_webs_path, html: {method: :post, class: 'form'}) do |f| %>
+    <%= search_form_for(@aq, url: search_acts_path, html: {method: :post, class: 'form'}) do |f| %>
+
       <!-- WEBS CHECK BOX OPTIONS -->
-
       <% web_opts = get_ransack_web_opts %>
       <% temps = web_opts['temps'] %>
       <% brands = web_opts['brands'] %>
@@ -19,7 +19,7 @@
       <% gp_stss = act_opts['gp_stss'] %>
 
       <!-- SEARCH SECTION - START -->
-      <h6 class="text-center sidebar-header">Search Criteria</h6>
+      <h6 class="text-center sidebar-header">Search Accounts</h6>
       <ul class="components">
 
         <!-- SEARCH ACCOUNTS - START -->
@@ -65,55 +65,55 @@
               <!-- Search Acts (Account Name) -->
               <tr>
                 <td class="w25">Account Name</td>
-                <td class="w75"><%= f.search_field :acts_act_name_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :act_name_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (Full Address) -->
               <tr>
                 <td class="w25">Full Address</td>
-                <td class="w75"><%= f.search_field :acts_full_address_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :full_address_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (Street) -->
               <tr>
                 <td class="w25">Street</td>
-                <td class="w75"><%= f.search_field :acts_street_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :street_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (City) -->
               <tr>
                 <td class="w25">City</td>
-                <td class="w75"><%= f.search_field :acts_city_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :city_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (Zip) -->
               <tr>
                 <td class="w25">Zip</td>
-                <td class="w75"><%= f.search_field :acts_zip_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :zip_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (Phone) -->
               <tr>
                 <td class="w25">Phone</td>
-                <td class="w75"><%= f.search_field :acts_phone_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :phone_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (Lat) -->
               <tr>
                 <td class="w25">Lat</td>
-                <td class="w75"><%= f.search_field :acts_lat_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :lat_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (Lon) -->
               <tr>
                 <td class="w25">Lon</td>
-                <td class="w75"><%= f.search_field :acts_lon_cont_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :lon_cont_any, class: "form-control ransack-input" %></td>
               </tr>
 
               <!-- Search Acts (GP ID) -->
               <tr>
                 <td class="w25">GP ID</td>
-                <td class="w75"><%= f.search_field :acts_gp_id_eq_any, class: "form-control ransack-input" %></td>
+                <td class="w75"><%= f.search_field :gp_id_eq_any, class: "form-control ransack-input" %></td>
               </tr>
             </table>
 
@@ -124,13 +124,13 @@
                   <tr>
                     <!-- LEFT -->
                     <td>
-                      <%= check_box_tag('q[acts_state_in][]', state) %>
+                      <%= check_box_tag('q[state_in][]', state) %>
                       <%= state %>
                     </td>
                   <% else %>
                     <!-- RIGHT -->
                     <td>
-                      <%= check_box_tag('q[acts_state_in][]', state) %>
+                      <%= check_box_tag('q[state_in][]', state) %>
                       <%= state %>
                     </td>
                   </tr>
@@ -150,13 +150,13 @@
                   <tr>
                     <!-- LEFT -->
                     <td>
-                      <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                      <%= check_box_tag('q[gp_sts_in][]', gp_sts) %>
                       <%= gp_sts %>
                     </td>
                   <% else %>
                     <!-- RIGHT -->
                     <td>
-                      <%= check_box_tag('q[acts_gp_sts_in][]', gp_sts) %>
+                      <%= check_box_tag('q[gp_sts_in][]', gp_sts) %>
                       <%= gp_sts %>
                     </td>
                   </tr>
@@ -171,43 +171,43 @@
                   <!-- gp_date -->
                   <tr>
                     <td>GP Verified</td>
-                    <td><%= f.date_field :acts_gp_date_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :acts_gp_date_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :gp_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :gp_date_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- adr_changed -->
                   <tr>
                     <td>Address Updated</td>
-                    <td><%= f.date_field :acts_adr_changed_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :acts_adr_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :adr_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :adr_changed_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- act_changed -->
                   <tr>
                     <td>Acct-Name Updated</td>
-                    <td><%= f.date_field :acts_act_changed_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :acts_act_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :act_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :act_changed_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- ax_date -->
                   <tr>
                     <td>Account InActive</td>
-                    <td><%= f.date_field :acts_ax_date_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :acts_ax_date_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :ax_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :ax_date_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- updated_at -->
                   <tr>
                     <td>Account Updated</td>
-                    <td><%= f.date_field :acts_updated_at_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :acts_updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- created_at -->
                   <tr>
                     <td>Account Created</td>
-                    <td><%= f.date_field :acts_created_at_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :acts_created_at_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                 </table>
@@ -220,7 +220,7 @@
         <!-- SEARCH WEBS - START -->
         <li>
           <a class="dropdown-toggle" href="#web-criteria" data-toggle="collapse" aria-expanded="false">
-            <%= icon('fas', 'external-link-alt', 'Web Criteria') %>
+            <%= icon('fas', 'external-link-alt', 'Website Criteria') %>
           </a>
           <ul class="collapse" id="web-criteria">
             <div class="panel sidebar-panel">
@@ -252,11 +252,11 @@
 
                 <tr>
                   <td class="w50">
-                    <%= check_box_tag('q[cop_in][]', true) %>
+                    <%= check_box_tag('q[webs_cop_in][]', true) %>
                     <%= 'CoPilot' %>
                   </td>
                   <td class="w50">
-                    <%= check_box_tag('q[cop_not_in][]', true) %>
+                    <%= check_box_tag('q[webs_cop_not_in][]', true) %>
                     <%= 'None' %>
                   </td>
                 </tr>
@@ -269,12 +269,12 @@
                 <!-- Search Webs (URL) -->
                 <tr>
                   <td class="w20">URL</td>
-                  <td class="w80"><%= f.search_field :url_cont_any, class: "form-control ransack-input" %></td>
+                  <td class="w80"><%= f.search_field :webs_url_cont_any, class: "form-control ransack-input" %></td>
                 </tr>
                 <!-- Search Webs (FWD URL) -->
                 <tr>
                   <td class="w20">FWD URL</td>
-                  <td class="w80"><%= f.search_field :fwd_url_cont_any, class: "form-control ransack-input" %></td>
+                  <td class="w80"><%= f.search_field :webs_fwd_url_cont_any, class: "form-control ransack-input" %></td>
 
                 </tr>
               </table>
@@ -291,13 +291,13 @@
                     <tr>
                       <!-- LEFT -->
                       <td>
-                        <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                        <%= check_box_tag('q[webs_temp_name_in][]', temp_name) %>
                         <%= temp_name %>
                       </td>
                     <% else %>
                       <!-- RIGHT -->
                       <td>
-                        <%= check_box_tag('q[temp_name_in][]', temp_name) %>
+                        <%= check_box_tag('q[webs_temp_name_in][]', temp_name) %>
                         <%= temp_name %>
                       </td>
                     </tr>
@@ -317,13 +317,13 @@
                     <tr>
                       <!-- LEFT -->
                       <td>
-                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                        <%= check_box_tag('q[webs_brands_brand_name_in][]', brand_name) %>
                         <%= brand_name %>
                       </td>
                     <% else %>
                       <!-- RIGHT -->
                       <td>
-                        <%= check_box_tag('q[brands_brand_name_in][]', brand_name) %>
+                        <%= check_box_tag('q[webs_brands_brand_name_in][]', brand_name) %>
                         <%= brand_name %>
                       </td>
                     </tr>
@@ -343,13 +343,13 @@
                     <tr>
                       <!-- LEFT -->
                       <td>
-                        <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                        <%= check_box_tag('q[webs_url_sts_in][]', url_sts) %>
                         <%= url_sts %>
                       </td>
                     <% else %>
                       <!-- RIGHT -->
                       <td>
-                        <%= check_box_tag('q[url_sts_in][]', url_sts) %>
+                        <%= check_box_tag('q[webs_url_sts_in][]', url_sts) %>
                         <%= url_sts %>
                       </td>
                     </tr>
@@ -369,13 +369,13 @@
                     <tr>
                       <!-- LEFT -->
                       <td>
-                        <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                        <%= check_box_tag('q[webs_temp_sts_in][]', temp_sts) %>
                         <%= temp_sts %>
                       </td>
                     <% else %>
                       <!-- RIGHT -->
                       <td>
-                        <%= check_box_tag('q[temp_sts_in][]', temp_sts) %>
+                        <%= check_box_tag('q[webs_temp_sts_in][]', temp_sts) %>
                         <%= temp_sts %>
                       </td>
                     </tr>
@@ -395,13 +395,13 @@
                     <tr>
                       <!-- LEFT -->
                       <td>
-                        <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                        <%= check_box_tag('q[webs_page_sts_in][]', page_sts) %>
                         <%= page_sts %>
                       </td>
                     <% else %>
                       <!-- RIGHT -->
                       <td>
-                        <%= check_box_tag('q[page_sts_in][]', page_sts) %>
+                        <%= check_box_tag('q[webs_page_sts_in][]', page_sts) %>
                         <%= page_sts %>
                       </td>
                     </tr>
@@ -422,13 +422,13 @@
                     <tr>
                       <!-- LEFT -->
                       <td>
-                        <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                        <%= check_box_tag('q[webs_cs_sts_in][]', cs_sts) %>
                         <%= cs_sts %>
                       </td>
                     <% else %>
                       <!-- RIGHT -->
                       <td>
-                        <%= check_box_tag('q[cs_sts_in][]', cs_sts) %>
+                        <%= check_box_tag('q[webs_cs_sts_in][]', cs_sts) %>
                         <%= cs_sts %>
                       </td>
                     </tr>
@@ -452,64 +452,67 @@
                   <!-- URL Verified -->
                   <tr>
                     <td>URL Verified</td>
-                    <td><%= f.date_field :url_date_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :url_date_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_url_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_url_date_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- Template -->
                   <tr>
                     <td>Template Verified</td>
-                    <td><%= f.date_field :tmp_date_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :tmp_date_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_tmp_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_tmp_date_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- Staff Page -->
                   <tr>
                     <td>Staff Page Verified</td>
-                    <td><%= f.date_field :page_date_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :page_date_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_page_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_page_date_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- Staff Mined -->
                   <tr>
                     <td>Staff Verified</td>
-                    <td><%= f.date_field :cs_date_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :cs_date_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_cs_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_cs_date_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- URL Updated -->
                   <tr>
                     <td>URL Updated</td>
-                    <td><%= f.date_field :web_changed_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :web_changed_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_web_changed_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_web_changed_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- URL InActive -->
                   <tr>
                     <td>URL InActive</td>
-                    <td><%= f.date_field :wx_date_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :wx_date_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_wx_date_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_wx_date_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- Web Updated -->
                   <tr>
                     <td>Web Updated</td>
-                    <td><%= f.date_field :updated_at_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :updated_at_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_updated_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_updated_at_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
 
                   <!-- Web Created -->
                   <tr>
                     <td>Web Created</td>
-                    <td><%= f.date_field :created_at_gteq, {class: 'ransack-date-input'} %></td>
-                    <td><%= f.date_field :created_at_lteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_created_at_gteq, {class: 'ransack-date-input'} %></td>
+                    <td><%= f.date_field :webs_created_at_lteq, {class: 'ransack-date-input'} %></td>
                   </tr>
                 </table>
               </div>
             </div>
           </ul>
         </li>
+
+
       </ul>
+
 
 
 
@@ -518,155 +521,115 @@
         <%= icon('fas', 'sort', 'Sort Options', class: 'fa-pull-right') %>
       </h6>
 
-      <ul class="components">
-        <!-- Sort Webs (General-1) -->
+        <!-- Sort Acts (General-1) -->
         <table class="ransack-table table  text-nowrap">
-          <thead>
-            <tr>
-              <th colspan="2" class="text-center">General</th>
-            </tr>
-          </thead>
           <tr>
             <td>
-              <%= sort_link(@wq, :url) do %>
-                <span><%= icon('fas', 'home', 'URL') %></span>
+              <%= sort_link(@aq, :act_name) do %>
+                <span><%= icon('fas', 'building', 'Account Name') %></span>
               <% end %>
             </td>
 
             <td>
-              <%= sort_link(@wq, :fwd_url) do %>
-                <span><%= icon('fas', 'home', 'Redirected URL') %></span>
+              <%= sort_link(@aq, :phone) do %>
+                <span><%= icon('fas', 'phone', 'Phone') %></span>
               <% end %>
             </td>
           </tr>
 
           <tr>
             <td>
-              <%= sort_link(@wq, :brands_brand_name) do %>
-                <span><%= icon('fas', 'car', 'Franchise Brand') %></span>
+              <%= sort_link(@aq, :street) do %>
+                <span><%= icon('fas', 'map-marker', 'Street') %></span>
               <% end %>
             </td>
 
             <td>
-              <%= sort_link(@wq, :temp_name) do %>
-                <span><%= icon('fab', 'firstdraft', 'Template') %></span>
+              <%= sort_link(@aq, :city) do %>
+                <span><%= icon('fas', 'map-marker', 'City') %></span>
               <% end %>
             </td>
           </tr>
+
+          <tr>
+            <td>
+              <%= sort_link(@aq, :state) do %>
+                <span><%= icon('fas', 'map-marker', 'State') %></span>
+              <% end %>
+            </td>
+
+            <td>
+              <%= sort_link(@aq, :zip) do %>
+                <span><%= icon('fas', 'map-marker', 'Zip Code') %></span>
+              <% end %>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <%= sort_link(@aq, :lat) do %>
+                <span><%= icon('fas', 'map-marker', 'Latitude') %></span>
+              <% end %>
+            </td>
+
+            <td>
+              <%= sort_link(@aq, :lon) do %>
+                <span><%= icon('fas', 'map-marker', 'Longitude') %></span>
+              <% end %>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <%= sort_link(@aq, :gp_sts) do %>
+                <span><%= icon('fab', 'google', 'GP Status') %></span>
+              <% end %>
+            </td>
+
+            <td>
+              <%= sort_link(@aq, :gp_id) do %>
+                <span><%= icon('fab', 'google', 'GP ID') %></span>
+              <% end %>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <%= sort_link(@aq, :gp_date) do %>
+                <span><%= icon('fas', 'calendar-alt', 'GP Updated') %></span>
+              <% end %>
+            </td>
+
+            <td>
+              <%= sort_link(@aq, :adr_changed) do %>
+                <span><%= icon('fas', 'calendar-alt', 'Address Updated') %></span>
+              <% end %>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <%= sort_link(@aq, :ax_date) do %>
+                <span><%= icon('fas', 'calendar-alt', 'InActive Date') %></span>
+              <% end %>
+            </td>
+
+            <td>
+              <%= sort_link(@aq, :act_changed) do %>
+                <span><%= icon('fas', 'calendar-alt', 'Profile Updated') %></span>
+              <% end %>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan='2'>
+              <%= sort_link(@aq, :created_at) do %>
+                <span><%= icon('fas', 'calendar-alt', 'Created') %></span>
+              <% end %>
+            </td>
+          </tr>
+
         </table>
-
-        <!-- Sort Webs (Status-2) -->
-        <table class="ransack-table table  text-nowrap">
-          <thead>
-            <tr>
-              <th colspan="2" class="text-center">Status</th>
-            </tr>
-          </thead>
-          <tr>
-            <td>
-              <%= sort_link(@wq, :url_sts) do %>
-                <span><%= icon('fas', 'home', 'URL') %></span>
-              <% end %>
-            </td>
-
-            <td>
-              <%= sort_link(@wq, :cop) do %>
-                <span><%= icon('fas', 'star', 'CoPilot') %></span>
-              <% end %>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <%= sort_link(@wq, :temp_sts) do %>
-                <span><%= icon('fab', 'firstdraft', 'Template') %></span>
-              <% end %>
-            </td>
-
-            <td>
-              <%= sort_link(@wq, :page_sts) do %>
-                <span><%= icon('fas', 'link', 'Staff Page') %></span>
-              <% end %>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <%= sort_link(@wq, :cs_sts) do %>
-                <span><%= icon('fas', 'users', 'Staff Mined') %></span>
-              <% end %>
-            </td>
-
-            <td></td>
-          </tr>
-        </table>
-
-        <!-- Sort Webs (Dates-3) -->
-        <table class="ransack-table table  text-nowrap">
-          <thead>
-            <tr>
-              <th colspan="2" class="text-center">Dates</th>
-            </tr>
-          </thead>
-          <tr>
-            <td>
-              <%= sort_link(@wq, :url_date) do %>
-                <span><%= icon('fas', 'home', 'URL Verified') %></span>
-              <% end %>
-            </td>
-
-            <td>
-              <%= sort_link(@wq, :web_changed) do %>
-                <span><%= icon('fas', 'home', 'URL Updated') %></span>
-              <% end %>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <%= sort_link(@wq, :wx_date) do %>
-                <span><%= icon('fas', 'home', 'URL InActive') %></span>
-              <% end %>
-            </td>
-
-            <td>
-              <%= sort_link(@wq, :tmp_date) do %>
-                <span><%= icon('fab', 'firstdraft', 'Template Verified') %></span>
-              <% end %>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <%= sort_link(@wq, :page_date) do %>
-                <span><%= icon('fas', 'link', 'Staff Page Verified') %></span>
-              <% end %>
-            </td>
-
-            <td>
-              <%= sort_link(@wq, :cs_date) do %>
-                <span><%= icon('fas', 'users', 'Staff Mined') %></span>
-              <% end %>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <%= sort_link(@wq, :created_at) do %>
-                <span><%= icon('fas', 'external-link-alt', 'Web Created') %></span>
-              <% end %>
-            </td>
-
-            <td>
-              <%= sort_link(@wq, :updated_at) do %>
-                <span><%= icon('fas', 'external-link-alt', 'Web Updated') %></span>
-              <% end %>
-            </td>
-          </tr>
-        </table>
-      </ul>
-
-
 
       <!-- Save & Name Search Field -->
       <div class="form-group">
@@ -681,21 +644,19 @@
 
     <% end %>
 
-
     <br>
     <!-- SAVED SEARCHES SECTION - START -->
-    <h6 class="text-center sidebar-header">Saved Website Searches</h6>
+    <h6 class="text-center sidebar-header">Saved Account Searches</h6>
     <ul class="components">
       <table class="table">
-        <% queries = current_user&.queries&.where(mod_name: 'Web')&.order("updated_at DESC") %>
+        <% queries = current_user&.queries&.where(mod_name: 'Act')&.order("updated_at DESC") %>
         <% queries&.each_with_index do |query, index| %>
-          <tr><td><%= link_to "#{index + 1}. #{query.q_name}", search_webs_path({q: query.params['q']}) %></td></tr>
+          <tr><td><%= link_to "#{index + 1}. #{query.q_name}", search_acts_path({q: query.params['q']}) %></td></tr>
         <% end %>
       </table>
       <br>
     </ul>
     <br>
-
 
   <% end %>
 

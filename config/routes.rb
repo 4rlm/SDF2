@@ -9,6 +9,16 @@ Rails.application.routes.draw do
   get 'home/index'
   root to: 'home#index'
 
+  resources :acts do
+    collection do
+      match 'search' => 'acts#search', via: [:get, :post], as: :search
+      match 'generate_csv' => 'acts#generate_csv', via: [:get, :post], as: :generate_csv
+
+      match 'followed' => 'acts#followed', via: [:get, :post], as: :followed
+      match 'hidden' => 'acts#hidden', via: [:get, :post], as: :hidden
+    end
+  end
+
   resources :conts do
     collection do
       match 'search' => 'conts#search', via: [:get, :post], as: :search
@@ -78,5 +88,5 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :acts, :terms, :links
+  resources :terms, :links
 end

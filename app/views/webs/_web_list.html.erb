@@ -1,0 +1,61 @@
+<%#= binding.pry %>
+<% @web_activity = current_user.web_activities.find_or_create_by(web_id: web.id) %>
+<% web_export = Export.find_by(id: @web_activity.export_id) %>
+
+  <!-- WEBS SECTION STARTS -->
+  <div style="border-top: 1px solid gray; margin: 0; padding: 0;" class="col-md-12"></div>
+
+  <table class="table details">
+      <tr>
+        <td class='w25'><%= link_to(icon('fas', 'home', web.url ), web.url, target: '_blank')%></td>
+        <td class='w10'><%= web.cop ? icon('fas', 'star', 'CoPilot') : icon('fas', 'star', 'Non-CoPilot') %> </td>
+
+        <% brands = get_brands(web)&.join(', ') %>
+        <% brands.present? ? brand_var = brands : brand_var = 'Non-Franchise'%>
+        <td class='w15'><%= icon('fas', 'car', brand_var ) %></td>
+
+        <td class='w10'><%= icon('fas', 'calendar-alt', web.created_at.strftime('%x') )%></td>
+
+        <td class='w20'>
+          <%= icon('fab', 'firstdraft', "#{web&.tmp_date&.strftime('%x')} #{web.temp_sts} #{web.temp_name}" ) if web.tmp_date.present? %>
+        </td>
+
+        <td class='w10'><%= render 'web_activities/toggle_fav_wrap', locals: {web_activity: @web_activity} %></td>
+        <td class='w10'><%= render 'web_activities/toggle_hide_wrap', locals: {web_activity: @web_activity} %></td>
+      </tr>
+
+      <tr>
+        <td class='w25'><%= link_to(web.fwd_url, web.fwd_url, target: '_blank') if web.fwd_url.present? %></td>
+        <td class='w10'><%= "𝚫 #{web&.web_changed&.strftime('%x')}" if web.web_changed.present? %></td>
+        <td class='w15'><%= icon('fas', 'ban', web&.wx_date&.strftime('%x')) if web.wx_date.present? %></td>
+
+        <td class='w10'><%= icon('fas', 'link', "#{web&.page_date&.strftime('%x')} #{web.page_sts}" ) if web.page_date.present? %></td>
+
+        <td class='w20'>
+          <% if web.cs_date.present? %>
+            <%= icon('fas', 'users', "#{web&.cs_date&.strftime('%x')} #{web.cs_sts}" )%>
+            <% cont_count = web.conts&.count %>
+
+            <% if cont_count > 0 %>
+            | <a class="btn btn-primary btn-sm" href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+            <% end %>
+          <% end %>
+        </td>
+
+        <td class='w20' colspan='2'><%= icon('fas', 'download', web_export&.file_name ) if web_export.present? %></td>
+      </tr>
+
+    </table>
+
+<div class="row">
+  <div class="col-md-12">
+
+    <div class='contWrap' style="display:none" id="<%= web.id %>">
+      <% if web.conts.any? %>
+        <% @conts = web.conts %>
+        <%= render 'conts/conts_list', conts: @conts %>
+      <% end %>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<% @act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
+<% act_export = Export.find_by(id: @act_activity.export_id) %>
+
+
+<table class="table details">
+  <tr>
+    <td colspan="2" style="width: 40%;"><%= icon('fas', 'building', act.act_name) %></p>
+    <td style="width: 40%;"><%= icon('fab', 'google', "Places: #{act.gp_sts}")%>: <%= act.gp_date&.strftime('%x')%></td>
+    <td style="width: 20%;"><%= icon('fas', 'calendar-alt', "Name Updated: #{act.act_changed&.strftime('%x')}" ) %></td>
+  </tr>
+
+  <tr>
+    <td colspan="2" style="width: 40%;"><%= icon('fas', 'address-card', act.full_address) %></td>
+    <td style="width: 40%;"><%= icon('fab', 'google', "# #{act.gp_id}") %></td>
+    <td style="width: 20%;"><%= icon('fas', 'calendar-alt', "Address Updated: #{act.adr_changed&.strftime('%x')}" ) %></td>
+  </tr>
+
+  <tr>
+    <td colspan="2" style="width: 40%;"><%= icon('fas', 'phone', act.phone) %></td>
+    <td style="width: 40%;"><%= icon('fas', 'map-marker-alt', "#{act.lat}, #{act.lon}") %></td>
+    <td style="width: 20%;"><%= icon('fas', 'calendar-alt', "Created: #{act.created_at.strftime('%x')}" ) %></td>
+  </tr>
+
+  <tr>
+    <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
+    <td style="width: 100px;"><%= render 'act_activities/toggle_fav_wrap', locals: {act_activity: @act_activity} %></td>
+    <td style="width: 100px;"><%= render 'act_activities/toggle_hide_wrap', locals: {act_activity: @act_activity} %></td>
+    <td colspan="2" style="width: 33%;"><%= icon('fas', 'download', "#{act_export&.export_date&.strftime('%x')} #{act_export&.file_name}" )%></td>
+  </tr>
+</table>

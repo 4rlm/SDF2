@@ -7,22 +7,76 @@ class ActsController < ApplicationController
   # GET /acts.json
   def index
 
-    ## Splits 'cont_any' strings into array, if string and has ','
-    if !params[:q].nil?
-      acts_helper = Object.new.extend(ActsHelper)
-      params[:q] = acts_helper.split_ransack_params(params[:q])
+    if params[:tally_scope].present?
+      @acts = Act.send(params[:tally_scope]).paginate(page: params[:page], per_page: 20)
+    elsif params[:bypass_web_ids]&.any?
+      @acts = Act.where(id: [params[:bypass_act_ids]]).paginate(page: params[:page], per_page: 20)
+    else
+      params.delete('q') if params['q'].present? && params['q'] == 'q'
+
+      # Splits 'cont_any' strings into array, if string and has ','
+      if params[:q].present?
+        acts_helper = Object.new.extend(ActsHelper)
+        params[:q] = acts_helper.split_ransack_params(params[:q])
+      end
+
+      @aq = Act.ransack(params[:q])
+      @acts = @aq.result(distinct: true).includes(:webs, :conts, :brands, :act_activities).paginate(page: params[:page], per_page: 20)
     end
 
-    @q = Act.web_is_cop_or_franchise.where.not(gp_id: nil).ransack(params[:q])
-    @acts = @q.result(distinct: true).paginate(page: params[:page], per_page: 50)
-
-    respond_to do |format|
-      format.json # show.js.erb
-      format.html # show.html.erb
-    end
-
-    respond_with(@acts)
+    # respond_to do |format|
+    #   format.json # show.js.erb
+    #   format.html # show.html.erb
+    # end
+    #
+    # respond_with(@acts)
   end
+
+
+
+  # def followed
+  #   params[:bypass_act_ids] = helpers.get_followed_act_ids(nil)
+  #   redirect_to acts_path(params)
+  # end
+  #
+  # def hidden
+  #   params[:bypass_act_ids] = helpers.get_hidden_act_ids(nil)
+  #   redirect_to acts_path(params)
+  # end
+
+  # def followed_acts
+  #   act_ids = helpers.get_followed_act_ids(nil)
+  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+  #   redirect_to webs_path(params)
+  # end
+  #
+  # def hidden_acts
+  #   act_ids = helpers.get_hidden_act_ids(nil)
+  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+  #   redirect_to webs_path(params)
+  # end
+
+
+  def generate_csv
+    if params[:q].present?
+      # ActCsvTool.new(params, current_user).delay.start_act_webs_csv_and_log
+      ActCsvTool.new(params, current_user).start_act_webs_csv_and_log
+      params['action'] = 'index'
+      redirect_to acts_path(params)
+    end
+  end
+
+
+  def search
+    if params[:q]['q_name_cont_any'].present?
+      q_name = params[:q].delete('q_name_cont_any')
+      ActCsvTool.new(params, current_user).save_act_queries(q_name)
+    end
+
+    redirect_to acts_path(params)
+  end
+
+
 
   def show
     respond_to do |format|

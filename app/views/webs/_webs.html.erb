@@ -4,7 +4,7 @@
 
 <div class="row">
   <div class="col-md-3">
-    <h5>Accounts <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@webs.count, :delimiter => ',') %> )</span></h5>
+    <h5>Websites <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@webs.count, :delimiter => ',') %> )</span></h5>
   </div>
 
 
@@ -25,12 +25,12 @@
   <% @webs.each do |web| %>
 
     <% @web = web %>
-    <%= render 'webs/web_details', locals: {web: @web} %>
+    <%= render 'webs/web_details', web: @web %>
 
   <% end %>
 
   <br>
-  <%= will_paginate @webs if @webs.present? %>
+  <%= will_paginate @webs %>
   <br>
   <br>
 </div>

@@ -1,0 +1,56 @@
+<%= render partial: 'shared/acts_sidebar_btn' %>
+
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+  <div class="col-md-3">
+    <h5>Accounts <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@acts.count, :delimiter => ',') %> )</span></h5>
+  </div>
+
+
+  <div class="col-md-3">
+    <% if params[:q].present? %>
+      <%= link_to generate_csv_acts_path(params), remote: true, class: 'btn btn-primary btn-md' do %>
+        <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="col-md-6"></div>
+</div>
+
+
+
+<div class="panel outer-panel">
+    <% @acts.each do |act| %>
+      <div class="row outer-list-row">
+
+        <% @act = act %>
+        <%= render 'acts/act_details', act: @act %>
+
+
+        <!-- ACTS SECTION BEGINS -->
+        <!-- <div class="row outer-list-col"> -->
+          <% act.webs.each do |web| %>
+
+            <!-- <div class="row association-row"> -->
+              <%= render 'webs/web_list', web: web %>
+            <!-- </div> -->
+
+          <% end %>
+
+        <!-- </div> -->
+
+
+
+
+      </div>
+
+    <% end %>
+
+
+  <%= will_paginate @acts if @acts.present? %>
+  <br>
+  <br>
+
+</div>

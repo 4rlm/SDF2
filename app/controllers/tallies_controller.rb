@@ -6,7 +6,7 @@ class TalliesController < ApplicationController
   # GET /tallies
   # GET /tallies.json
   def index
-    # @tallies = Tally.all
+    @tallies = Tally.all
   end
 
 

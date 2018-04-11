@@ -23,7 +23,8 @@ class CreateWebs < ActiveRecord::Migration[5.1]
       t.datetime :cs_date, index: true
       t.datetime :brand_date, index: true
 
-      t.integer  :fwd_url
+      t.string   :fwd_url
+      t.integer  :fwd_url_id
       t.datetime :web_changed, index: true
       t.datetime :wx_date, index: true
       t.string   :q_name

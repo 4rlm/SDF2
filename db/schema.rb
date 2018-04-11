@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180407021858) do
+ActiveRecord::Schema.define(version: 20180404232112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,20 +40,6 @@ ActiveRecord::Schema.define(version: 20180407021858) do
     t.index ["act_id", "web_id"], name: "index_act_webs_on_act_id_and_web_id", unique: true
     t.index ["act_id"], name: "index_act_webs_on_act_id"
     t.index ["web_id"], name: "index_act_webs_on_web_id"
-  end
-
-  create_table "activities", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "export_id"
-    t.string "mod_name", null: false
-    t.integer "mod_id"
-    t.string "fav_sts"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "hide_sts"
-    t.index ["export_id"], name: "index_activities_on_export_id"
-    t.index ["mod_name"], name: "index_activities_on_mod_name"
-    t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
   create_table "acts", force: :cascade do |t|
@@ -153,16 +139,6 @@ ActiveRecord::Schema.define(version: 20180407021858) do
     t.index ["web_id"], name: "index_conts_on_web_id"
   end
 
-  create_table "dashes", force: :cascade do |t|
-    t.integer "count"
-    t.string "category"
-    t.citext "focus"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category"], name: "index_dashes_on_category"
-    t.index ["focus"], name: "index_dashes_on_focus"
-  end
-
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
@@ -192,23 +168,14 @@ ActiveRecord::Schema.define(version: 20180407021858) do
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
   end
 
-  create_table "options", force: :cascade do |t|
-    t.string "mod_name", null: false
-    t.jsonb "option_hsh", default: "{}", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["mod_name"], name: "index_options_on_mod_name"
-    t.index ["option_hsh"], name: "index_options_on_option_hsh", using: :gin
-  end
-
   create_table "queries", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "q_name", null: false
     t.string "mod_name", null: false
+    t.integer "row_count"
     t.jsonb "params", default: "{}", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "row_count"
     t.index ["mod_name"], name: "index_queries_on_mod_name"
     t.index ["params"], name: "index_queries_on_params", using: :gin
     t.index ["q_name"], name: "index_queries_on_q_name"
@@ -406,7 +373,8 @@ ActiveRecord::Schema.define(version: 20180407021858) do
     t.datetime "page_date"
     t.datetime "cs_date"
     t.datetime "brand_date"
-    t.integer "fwd_url"
+    t.string "fwd_url"
+    t.integer "fwd_url_id"
     t.datetime "web_changed"
     t.datetime "wx_date"
     t.string "q_name"

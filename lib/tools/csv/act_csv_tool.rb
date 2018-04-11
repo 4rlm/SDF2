@@ -21,12 +21,12 @@ class ActCsvTool
     log_act_webs_export
   end
 
-  # def save_web_queries(q_name)
-  #   query = @user.queries.find_or_initialize_by(mod_name: 'Act', q_name: q_name)
-  #   query.params = @params
-  #   query.row_count = @webs.count
-  #   query.save
-  # end
+  def save_act_queries(q_name)
+    query = @user.queries.find_or_initialize_by(mod_name: 'Act', q_name: q_name)
+    query.params = @params
+    query.row_count = @acts.count
+    query.save
+  end
 
 
   ############  WEB_ACTS EXPORT  ############

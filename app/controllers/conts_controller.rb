@@ -10,8 +10,10 @@ class ContsController < ApplicationController
     if params[:bypass_cont_ids]&.any?
       @conts = Cont.where(id: [params[:bypass_cont_ids]]).paginate(page: params[:page], per_page: 20)
     else
+      params.delete('q') if params['q'].present? && params['q'] == 'q'
+
       ## Splits 'cont_any' strings into array, if string and has ','
-      if !params[:q].nil?
+      if params[:q].present?
         conts_helper = Object.new.extend(ContsHelper)
         params[:q] = conts_helper.split_ransack_params(params[:q])
       end

@@ -13,14 +13,17 @@ class WebsController < ApplicationController
     elsif params[:bypass_web_ids]&.any?
       @webs = Web.where(id: [params[:bypass_web_ids]]).paginate(page: params[:page], per_page: 20)
     else
+      params.delete('q') if params['q'].present? && params['q'] == 'q'
+
       ## Splits 'cont_any' strings into array, if string and has ','
-      if !params[:q].nil?
+      if params[:q].present?
         webs_helper = Object.new.extend(WebsHelper)
         params[:q] = webs_helper.split_ransack_params(params[:q])
       end
 
       @wq = Web.ransack(params[:q])
       @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)
+
     end
 
     # respond_to do |format|
@@ -30,27 +33,27 @@ class WebsController < ApplicationController
   end
 
 
-  def followed
-    params[:bypass_web_ids] = helpers.get_followed_web_ids(nil)
-    redirect_to webs_path(params)
-  end
+  # def followed
+  #   params[:bypass_web_ids] = helpers.get_followed_web_ids(nil)
+  #   redirect_to webs_path(params)
+  # end
+  #
+  # def hidden
+  #   params[:bypass_web_ids] = helpers.get_hidden_web_ids(nil)
+  #   redirect_to webs_path(params)
+  # end
 
-  def hidden
-    params[:bypass_web_ids] = helpers.get_hidden_web_ids(nil)
-    redirect_to webs_path(params)
-  end
+  # def followed_acts
+  #   act_ids = helpers.get_followed_act_ids(nil)
+  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+  #   redirect_to webs_path(params)
+  # end
 
-  def followed_acts
-    act_ids = helpers.get_followed_act_ids(nil)
-    params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
-    redirect_to webs_path(params)
-  end
-
-  def hidden_acts
-    act_ids = helpers.get_hidden_act_ids(nil)
-    params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
-    redirect_to webs_path(params)
-  end
+  # def hidden_acts
+  #   act_ids = helpers.get_hidden_act_ids(nil)
+  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+  #   redirect_to webs_path(params)
+  # end
 
 
   def generate_csv
