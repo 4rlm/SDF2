@@ -60,8 +60,13 @@ class WebsController < ApplicationController
     if params[:q].present?
       # WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
       WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
-      params['action'] = 'index'
-      redirect_to webs_path(params)
+
+      respond_to do |format|
+        format.js { render :download_webs, status: :ok, location: @webs }
+      end
+
+      # params['action'] = 'index'
+      # redirect_to webs_path(params)
     end
   end
 

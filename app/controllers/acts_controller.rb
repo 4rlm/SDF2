@@ -61,8 +61,13 @@ class ActsController < ApplicationController
     if params[:q].present?
       # ActCsvTool.new(params, current_user).delay.start_act_webs_csv_and_log
       ActCsvTool.new(params, current_user).start_act_webs_csv_and_log
-      params['action'] = 'index'
-      redirect_to acts_path(params)
+
+      respond_to do |format|
+        format.js { render :download_acts, status: :ok, location: @acts }
+      end
+
+      # params['action'] = 'index'
+      # redirect_to acts_path(params)
     end
   end
 

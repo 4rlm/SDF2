@@ -44,8 +44,13 @@ class ContsController < ApplicationController
     if params[:q].present?
       # ContCsvTool.new(params, current_user).delay.start_cont_web_csv_and_log
       ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
-      params['action'] = 'index'
-      redirect_to conts_path(params)
+
+      respond_to do |format|
+        format.js { render :download_conts, status: :ok, location: @conts }
+      end
+
+      # params['action'] = 'index'
+      # redirect_to conts_path(params)
     end
   end
 

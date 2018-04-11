@@ -8,11 +8,7 @@
   </div>
 
   <div class="col-md-3">
-    <% if params[:q].present? %>
-      <%= link_to generate_csv_conts_path(params), class: 'btn btn-primary btn-md' do %>
-        <i class="fa fa-download" aria-hidden="true"></i> Download CSV
-      <% end %>
-    <% end %>
+    <%= render 'conts/download_conts', conts: @conts %>
   </div>
 
 
