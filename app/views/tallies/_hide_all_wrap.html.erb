@@ -1,0 +1,6 @@
+<td>
+  <% @tally_hsh = tally_hsh %>
+  <div class="hide_all" data-id="<% @tally_hsh[:tally_id] %>">
+    <%= render 'tallies/hide_all', tally_hsh: @tally_hsh %>
+  </div>
+</td>

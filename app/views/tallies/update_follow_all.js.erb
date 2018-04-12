@@ -1,0 +1,2 @@
+var follow_all_div = $('div.follow_all[data-id="<%= @tally_hsh[:tally_id] %>"]');
+$(follow_all_div).html("<%= j (render 'follow_all', tally_hsh: @tally_hsh) %>");

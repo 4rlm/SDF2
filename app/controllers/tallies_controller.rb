@@ -25,26 +25,55 @@ class TalliesController < ApplicationController
 
 
   def follow_all
-    follow_all_tally_helper(params)
-    redirect_to tallies_path
+    follow_all_tally_helper(params[:tally_hsh])
+
+    @tally_hsh = params[:tally_hsh]
+    @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
+
+    respond_to do |format|
+      format.js { render :update_follow_all, status: :ok, tally_hsh: @tally_hsh }
+    end
+
+    # redirect_to tallies_path
   end
 
   def unfollow_all
-    binding.pry
-    unfollow_all_tally_helper(params)
-    redirect_to tallies_path
+    unfollow_all_tally_helper(params[:tally_hsh])
+
+    @tally_hsh = params[:tally_hsh]
+    @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
+
+    respond_to do |format|
+      format.js { render :update_unfollow_all, status: :ok, tally_hsh: @tally_hsh }
+    end
+
+    # redirect_to tallies_path
   end
 
   def hide_all
-    binding.pry
-    hide_all_tally_helper(params)
-    redirect_to tallies_path
+    hide_all_tally_helper(params[:tally_hsh])
+
+    @tally_hsh = params[:tally_hsh]
+    @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
+
+    respond_to do |format|
+      format.js { render :update_hide_all, status: :ok, tally_hsh: @tally_hsh }
+    end
+
+    # redirect_to tallies_path
   end
 
   def unhide_all
-    binding.pry
-    unhide_all_tally_helper(params)
-    redirect_to tallies_path
+    unhide_all_tally_helper(params[:tally_hsh])
+
+    @tally_hsh = params[:tally_hsh]
+    @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
+
+    respond_to do |format|
+      format.js { render :update_unhide_all, status: :ok, tally_hsh: @tally_hsh }
+    end
+
+    # redirect_to tallies_path
   end
 
 

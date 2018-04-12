@@ -1,6 +1,4 @@
-<td>
-  <% @tally_hsh = tally_hsh %>
-  <div class="download_tallies" data-id="<% @tally_hsh[:tally_id] %>">
-    <%= render 'tallies/download_tallies', tally_hsh: @tally_hsh %>
-  </div>
-</td>
+<% @tally_hsh = tally_hsh %>
+<div class="download_tallies" data-id="<% @tally_hsh[:tally_id] %>">
+  <%= render 'tallies/download_tallies', tally_hsh: @tally_hsh %>
+</div>
