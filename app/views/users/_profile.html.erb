@@ -1,27 +1,22 @@
 <!-- User Profile -->
 <div class="panel">
-  <h6>User Profile</h6>
   <div class="row">
     <table class="table">
-      <thead class="thead-inverse">
+      <tbody>
         <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Role</th>
-          <th>Registered</th>
-          <th>Updated</th>
-        </tr>
-      </thead>
+          <td style="font-size: 18px; font-weight: bolder;"><%= icon('fas', 'user-circle', "User Profile") %></td>
 
-      <tr>
-        <td><%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %></td>
-        <td><%= @user.email %></td>
-        <td><%= @user.phone %></td>
-        <td><%= @user.role.capitalize %></td>
-        <td><%= @user.created_at.strftime('%x') %></td>
-        <td><%= @user.updated_at.strftime('%x') %></td>
-      </tr>
+          <td><%= icon('fas', 'user', "#{@user.first_name.capitalize} #{@user.last_name.capitalize}") %></td>
+          <td><%= icon('fas', 'at', @user.email) %></td>
+          <td><%= icon('fas', 'phone', @user.phone) %></td>
+          <td><%= icon('fas', 'id-badge', @user.role.capitalize) %></td>
+          <td><%= icon('fas', 'calendar-alt', "Registered #{@user.created_at.strftime('%x')}") %></td>
+          <td><%= icon('fas', 'calendar-alt', "Updated #{@user.updated_at.strftime('%x')}") %></td>
+
+          <td><%= link_to icon('fas', 'edit', 'Edit Profile'),  edit_user_registration_path, class: "btn btn-primary btn-md" %></td>
+          <td><%= link_to icon('fas', 'sign-out-alt', 'Log Out'),  destroy_user_session_path, method: :delete, class: "btn btn-danger btn-md" %></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>
