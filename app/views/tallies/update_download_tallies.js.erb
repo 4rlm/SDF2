@@ -1,0 +1,2 @@
+var download_tallies_div = $('div.download_tallies[data-id="<%= @tally_hsh[:tally_id] %>"]');
+$(download_tallies_div).html("<%= j (render 'download_tallies', tally_hsh: @tally_hsh) %>");

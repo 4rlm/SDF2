@@ -12,8 +12,15 @@ class TalliesController < ApplicationController
 
 
   def generate_csv
-    generate_csv_tally_helper(params)
-    redirect_to tallies_path
+    generate_csv_tally_helper(params[:tally_hsh])
+    @tally_hsh = params[:tally_hsh]
+    @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
+
+    respond_to do |format|
+      format.js { render :update_download_tallies, status: :ok, tally_hsh: @tally_hsh }
+    end
+
+    # redirect_to tallies_path
   end
 
 
