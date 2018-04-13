@@ -1,89 +1,139 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+<div class="header-overlay"></div>
 <section class="home-hero parallax--bg">
-	<div class="v-header container">
-
+  <div class="v-header container">
     <div class="fullscreen-video-wrap">
       <%= video_tag "cars.mov", autoplay: :autoplay, loop: :loop, mute: :mute, class: "video" %>
     </div>
+  </div>
+<!-- VIDEO BACKGROUND STUFF ABOVE -->
 
-		<!-- <h1 class="title parallax--box">Making things looks great <span>for companies who make great stuff</span>
-		</h1>
-		<a href="" class="button button-accent">See Our Work</a> -->
-	</div>
+  <div class="header-content text-md-center" style="margin-top: -280px;">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="title parallax--box">Welcome to Big Data Solutions</h1>
+        <h2>Customized CRM Data Curation</h2>
+      </div>
+    </div>
+  </div>
 
-  <div class="header-overlay"></div>
-  
+  <div class="row" style="margin-top: 150px;">
+    <div class="col-md-4 parallax--box">
+      <h3 class="text-center" style="background: orange; color: #232323;">Problem</h3>
+      <h3 class="text-center" >Sales Professionals' Time Spent</h3>
+      <div class="problem_solution">
+        <h5><%= icon('fas', 'caret-down', '31% Searching & Verifying Data') %></h5>
+        <h5><%= icon('fas', 'caret-down', '20% Reporting & Admin') %></h5>
+        <h5><%= icon('fas', 'caret-down', '33% SELLING') %></h5>
+      </div>
+      <h6 class="text-center"> - Docurated's State of Sales Productivity Study</h6>
+    </div>
+
+    <div class="col-md-4">
+    </div>
+
+    <div class="col-md-4 parallax--box">
+      <h3 class="text-center" style="background: #00ff6c; color: #232323;">Solution</h3>
+      <h3 class="text-center">CRM Data Verification</h3>
+      <div class="problem_solution">
+        <h5><%= icon('fas', 'caret-up', 'Weekly Data Status Reports') %></h5>
+        <h5><%= icon('fas', 'caret-up', '24-7 Google Places Verification') %></h5>
+        <h5><%= icon('fas', 'caret-up', 'Identifies Duplicates & Obsoletes') %></h5>
+        <h5><%= icon('fas', 'caret-up', 'Industry Specific Lead Generation') %></h5>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row text-center" style="margin-top: 0px;">
+    <div class="col-md-12 parallax--box">
+      <h5>Stop Researching CRM Data</h5>
+      <h2>Get Back to Selling</h2><br>
+    </div>
+  </div>
+
+  <div class="row text-center" style="margin-top: 15px;">
+    <div class="col-md-12 parallax--box">
+      <a href="" class="button button-accent">View Demo</a>
+    </div>
+  </div>
 </section>
 
-<div class="container">
+
+
+<!-- <div class="container" style="margin-top: 0px;">
 	<section class="home-about">
 
 		<div class="home-about-textbox parallax--box">
-			<h1>Who we are</h1>
-			<p>Sit by the fire drink water out of the faucet hide head under blanket so no one can see cat is love, cat is life. Knock dish off table eating always hungry so favor packaging over toy. </p>
-			<p><strong>Rub face on owner.</strong> Peer out window, chatter at birds, lure them to mouth. Chase ball of string eat a plant, kill a hand, i am the best have secret plans.</p>
+			<h3>Unique Approach</h3>
+
+      <p>Sage DataForce structures data on a tri-directional basis with the website url as its nucleus. The first step of the process is running all of your account urls through a process which can follow and log redirects.  They verifying the account data with browser and map indexing.  Thus showing you the complete history and connection between business names, locations, and urls.</p>
 		</div>
 
 	</section>
-</div>
+</div> -->
 
 
-<section class="portfolio">
-	<h1>Some of our work</h1>
+<section class="portfolio" style="">
 
-	<!-- portfolio item 01 -->
+  <!-- Dashboard -->
+  <figure class="port-item">
+    <%= image_tag("sdf_demo/dash.png", class: 'port_img') %>
+
+    <figcaption class="port-desc text-center">
+      <p>Weekly Exportable Reports of New & Updated Data</p>
+      <a href="" class="button button-accent button-small">Dashboard Demo</a>
+    </figcaption>
+  </figure>
+
+	<!-- Profile -->
 	<figure class="port-item">
-    <%= image_tag("portfolio-01.jpg") %>
-		<figcaption class="port-desc">
-			<p>Project title</p>
-			<a href="" class="button button-accent button-small">Project details</a>
+    <%= image_tag("sdf_demo/profile.png", class: 'port_img') %>
+
+		<figcaption class="port-desc text-center">
+			<p>Manage Saved Searches, CSVs, Followed & Hidden Data</p>
+			<a href="" class="button button-accent button-small">User Profile Demo</a>
 		</figcaption>
 	</figure>
 
-	<!-- portfolio item 02 -->
+	<!-- Accounts -->
 	<figure class="port-item">
-    <%= image_tag("portfolio-02.jpg") %>
-		<figcaption class="port-desc">
-			<p>Project title</p>
-			<a href="" class="button button-accent button-small">Project details</a>
+    <%= image_tag("sdf_demo/acts.png", class: 'port_img') %>
+
+		<figcaption class="port-desc text-center">
+			<p>Google Places ID, GPS, Changes, CSVs including Contacts & Websites</p>
+			<a href="" class="button button-accent button-small">Accounts Demo</a>
 		</figcaption>
 	</figure>
 
-	<!-- portfolio item 03 -->
+	<!-- Contacts -->
 	<figure class="port-item">
-    <%= image_tag("portfolio-03.jpg") %>
-		<figcaption class="port-desc">
-			<p>Project title</p>
-			<a href="" class="button button-accent button-small">Project details</a>
+    <%= image_tag("sdf_demo/conts.png", class: 'port_img') %>
+
+		<figcaption class="port-desc text-center">
+			<p>Name, Job, Email, Phone, Changes, CSVs including Accounts & Websites </p>
+			<a href="" class="button button-accent button-small">Contacts Demo</a>
 		</figcaption>
 	</figure>
 
-	<!-- portfolio item 04 -->
+	<!-- Websites -->
 	<figure class="port-item">
-    <%= image_tag("portfolio-04.jpg") %>
-		<figcaption class="port-desc">
-			<p>Project title</p>
-			<a href="" class="button button-accent button-small">Project details</a>
+    <%= image_tag("sdf_demo/webs.png", class: 'port_img') %>
+
+		<figcaption class="port-desc text-center">
+      <p>List all Accounts and Contacts Associated with Website URL </p>
+			<a href="" class="button button-accent button-small">Websites Demo</a>
 		</figcaption>
 	</figure>
 
-	<!-- portfolio item 05 -->
+	<!-- Search -->
 	<figure class="port-item">
-    <%= image_tag("portfolio-05.jpg") %>
-		<figcaption class="port-desc">
-			<p>Project title</p>
-			<a href="" class="button button-accent button-small">Project details</a>
-		</figcaption>
-	</figure>
+    <%= image_tag("sdf_demo/search.png", class: 'port_img') %>
 
-	<!-- portfolio item 06 -->
-	<figure class="port-item">
-    <%= image_tag("portfolio-06.jpg") %>
-		<figcaption class="port-desc">
-			<p>Project title</p>
-			<a href="" class="button button-accent button-small">Project details</a>
+		<figcaption class="port-desc text-center">
+			<p>Search, Save, View & Sort Accounts, Contacts & Websites</p>
+			<a href="" class="button button-accent button-small">Advanced Search Demo</a>
 		</figcaption>
 	</figure>
 
@@ -91,14 +141,33 @@
 
 <section class="cta">
 	<div class="container">
-		<h1 class="title title-cta">Like what you see?
-			 <span>Then what are you waiting for?</span>
-		</h1>
-		<a href="" class="button button-dark">Hire us</a>
+		<!-- <h1 class="title title-cta">Like what you see? <span>Then what are you waiting for?</span></h1> -->
+		<!-- <a href="" class="button button-dark">Hire us</a> -->
+    <!-- <section class="home-about"> -->
+
+      <div class="home-about-textbox parallax--box" style="margin-top: -280px;">
+        <div class="row">
+          <h1 class="text-center">Unique Approach <span style="font-size: 18px;">Website URL at the Core; Not the Account</span></h1>
+        </div>
+
+        <div class="" style="margin-left: 100px;">
+          <h6>1. Follow & Log URL Redirects</h6>
+          <h6>2. Verify Data with Google Places and Maps</h6>
+          <h6>3. Standardize Phones, URLs & Addresses</h6>
+        </div>
+        <h5 style="margin-left: 50px;">Logs History and Relationship of Accounts, Addresses & URLs</h5>
+      </div>
+
+    <!-- </section> -->
+
 	</div>
 </section>
 
-<footer>
+<div style="margin-bottom: 50px;">
+
+</div>
+
+<!-- <footer>
 	<div class="container">
 		<div class="col-3">
 			<p>Shoreditch bespoke leggings, tote bag williamsburg woke retro readymade scenester brunch art party farm-to-table pug. Wayfarers lyft prism, edison bulb distillery pok pok narwhal pinterest poke.</p>
@@ -134,4 +203,4 @@
 			</ul>
 		</div>
 	</div>
-</footer>
+</footer> -->

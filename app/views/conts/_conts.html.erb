@@ -11,9 +11,7 @@
     <%= render 'conts/download_conts', conts: @conts %>
   </div>
 
-
   <div class="col-md-6"></div>
-
 </div>
 
 
@@ -39,16 +37,14 @@
         </div>
       </div>
     <% end %>
-
-
-<% end %>
+  <% end %>
 </div>
 
 
-
-
-
-<br>
-<%= will_paginate @conts if @conts&.present? %>
-<br>
-<br>
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-8 text-center">
+    <%= will_paginate @conts %>
+  </div>
+</div>

@@ -7,7 +7,6 @@
     <h5><%= icon('fas', 'building', 'Accounts') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@acts.count, :delimiter => ',') %> )</span></h5>
   </div>
 
-
   <div class="col-md-3">
     <%= render 'acts/download_acts', acts: @acts %>
   </div>
@@ -16,37 +15,24 @@
 </div>
 
 
-
 <div class="panel outer-panel">
-    <% @acts.each do |act| %>
-      <div class="row outer-list-row">
-
-        <% @act = act %>
-        <%= render 'acts/act_details', act: @act %>
-
-
-        <!-- ACTS SECTION BEGINS -->
-        <!-- <div class="row outer-list-col"> -->
-          <% act.webs.each do |web| %>
-
-            <!-- <div class="row association-row"> -->
-              <%= render 'webs/web_list', web: web %>
-            <!-- </div> -->
-
-          <% end %>
-
-        <!-- </div> -->
+  <% @acts.each do |act| %>
+    <div class="row outer-list-row">
+      <% @act = act %>
+      <%= render 'acts/act_details', act: @act %>
+      <!-- ACTS SECTION BEGINS -->
+        <% act.webs.each do |web| %>
+            <%= render 'webs/web_list', web: web %>
+        <% end %>
+    </div>
+  <% end %>
+</div>
 
 
-
-
-      </div>
-
-    <% end %>
-
-
-  <%= will_paginate @acts if @acts.present? %>
-  <br>
-  <br>
-
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-8 text-center">
+    <%= will_paginate @acts %>
+  </div>
 </div>

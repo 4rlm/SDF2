@@ -7,26 +7,25 @@
     <h5><%= icon('fas', 'external-link-alt', 'Websites') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@webs.count, :delimiter => ',') %> )</span></h5>
   </div>
 
-
   <div class="col-md-3">
     <%= render 'webs/download_webs', webs: @webs %>
   </div>
-
   <div class="col-md-6"></div>
 </div>
 
 
-
 <div class="panel outer-panel">
   <% @webs.each do |web| %>
-
     <% @web = web %>
     <%= render 'webs/web_details', web: @web %>
-
   <% end %>
+</div>
 
-  <br>
-  <%= will_paginate @webs %>
-  <br>
-  <br>
+
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-8 text-center">
+    <%= will_paginate @webs %>
+  </div>
 </div>

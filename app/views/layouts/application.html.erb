@@ -20,25 +20,20 @@
 
   <div class="wrapper">
     <%= render partial: 'shared/sidebar' %>
+    <div class="row">
+      <%= render partial: 'shared/flash' %>
+    </div>
 
     <!-- Page Content Holder -->
-    <div id="content">
+    <div id="content" style="margin-top: 30px;">
       <div id="yield-content">
-        <div class=""><%= render partial: 'shared/flash' %></div>
         <%= yield %>
+        <%= render 'shared/footer' %>
       </div>
-
-      <!-- <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <%#= render partial: 'shared/sidebar_btn' %>
-          <%#= render partial: 'shared/flash' %>
-        </div>
-      </nav> -->
     </div>
 
     <div class="overlay"></div>
   </div>
-
 
 </body>
 
