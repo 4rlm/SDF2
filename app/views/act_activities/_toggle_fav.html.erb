@@ -1,7 +1,7 @@
-<%= form_with(model: @act_activity) do |f| %>
+<%= form_with(model: act_activity) do |f| %>
   <%= f.hidden_field :form_id, value: 'toggle_fav_form' %>
 
-  <% if @act_activity.fav_sts == true %>
+  <% if act_activity.fav_sts == true %>
     <% fav_btn = 'active-sts' %>
     <% submit_label = 'Following' %>
     <%= f.hidden_field :fav_sts, value: false %>

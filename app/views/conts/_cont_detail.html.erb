@@ -1,14 +1,13 @@
-<% cont = @cont %>
-<% @cont_activity = current_user.cont_activities.find_or_create_by(cont_id: cont.id) %>
-<% cont_export = Export.find_by(id: @cont_activity.export_id) %>
+<% cont_activity = current_user.cont_activities.find_or_create_by(cont_id: cont.id) %>
+<% cont_export = Export.find_by(id: cont_activity.export_id) %>
 
 <div class="row outer-list-row">
   <table class="table details">
     <tr>
       <td style="width: 60%;"><%= icon('fas', 'user', cont.full_name) %></td>
 
-      <td style="width: 10%;"><%= render 'cont_activities/toggle_fav_wrap', locals: {cont_activity: @cont_activity} %></td>
-      <td style="width: 10%;"><%= render 'cont_activities/toggle_hide_wrap', locals: {cont_activity: @cont_activity} %></td>
+      <td style="width: 10%;"><%= render 'cont_activities/toggle_fav_wrap', cont_activity: cont_activity %></td>
+      <td style="width: 10%;"><%= render 'cont_activities/toggle_hide_wrap', cont_activity: cont_activity %></td>
       <td style="width: 10%;">Created:</td>
       <td style="width: 10%;"><%= cont.created_at&.strftime('%x') %></td>
     </tr>
@@ -47,16 +46,16 @@
   <% acts&.each do |act| %>
 
     <!-- FIND OR CREATE act_activity -->
-    <% @act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
-    <% act_export = Export.find_by(id: @act_activity.export_id) %>
+    <% act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
+    <% act_export = Export.find_by(id: act_activity.export_id) %>
 
     <table class="table details">
       <tr class="cont-acts">
         <td class="cont-acts w70"><%= act.act_name %> | <%= act.full_address %> </td>
         <td class="cont-acts w10"><a href="#" class="btn btn-sm" data-toggle="modal" data-target="#viewWebModal">Details</a></td>
         <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-        <td class="cont-acts w10"><%= render 'act_activities/toggle_fav_wrap', locals: {act_activity: @act_activity} %></td>
-        <td class="cont-acts w10"><%= render 'act_activities/toggle_hide_wrap', locals: {act_activity: @act_activity} %></td>
+        <td class="cont-acts w10"><%= render 'act_activities/toggle_fav_wrap', act_activity: act_activity %></td>
+        <td class="cont-acts w10"><%= render 'act_activities/toggle_hide_wrap', act_activity: act_activity %></td>
       </tr>
     </table>
   <% end %>
@@ -64,6 +63,5 @@
 </div>
 
 <div id="view-web"> <!-- MODAL -->
-  <%# @web = cont.web %>
-  <%#= render 'webs/web_modal', web: @web %>
+  <%= render 'webs/web_modal', web: cont.web %>
 </div>

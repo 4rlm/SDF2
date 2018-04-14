@@ -1,7 +1,7 @@
 <% if @wq.present? %>
-  <%= render partial: 'shared/webs_sidebar' %>
+  <%= render 'shared/webs_sidebar' %>
 <% elsif @cq.present? %>
-  <%= render partial: 'shared/conts_sidebar' %>
+  <%= render 'shared/conts_sidebar' %>
 <% elsif @aq.present? %>
-  <%= render partial: 'shared/acts_sidebar' %>
+  <%= render 'shared/acts_sidebar' %>
 <% end%>

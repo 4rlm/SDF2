@@ -1,7 +1,6 @@
-<!-- FIND OR CREATE @activity -->
-<% web = @web %>
-<% @web_activity = current_user.web_activities.find_or_create_by(web_id: web.id) %>
-<% web_export = Export.find_by(id: @web_activity.export_id) %>
+<!-- FIND OR CREATE activity -->
+<% web_activity = current_user.web_activities.find_or_create_by(web_id: web.id) %>
+<% web_export = Export.find_by(id: web_activity.export_id) %>
 
 <!-- WEBS SECTION STARTS -->
 <div class="row outer-list-row">
@@ -13,8 +12,8 @@
       <tr>
         <td style="width: 30%;"><%= icon('fas', 'star', web.cop) %></td>
         <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
-        <td style="width: 30%;"><%= render 'web_activities/toggle_fav_wrap', locals: {web_activity: @web_activity} %></td>
-        <td style="width: 30%;"><%= render 'web_activities/toggle_hide_wrap', locals: {web_activity: @web_activity} %></td>
+        <td style="width: 30%;"><%= render 'web_activities/toggle_fav_wrap', web_activity: web_activity %></td>
+        <td style="width: 30%;"><%= render 'web_activities/toggle_hide_wrap', web_activity: web_activity %></td>
       </tr>
 
       <tr><td colspan="3"><%= icon('fas', 'car', get_brands(web)&.join(', ')) %></td></tr>
@@ -51,17 +50,9 @@
       <div class="row association-row">
         <%= render 'acts/act_details', act: act %>
       </div>
-      
+
     <% end %>
 
   </div>
 
-</div>
-
-
-<div class='row contWrap' style="display:none" id="<%= web.id %>">
-  <% if web.conts.any? %>
-    <% @conts = web.conts %>
-    <%= render 'conts/conts_list', conts: @conts %>
-  <% end %>
 </div>

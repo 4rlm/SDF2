@@ -1,7 +1,7 @@
-<%= form_with(model: @web_activity) do |f| %>
+<%= form_with(model: web_activity) do |f| %>
   <%= f.hidden_field :form_id, value: 'toggle_hide_form' %>
 
-  <% if @web_activity.hide_sts == true %>
+  <% if web_activity.hide_sts == true %>
     <% hide_btn = 'active-sts' %>
     <% submit_label = 'Hidden' %>
     <%= f.hidden_field :hide_sts, value: false %>

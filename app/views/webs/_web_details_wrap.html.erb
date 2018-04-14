@@ -1,0 +1,7 @@
+<%= render 'webs/web_details', web: web %>
+
+<div class='row contWrap' style="display:none" id="<%= web.id %>">
+  <% if web.conts.any? %>
+    <%= render 'conts/conts_list', conts: web.conts %>
+  <% end %>
+</div>

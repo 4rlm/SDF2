@@ -1,7 +1,8 @@
 class ContsController < ApplicationController
   before_action :set_cont, only: [:show, :edit, :update, :destroy]
-  respond_to :html, :json
+  # respond_to :html, :json
   helper_method :sort_column, :sort_direction
+  require 'will_paginate/array'
 
   # GET /conts
   # GET /conts.json

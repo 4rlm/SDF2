@@ -1,6 +1,6 @@
 <%#= binding.pry %>
-<% @web_activity = current_user.web_activities.find_or_create_by(web_id: web.id) %>
-<% web_export = Export.find_by(id: @web_activity.export_id) %>
+<% web_activity = current_user.web_activities.find_or_create_by(web_id: web.id) %>
+<% web_export = Export.find_by(id: web_activity.export_id) %>
 
   <!-- WEBS SECTION STARTS -->
   <div style="border-top: 1px solid gray; margin: 0; padding: 0;" class="col-md-12"></div>
@@ -20,8 +20,8 @@
           <%= icon('fab', 'firstdraft', "#{web&.tmp_date&.strftime('%x')} #{web.temp_sts} #{web.temp_name}" ) if web.tmp_date.present? %>
         </td>
 
-        <td class='w10'><%= render 'web_activities/toggle_fav_wrap', locals: {web_activity: @web_activity} %></td>
-        <td class='w10'><%= render 'web_activities/toggle_hide_wrap', locals: {web_activity: @web_activity} %></td>
+        <td class='w10'><%= render 'web_activities/toggle_fav_wrap', web_activity: web_activity %></td>
+        <td class='w10'><%= render 'web_activities/toggle_hide_wrap', web_activity: web_activity %></td>
       </tr>
 
       <tr>
@@ -52,8 +52,7 @@
 
     <div class='contWrap' style="display:none" id="<%= web.id %>">
       <% if web.conts.any? %>
-        <% @conts = web.conts %>
-        <%= render 'conts/conts_list', conts: @conts %>
+        <%= render 'conts/conts_list', conts: web.conts %>
       <% end %>
     </div>
 

@@ -1,5 +1,5 @@
-<% @act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
-<% act_export = Export.find_by(id: @act_activity.export_id) %>
+<% act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
+<% act_export = Export.find_by(id: act_activity.export_id) %>
 
 
 <table class="table details">
@@ -23,8 +23,8 @@
 
   <tr>
     <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-    <td style="width: 100px;"><%= render 'act_activities/toggle_fav_wrap', locals: {act_activity: @act_activity} %></td>
-    <td style="width: 100px;"><%= render 'act_activities/toggle_hide_wrap', locals: {act_activity: @act_activity} %></td>
+    <td style="width: 100px;"><%= render 'act_activities/toggle_fav_wrap', act_activity: act_activity %></td>
+    <td style="width: 100px;"><%= render 'act_activities/toggle_hide_wrap', act_activity: act_activity %></td>
     <td colspan="2" style="width: 33%;"><%= icon('fas', 'download', "#{act_export&.export_date&.strftime('%x')} #{act_export&.file_name}" )%></td>
   </tr>
 </table>

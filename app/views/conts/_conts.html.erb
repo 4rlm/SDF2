@@ -1,29 +1,30 @@
-<%= render partial: 'shared/conts_sidebar_btn' %>
+<%= render 'shared/conts_sidebar_btn' %>
 
 <p id="notice"><%= notice %></p>
 
 <div class="row">
   <div class="col-md-3">
-    <h5><%= icon('fas', 'users', 'Contacts') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@conts.count, :delimiter => ',') %> )</span></h5>
+    <h5><%= icon('fas', 'users', 'Contacts') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(conts.count, :delimiter => ',') %> )</span></h5>
   </div>
 
   <div class="col-md-3">
-    <%= render 'conts/download_conts', conts: @conts %>
+    <%= render 'conts/download_conts', conts: conts %>
   </div>
 
   <div class="col-md-6"></div>
 </div>
 
 
+
 <div class="row">
-  <% @conts&.each_with_index do |cont, index| %>
+  <% conts&.each_with_index do |cont, index| %>
     <% if index.even? %>
+
+
     <!-- LEFT -->
       <div class="col-md-6">
         <div class="col-md-12">
-          <% @cont = cont %>
           <%= render 'conts/cont_detail', cont: cont %>
-          <%#= render 'webs/web_details', locals: {web: @web} %>
         </div>
       </div>
 
@@ -31,20 +32,20 @@
       <!-- RIGHT -->
       <div class="col-md-6">
         <div class="col-md-12">
-          <% @cont = cont %>
           <%= render 'conts/cont_detail', cont: cont %>
-          <%#= render 'webs/web_details', locals: {web: @web} %>
         </div>
       </div>
     <% end %>
+
   <% end %>
 </div>
+
 
 
 <div class="row">
   <div class="col-md-4">
   </div>
   <div class="col-md-8 text-center">
-    <%= will_paginate @conts %>
+    <%= will_paginate conts %>
   </div>
 </div>
