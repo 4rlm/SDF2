@@ -6,8 +6,8 @@
     <tr>
       <td style="width: 60%;"><%= icon('fas', 'user', cont.full_name) %></td>
 
-      <td style="width: 10%;"><%= render 'cont_activities/toggle_fav_wrap', cont_activity: cont_activity %></td>
-      <td style="width: 10%;"><%= render 'cont_activities/toggle_hide_wrap', cont_activity: cont_activity %></td>
+      <td style="width: 10%;"><%= render 'cont_activities/toggle_fav', cont_activity: cont_activity %></td>
+      <td style="width: 10%;"><%= render 'cont_activities/toggle_hide', cont_activity: cont_activity %></td>
       <td style="width: 10%;">Created:</td>
       <td style="width: 10%;"><%= cont.created_at&.strftime('%x') %></td>
     </tr>
@@ -54,8 +54,8 @@
         <td class="cont-acts w70"><%= act.act_name %> | <%= act.full_address %> </td>
         <td class="cont-acts w10"><a href="#" class="btn btn-sm" data-toggle="modal" data-target="#viewWebModal">Details</a></td>
         <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-        <td class="cont-acts w10"><%= render 'act_activities/toggle_fav_wrap', act_activity: act_activity %></td>
-        <td class="cont-acts w10"><%= render 'act_activities/toggle_hide_wrap', act_activity: act_activity %></td>
+        <td class="cont-acts w10"><%= render 'act_activities/toggle_fav', act_activity: act_activity %></td>
+        <td class="cont-acts w10"><%= render 'act_activities/toggle_hide', act_activity: act_activity %></td>
       </tr>
     </table>
   <% end %>

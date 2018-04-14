@@ -12,8 +12,8 @@
       <tr>
         <td style="width: 30%;"><%= icon('fas', 'star', web.cop) %></td>
         <!-- WEB: TOGGLE STS PARTIAL - STARTS -->
-        <td style="width: 30%;"><%= render 'web_activities/toggle_fav_wrap', web_activity: web_activity %></td>
-        <td style="width: 30%;"><%= render 'web_activities/toggle_hide_wrap', web_activity: web_activity %></td>
+        <td style="width: 30%;"><%= render 'web_activities/toggle_fav', web_activity: web_activity %></td>
+        <td style="width: 30%;"><%= render 'web_activities/toggle_hide', web_activity: web_activity %></td>
       </tr>
 
       <tr><td colspan="3"><%= icon('fas', 'car', get_brands(web)&.join(', ')) %></td></tr>

@@ -20,7 +20,7 @@ class ContsController < ApplicationController
       end
 
       @cq = Cont.ransack(params[:q])
-      @conts = @cq.result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).paginate(page: params[:page], per_page: 50)
+      @conts = @cq.result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).paginate(page: params[:page], per_page: 20)
     end
 
     # respond_to do |format|

@@ -37,8 +37,8 @@
 
         <td style="width: 10%;"><%= "#{cont_export&.export_date&.strftime('%x')} #{cont_export&.file_name}" %></td>
 
-        <td style="width: 5%;"><%= render 'cont_activities/toggle_fav_wrap', cont_activity: cont_activity %></td>
-        <td style="width: 5%;"><%= render 'cont_activities/toggle_hide_wrap', cont_activity: cont_activity %></td>
+        <td style="width: 5%;"><%= render 'cont_activities/toggle_fav', cont_activity: cont_activity %></td>
+        <td style="width: 5%;"><%= render 'cont_activities/toggle_hide', cont_activity: cont_activity %></td>
       </tr>
     <% end %>
   </tbody>

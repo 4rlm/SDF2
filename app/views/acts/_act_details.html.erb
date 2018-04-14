@@ -23,8 +23,8 @@
 
   <tr>
     <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
-    <td style="width: 100px;"><%= render 'act_activities/toggle_fav_wrap', act_activity: act_activity %></td>
-    <td style="width: 100px;"><%= render 'act_activities/toggle_hide_wrap', act_activity: act_activity %></td>
+    <td style="width: 100px;"><%= render 'act_activities/toggle_fav', act_activity: act_activity %></td>
+    <td style="width: 100px;"><%= render 'act_activities/toggle_hide', act_activity: act_activity %></td>
     <td colspan="2" style="width: 33%;"><%= icon('fas', 'download', "#{act_export&.export_date&.strftime('%x')} #{act_export&.file_name}" )%></td>
   </tr>
 </table>
