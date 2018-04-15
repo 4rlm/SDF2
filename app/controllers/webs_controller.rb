@@ -33,6 +33,15 @@ class WebsController < ApplicationController
   end
 
 
+  def show_conts
+    @web = Web.find(params[:web_id])
+
+    respond_to do |format|
+      format.js { render :show_conts, status: :ok, location: @web }
+    end
+  end
+
+
   # def followed
   #   params[:bypass_web_ids] = helpers.get_followed_web_ids(nil)
   #   redirect_to webs_path(params)

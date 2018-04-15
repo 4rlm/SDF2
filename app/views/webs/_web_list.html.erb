@@ -38,6 +38,8 @@
 
             <% if cont_count > 0 %>
             | <a class="btn btn-primary btn-sm" href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+
+            <%= link_to "Show Conts!!", show_conts_webs_path(web_id: web.id), :remote => true, class: 'btn btn-primary btn-sm' %>
             <% end %>
           <% end %>
         </td>
@@ -55,6 +57,21 @@
         <%= render 'conts/conts_list', conts: web.conts %>
       <% end %>
     </div>
+
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+
+
+    <div class='show_conts' data-id="<%= web.id %>">
+
+        <%#= binding.pry %>
+
+    </div>
+
 
   </div>
 </div>
