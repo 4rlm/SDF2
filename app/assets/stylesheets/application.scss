@@ -76,12 +76,16 @@ p {
   color: #f2f2f2;
 }
 
-a, a:hover, a:focus, a:visited {
+a, a:hover, a:focus {
   color: inherit;
   background: inherit;
   text-decoration: none;
   transition: all 0.3s;
 }
+
+// a:visited {
+//
+// }
 
 #yield-content {
   width: 100%;

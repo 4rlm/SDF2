@@ -58,7 +58,7 @@
         <td class="cont-acts w70"><%= act.act_name %> | <%= act.full_address %> </td>
 
         <td>
-          <%= link_to "Details2", show_web_conts_path(cont_id: cont.id), onclick: "toggleWeb(#{cont.id})", remote: true, class: 'btn btn-primary btn-sm' %>
+          <%= link_to "Details", show_web_conts_path(cont_id: cont.id), onclick: "toggleWeb(#{cont.id})", remote: true, class: 'btn btn-primary btn-sm' %>
         </td>
 
         <!-- ACT: TOGGLE STS PARTIAL - STARTS -->
