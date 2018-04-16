@@ -23,8 +23,9 @@
       <tr>
         <td colspan="3"><%= icon('fas', 'users', "#{web&.cs_date&.strftime('%x')} #{web.cs_sts}" )%>
           <% cont_count = web.conts&.count %>
+
           <% if cont_count > 0 %>
-          | <a href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+            <%= link_to "Staff (#{cont_count})", show_conts_webs_path(web_id: web.id), onclick: "toggleConts(#{web.id})", remote: true, class: 'btn btn-primary btn-sm' %>
           <% end %>
         </td>
       </tr>
@@ -46,13 +47,16 @@
   <div class="col-md-9 outer-list-col">
     <% web.acts.each do |act| %>
     <!-- FIND OR CREATE web_activity -->
-
       <div class="row association-row">
         <%= render 'acts/act_details', act: act %>
       </div>
-
     <% end %>
-
   </div>
 
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= render 'webs/show_web_conts', web: web %>
+  </div>
 </div>

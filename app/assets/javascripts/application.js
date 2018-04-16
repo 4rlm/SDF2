@@ -26,21 +26,6 @@
 //= require_tree .
 
 
-
-  // SHOWS STAFF CONTACTS LIST FROM WEBS VIA BUTTON
-  // function toggleConts(web_id) {
-  //
-  //   var element = $(".contWrap#" + web_id);
-  //   console.log(element);
-  //
-  //   if (element.is(':visible')) {
-  //     element.hide();
-  //   } else {
-  //     element.show();
-  //   }
-  // }
-
-
   // SHOWS STAFF CONTACTS LIST FROM WEBS VIA BUTTON
   function toggleConts(web_id) {
 
@@ -53,12 +38,6 @@
       element.show();
     }
   }
-
-
-
-
-
-
 
 
 
