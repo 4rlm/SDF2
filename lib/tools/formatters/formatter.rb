@@ -11,8 +11,8 @@
 # require 'format_adr'
 # require 'format_act'
 # require 'format_phone'
-# require 'format_web'
-%w{format_adr format_act cross_ref format_phone format_web}.each { |x| require x }
+require 'format_web'
+%w{format_adr format_act cross_ref format_phone}.each { |x| require x }
 
 
 ## CLASS METHOD TO START, EXPLAIN, OR TEST OTHER FORMATTER CLASSES AND METHODS.

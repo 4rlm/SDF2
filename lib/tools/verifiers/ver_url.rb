@@ -16,7 +16,7 @@ class VerUrl
     @dj_count_limit = 0
     @dj_workers = 4
     @obj_in_grp = 20
-    @dj_refresh_interval = 10
+    @dj_refresh_interval = 20
     @db_timeout_limit = 200
     @cut_off = 1.days.ago
     @formatter = Formatter.new
@@ -24,18 +24,32 @@ class VerUrl
   end
 
   def get_query
+
+    # TEMPORARY BELOW...FIXING FWD URL
     err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
     query = Web.select(:id)
-      .where(url_sts: ['Valid', nil])
+      .where(url_sts: 'FWD')
       .where('url_date < ? OR url_date IS NULL', @cut_off)
         .or(Web.select(:id)
           .where(url_sts: err_sts_arr)
           .where('timeout < ?', @db_timeout_limit)
         ).order("timeout ASC").pluck(:id)
+
+
+    ## ORIGINAL BELOW...
+    # err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+    # query = Web.select(:id)
+    #   .where(url_sts: ['Valid', nil])
+    #   .where('url_date < ? OR url_date IS NULL', @cut_off)
+    #     .or(Web.select(:id)
+    #       .where(url_sts: err_sts_arr)
+    #       .where('timeout < ?', @db_timeout_limit)
+    #     ).order("timeout ASC").pluck(:id)
   end
 
   def start_ver_url
     query = get_query
+
     while query.any?
       setup_iterator(query)
       query = get_query
