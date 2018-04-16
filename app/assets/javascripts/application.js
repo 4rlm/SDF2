@@ -41,11 +41,11 @@
 
 
 
-  // SHOWS Webs LIST FROM Conts VIA BUTTON
-  function toggleWeb(id) {
+  // SHOWS STAFF CONTACTS LIST FROM WEBS VIA BUTTON
+  function toggleWeb(cont_id) {
 
-    var element = $(".webWrap#" + id);
-    console.log(element);
+    var element = $('.showWeb[data-id=' + cont_id + ']');
+    console.log(element.is(':visible'));
 
     if (element.is(':visible')) {
       element.hide();
@@ -54,6 +54,20 @@
     }
   }
 
+
+  // SHOWS Webs LIST FROM Conts VIA BUTTON
+  // function toggleWeb(id) {
+  //
+  //   var element = $(".webWrap#" + id);
+  //   console.log(element);
+  //
+  //   if (element.is(':visible')) {
+  //     element.hide();
+  //   } else {
+  //     element.show();
+  //   }
+  // }
+  //
 
   // Export Webs CSV if Clicked.
   function webExporter() {

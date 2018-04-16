@@ -30,6 +30,15 @@ class ContsController < ApplicationController
   end
 
 
+  def show_web
+    @cont = Cont.find(params[:cont_id])
+
+    respond_to do |format|
+      format.js { render :show_web, status: :ok, location: @cont }
+    end
+  end
+
+
   def followed
     params[:bypass_cont_ids] = helpers.get_followed_cont_ids(nil)
     redirect_to conts_path(params)

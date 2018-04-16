@@ -26,6 +26,8 @@ Rails.application.routes.draw do
 
       match 'followed' => 'conts#followed', via: [:get, :post], as: :followed
       match 'hidden' => 'conts#hidden', via: [:get, :post], as: :hidden
+
+      match 'show_web' => 'conts#show_web', via: [:get, :post], as: :show_web
     end
   end
 

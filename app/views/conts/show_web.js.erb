@@ -1,0 +1,2 @@
+var showWebDiv = $('div.showWeb[data-id="<%= @cont.id %>"]');
+showWebDiv.html("<%= j (render 'webs/web_details', web: @cont.web) %>");
