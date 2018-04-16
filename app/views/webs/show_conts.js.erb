@@ -1,2 +1,2 @@
-var showContsDiv = $('div.show_conts[data-id="<%= @web.id %>"]');
+var showContsDiv = $('div.showConts[data-id="<%= @web.id %>"]');
 showContsDiv.html("<%= j (render 'conts/conts_list', conts: @web.conts) %>");

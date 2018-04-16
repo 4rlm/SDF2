@@ -37,9 +37,12 @@
             <% cont_count = web.conts&.count %>
 
             <% if cont_count > 0 %>
-            | <a class="btn btn-primary btn-sm" href="#" onclick="toggleConts(<%= web.id %>);return false;">Staff (<%= cont_count %>)</a>
+              <!-- <a class="btn btn-primary btn-sm" href="#" onclick="toggleConts(<%#= web.id %>);return false;">Staff </a> -->
 
-            <%= link_to "Show Conts!!", show_conts_webs_path(web_id: web.id), :remote => true, class: 'btn btn-primary btn-sm' %>
+              <%#= link_to "Show Conts!!", show_conts_webs_path(web_id: web.id), :remote => true, class: 'btn btn-primary btn-sm' %>
+
+            <%= link_to "Show Conts!!", show_conts_webs_path(web_id: web.id), onclick: "toggleConts(#{web.id})", remote: true, class: 'btn btn-primary btn-sm' %>
+
             <% end %>
           <% end %>
         </td>
@@ -52,13 +55,13 @@
 <div class="row">
   <div class="col-md-12">
 
-    <div class='contWrap' style="display:none" id="<%= web.id %>">
-      <% if web.conts.any? %>
-        <%= render 'conts/conts_list', conts: web.conts %>
-      <% end %>
+    <!-- <div class='contWrap' style="display:none" id="<%= web.id %>"> -->
+      <%# if web.conts.any? %>
+        <%#= render 'conts/conts_list', conts: web.conts %>
+      <%# end %>
     </div>
 
-  </div>
+  <!-- </div> -->
 </div>
 
 
@@ -66,7 +69,7 @@
   <div class="col-md-12">
 
 
-    <div class='show_conts' data-id="<%= web.id %>">
+    <div class='showConts' data-id="<%= web.id %>" style="display: none">
 
         <%#= binding.pry %>
 

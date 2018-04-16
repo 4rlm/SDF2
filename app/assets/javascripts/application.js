@@ -28,10 +28,24 @@
 
 
   // SHOWS STAFF CONTACTS LIST FROM WEBS VIA BUTTON
+  // function toggleConts(web_id) {
+  //
+  //   var element = $(".contWrap#" + web_id);
+  //   console.log(element);
+  //
+  //   if (element.is(':visible')) {
+  //     element.hide();
+  //   } else {
+  //     element.show();
+  //   }
+  // }
+
+
+  // SHOWS STAFF CONTACTS LIST FROM WEBS VIA BUTTON
   function toggleConts(web_id) {
 
-    var element = $(".contWrap#" + web_id);
-    console.log(element);
+    var element = $('.showConts[data-id=' + web_id + ']');
+    console.log(element.is(':visible'));
 
     if (element.is(':visible')) {
       element.hide();
@@ -39,6 +53,13 @@
       element.show();
     }
   }
+
+
+
+
+
+
+
 
 
   // SHOWS Webs LIST FROM Conts VIA BUTTON
