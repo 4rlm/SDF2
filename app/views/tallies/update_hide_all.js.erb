@@ -1,2 +1,2 @@
-var hide_all_div = $('div.hide_all[data-id="<%= @tally_hsh[:tally_id] %>"]');
-$(hide_all_div).html("<%= j (render 'hide_all', tally_hsh: @tally_hsh) %>");
+var hideAllDiv = $('div.hideAll[data-id="<%= @tally_hsh[:tally_id] %>"]');
+hideAllDiv.html("<%= j (render 'hide_all', tally_hsh: @tally_hsh) %>");

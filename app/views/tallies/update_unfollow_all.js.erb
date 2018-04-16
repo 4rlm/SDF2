@@ -1,2 +1,2 @@
-var unfollow_all_div = $('div.unfollow_all[data-id="<%= @tally_hsh[:tally_id] %>"]');
-$(unfollow_all_div).html("<%= j (render 'unfollow_all', tally_hsh: @tally_hsh) %>");
+var unfollowAllDiv = $('div.unfollowAll[data-id="<%= @tally_hsh[:tally_id] %>"]');
+unfollowAllDiv.html("<%= j (render 'unfollow_all', tally_hsh: @tally_hsh) %>");

@@ -1,2 +1,2 @@
-var unhide_all_div = $('div.unhide_all[data-id="<%= @tally_hsh[:tally_id] %>"]');
-$(unhide_all_div).html("<%= j (render 'unhide_all', tally_hsh: @tally_hsh) %>");
+var unhideAllDiv = $('div.unhideAll[data-id="<%= @tally_hsh[:tally_id] %>"]');
+unhideAllDiv.html("<%= j (render 'unhide_all', tally_hsh: @tally_hsh) %>");

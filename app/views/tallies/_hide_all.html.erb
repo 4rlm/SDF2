@@ -1,8 +1,8 @@
 <td>
   <% @tally_hsh = tally_hsh %>
-  <div class="hide_all" data-id="<% @tally_hsh[:tally_id] %>">
+  <div class="hideAll" data-id="<% @tally_hsh[:tally_id] %>">
 
     <%= link_to 'Hide', hide_all_tallies_path(tally_hsh: tally_hsh), remote: true, class: 'btn btn-danger btn-sm' %>
-    
+
   </div>
 </td>
