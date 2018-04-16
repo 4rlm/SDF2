@@ -2,7 +2,9 @@
 <% cont_export = Export.find_by(id: cont_activity.export_id) %>
 
 <div class="row outer-list-row">
-  <table class="table details">
+
+  <div class="col-md-6">
+    <table class="table details">
     <tr>
       <td style="width: 60%;"><%= icon('fas', 'user', cont.full_name) %></td>
 
@@ -41,19 +43,19 @@
       <td colspan="2" style="width: 33%;"><%= icon('fas', 'download', "#{cont_export&.export_date&.strftime('%x')} #{cont_export&.file_name}" )%></td>
     </tr>
   </table>
+  </div>
 
-  <% acts = cont.acts %>
-  <% acts&.each do |act| %>
-
-    <!-- FIND OR CREATE act_activity -->
-    <% act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
-    <% act_export = Export.find_by(id: act_activity.export_id) %>
-
+  <div class="col-md-6">
     <table class="table details">
+    <% acts = cont.acts %>
+    <% acts&.each do |act| %>
+
+      <!-- FIND OR CREATE act_activity -->
+      <% act_activity = current_user.act_activities.find_or_create_by(act_id: act.id) %>
+      <% act_export = Export.find_by(id: act_activity.export_id) %>
+
       <tr class="cont-acts">
         <td class="cont-acts w70"><%= act.act_name %> | <%= act.full_address %> </td>
-
-        <!-- <td class="cont-acts w10"><a href="#" class="btn btn-sm" data-toggle="modal" data-target="#viewWebModal">Details</a></td> -->
 
         <td>
           <%= link_to "Details2", show_web_conts_path(cont_id: cont.id), onclick: "toggleWeb(#{cont.id})", remote: true, class: 'btn btn-primary btn-sm' %>
@@ -63,11 +65,15 @@
         <td class="cont-acts w10"><%= render 'act_activities/toggle_fav', act_activity: act_activity %></td>
         <td class="cont-acts w10"><%= render 'act_activities/toggle_hide', act_activity: act_activity %></td>
       </tr>
-    </table>
-  <% end %>
+    <% end %>
+  </table>
+  </div>
 
 </div>
 
-<div id="view-web"> <!-- MODAL -->
-  <%#= render 'webs/web_modal', web: cont.web %>
+
+<div class="row"">
+  <div class="col-md-12">
+    <%= render 'conts/show_cont_web', cont: cont %>
+  </div>
 </div>

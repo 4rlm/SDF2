@@ -173,6 +173,17 @@ a, a:hover, a:focus, a:visited {
 
 
 
+.showWeb {
+  display: none;
+  padding: 0;
+  margin-bottom: 30px;
+  border-top: 2px solid red;
+  border-bottom: 2px solid red;
+}
+
+
+
+
 
 // Toggle_sts Customizing
 .toggle-btn-group {
@@ -254,11 +265,11 @@ a, a:hover, a:focus, a:visited {
 }
 
 .cont-acts {
-  border-top: 3px solid #4e5465;
+  border-bottom: 3px solid #4e5465;
 }
 
 .cont-acts td {
-  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 // .fa-btn-xs {

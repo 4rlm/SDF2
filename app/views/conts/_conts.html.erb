@@ -17,32 +17,12 @@
 
 
 <div class="row">
-  <% conts&.each_with_index do |cont, index| %>
-      <% if index.even? %>
-      <!-- LEFT -->
-        <div class="col-md-6">
-          <div class="col-md-12">
-            <%= render 'conts/cont_detail', cont: cont %>
-          </div>
-        </div>
-
-      <% else %>
-        <!-- RIGHT -->
-        <div class="col-md-6">
-          <div class="col-md-12">
-            <%= render 'conts/cont_detail', cont: cont %>
-          </div>
-        </div>
-      <% end %>
+  <% conts&.each do |cont| %>
+    <div class="col-md-12">
+      <%= render 'conts/cont_detail', cont: cont %>
+    </div>
   <% end %>
 </div>
-
-  <!-- <div class="row"> -->
-    <!-- <div class="col-md-12"> -->
-      <%#= render 'conts/show_cont_web', cont: cont %>
-    <!-- </div> -->
-  <!-- </div> -->
-
 
 
 
