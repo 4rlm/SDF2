@@ -7,7 +7,20 @@
   <div class="col-md-3 association-parent">
     <table class="table details">
       <tr><td colspan="3"><%= link_to(icon('fas', 'home', web.url ), web.url, target: '_blank')%></td></tr>
-      <tr><td colspan="3"><%= link_to(icon('fas', 'home', web.fwd_url ), web.url, target: '_blank')%></td></tr>
+
+      <% if web.fwd_url.present? %>
+        <tr><td colspan="3"><%= link_to("F: #{web.fwd_url}", web.url, target: '_blank') %></td></tr>
+      <% end %>
+
+      <tr>
+        <td colspan="2" style="width: 50%;">URL Status: <%= web.url_sts %> </td>
+        <td style="width: 50%;">
+          <% if web.fwd_url_id.present? %>
+            <%= link_to("FWD URL Details", webs_path(fwd_web_id: web.fwd_url_id), target: '_blank', class: 'btn btn-primary btn-md') %>
+          <% end %>
+        </td>
+      </tr>
+
 
       <tr>
         <td style="width: 30%;"><%= icon('fas', 'star', web.cop) %></td>

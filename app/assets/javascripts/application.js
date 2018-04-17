@@ -40,11 +40,10 @@
   }
 
 
+  // SHOWS FWD WEB DETAILS FROM WEBS VIA BUTTON
+  function toggleFwd(web_id) {
 
-  // SHOWS STAFF CONTACTS LIST FROM WEBS VIA BUTTON
-  function toggleWeb(cont_id) {
-
-    var element = $('.showWeb[data-id=' + cont_id + ']');
+    var element = $('.showFwd[data-id=' + web_id + ']');
     console.log(element.is(':visible'));
 
     if (element.is(':visible')) {

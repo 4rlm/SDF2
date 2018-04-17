@@ -15,10 +15,10 @@ class VerUrl
     @dj_on = true
     @dj_count_limit = 0
     @dj_workers = 4
-    @obj_in_grp = 20
-    @dj_refresh_interval = 20
+    @obj_in_grp = 30
+    @dj_refresh_interval = 10
     @db_timeout_limit = 200
-    @cut_off = 1.days.ago
+    @cut_off = 2.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
@@ -26,25 +26,25 @@ class VerUrl
   def get_query
 
     # TEMPORARY BELOW...FIXING FWD URL
-    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    query = Web.select(:id)
-      .where(url_sts: 'FWD')
-      .where('url_date < ? OR url_date IS NULL', @cut_off)
-        .or(Web.select(:id)
-          .where(url_sts: err_sts_arr)
-          .where('timeout < ?', @db_timeout_limit)
-        ).order("timeout ASC").pluck(:id)
-
-
-    ## ORIGINAL BELOW...
     # err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
     # query = Web.select(:id)
-    #   .where(url_sts: ['Valid', nil])
+    #   .where(url_sts: 'FWD')
     #   .where('url_date < ? OR url_date IS NULL', @cut_off)
     #     .or(Web.select(:id)
     #       .where(url_sts: err_sts_arr)
     #       .where('timeout < ?', @db_timeout_limit)
     #     ).order("timeout ASC").pluck(:id)
+
+
+    ## ORIGINAL BELOW...
+    err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
+    query = Web.select(:id)
+      .where(url_sts: ['Valid', nil])
+      .where('url_date < ? OR url_date IS NULL', @cut_off)
+        .or(Web.select(:id)
+          .where(url_sts: err_sts_arr)
+          .where('timeout < ?', @db_timeout_limit)
+        ).order("timeout ASC").pluck(:id)
   end
 
   def start_ver_url

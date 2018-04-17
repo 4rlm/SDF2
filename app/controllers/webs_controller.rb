@@ -12,6 +12,8 @@ class WebsController < ApplicationController
       @webs = Web.send(params[:tally_scope]).paginate(page: params[:page], per_page: 20)
     elsif params[:bypass_web_ids]&.any?
       @webs = Web.where(id: [params[:bypass_web_ids]]).paginate(page: params[:page], per_page: 20)
+    elsif params[:fwd_web_id].present?
+      @webs = Web.where(id: params[:fwd_web_id]).paginate(page: params[:page], per_page: 20)
     else
       params.delete('q') if params['q'].present? && params['q'] == 'q'
 
