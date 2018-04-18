@@ -202,7 +202,6 @@ module ApplicationHelper
 
 
   def create_all_activities(user_id)
-    binding.pry
     create_web_activities(user_id)
     create_act_activities(user_id)
     create_cont_activities(user_id)

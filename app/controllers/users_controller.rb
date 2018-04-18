@@ -19,6 +19,7 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
+    helpers.create_all_activities(@user.id)
     # ApplicationHelper.delay.create_all_activities(current_user.id)
   end
 
