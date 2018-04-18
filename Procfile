@@ -1,5 +1,7 @@
-web: bundle exec rails server -p 3000
+web:            bundle exec rails server -p $PORT
 worker:         bundle exec foreman start -f Procfile.workers
+
+#web: bundle exec rails server -p 3000
 # puma:           bundle exec tail -f log/development.log
 
 # NUM_WORKERS=4 delayed_job_worker_pool ./config/delayed_job_worker_pool.rb
