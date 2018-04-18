@@ -55,8 +55,16 @@ class WebsController < ApplicationController
   # end
 
   # def followed_acts
-  #   act_ids = helpers.get_followed_act_ids(nil)
-  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+  #   # act_ids = helpers.get_followed_act_ids(nil)
+  #   # act_ids = Act.send(params[:tally_scope]).pluck(:id)
+  #   act_ids = current_user.act_activities.where(fav_sts: true).pluck(:act_id)
+  #   binding.pry
+  #
+  #   current_user.web_activities.unfollowed.where(web_id: [web_ids])
+  #
+  #   # params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
+  #   binding.pry
+  #
   #   redirect_to webs_path(params)
   # end
 

@@ -11,6 +11,12 @@ class ActsController < ApplicationController
       @acts = Act.send(params[:tally_scope]).paginate(page: params[:page], per_page: 20)
     elsif params[:bypass_web_ids]&.any?
       @acts = Act.where(id: [params[:bypass_act_ids]]).paginate(page: params[:page], per_page: 20)
+    elsif params[:grab_followed_acts].present?
+      act_ids = current_user.act_activities.followed.pluck(:act_id)
+      @acts = Act.where(id: [act_ids]).paginate(page: params[:page], per_page: 20)
+    elsif params[:grab_hidden_acts].present?
+      act_ids = current_user.act_activities.hidden.pluck(:act_id)
+      @acts = Act.where(id: [act_ids]).paginate(page: params[:page], per_page: 20)
     else
       params.delete('q') if params['q'].present? && params['q'] == 'q'
 
@@ -23,6 +29,8 @@ class ActsController < ApplicationController
       @aq = Act.ransack(params[:q])
       @acts = @aq.result(distinct: true).includes(:webs, :conts, :brands, :act_activities).paginate(page: params[:page], per_page: 20)
     end
+
+    @aq = Act.ransack(params[:q]) if !@aq.present?
 
     # respond_to do |format|
     #   format.json # show.js.erb
