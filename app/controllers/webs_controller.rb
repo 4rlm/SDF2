@@ -14,6 +14,12 @@ class WebsController < ApplicationController
       @webs = Web.where(id: [params[:bypass_web_ids]]).paginate(page: params[:page], per_page: 20)
     elsif params[:fwd_web_id].present?
       @webs = Web.where(id: params[:fwd_web_id]).paginate(page: params[:page], per_page: 20)
+    elsif params[:grab_followed].present?
+      web_ids = current_user.web_activities.followed.pluck(:web_id)
+      @webs = Web.where(id: [web_ids]).paginate(page: params[:page], per_page: 20)
+    elsif params[:grab_hidden].present?
+      web_ids = current_user.web_activities.hidden.pluck(:web_id)
+      @webs = Web.where(id: [web_ids]).paginate(page: params[:page], per_page: 20)
     else
       params.delete('q') if params['q'].present? && params['q'] == 'q'
 
@@ -27,6 +33,8 @@ class WebsController < ApplicationController
       @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)
 
     end
+
+    @wq = Web.ransack(params[:q]) if !@wq.present?
 
     # respond_to do |format|
     #   format.html # show.html.erb

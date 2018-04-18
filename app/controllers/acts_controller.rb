@@ -14,7 +14,7 @@ class ActsController < ApplicationController
     elsif params[:grab_followed].present?
       act_ids = current_user.act_activities.followed.pluck(:act_id)
       @acts = Act.where(id: [act_ids]).paginate(page: params[:page], per_page: 20)
-    elsif params[:grab_hidden_acts].present?
+    elsif params[:grab_hidden].present?
       act_ids = current_user.act_activities.hidden.pluck(:act_id)
       @acts = Act.where(id: [act_ids]).paginate(page: params[:page], per_page: 20)
     else

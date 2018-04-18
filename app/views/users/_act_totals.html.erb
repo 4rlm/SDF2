@@ -1,10 +1,10 @@
 <tr>
   <td>Accounts</td>
-  <td><%= link_to number_with_delimiter(@user.act_activities.followed.count, :delimiter => ','), acts_path(grab_followed: 'grab_followed'), class: 'btn btn-primary btn-sm' %></td>
+  <td><%= link_to number_with_delimiter(current_user.act_activities.followed.count, :delimiter => ','), acts_path(grab_followed: 'grab_followed'), class: 'btn btn-primary btn-sm' %></td>
 
   <td><%= link_to "Reset", unfollow_all_act_activities_path, class: 'btn btn-default btn-sm' %></td>
 
-  <td><%= link_to number_with_delimiter(@user.act_activities.hidden.count, :delimiter => ','), acts_path(grab_hidden_acts: 'grab_hidden_acts'), class: 'btn btn-primary btn-sm' %></td>
+  <td><%= link_to number_with_delimiter(current_user.act_activities.hidden.count, :delimiter => ','), acts_path(grab_hidden: 'grab_hidden'), class: 'btn btn-primary btn-sm' %></td>
 
   <td><%= link_to "Reset", unhide_all_act_activities_path, class: 'btn btn-default btn-sm' %></td>
 </tr>

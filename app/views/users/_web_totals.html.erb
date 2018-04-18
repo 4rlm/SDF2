@@ -1,7 +1,11 @@
 <tr>
   <td>Websites</td>
-  <td><%= link_to number_with_delimiter(current_user.web_activities.followed.count, :delimiter => ','), followed_webs_path(params), class: 'btn btn-primary btn-sm' %></td>
-  <td><%= link_to "Reset", unfollow_all_web_activities_path(params), class: 'btn btn-default btn-sm' %></td>
-  <td><%= link_to number_with_delimiter(current_user.web_activities.hidden.count, :delimiter => ','), hidden_webs_path(params), class: 'btn btn-primary btn-sm' %></td>
-  <td><%= link_to "Reset", unhide_all_web_activities_path(params), class: 'btn btn-default btn-sm' %></td>
+
+  <td><%= link_to number_with_delimiter(current_user.web_activities.followed.count, :delimiter => ','), webs_path(grab_followed: 'grab_followed'), class: 'btn btn-primary btn-sm' %></td>
+
+  <td><%= link_to "Reset", unfollow_all_web_activities_path, class: 'btn btn-default btn-sm' %></td>
+
+  <td><%= link_to number_with_delimiter(current_user.web_activities.hidden.count, :delimiter => ','), webs_path(grab_hidden: 'grab_hidden'), class: 'btn btn-primary btn-sm' %></td>
+
+  <td><%= link_to "Reset", unhide_all_web_activities_path, class: 'btn btn-default btn-sm' %></td>
 </tr>

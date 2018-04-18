@@ -8,35 +8,17 @@ class WebActivitiesController < ApplicationController
   end
 
 
-  def follow_all
-    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(fav_sts: true)
-    after_fav_hide_switch
-  end
-
   def unfollow_all
     current_user.web_activities.followed.update_all(fav_sts: false)
-    after_fav_hide_switch
+    redirect_to current_user
   end
 
-  def hide_all
-    WebActivity.where(user_id: current_user.id, web_id: [params[:web_ids]]).update_all(hide_sts: true)
-    after_fav_hide_switch
-  end
 
   def unhide_all
     current_user.web_activities.hidden.update_all(hide_sts: false)
-    after_fav_hide_switch
+    redirect_to current_user
   end
 
-  def after_fav_hide_switch
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    elsif params['source_path'] == 'user_path'
-      redirect_to current_user
-    elsif params['source_path'] == 'conts_path'
-      redirect_to conts_path
-    end
-  end
 
 
   # GET /web_activities/1
