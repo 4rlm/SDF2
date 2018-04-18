@@ -8,40 +8,16 @@ class ContActivitiesController < ApplicationController
   end
 
 
-
-  def follow_all
-    binding.pry
-    ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]]).update_all(fav_sts: true)
-    after_fav_hide_switch
-  end
-
   def unfollow_all
     current_user.cont_activities.followed.update_all(fav_sts: false)
-    after_fav_hide_switch
+    redirect_to current_user
   end
-
-  def hide_all
-    binding.pry
-    ContActivity.where(user_id: current_user.id, cont_id: [params[:cont_ids]]).update_all(hide_sts: true)
-    after_fav_hide_switch
-  end
+  
 
   def unhide_all
     current_user.cont_activities.hidden.update_all(hide_sts: false)
-    after_fav_hide_switch
+    redirect_to current_user
   end
-
-  def after_fav_hide_switch
-    if params['source_path'] == 'webs_path'
-      redirect_to webs_path
-    elsif params['source_path'] == 'user_path'
-      redirect_to current_user
-    elsif params['source_path'] == 'conts_path'
-      redirect_to conts_path
-    end
-  end
-
-
 
 
   # GET /cont_activities/1

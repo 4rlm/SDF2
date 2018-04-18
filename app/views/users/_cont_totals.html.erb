@@ -1,7 +1,11 @@
 <tr>
   <td>Contacts</td>
-  <td><%= link_to number_with_delimiter(current_user.cont_activities.followed.count, :delimiter => ','), followed_conts_path(params), class: 'btn btn-primary btn-sm' %></td>
-  <td><%= link_to "Reset", unfollow_all_cont_activities_path(params), class: 'btn btn-default btn-sm' %></td>
-  <td><%= link_to number_with_delimiter(current_user.cont_activities.hidden.count, :delimiter => ','), hidden_conts_path(params), class: 'btn btn-primary btn-sm' %></td>
-  <td><%= link_to "Reset", unhide_all_cont_activities_path(params), class: 'btn btn-default btn-sm' %></td>
+
+  <td><%= link_to number_with_delimiter(current_user.cont_activities.followed.count, :delimiter => ','), conts_path(grab_followed: 'grab_followed'), class: 'btn btn-primary btn-sm' %></td>
+
+  <td><%= link_to "Reset", unfollow_all_cont_activities_path, class: 'btn btn-default btn-sm' %></td>
+
+  <td><%= link_to number_with_delimiter(current_user.cont_activities.hidden.count, :delimiter => ','), conts_path(grab_hidden: 'grab_hidden'), class: 'btn btn-primary btn-sm' %></td>
+
+  <td><%= link_to "Reset", unhide_all_cont_activities_path, class: 'btn btn-default btn-sm' %></td>
 </tr>

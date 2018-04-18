@@ -6,7 +6,7 @@
     <div class="col-md-4">
       <h6 class="text-center">Following & Hidden</h6>
 
-      <% params[:source_path] = 'user_path' %>
+      <%# params[:source_path] = 'user_path' %>
 
       <!-- Followed & Hidden Acts -->
       <table class="table">
@@ -19,7 +19,7 @@
         </thead>
         <tbody>
           <%= render 'users/act_totals', user: @user %>
-          <%#= render 'users/cont_totals', user: @user %>
+          <%= render 'users/cont_totals', user: @user %>
           <%#= render 'users/web_totals', user: @user %>
         </tbody>
       </table>

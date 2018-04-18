@@ -10,29 +10,14 @@ class ActActivitiesController < ApplicationController
 
   def unfollow_all
     current_user.act_activities.followed.update_all(fav_sts: false)
-    # after_fav_hide_switch
     redirect_to current_user
   end
 
 
   def unhide_all
     current_user.act_activities.hidden.update_all(hide_sts: false)
-    # after_fav_hide_switch
     redirect_to current_user
   end
-
-
-  # def after_fav_hide_switch
-  #   binding.pry
-  #   if params['source_path'] == 'webs_path'
-  #     redirect_to webs_path
-  #   elsif params['source_path'] == 'user_path'
-  #     redirect_to current_user
-  #   elsif params['source_path'] == 'conts_path'
-  #     redirect_to conts_path
-  #   end
-  # end
-
 
 
 
