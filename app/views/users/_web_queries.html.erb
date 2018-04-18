@@ -8,10 +8,10 @@
     <td><%#= link_to web_query.q_name, search_webs_path({q: web_query.params['q']}), class: 'btn btn-default btn-lg' %></td>
     <td><%= web_query.created_at.strftime('%x') %></td>
 
-    <td><%= link_to "Follow", follow_all_queries_path(params), class: 'btn btn-primary btn-sm' %></td>
-    <td><%= link_to "Reset", unfollow_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
-    <td><%= link_to "Hide", hide_all_queries_path(params), class: 'btn btn-danger btn-sm' %></td>
-    <td><%= link_to "Reset", unhide_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
+    <td><%#= link_to "Follow", follow_all_queries_path(params), class: 'btn btn-primary btn-sm' %></td>
+    <td><%#= link_to "Reset", unfollow_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
+    <td><%#= link_to "Hide", hide_all_queries_path(params), class: 'btn btn-danger btn-sm' %></td>
+    <td><%#= link_to "Reset", unhide_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
 
   </tr>
 <% end %>
