@@ -17,15 +17,16 @@ module Sdf2
     # -- all .rb files in that directory are automatically loaded.
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
 
-    config.autoload_paths << File.join(config.root, "lib")
+    # config.autoload_paths << File.join(config.root, "lib")
     config.autoload_paths += %W(#{config.root}/controllers/concerns)
     # config.autoload_paths += %W(#{config.root}/lib/servicers)
 
     # config.autoload_paths << Rails.root.join('datatables')
     # config.autoload_paths << File.join(config.root, "datatables")
 
-    config.autoload_paths << Rails.root.join('lib/**/')
+    config.autoload_paths << Rails.root.join('lib/**')
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
 
     # config.autoload_paths << Rails.root.join('lib/tools')
     # config.autoload_paths += Dir["#{config.root}/lib/tools"]
