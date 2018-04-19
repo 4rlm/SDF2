@@ -11,13 +11,13 @@ class FindTemp
   include Noko
 
   def initialize
-    @dj_on = false
-    @dj_count_limit = 5
-    @dj_workers = 4
-    @obj_in_grp = 40
-    @dj_refresh_interval = 10
-    @db_timeout_limit = 60
-    @cut_off = 1.days.ago
+    @dj_on = true
+    @dj_count_limit = 0
+    @dj_workers = 3
+    @obj_in_grp = 9
+    @dj_refresh_interval = 5
+    @db_timeout_limit = 200
+    @cut_off = 7.days.ago
     @mig = Mig.new
   end
 
