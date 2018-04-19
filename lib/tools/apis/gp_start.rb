@@ -56,7 +56,6 @@ class GpStart
 
     puts query.count
     sleep(1)
-    # binding.pry
     return query
   end
 

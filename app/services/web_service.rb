@@ -1,7 +1,6 @@
 class WebService
 
   def flag_data_starter(ids)
-    binding.pry
 
     # if ids.any?
     #   cores = Core.where(id: ids)
@@ -12,7 +11,7 @@ class WebService
     #   end
     # end
 
-    
+
   end
 
 end

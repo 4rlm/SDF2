@@ -12,7 +12,7 @@ class ContActivitiesController < ApplicationController
     current_user.cont_activities.followed.update_all(fav_sts: false)
     redirect_to current_user
   end
-  
+
 
   def unhide_all
     current_user.cont_activities.hidden.update_all(hide_sts: false)
@@ -67,7 +67,6 @@ class ContActivitiesController < ApplicationController
 
 
   def update
-    # binding.pry
     if @cont_activity.update(cont_activity_params)
       respond_to do |format|
         if params[:cont_activity][:form_id] == 'toggle_fav_form'

@@ -17,8 +17,6 @@ gem 'hirb'
 # require 'hirb'
 # Hirb.enable
 
-gem 'pry'
-
 ---------
 $ be bundle install
 

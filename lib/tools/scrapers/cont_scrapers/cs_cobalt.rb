@@ -39,7 +39,6 @@ class CsCobalt
       raw_staffs_arr = []
       ez_staffs = []
 
-      # binding.pry
       raw_staffs_arr << noko_page.css('div.deck .primary')
       raw_staffs_arr << noko_page.css('div.deck div.content')
       raw_staffs_arr << noko_page.css('div#staffList .staff')
@@ -54,7 +53,6 @@ class CsCobalt
       raw_staffs_arr << noko_page.css('div.staff_no_link')
       raw_staffs_arr << noko_page.css('td')
 
-      # binding.pry
       # ez_staffs = []
       # raw_staffs_arr << noko_page.css('td')
 
@@ -72,7 +70,6 @@ class CsCobalt
       # attr = attributes.find { |attr| elem[attr] }
       # samps = noko_page[attr] if attr
 
-      # binding.pry
       # raw_staffs_arr = []
 
       # Code to do the scraping
@@ -98,7 +95,6 @@ class CsCobalt
       # raw_staffs_arr << noko_page.css('#af-static .af-staff-member')
     end
 
-    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
 
 

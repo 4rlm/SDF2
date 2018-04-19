@@ -60,10 +60,8 @@ module ServCsvExport
     user_id = 1
     export_cont_web(conts)
 
-    binding.pry
     ## Add export log to Export Table.
     log_export_cont_web(query, user_id)
-    binding.pry
   end
 
   ## FILTERED COLS: SAVES CSV, NOT GENERATE!
@@ -105,8 +103,6 @@ module ServCsvExport
 
     webs = conts.map {|cont| cont.web }&.sort&.uniq
     export_obj.webs << webs
-
-    binding.pry
   end
 
 

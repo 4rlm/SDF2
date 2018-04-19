@@ -95,7 +95,6 @@ class ActScraper
 
           gp_sts = gp_hsh[:gp_sts]
           web_hsh = {as_sts: validity, as_date: Time.now}
-          binding.pry
           # web_hsh = web_hsh.merge(gp_sts)
 
           # web_hsh = { place_id: gp_hsh[:place_id], as_sts: validity, as_date: Time.now}

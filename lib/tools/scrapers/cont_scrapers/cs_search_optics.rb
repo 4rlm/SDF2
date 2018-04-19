@@ -13,7 +13,6 @@ class CsSearchOptics
     cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
 
     cs_hsh_arr&.uniq!
-    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
 
     ### STRUGGLE WITH EDGE CASES BELOW ###

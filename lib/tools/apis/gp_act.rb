@@ -157,7 +157,6 @@
 #     #     puts "\n\n=======\ninval: #{inval}"
 #     #     puts "url: #{url}"
 #     #     puts "act_name: #{act_name}"
-#     #     # binding.pry
 #     #
 #     #     act_obj.destroy
 #     #     return false ## not valid

@@ -31,7 +31,6 @@ module Noko
             uri = URI(web_url)
             page = agent.get(uri)
           rescue Mechanize::ResponseReadError => e
-            # binding.pry
             page = e.force_parse
           end
 

@@ -66,7 +66,6 @@ class ActActivitiesController < ApplicationController
   # end
 
   def update
-    # binding.pry
     if @act_activity.update(act_activity_params)
       respond_to do |format|
         if params[:act_activity][:form_id] == 'toggle_fav_form'

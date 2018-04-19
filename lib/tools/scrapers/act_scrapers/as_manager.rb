@@ -9,8 +9,6 @@
 #
 #   # STRIPS AND FORMATS DATA BEFORE SAVING TO DB
 #   def address_formatter(org, street, city, state, zip, phone, as_phones)
-#     binding.pry
-#
 #     org = nil if org.blank?
 #     street = nil if street.blank?
 #     city = nil if city.blank?
@@ -58,8 +56,6 @@
 #   end
 #
 #   # def results_processor(org, street, city, state, zip, phone, as_phones, full_addr, web_obj)
-#   #   binding.pry
-#   #
 #   #   phone = format_phone(phone) if phone
 #   #   phones = clean_phones_arr(as_phones)
 #   #

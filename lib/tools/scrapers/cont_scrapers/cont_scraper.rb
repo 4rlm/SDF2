@@ -43,8 +43,7 @@ class ContScraper
 
     puts "\n\nQuery Count: #{query.count}"
     sleep(1)
-    # binding.pry
-    return query
+    query
   end
 
 

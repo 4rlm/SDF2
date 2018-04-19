@@ -48,11 +48,9 @@ class CsDealeron
 
       cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
 
-      # binding.pry if !cs_hsh_arr.any?
       return cs_hsh_arr
     end
 
-    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
   end
 

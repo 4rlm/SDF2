@@ -25,11 +25,9 @@ class AboutTool
 
   def start_url_redirect
     puts ">> start_url_redirect..."
-    binding.pry
 
     VerUrl.new
     # VerUrl.new.start_ver_url
-    binding.pry
 
     # VerUrl.new.delay.start_ver_url
   end

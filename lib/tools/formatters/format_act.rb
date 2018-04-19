@@ -52,13 +52,11 @@ module FormatAct
       else
         act_name = "#{act_name} #{city_state}"
       end
-      binding.pry
 
       act_name&.strip!
       act_name&.squeeze!(" ")
       act_name = act_name.split(' ').reverse.uniq.reverse.join(' ') if act_name.present?
       act_name.present? ? final_act_name = act_name : final_act_name = nil
-      binding.pry
       return final_act_name
     end
   end

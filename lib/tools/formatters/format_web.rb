@@ -168,7 +168,6 @@ module FormatWeb
       if (clean_url.present? && url.present?) && (clean_url != url)
         puts url
         puts clean_url
-        binding.pry
         web.update(url: clean_url)
       end
     end

@@ -1,6 +1,5 @@
 require "net/http"
 require 'uri'
-require "pry"
 #############################
 staff_urls = %w(
 https://www.google.com

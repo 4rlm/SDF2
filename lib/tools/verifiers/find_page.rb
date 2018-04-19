@@ -102,7 +102,6 @@ class FindPage
     stock_hsh = {stock_texts: stock_texts, stock_links: stock_links}
     # puts stock_hsh
     # sleep(1)
-    # binding.pry
     return stock_hsh
   end
 
@@ -152,8 +151,6 @@ class FindPage
     puts "Valid Text and Links: #{link_text_results.count}"
     puts link_text_results.inspect
     # sleep(1)
-    # binding.pry
-    # binding.pry if !link_text_results.any?
     return link_text_results
   end
 

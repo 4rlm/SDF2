@@ -16,10 +16,7 @@ class CsStandardScraper
     # staffs_arr << noko_page.css('div.wpb_column.vc_column_container div.vc_row.wpb_row')
     # staffs_arr << noko_page.css('.team')
 
-    # binding.pry
-
     cs_hsh_arr&.uniq!
-    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
 
     ##################################################

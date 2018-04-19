@@ -24,7 +24,6 @@ class CsDealerCom
     end
 
     cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(ez_staffs)
-    # binding.pry if !cs_hsh_arr.any?
     return cs_hsh_arr
 
 
@@ -66,7 +65,6 @@ class CsDealerCom
 
     ### PRACTICE BELOW ###
     ez_staffs = []
-    binding.pry
 
     staffs = []
     # staffs << noko_page.css('table.wysiwyg-table td')
@@ -92,10 +90,8 @@ class CsDealerCom
 
 
     staffs_arr << staffs
-    # binding.pry
 
     cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
-    # binding.pry
     # sleep(1)
     return cs_hsh_arr
 
@@ -103,7 +99,6 @@ class CsDealerCom
 
     # if staffs.any?
     #   puts staffs.count
-    #   binding.pry
     #   cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs)
     # end
 
@@ -115,14 +110,10 @@ class CsDealerCom
     #
     # if staffs_arr.any?
     #   puts staffs_arr.count
-    #   binding.pry
     # end
 
     # cs_hsh_arr = @cs_helper.standard_scraper(staffs_arr)
     # cs_hsh_arr = @cs_helper.consolidate_cs_hsh_arr(staffs_arr)
-
-    # binding.pry if !cs_hsh_arr.any?
-
 
     ##### TESTING BELOW ######
     # staffs_arr << noko_page.css('div.yui3-u-2-3 div.content')
