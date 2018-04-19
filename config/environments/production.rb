@@ -11,9 +11,6 @@ Rails.application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
-  config.enable_dependency_loading = true
-  config.autoload_paths << Rails.root.join('lib')
-
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -62,9 +59,11 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
+  config.active_job.queue_adapter = :delayed_job  ##=> default was :resque (below)
+  config.action_mailer.perform_caching = false
+  # config.active_job.queue_adapter = :sidekiq  ##=> default was :resque (below)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "sdf2_#{Rails.env}"
-  config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
