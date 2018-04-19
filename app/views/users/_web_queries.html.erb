@@ -6,6 +6,7 @@
     <td><%= number_with_delimiter(web_query.row_count, :delimiter => ',') %></td>
 
     <td><%= link_to web_query.q_name, search_webs_path({q: web_query.params['q']}), class: 'btn btn-default btn-lg' %></td>
+
     <td><%= web_query.created_at.strftime('%x') %></td>
 
     <td><%#= link_to "Follow", follow_all_queries_path(params), class: 'btn btn-primary btn-sm' %></td>

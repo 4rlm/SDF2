@@ -7,7 +7,6 @@ class WebsController < ApplicationController
   # GET /webs
   # GET /webs.json
   def index
-
     if params[:tally_scope].present?
       @webs = Web.send(params[:tally_scope]).paginate(page: params[:page], per_page: 20)
     elsif params[:bypass_web_ids]&.any?
@@ -66,12 +65,10 @@ class WebsController < ApplicationController
   #   # act_ids = helpers.get_followed_act_ids(nil)
   #   # act_ids = Act.send(params[:tally_scope]).pluck(:id)
   #   act_ids = current_user.act_activities.where(fav_sts: true).pluck(:act_id)
-  #   binding.pry
   #
   #   current_user.web_activities.unfollowed.where(web_id: [web_ids])
   #
   #   # params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
-  #   binding.pry
   #
   #   redirect_to webs_path(params)
   # end
@@ -106,15 +103,8 @@ class WebsController < ApplicationController
 
     # index
     # render :index
-    redirect_to webs_path(params)
+    redirect_to webs_path(params.permit!)
   end
-
-
-  # def flag_data
-  #   @service.flag_data_starter(params[:webs])
-  #   flash[:notice] = "Flagging Data Done!"
-  #   redirect_to webs_path
-  # end
 
 
   # GET /webs/1
@@ -188,7 +178,7 @@ class WebsController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    # def web_params
-    #   params.require(:act).permit(:id, :url, :url_sts_code, :cop, :url_sts, :temp_sts, :page_sts, :cs_sts, :brand_sts, :timeout, :url_date, :tmp_date, :page_date, :cs_date, :brand_date, :fwd_url, :web_changed, :wx_date, temp_name: [])
-    # end
+    def web_params
+      params.require(:act).permit(:id, :url, :url_sts_code, :cop, :url_sts, :temp_sts, :page_sts, :cs_sts, :brand_sts, :timeout, :url_date, :tmp_date, :page_date, :cs_date, :brand_date, :fwd_url, :web_changed, :wx_date, :q, temp_name: [])
+    end
 end
