@@ -4,6 +4,7 @@ class Query < ApplicationRecord
 
   # Query below:
   # user.queries.web_queries
+  scope :act_queries, ->{ where(mod_name: 'Act').order("updated_at DESC") }
   scope :cont_queries, ->{ where(mod_name: 'Cont').order("updated_at DESC") }
   scope :web_queries, ->{ where(mod_name: 'Web').order("updated_at DESC") }
 

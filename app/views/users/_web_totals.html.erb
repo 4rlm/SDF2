@@ -5,7 +5,7 @@
 
   <td><%= link_to "Reset", unfollow_all_web_activities_path, class: 'btn btn-default btn-sm' %></td>
 
-  <td><%= link_to number_with_delimiter(current_user.web_activities.hidden.count, :delimiter => ','), webs_path(grab_hidden: 'grab_hidden'), class: 'btn btn-primary btn-sm' %></td>
+  <td><%= link_to number_with_delimiter(current_user.web_activities.hidden.count, :delimiter => ','), webs_path(grab_hidden: 'grab_hidden'), class: 'btn btn-danger btn-sm' %></td>
 
   <td><%= link_to "Reset", unhide_all_web_activities_path, class: 'btn btn-default btn-sm' %></td>
 </tr>

@@ -82,8 +82,8 @@ class WebsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      # WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
-      WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
+      WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
+      # WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
 
       respond_to do |format|
         format.js { render :download_webs, status: :ok, location: @webs }
@@ -98,7 +98,7 @@ class WebsController < ApplicationController
   def search
     if params[:q]['q_name_cont_any'].present?
       q_name = params[:q].delete('q_name_cont_any')
-      WebCsvTool.new(params, current_user).save_web_queries(q_name)
+      WebCsvTool.new(params, current_user).delay.save_web_queries(q_name)
     end
 
     # index

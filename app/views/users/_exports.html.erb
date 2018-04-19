@@ -1,30 +1,42 @@
 <!-- Exports -->
-<div class="panel">
-  <div class="row">
+<!-- <div class="panel"> -->
+<!-- <div class="row"> -->
+<!-- <div class=""> -->
 
-      <!-- Exports -->
-      <div class="col-md-4">
-        <h6 class="text-center">Exports</h6>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>file_name</th>
-              <th>export_date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% exports = @user.exports %>
-            <% exports.each do |export| %>
-            <tr>
-              <td><%= export.file_name %></td>
-              <td><%= export.export_date.strftime('%x') %></td>
-            </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+<!-- <div class="col-md-4"> -->
+<h6 class="text-center">Exports</h6>
+<table class="table">
+  <thead>
+    <tr>
+      <th class="text-center">Category</th>
+      <th class="text-center">File Name</th>
+      <th class="text-center">Generated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% exports = @user.exports.order("export_date DESC") %>
+    <% exports.each do |export| %>
+    <% filename = export.file_name %>
 
-    </div>
-  </div>
+    <% if filename.include?('web_acts') %>
+      <% category = 'Websites' %>
+    <% elsif filename.include?('act_webs') %>
+      <% category = 'Accounts' %>
+    <% elsif filename.include?('cont_web') %>
+      <% category = 'Contacts' %>
+    <% end %>
 
-</div>
+    <tr>
+      <td><%= category %></td>
+      <td><%= filename %></td>
+      <td><%= export.export_date.strftime('%x') %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<!-- </div> -->
+
+<!-- </div> -->
+<!-- </div> -->
+
+<!-- </div> -->

@@ -5,13 +5,24 @@
 <%= render 'users/profile', user: @user %>
 <br>
 
-<!-- Following & Hidden -->
-<%= render 'users/fav_hide_queries', user: @user %>
-<br>
+<div class="row">
 
-<!-- Exports -->
-<%= render 'users/exports', user: @user %>
-<br>
+  <div class="col-md-4">
+    <!-- FAV HIDE TOTALS -->
+    <%= render 'users/fav_hide_totals', user: @user %>
 
+    <br>
+    <br>
+
+    <!-- Exports -->
+    <%= render 'users/exports', user: @user %>
+  </div>
+
+  <div class="col-md-8">
+    <!-- SAVED QUERIES-->
+    <%= render 'users/fav_hide_queries', user: @user %>
+  </div>
+
+</div>
 
 <br>

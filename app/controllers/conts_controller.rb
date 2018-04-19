@@ -60,8 +60,8 @@ class ContsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      # ContCsvTool.new(params, current_user).delay.start_cont_web_csv_and_log
-      ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
+      ContCsvTool.new(params, current_user).delay.start_cont_web_csv_and_log
+      # ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
 
       respond_to do |format|
         format.js { render :download_conts, status: :ok, location: @conts }
@@ -76,7 +76,7 @@ class ContsController < ApplicationController
   def search
     if params[:q]['q_name_cont_any'].present?
       q_name = params[:q].delete('q_name_cont_any')
-      ContCsvTool.new(params, current_user).save_cont_queries(q_name)
+      ContCsvTool.new(params, current_user).delay.save_cont_queries(q_name)
     end
 
     index

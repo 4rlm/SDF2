@@ -1,0 +1,15 @@
+<% @user.queries.act_queries&.each do |act_query| %>
+  <% params[:query_id] = act_query.id %>
+
+  <tr>
+    <td>Accounts</td>
+    <td><%= number_with_delimiter(act_query.row_count, :delimiter => ',') %></td>
+    <td><%= link_to act_query.q_name, search_acts_path({q: act_query.params['q']}), class: 'btn btn-default btn-lg' %></td>
+    <td><%= act_query.created_at.strftime('%x') %></td>
+
+    <td><%= link_to "Follow", follow_all_queries_path(params), class: 'btn btn-primary btn-sm' %></td>
+    <td><%= link_to "Reset", unfollow_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
+    <td><%= link_to "Hide", hide_all_queries_path(params), class: 'btn btn-danger btn-sm' %></td>
+    <td><%= link_to "Reset", unhide_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
+  </tr>
+<% end %>
