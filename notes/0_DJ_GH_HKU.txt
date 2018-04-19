@@ -212,7 +212,7 @@ Short list to-do ...
 
 ############ Delayed Job ############
 	$ rake jobs:clear
-	$ heroku run rake jobs:clear --app bds-max
+	$ heroku run rake jobs:clear --app sdf2
 
 ############ Database Connections ############
 	$ bundle exec rails dbconsole

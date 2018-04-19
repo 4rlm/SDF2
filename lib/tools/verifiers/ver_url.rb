@@ -14,11 +14,11 @@ class VerUrl
   def initialize
     @dj_on = true
     @dj_count_limit = 0
-    @dj_workers = 4
-    @obj_in_grp = 30
-    @dj_refresh_interval = 10
+    @dj_workers = 3
+    @obj_in_grp = 15
+    @dj_refresh_interval = 5
     @db_timeout_limit = 200
-    @cut_off = 2.days.ago
+    @cut_off = 7.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
   end
