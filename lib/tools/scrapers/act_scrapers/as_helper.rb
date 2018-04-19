@@ -11,7 +11,7 @@ class AsHelper # RoofTop Scraper Helper Method
     raw_data_1 = noko_page.at_css('body').inner_html
     raw_data_2 = noko_page.at_css('body').text
     reg = Regexp.new("[(]?[0-9]{3}[ ]?[)-.]?[ ]?[0-9]{3}[ ]?[-. ][ ]?[0-9]{4}")
-    Invalid = Regexp.new("[0-9]{5,}")
+    invalid = Regexp.new("[0-9]{5,}")
 
     begin
       # raw_data_1 = utf_cleaner(raw_data_1)
@@ -20,7 +20,7 @@ class AsHelper # RoofTop Scraper Helper Method
       data_2 = raw_data_2&.scan(reg)
       phones = data_1&.uniq + data_2&.uniq
       phones = phones&.uniq&.sort
-      phones = phones&.reject { |x| Invalid.match(x) }
+      phones = phones&.reject { |x| invalid.match(x) }
     rescue
       puts "PHONE RESCUE!!!"
       # phones = nil
