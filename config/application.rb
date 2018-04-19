@@ -24,8 +24,14 @@ module Sdf2
     # config.autoload_paths << Rails.root.join('datatables')
     # config.autoload_paths << File.join(config.root, "datatables")
 
-    config.autoload_paths << Rails.root.join('lib/**')
-    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    ## WORKS WELL IN LOCAL, BUT NOT PRODUCTION. ##
+    # config.autoload_paths << Rails.root.join('lib/**')
+    # config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    ## TRIAL BELOW.
+    config.eager_load_paths << Rails.root.join('lib/**')
+    config.eager_load_paths += Dir["#{config.root}/lib/**/"]
+
 
 
     # config.autoload_paths << Rails.root.join('lib/tools')
