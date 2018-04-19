@@ -12,9 +12,9 @@ class FindTemp
 
   def initialize
     @dj_on = true
-    @dj_count_limit = 0
+    @dj_count_limit = 4
     @dj_workers = 2
-    @obj_in_grp = 9
+    @obj_in_grp = 10
     @dj_refresh_interval = 5
     @db_timeout_limit = 20
     @cut_off = 7.days.ago
