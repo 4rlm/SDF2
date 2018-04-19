@@ -3,6 +3,14 @@
 #Call: Start.method_name
 class Start
 
+  #CALL: Start.run_all_scrapers
+  def self.run_all_scrapers
+    VerUrl.new.start_ver_url
+    FindTemp.new.start_find_temp
+    # FindPage.new.start_find_page
+    # GpAct.new.start_act_goog
+  end
+
   #Call: Start.mega_start
   def self.mega_start
     ServCsvTool.new.import_all_seed_files ## imports all seeds.

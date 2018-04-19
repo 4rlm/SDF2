@@ -14,8 +14,9 @@ module IterQuery
 
   def pause_iteration
     until get_dj_count <= @dj_count_limit
-      puts "\nWaiting on #{get_dj_count} Queued Jobs | Queue Limit: #{@dj_count_limit}"
-      puts "Total Query Count: #{@query_count}, Refresh Rate: #{@dj_refresh_interval} seconds"
+      puts "\nCurrent Process: #{@current_process}"
+      puts "Waiting on #{get_dj_count} Queued Jobs | Queue Limit: #{@dj_count_limit}"
+      puts "Total Query Count: #{@query_count}, Refresh Rate: #{@dj_refresh_interval} seconds\n\n"
       sleep(@dj_refresh_interval)
     end
   end

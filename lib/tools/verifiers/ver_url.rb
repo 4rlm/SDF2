@@ -21,6 +21,7 @@ class VerUrl
     @cut_off = 7.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
+    @current_process = "VerUrl"
   end
 
   def get_query

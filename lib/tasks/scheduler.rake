@@ -2,8 +2,7 @@ desc "This task is called by the Heroku scheduler add-on"
 
 
 task run_all_scrapers: :environment do
-  VerUrl.new.delay.start_ver_url
-  FindTemp.new.delay.start_find_temp
+  Start.delay.run_all_scrapers
 end
 
 task check_urls: :environment do
@@ -16,8 +15,8 @@ task check_templates: :environment do
 end
 
 # rake verify_urls
-# rake check_templates
-# heroku run rake verify_urls
+# rake run_all_scrapers
+# heroku run rake run_all_scrapers
 
 # heroku addons:create scheduler:standard
 # heroku addons:open scheduler
