@@ -5,3 +5,7 @@ task :verify_urls => :environment do
 end
 
 # rake verify_urls
+# heroku run rake verify_urls
+
+# heroku addons:create scheduler:standard
+# heroku addons:open scheduler
