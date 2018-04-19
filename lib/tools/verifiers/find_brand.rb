@@ -3,22 +3,19 @@
 class FindBrand
 
   def initialize
-    @bts = BrandTerm.all
+    @brand_terms = BrandTerm.all
     @brands = Brand.all
-    @cut_off = 24.hour.ago
+    @cut_off = 7.days.ago
   end
 
 
   def get_query
     query = Web.select(:id)
-      .where(url_sts: 'Valid', brand_sts: ['Valid', nil])
       .where('brand_date < ? OR brand_date IS NULL', @cut_off)
-      .order("id ASC").pluck(:id)
+      .order("updated_at ASC").pluck(:id)
 
     puts "\n\nQuery Count: #{query.count}"
-    sleep(1)
-    # binding.pry
-    return query
+    query
   end
 
 
@@ -30,9 +27,6 @@ class FindBrand
   def template_starter(id)
     web = Web.find(id)
     url = web.url
-    # web.brands.destroy_all
-    update_hsh = { brand_sts: nil, brand_date: Time.now }
-
     brands = []
     url = web.url
     host = URI(url)&.host if url.present?
@@ -43,29 +37,21 @@ class FindBrand
 
     if names.present?
       names.each do |act_name|
-        @bts.each do |bt|
+        @brand_terms.each do |bt|
           brands << bt.brand_name if act_name.include?(bt.brand_term)
         end
       end
 
-      brand_objs = brands.uniq.map do |brand|
-        @brands.where(brand_name: brand)
-      end
+      brands&.uniq!
+      current_brands = web.brands.map(&:brand_name)
+      brands -= current_brands if current_brands.any?
 
-      if brand_objs.any?
-        brand_objs.each do |brand_obj|
-          web.brands << brand_obj if !web.brands.include?(brand_obj)
-        end
-        update_hsh[:brand_sts] = 'Valid'
+      if brands.any?
+        web.brands << Brand.where(brand_name: [brands])
       end
     end
 
-    web.update(update_hsh)
-
-    # puts names.uniq
-    # puts "----------"
-    # puts brands.uniq
-    # binding.pry
+    web.update(brand_date: Time.now)
   end
 
 

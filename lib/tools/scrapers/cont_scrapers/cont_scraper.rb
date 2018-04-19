@@ -10,16 +10,17 @@ class ContScraper
   include Noko
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 0
-    @dj_workers = 4
-    @obj_in_grp = 40
-    @dj_refresh_interval = 10
-    @cut_off = 2.days.ago
-    @db_timeout_limit = 60
+    @dj_workers = 3
+    @obj_in_grp = 9
+    @dj_refresh_interval = 5
+    @cut_off = 7.days.ago
+    @db_timeout_limit = 200
     @formatter = Formatter.new
     @mig = Mig.new
     @cs_helper = CsHelper.new
+    @current_process = "ContScraper"
   end
 
 

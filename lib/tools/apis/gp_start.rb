@@ -12,18 +12,19 @@ class GpStart
   def initialize
     @dj_on = false
     @dj_count_limit = 0
-    @dj_workers = 4
-    @obj_in_grp = 40
-    @dj_refresh_interval = 10
-    @db_timeout_limit = 60
+    @dj_workers = 3
+    @obj_in_grp = 9
+    @dj_refresh_interval = 5
+    @db_timeout_limit = 200
     @count = 0
-    @cut_off = 6.days.ago
+    @cut_off = 7.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
     @multi_spots = true
     @client = GooglePlaces::Client.new(ENV['GOOGLE_PLACES_API'])
     @spot_start_time = nil
     @gp_acts = []
+    @current_process = "GpStart"
   end
 
 

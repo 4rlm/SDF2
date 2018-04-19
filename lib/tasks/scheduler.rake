@@ -17,6 +17,7 @@ end
 # rake verify_urls
 # rake run_all_scrapers
 # heroku run rake run_all_scrapers
+# heroku run rake jobs:clear
 
 # heroku addons:create scheduler:standard
 # heroku addons:open scheduler
