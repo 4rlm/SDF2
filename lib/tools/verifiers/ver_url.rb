@@ -15,8 +15,8 @@ class VerUrl
     @dj_on = true
     @dj_count_limit = 0
     @dj_workers = 3
-    @obj_in_grp = 6
-    @dj_refresh_interval = 2
+    @obj_in_grp = 9
+    @dj_refresh_interval = 4
     @db_timeout_limit = 200
     @cut_off = 7.days.ago
     @formatter = Formatter.new

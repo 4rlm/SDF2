@@ -1,8 +1,8 @@
 Delay_Job_01: bundle exec rake jobs:work
 Delay_Job_02: bundle exec rake jobs:work
 Delay_Job_03: bundle exec rake jobs:work
-Delay_Job_04: bundle exec rake jobs:work
-Delay_Job_05: bundle exec rake jobs:work
+# Delay_Job_04: bundle exec rake jobs:work
+# Delay_Job_05: bundle exec rake jobs:work
 
 # Delay_Job_06: bundle exec rake jobs:work
 # Delay_Job_07: bundle exec rake jobs:work
