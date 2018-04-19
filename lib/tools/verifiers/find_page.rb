@@ -10,20 +10,21 @@ class FindPage
   include Noko
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 0
-    @dj_workers = 4
-    @obj_in_grp = 40
-    @dj_refresh_interval = 10
-    @cut_off = 24.hour.ago
+    @dj_workers = 3
+    @obj_in_grp = 9
+    @dj_refresh_interval = 5
+    @cut_off = 7.days.ago
     @formatter = Formatter.new
-    @db_timeout_limit = 60
+    @db_timeout_limit = 200
     @mig = Mig.new
+    @current_process = "FindPage"
   end
 
   def get_query
     err_sts_arr = ['Error: Timeout', 'Error: Host', 'Error: TCP']
-    
+
     query = Web.select(:id)
       .where(url_sts: 'Valid', page_sts: "Invalid")
       .where('page_date < ? OR page_date IS NULL', @cut_off)

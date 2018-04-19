@@ -19,6 +19,7 @@ class FindTemp
     @db_timeout_limit = 200
     @cut_off = 7.days.ago
     @mig = Mig.new
+    @current_process = "FindTemp"
   end
 
   def get_query
