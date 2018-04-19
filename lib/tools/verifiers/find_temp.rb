@@ -16,7 +16,7 @@ class FindTemp
     @dj_workers = 3
     @obj_in_grp = 9
     @dj_refresh_interval = 5
-    @db_timeout_limit = 200
+    @db_timeout_limit = 20
     @cut_off = 7.days.ago
     @mig = Mig.new
     @current_process = "FindTemp"
