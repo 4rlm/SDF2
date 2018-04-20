@@ -8,7 +8,7 @@ end
 
 #CALL: heroku run rake get_process_sts
 task get_process_sts: :environment do
-  Start.get_process_sts
+  Start.delay.get_process_sts
 end
 
 
