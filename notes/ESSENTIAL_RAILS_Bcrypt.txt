@@ -227,6 +227,8 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
   $ rails g migration add_hide_sts_to_activities hide_sts:string
 
   $ rails g migration add_row_count_to_queries row_count:integer
+  $ rails g migration add_role_to_users role:integer
+
 
 
 --ADD INDEX
@@ -248,7 +250,7 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
 --REMOVE
   $ rails g migration remove_hide_sts_from_acts hide_sts:string
   $ rails g migration remove_hide_sts_from_conts hide_sts:string
-  $ rails g migration remove_hide_sts_from_webs hide_sts:string
+  $ rails g migration remove_role_from_users role:string
 
 
 

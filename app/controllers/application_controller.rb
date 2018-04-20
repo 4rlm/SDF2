@@ -19,6 +19,31 @@ class ApplicationController < ActionController::Base
 
   protected
 
+
+  # ========== Detect User's Level(Role) ==========
+
+  def intermediate_and_up
+    unless current_user && (current_user.intermediate? || current_user.advanced? || current_user.admin?)
+      flash[:alert] = "NOT AUTHORIZED [2]"
+      redirect_to root_path
+    end
+  end
+
+  def advanced_and_up
+    unless current_user && (current_user.advanced? || current_user.admin?)
+      flash[:alert] = "NOT AUTHORIZED [3]"
+      redirect_to root_path
+    end
+  end
+
+  def admin_only
+    unless current_user && current_user.admin?
+      flash[:alert] = "NOT AUTHORIZED [4]"
+      redirect_to root_path
+    end
+  end
+
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :phone, :role, :approved])
     devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :phone, :role, :approved])

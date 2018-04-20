@@ -9,7 +9,7 @@
           <td><%= icon('fas', 'user', "#{@user.first_name.capitalize} #{@user.last_name.capitalize}") %></td>
           <td><%= icon('fas', 'at', @user.email) %></td>
           <td><%= icon('fas', 'phone', @user.phone) %></td>
-          <td><%= icon('fas', 'id-badge', @user.role.capitalize) %></td>
+          <td><%#= icon('fas', 'id-badge', @user.role.capitalize) %></td>
           <td><%= icon('fas', 'calendar-alt', "Registered #{@user.created_at.strftime('%x')}") %></td>
           <td><%= icon('fas', 'calendar-alt', "Updated #{@user.updated_at.strftime('%x')}") %></td>
 
