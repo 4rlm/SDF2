@@ -23,22 +23,22 @@
       <tbody>
         <tr>
           <td class="text-center">Total</td>
-          <td class="text-center"><%= number_with_delimiter(process_sts.ver_url, :delimiter => ',') %></td>
-          <td class="text-center"><%= number_with_delimiter(process_sts.find_temp, :delimiter => ',') %></td>
-          <td class="text-center"><%= number_with_delimiter(process_sts.find_page, :delimiter => ',') %></td>
-          <td class="text-center"><%= number_with_delimiter(process_sts.gp, :delimiter => ',') %></td>
-          <td class="text-center"><%= number_with_delimiter(process_sts.find_brand, :delimiter => ',') %></td>
-          <td class="text-center"><%= number_with_delimiter(process_sts.cont_scraper, :delimiter => ',') %></td>
-        </tr>
-
-        <tr>
-          <td class="text-center">Queued</td>
           <td class="text-center"><%= number_with_delimiter(process_sts.url_total, :delimiter => ',') %></td>
           <td class="text-center"><%= number_with_delimiter(process_sts.temp_total, :delimiter => ',') %></td>
           <td class="text-center"><%= number_with_delimiter(process_sts.page_total, :delimiter => ',') %></td>
           <td class="text-center"><%= number_with_delimiter(process_sts.gp_total, :delimiter => ',') %></td>
           <td class="text-center"><%= number_with_delimiter(process_sts.brand_total, :delimiter => ',') %></td>
           <td class="text-center"><%= number_with_delimiter(process_sts.cont_total, :delimiter => ',') %></td>
+        </tr>
+
+        <tr>
+          <td class="text-center">Queued</td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.ver_url, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.find_temp, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.find_page, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.gp, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.find_brand, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.cont_scraper, :delimiter => ',') %></td>
         </tr>
       </tbody>
 
