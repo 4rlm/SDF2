@@ -5,7 +5,7 @@ class Start
 
   #CALL: Start.run_all_scrapers
   def self.run_all_scrapers
-    Start.get_process_sts
+    # Start.get_process_sts
     VerUrl.new.start_ver_url
     FindTemp.new.start_find_temp
     FindPage.new.start_find_page
