@@ -1,0 +1,2 @@
+class ProcessStatus < ApplicationRecord
+end

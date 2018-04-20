@@ -5,12 +5,35 @@ class Start
 
   #CALL: Start.run_all_scrapers
   def self.run_all_scrapers
+    Start.get_process_sts
     VerUrl.new.start_ver_url
     FindTemp.new.start_find_temp
     FindPage.new.start_find_page
     GpStart.new.start_gp_act
     FindBrand.new.start_find_brand
     ContScraper.new.start_cont_scraper
+  end
+
+  #Call: Start.get_process_sts
+  def self.get_process_sts
+    process_sts_hsh = {
+      ver_url: VerUrl.new.get_query.count,
+      find_temp: FindTemp.new.get_query.count,
+      find_page: FindPage.new.get_query.count,
+      gp: GpStart.new.get_query.count,
+      find_brand: FindBrand.new.get_query.count,
+      cont_scraper: ContScraper.new.get_query.count,
+
+      url_total: Web.where(url_sts: 'Valid').count,
+      temp_total: Web.where(temp_sts: 'Valid').count,
+      page_total: Web.where(page_sts: 'Valid').count,
+      gp_total: Act.where(gp_sts: 'Valid').count,
+      brand_total: Web.where(brand_sts: 'Valid').count,
+      cont_total: Web.where(cs_sts: 'Valid').count
+    }
+
+    process_sts = ProcessStatus.find_or_create_by(id: 1)
+    process_sts = process_sts.update(process_sts_hsh)
   end
 
   #Call: Start.mega_start
