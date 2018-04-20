@@ -28,7 +28,6 @@
 
   // SHOWS STAFF CONTACTS LIST FROM WEBS VIA BUTTON
   function toggleConts(web_id) {
-
     var element = $('.showConts[data-id=' + web_id + ']');
     console.log(element.is(':visible'));
 
@@ -42,7 +41,6 @@
 
   // SHOWS FWD WEB DETAILS FROM WEBS VIA BUTTON
   function toggleFwd(web_id) {
-
     var element = $('.showFwd[data-id=' + web_id + ']');
     console.log(element.is(':visible'));
 
@@ -55,18 +53,17 @@
 
 
   // SHOWS Webs LIST FROM Conts VIA BUTTON
-  // function toggleWeb(id) {
-  //
-  //   var element = $(".webWrap#" + id);
-  //   console.log(element);
-  //
-  //   if (element.is(':visible')) {
-  //     element.hide();
-  //   } else {
-  //     element.show();
-  //   }
-  // }
-  //
+  function toggleWeb(cont_id) {
+    var element = $('.showWeb[data-id=' + cont_id + ']');
+    console.log(element);
+
+    if (element.is(':visible')) {
+      element.hide();
+    } else {
+      element.show();
+    }
+  }
+
 
   // Export Webs CSV if Clicked.
   function webExporter() {
@@ -77,19 +74,3 @@
           x.style.display = "none";
       }
   }
-
-
-
-  // GENERATES CSV FROM RANSACK QUERY VIA BUTTON
-  // function flagDataWeb() {
-  //   console.log("flagData Clicked", webs);
-  //   $.ajax({
-  //     url: "/webs/flag_data",
-  //     data: {webs: webs},
-  //     success: function() { web.reload(); }
-  //   });
-  // }
-
-
-
-  // $('.collapse').collapse();
