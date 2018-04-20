@@ -24,7 +24,7 @@
   </tr>
 
   <tr>
-    <td class='w25'><%= link_to(web.fwd_url, web.fwd_url, target: '_blank') if web.fwd_url.present? %></td>
+    <td class='w25'><%= link_to("F: #{web.fwd_url}", web.fwd_url, target: '_blank') if web.fwd_url.present? %></td>
     <td class='w10'><%= "𝚫 #{web&.web_changed&.strftime('%x')}" if web.web_changed.present? %></td>
     <td class='w15'><%= icon('fas', 'ban', web&.wx_date&.strftime('%x')) if web.wx_date.present? %></td>
 
