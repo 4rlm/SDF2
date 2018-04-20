@@ -5,7 +5,8 @@
 <div class="panel">
   <div class="row">
     <% process_sts = ProcessStatus.last %>
-    <h6>Process Status <span style="font-size: 12px;" class="font-italic"> Snapshot from <%= process_sts.updated_at.strftime('%m') %> Minutes Ago </span> </h6>
+    <h6>Process Status <span style="font-size: 12px;" class="font-italic text-primary"> From <%= time_ago_in_words(process_sts.updated_at) %> Ago </span> </h6>
+
 
     <table class="table">
       <thead>
@@ -53,7 +54,7 @@
 
 <div class="panel">
   <div class="row">
-    <h6>Activity Reports <span style="font-size: 12px;" class="font-italic"> Realtime </span> </h6>
+    <h6>Activity Reports <span style="font-size: 12px;" class="font-italic text-primary"> Realtime </span> </h6>
 
     <div class="col-md-12">
 
