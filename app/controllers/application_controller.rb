@@ -5,22 +5,18 @@ class ApplicationController < ActionController::Base
   ## Custom: Strong Parameters White Listing
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  def block_pending_users
-    unless current_user && current_user.role != "admin"
-      flash[:alert] = "Please wait for admin approval."
-      redirect_to root_path
-    end
-  end
-
-  # respond_to do |format|
-  #   format.json # show.js.erb
-  #   format.html # show.html.erb
-  # end
 
   protected
 
 
   # ========== Detect User's Level(Role) ==========
+
+  def basic_and_up
+    unless current_user && (current_user.basic? || current_user.intermediate? || current_user.advanced? || current_user.admin?)
+      flash[:alert] = "NOT AUTHORIZED [1]"
+      redirect_to root_path
+    end
+  end
 
   def intermediate_and_up
     unless current_user && (current_user.intermediate? || current_user.advanced? || current_user.admin?)

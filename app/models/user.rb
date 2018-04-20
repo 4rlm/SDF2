@@ -27,8 +27,11 @@ class User < ApplicationRecord
   scope :unhidden_web_ids, ->{ joins(:web_activities).merge(WebActivity.unhidden).pluck(:web_id) }
 
 
+  enum role: [:pending, :basic, :intermediate, :advanced, :admin]
 
-
+  def init
+    self.role ||= :pending if self.has_attribute? :role
+  end
 
   # scope :is_franchise, ->{ joins(:brands).merge(Brand.is_franchise) }
 
