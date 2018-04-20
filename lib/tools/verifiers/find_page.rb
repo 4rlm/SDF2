@@ -38,10 +38,10 @@ class FindPage
   end
 
   def start_find_page
-    query = get_query
+    query = get_query[0..20]
     while query.any?
       setup_iterator(query)
-      query = get_query
+      query = get_query[0..20]
       break if !query.any?
     end
   end

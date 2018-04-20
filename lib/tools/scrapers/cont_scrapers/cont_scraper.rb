@@ -48,10 +48,10 @@ class ContScraper
 
 
   def start_cont_scraper
-    query = get_query
+    query = get_query[0..20]
     while query.any?
       setup_iterator(query)
-      query = get_query
+      query = get_query[0..20]
       break if !query.any?
     end
   end

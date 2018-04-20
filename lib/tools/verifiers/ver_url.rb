@@ -49,11 +49,11 @@ class VerUrl
   end
 
   def start_ver_url
-    query = get_query
+    query = get_query[0..20]
 
     while query.any?
       setup_iterator(query)
-      query = get_query
+      query = get_query[0..20]
       break unless query.any?
     end
   end
