@@ -8,17 +8,17 @@ class WebsController < ApplicationController
   # GET /webs.json
   def index
     if params[:tally_scope].present?
-      @webs = Web.send(params[:tally_scope]).paginate(page: params[:page], per_page: 20)
+      @webs = Web.send(params[:tally_scope]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     elsif params[:bypass_web_ids]&.any?
-      @webs = Web.where(id: [params[:bypass_web_ids]]).paginate(page: params[:page], per_page: 20)
+      @webs = Web.where(id: [params[:bypass_web_ids]]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     elsif params[:fwd_web_id].present?
-      @webs = Web.where(id: params[:fwd_web_id]).paginate(page: params[:page], per_page: 20)
+      @webs = Web.where(id: params[:fwd_web_id]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     elsif params[:grab_followed].present?
       web_ids = current_user.web_activities.followed.pluck(:web_id)
-      @webs = Web.where(id: [web_ids]).paginate(page: params[:page], per_page: 20)
+      @webs = Web.where(id: [web_ids]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     elsif params[:grab_hidden].present?
       web_ids = current_user.web_activities.hidden.pluck(:web_id)
-      @webs = Web.where(id: [web_ids]).paginate(page: params[:page], per_page: 20)
+      @webs = Web.where(id: [web_ids]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     else
       params.delete('q') if params['q'].present? && params['q'] == 'q'
 
@@ -29,7 +29,7 @@ class WebsController < ApplicationController
       end
 
       @wq = Web.ransack(params[:q])
-      @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).paginate(page: params[:page], per_page: 20)
+      @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
 
     end
 

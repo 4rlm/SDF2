@@ -9,13 +9,13 @@ class ContsController < ApplicationController
   def index
 
     if params[:bypass_cont_ids]&.any?
-      @conts = Cont.where(id: [params[:bypass_cont_ids]]).paginate(page: params[:page], per_page: 20)
+      @conts = Cont.where(id: [params[:bypass_cont_ids]]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     elsif params[:grab_followed].present?
       cont_ids = current_user.cont_activities.followed.pluck(:cont_id)
-      @conts = Cont.where(id: [cont_ids]).paginate(page: params[:page], per_page: 20)
+      @conts = Cont.where(id: [cont_ids]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     elsif params[:grab_hidden].present?
       cont_ids = current_user.cont_activities.hidden.pluck(:cont_id)
-      @conts = Cont.where(id: [cont_ids]).paginate(page: params[:page], per_page: 20)
+      @conts = Cont.where(id: [cont_ids]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     else
       params.delete('q') if params['q'].present? && params['q'] == 'q'
 
@@ -26,7 +26,7 @@ class ContsController < ApplicationController
       end
 
       @cq = Cont.ransack(params[:q])
-      @conts = @cq.result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).paginate(page: params[:page], per_page: 20)
+      @conts = @cq.result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     end
 
       @cq = Cont.ransack(params[:q]) if !@cq.present?
