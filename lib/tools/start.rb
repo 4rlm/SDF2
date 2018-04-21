@@ -32,8 +32,7 @@ class Start
       cont_total: Web.where(cs_sts: 'Valid').count
     }
 
-    process_sts = ProcessStatus.find_or_create_by(id: 1)
-    process_sts = process_sts.update(process_sts_hsh)
+    ProcessStatus.find_or_create_by(id: 1).update(process_sts_hsh)
   end
 
   #Call: Start.mega_start

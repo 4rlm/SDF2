@@ -1,7 +1,7 @@
 class TalliesController < ApplicationController
   # before_action :set_tally, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
-  
+
   include TalliesHelper
 
 
@@ -9,6 +9,17 @@ class TalliesController < ApplicationController
   # GET /tallies.json
   def index
     @tallies = Tally.all
+  end
+
+
+  def refresh_process
+    Start.get_process_sts
+    @process_sts = ProcessStatus.first
+
+    respond_to do |format|
+      format.js { render :refresh_process, status: :ok, process_sts: @process_sts }
+    end
+
   end
 
 
