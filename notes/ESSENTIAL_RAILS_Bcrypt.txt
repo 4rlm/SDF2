@@ -246,6 +246,11 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
   rename_column :query, :params, :params
 
 
+$ rails g migration change_column_default1
+  change_column :table_name, :column_name, :type, default: "Your value"
+
+
+
 
 --REMOVE
   $ rails g migration remove_hide_sts_from_acts hide_sts:string
