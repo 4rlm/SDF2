@@ -1,0 +1,41 @@
+<div class="scr-prof-net scr-prof">
+  <table class="table table-bordered no-wrap">
+    <thead>
+      <tr>
+        <th class="level-heading"><%= header %></th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Updated</th>
+        <th>Created</th>
+        <th class="manage-btn">Manage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.each do |user| %>
+      <tr>
+
+
+        <td data-id="<%= user.id %>" onClick="selectUsers(this);">
+          <%= icon('fas', 'check', class: "stat-btn fa-clear") %>
+        </td>
+
+
+        <td><%= user.first_name %></td>
+        <td><%= user.last_name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.phone %></td>
+        <td><%= user.updated_at %></td>
+        <td><%= user.created_at %></td>
+
+        <td class='bg-light-red' >
+          <%= link_to admin_delete_user_path(user: user), data: { confirm: 'Are you sure to delete this user?' } do %>
+            <%= icon('fas', 'check', class: "btn btn-danger") %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div><br>

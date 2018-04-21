@@ -1,5 +1,7 @@
 class WebActivitiesController < ApplicationController
   before_action :set_web_activity, only: [:show, :edit, :update, :destroy]
+  before_action :basic_and_up
+  
 
   # GET /web_activities
   # GET /web_activities.json

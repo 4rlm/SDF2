@@ -1,5 +1,7 @@
 class ActActivitiesController < ApplicationController
   before_action :set_act_activity, only: [:show, :edit, :update, :destroy]
+  before_action :basic_and_up
+  
 
   # GET /act_activities
   # GET /act_activities.json

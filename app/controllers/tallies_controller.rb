@@ -1,5 +1,7 @@
 class TalliesController < ApplicationController
   # before_action :set_tally, only: [:show, :edit, :update, :destroy]
+  before_action :basic_and_up
+  
   include TalliesHelper
 
 

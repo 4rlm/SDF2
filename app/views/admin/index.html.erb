@@ -1,0 +1,28 @@
+<div class="row text-center pageHeading">
+  <div class="col-md-3">
+    <h1>Admin</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= render partial: 'table', locals: { users: @pending_users, header: "Pending" } %>
+    <%= render partial: 'table', locals: { users: @basic_users, header: "Basic" } %>
+    <%= render partial: 'table', locals: { users: @intermediate_users, header: "Intermediate" } %>
+    <%= render partial: 'table', locals: { users: @advanced_users, header: "Advanced" } %>
+    <%= render partial: 'table', locals: { users: @admin_users, header: "Admin" } %>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-md-12">
+    <div class="pull-left scr-prof level-change-btns">
+      <h4 class="inlined">Update </h4>
+      <span class="btn btn-primary btn-xs" data-level="pending" onClick="changeUserLevel(this);">Pending</span>
+      <span class="btn btn-primary btn-xs" data-level="basic" onClick="changeUserLevel(this);">Basic</span>
+      <span class="btn btn-primary btn-xs" data-level="intermediate" onClick="changeUserLevel(this);">Intermediate</span>
+      <span class="btn btn-primary btn-xs" data-level="advanced" onClick="changeUserLevel(this);">Advanced</span>
+      <span class="btn btn-primary btn-xs" data-level="admin" onClick="changeUserLevel(this);">Admin</span>
+    </div>
+  </div>
+</div>

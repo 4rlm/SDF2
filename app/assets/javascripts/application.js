@@ -74,3 +74,36 @@
           x.style.display = "none";
       }
   }
+
+
+
+
+
+  // ========== Admin's user level changer buttons ==========
+  var users = new Array();
+
+  function selectUsers(el) {
+    var tr = el.parentNode;
+    var stat = el.getElementsByClassName('stat-btn')[0];
+    var user_id = $(el).data("id");
+
+    if (stat.className.includes('fa-green')) {
+      tr.className = ""
+      stat.className = "fa fa-check fa-lg stat-btn fa-clear"
+      var index = users.indexOf(user_id);
+      users.splice(index, 1);
+    } else {
+      tr.className = "bg-yellow"
+      stat.className = "fa fa-check fa-lg stat-btn fa-green"
+      users.push(user_id);
+    }
+  }
+
+  function changeUserLevel(el) {
+    var level = $(el).data("level");
+    $.ajax({
+      url: "/admin/change_user_level",
+      data: {users: users, level: level},
+      success: function() { location.reload(); }
+    });
+  }

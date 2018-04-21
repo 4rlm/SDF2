@@ -92,5 +92,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'admin/index'
+  get 'admin/change_user_level' => 'admin#change_user_level'
+  get 'admin/delete_user' => 'admin#delete_user'
+
   resources :terms, :links
 end

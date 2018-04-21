@@ -1,5 +1,7 @@
 class QueriesController < ApplicationController
   before_action :set_query, only: [:show, :edit, :update, :destroy]
+  before_action :basic_and_up
+  
   include QueriesHelper
 
   # GET /queries
