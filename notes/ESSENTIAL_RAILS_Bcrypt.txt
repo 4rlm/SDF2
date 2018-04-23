@@ -62,7 +62,7 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
     has_many :tracks, through: :exportings
 
   3b) Add the following in (Users Model) to create associations to Track/Tracking:
-    has_many :tracks, dependent: :destroy
+    has_many :tracks, dependent: :delete_all
 --------------------
 
 
@@ -99,7 +99,7 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
       has_secure_password
       validates :username, :email, :password, presence: true
       validates :email, uniqueness: true
-      has_one :profile, dependent: :destroy
+      has_one :profile, dependent: :delete_all
     end
 --------------------
 
@@ -169,6 +169,17 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
 ====================================
 ** ESSENTIAL RAILS....3) PG Dump-Restore
 ====================================
+
+
+*) Heroku to Local
+  $ heroku pg:backups:capture
+  $ heroku pg:backups:download
+  (Then place dump file in sdf2 directory)
+  $ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d sdf2_development latest.dump
+  $ pg_restore -c -C -F c -v -U postgres latest.dump
+
+
+
 # Call: ServCsvTool.new.restore_backup(Brand, 'Brands.csv')
 
 

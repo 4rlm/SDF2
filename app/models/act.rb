@@ -4,15 +4,15 @@ class Act < ApplicationRecord
   # has_many :conts, inverse_of: :act, optional: true
   validates_uniqueness_of :gp_id, allow_blank: true, allow_nil: true
 
-  # has_one :act_web, dependent: :destroy
+  # has_one :act_web, dependent: :delete_all
   # has_one :web, through: :act_web
-  has_many :act_webs, dependent: :destroy
+  has_many :act_webs, dependent: :delete_all
   has_many :webs, through: :act_webs
 
   has_many :conts, through: :webs
   has_many :links, through: :webs
   has_many :brands, through: :webs
-  has_many :act_activities, dependent: :destroy
+  has_many :act_activities, dependent: :delete_all
 
   accepts_nested_attributes_for :act_webs, :webs, :conts, :links, :brands, :act_activities
 

@@ -30,6 +30,10 @@ class AdminController < ApplicationController
 
   def delete_user
     user = User.find(params[:user])
+    binding.pry
+    user.act_activities.delete_all
+    ActActivity.where(user_id: user.id).delete_all
+    user.act_activities.delete_all
     user.destroy
     redirect_to admin_index_path
   end

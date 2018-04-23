@@ -12,7 +12,7 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 0
     @dj_workers = 2
     @obj_in_grp = 10
@@ -110,10 +110,13 @@ class VerUrl
       fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
       if fwd_web_obj&.url.present?
         AssocWeb.transfer_web_associations(web, fwd_web_obj)
+        binding.pry
       else
+        binding.pry
         web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)
       end
     else
+      binding.pry
       web.update(url_sts: "Error: Nil", url_sts_code: nil, url_date: Time.now, timeout: 0)
     end
   end

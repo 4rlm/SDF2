@@ -145,7 +145,7 @@ Short list to-do ...
 
 ########### Advanced Schema ###########
 
-  has_many :cont_descriptions, dependent: :destroy
+  has_many :cont_descriptions, dependent: :delete_all
   has_many :descriptions, through: :cont_descriptions
   accepts_nested_attributes_for :cont_descriptions, :descriptions
 

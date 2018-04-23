@@ -5,17 +5,17 @@ class Web < ApplicationRecord
   validates_uniqueness_of :url, allow_blank: false, allow_nil: false
   has_many :conts
 
-  has_many :web_links, dependent: :destroy
+  has_many :web_links, dependent: :delete_all
   has_many :links, through: :web_links
 
-  has_many :web_brands, dependent: :destroy
+  has_many :web_brands, dependent: :delete_all
   has_many :brands, through: :web_brands
 
-  has_many :act_webs, dependent: :destroy
+  has_many :act_webs, dependent: :delete_all
   has_many :acts, through: :act_webs
   has_many :act_activities, through: :acts
 
-  has_many :web_activities, dependent: :destroy
+  has_many :web_activities, dependent: :delete_all
   has_many :users, through: :web_activities
 
   accepts_nested_attributes_for :act_webs, :acts, :conts, :web_links, :links, :web_brands, :brands, :web_activities

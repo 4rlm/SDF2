@@ -76,10 +76,10 @@ MODEL
   has_many :phonings, as: :phonable
   has_many :phones, through: :phonings
 
-  has_many :act_adrs, dependent: :destroy
+  has_many :act_adrs, dependent: :delete_all
   has_many :adrs, through: :act_adrs
 
-  has_many :act_webs, dependent: :destroy
+  has_many :act_webs, dependent: :delete_all
   has_many :webs, through: :act_webs
 
 == Cont ==
@@ -89,16 +89,16 @@ MODEL
   has_many :phonings, as: :phonable
   has_many :phones, through: :phonings
 
-  has_many :cont_descriptions, dependent: :destroy
+  has_many :cont_descriptions, dependent: :delete_all
   has_many :descriptions, through: :cont_descriptions
 
-  has_many :cont_titles, dependent: :destroy
+  has_many :cont_titles, dependent: :delete_all
   has_many :titles, through: :cont_titles
 
 
 
 == Adr ==
-  has_many :act_adrs, dependent: :destroy
+  has_many :act_adrs, dependent: :delete_all
   has_many :acts, through: :act_adrs
 
   def full_adr
@@ -118,20 +118,20 @@ MODEL
   validates :phone_id, :uniqueness => { :scope => [:phonable_type, :phonable_id] } #=> ALSO IN MIGRATION!
 
 == Web ==
-  has_many :act_webs, dependent: :destroy
+  has_many :act_webs, dependent: :delete_all
   has_many :acts, through: :act_webs
 
   validates_uniqueness_of :url, allow_blank: true, allow_nil: true
 
 == Description ==
-  has_many :cont_descriptions, dependent: :destroy
+  has_many :cont_descriptions, dependent: :delete_all
   has_many :conts, through: :cont_descriptions
 
   validates_uniqueness_of :job_desc, allow_blank: true, allow_nil: true
 
 
 == Title ==
-  has_many :cont_titles, dependent: :destroy
+  has_many :cont_titles, dependent: :delete_all
   has_many :conts, through: :cont_titles
 
   validates_uniqueness_of :job_title, allow_blank: true, allow_nil: true

@@ -78,11 +78,6 @@ ActiveRecord::Schema.define(version: 20180421045531) do
     t.index ["zip"], name: "index_acts_on_zip"
   end
 
-  create_table "admins", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "brand_terms", force: :cascade do |t|
     t.string "brand_term", null: false
     t.string "brand_name"
