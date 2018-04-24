@@ -54,9 +54,7 @@ class GpStart
         .order("id ASC").pluck(:id)
     end
 
-    puts query.count
-    sleep(1)
-    return query
+    query
   end
 
 
@@ -77,9 +75,9 @@ class GpStart
 
   #CALL: GpStart.new.start_gp_act
   def template_starter(id)
-    samp = Random.rand(11)
-    puts "Sleeping....#{samp}"
-    sleep(samp)
+    # samp = Random.rand(11)
+    # puts "Sleeping....#{samp}"
+    # sleep(samp)
 
     @spot_start_time = Time.now
     @gp_acts = []
