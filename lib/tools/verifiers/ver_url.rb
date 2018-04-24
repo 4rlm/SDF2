@@ -114,14 +114,11 @@ class VerUrl
     if curl_url.present?
       fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
       if fwd_web_obj&.url.present?
-        binding.pry
         AssocWeb.transfer_web_associations(web, fwd_web_obj)
       else
-        binding.pry
         web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)
       end
     else
-      binding.pry
       web.update(url_sts: "Error: Nil", url_sts_code: nil, url_date: Time.now, timeout: 0)
     end
   end
