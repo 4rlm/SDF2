@@ -43,8 +43,6 @@ class GpStart
         .select(:id).order("gp_date ASC")[0..0].pluck(:id)
     end
 
-
-
     ## ## Skipped Sts Query ##
     if !query.any?
       @multi_spots = false

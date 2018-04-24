@@ -12,7 +12,7 @@ class VerUrl
   include AssocWeb
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 0
     @dj_workers = 2
     @obj_in_grp = 10
@@ -73,8 +73,13 @@ class VerUrl
 
     formatted_url = @formatter.format_url(web_url)
     unless formatted_url.present?
-      web.update(url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now, wx_date: Time.now, timeout: timeout)
-      return
+      begin
+        web.update!(url_sts_code: nil, url_sts: 'Invalid', url_date: Time.now, wx_date: Time.now, timeout: timeout)
+      rescue
+        duplicate_web_objs = Web.where(url: web_url).order("id ASC")
+        duplicate_web_objs.last.destroy if duplicate_web_objs.count > 1
+      end
+      # return
     end
 
     if formatted_url != web_url
@@ -109,11 +114,14 @@ class VerUrl
     if curl_url.present?
       fwd_web_obj = Web.find_by(url: curl_url) if (curl_url != web_url)
       if fwd_web_obj&.url.present?
+        binding.pry
         AssocWeb.transfer_web_associations(web, fwd_web_obj)
       else
+        binding.pry
         web.update(url: curl_url, url_sts: 'Valid', url_sts_code: url_sts_code, url_date: Time.now, timeout: 0)
       end
     else
+      binding.pry
       web.update(url_sts: "Error: Nil", url_sts_code: nil, url_date: Time.now, timeout: 0)
     end
   end

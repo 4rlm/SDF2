@@ -175,6 +175,7 @@ NOTE: BREAK THIS FILE INTO TWO SEPARATE ONES: 1) Polymorphic, 2) Bcrypt, 3) PG D
   $ heroku pg:backups:capture
   $ heroku pg:backups:download
   (Then place dump file in sdf2 directory)
+  $ RAILS_ENV=development rake db:drop DISABLE_DATABASE_ENVIRONMENT_CHECK=1
   $ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d sdf2_development latest.dump
   $ pg_restore -c -C -F c -v -U postgres latest.dump
 
