@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :web_activities, dependent: :delete_all
   has_many :webs, through: :web_activities
 
+  has_many :photos, dependent: :destroy
 
   # User.where(id: 1).followed_web_ids
   scope :followed_web_ids, ->{ joins(:web_activities).merge(WebActivity.followed).pluck(:web_id) }
