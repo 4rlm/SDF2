@@ -5,12 +5,15 @@
       <span class="font-italic">CRM Data Verification Software</span>
     </div>
     <ul class="nav navbar-nav">
+      
+      <li><%= link_to(icon('fas', 'camera', 'Photos'), photos_path, class: "nav-link")%></li>
 
       <% if basic_and_up %>
         <li><%= link_to(icon('fas', 'building', 'Accounts'), acts_path, class: "nav-link")%></li>
         <li><%= link_to(icon('fas', 'users', 'Contacts'), conts_path, class: "nav-link")%></li>
         <li><%= link_to(icon('fas', 'external-link-alt', 'Websites'), webs_path, class: "nav-link")%></li>
         <li><%= link_to(icon('fas', 'tachometer-alt', 'Dashboard'), tallies_path, class: "nav-link")%></li>
+
       <% end %>
 
       <% if current_user.present? %>

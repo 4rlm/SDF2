@@ -111,9 +111,9 @@ gem 'ransack', '~> 1.8', '>= 1.8.4'
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 gem 'simplecov', '~> 0.12.0'
 gem 'bootstrap-select-rails', '~> 1.12', '>= 1.12.4'
-# gem 'paperclip', '~> 4.3', '>= 4.3.6'
+gem "paperclip", "~> 6.0.0"
+gem 'aws-sdk', '~> 3'
 # gem 'aws-sdk', '~> 1.6'
-gem 'aws-sdk', '~> 2'
 
 # gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
 

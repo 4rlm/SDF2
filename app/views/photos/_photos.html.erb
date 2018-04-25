@@ -1,0 +1,9 @@
+<div class="row">
+  <% if @photos %>
+    <% @photos.each do |photo| %>
+      <div class="col-md-2">
+        <%= render 'photos/photo', photo: photo %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

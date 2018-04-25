@@ -97,5 +97,7 @@ Rails.application.routes.draw do
   get 'admin/change_user_level' => 'admin#change_user_level'
   get 'admin/delete_user' => 'admin#delete_user'
 
+  resources :photos, only: [:new, :create, :index, :destroy]
+
   resources :terms, :links
 end

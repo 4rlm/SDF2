@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180421045531) do
+ActiveRecord::Schema.define(version: 20180425172315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
   enable_extension "citext"
+  enable_extension "hstore"
 
   create_table "act_activities", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -166,6 +166,16 @@ ActiveRecord::Schema.define(version: 20180421045531) do
     t.citext "staff_link", null: false
     t.citext "staff_text"
     t.index ["staff_link", "staff_text"], name: "index_links_on_staff_link_and_staff_text", unique: true
+  end
+
+  create_table "photos", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   create_table "process_statuses", force: :cascade do |t|
