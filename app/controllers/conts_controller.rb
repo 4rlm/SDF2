@@ -1,7 +1,7 @@
 class ContsController < ApplicationController
   before_action :set_cont, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
-  
+
   # respond_to :html, :json
   helper_method :sort_column, :sort_direction
   require 'will_paginate/array'
@@ -78,7 +78,7 @@ class ContsController < ApplicationController
   def search
     if params[:q]['q_name_cont_any'].present?
       q_name = params[:q].delete('q_name_cont_any')
-      ContCsvTool.new(params, current_user).delay.save_cont_queries(q_name)
+      ContCsvTool.new(params, current_user).save_cont_queries(q_name)
     end
 
     index

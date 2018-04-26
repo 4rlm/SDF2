@@ -1,6 +1,7 @@
+<tr><th colspan="2" style="font-size: 14px; font-weight: bolder;">Websites</th></tr>
+
 <% @user.queries.web_queries&.each do |web_query| %>
   <% params[:query_id] = web_query.id %>
-
   <tr>
     <td>Websites</td>
     <td><%= number_with_delimiter(web_query.row_count, :delimiter => ',') %></td>
@@ -10,6 +11,5 @@
     <td><%= link_to "Reset", unfollow_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
     <td><%= link_to "Hide", hide_all_queries_path(params), class: 'btn btn-danger btn-sm' %></td>
     <td><%= link_to "Reset", unhide_all_queries_path(params), class: 'btn btn-default btn-sm' %></td>
-
   </tr>
 <% end %>
