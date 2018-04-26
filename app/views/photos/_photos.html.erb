@@ -1,4 +1,12 @@
 <div class="row">
+  <%= link_to new_photo_path, class: 'btn btn-default btn-md' do %>
+    <%= icon('fas', 'camera', 'Upload Photo') %>
+  <% end %>
+</div>
+
+
+
+<div class="row">
   <% if @photos %>
     <% @photos.each do |photo| %>
       <div class="col-md-2">
