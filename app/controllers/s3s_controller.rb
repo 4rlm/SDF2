@@ -17,7 +17,7 @@ class S3sController < ApplicationController
 
 
   def download_csv
-    s3 = Photo.find(params[:id])
+    s3 = S3.find(params[:id])
     path = s3.csv.expiring_url
     redirect_to path
 

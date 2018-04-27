@@ -1,3 +1,0 @@
-id,url,url_sts_code,cop,temp_name,url_sts,temp_sts,page_sts,cs_sts,brand_sts,timeout,url_date,tmp_date,page_date,cs_date,brand_date,fwd_url,fwd_url_id,web_changed,wx_date,q_name,created_at,updated_at
-17853,https://www.davidsonchevrolet.com,405,true,Cobalt,Valid,Valid,Invalid,,Valid,10,2018-04-17 21:08:39 UTC,2018-04-20 03:52:23 UTC,2018-04-21 21:08:50 UTC,,2018-04-19 18:10:20 UTC,,,,,,2018-02-21 12:16:45 UTC,2018-04-21 21:08:50 UTC
-42708,http://www.ryancadillac.com,405,false,Cobalt,Valid,Valid,Invalid,,,10,2018-04-19 10:08:45 UTC,2018-04-20 00:39:45 UTC,2018-04-22 03:47:06 UTC,,2018-04-19 18:18:46 UTC,,,2018-03-02 04:13:38 UTC,,,2018-03-02 04:13:38 UTC,2018-04-22 03:47:06 UTC
