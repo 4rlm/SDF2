@@ -36,6 +36,8 @@ class PhotosController < ApplicationController
       :secure => true,
       :expires => 24*3600,  # 24 hours
       :response_content_disposition => "attachment; filename='#{csv_file_name}'").to_s
+
+    render :index  
   end
 
 
