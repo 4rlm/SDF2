@@ -1,16 +1,60 @@
 <div class="row">
-  <%= link_to new_photo_path, class: 'btn btn-default btn-md' do %>
-    <%= icon('fas', 'camera', 'Upload Photo') %>
+  <%= link_to perform_photos_path, class: 'btn btn-default btn-md' do %>
+    <%= icon('fas', 'download', 'Generate CSV!') %>
   <% end %>
 </div>
 
 
 <div class="row">
-  <% if @photos %>
-    <% @photos.each do |photo| %>
-      <div class="col-md-2">
-        <%= render 'photos/photo', photo: photo %>
-      </div>
-    <% end %>
-  <% end %>
+  <%#= link_to new_photo_path, class: 'btn btn-default btn-md' do %>
+    <%#= icon('fas', 'camera', 'Upload Photo') %>
+  <%# end %>
+</div>
+
+
+<div class="row">
+
+  <div class="media">
+    <div class="media-left">
+      <%#= link_to image_tag(photo.image.url(:thumb), class: 'media-object'), photo.image.url, target: '_blank' %>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <% if @photos %>
+            <% @photos.each do |photo| %>
+              <div class="col-md-2">
+
+                <tr>
+                  <td><%= photo.csv_file_name %></td>
+                  <td><%= photo.csv_content_type %></td>
+                  <td><%= photo.csv_file_size %></td>
+                  <td><%= photo.csv_updated_at %></td>
+
+                  <td>
+                    <%= link_to download_csv_photos_path(id: photo.id), class: 'btn btn-primary btn-md' do %>
+                      <i class="fa fa-download"></i> Download CSV
+                    <% end %>
+                  </td>
+
+                </tr>
+
+              </div>
+            <% end %>
+          <% end %>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
