@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :photos
   resources :users, :only => [:index, :show]
   resources :downloads, only: [:show]
   # resources :activities, only: [:toggle_sts]
@@ -94,11 +93,18 @@ Rails.application.routes.draw do
     end
   end
 
+  # resources :photos, only: [:new, :create, :index, :destroy]
+  resources :photos, only: [:new, :create, :index, :destroy] do
+    collection do
+      match 'perform' => 'photos#perform', via: [:get, :post], as: :perform
+      match 'download_csv' => 'photos#download_csv', via: [:get, :post], as: :download_csv
+    end
+  end
+
+
   get 'admin/index'
   get 'admin/change_user_level' => 'admin#change_user_level'
   get 'admin/delete_user' => 'admin#delete_user'
-
-  resources :photos, only: [:new, :create, :index, :destroy]
 
   resources :terms, :links
 end

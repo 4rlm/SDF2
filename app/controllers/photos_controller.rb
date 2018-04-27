@@ -7,6 +7,45 @@ class PhotosController < ApplicationController
     @photos = Photo.order('created_at')
   end
 
+
+
+  def perform
+    photo = Photo.new
+    options = {}
+    webs = Web.all[0..1]
+    file_name = 'test_csv_1'
+
+    CSV.generate(options) do |csv|
+      web_cols = webs.first.attributes.keys
+      csv.add_row(web_cols)
+
+      webs.each { |web| web.attributes.slice(*web_cols).values }
+      file = StringIO.new(csv.string)
+      photo.csv = file
+      photo.csv.instance_write(:content_type, 'text/csv')
+      photo.csv.instance_write(:file_name, file_name)
+      photo.save!
+    end
+
+    # path = photo.csv.url
+    # FileUtils.mkdir_p(path) unless File.exist?(path)
+    # File.open(File.join(photo.csv.url), 'wb') do |file|
+    #   file.puts f.read
+    # end
+
+    render :index
+  end
+
+
+  def download_csv
+    photo = Photo.find(params[:id])
+    data = open(photo.csv.url)
+    send_data data.read, filename: "#{photo.csv_file_name}", type: "text/csv", disposition: 'attachment'
+  end
+
+
+
+
   # GET /photos/1
   # GET /photos/1.json
   def show

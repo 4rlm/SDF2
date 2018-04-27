@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180425232737) do
+ActiveRecord::Schema.define(version: 20180427010607) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,10 @@ ActiveRecord::Schema.define(version: 20180425232737) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "csv_file_name"
+    t.string "csv_content_type"
+    t.integer "csv_file_size"
+    t.datetime "csv_updated_at"
   end
 
   create_table "process_statuses", force: :cascade do |t|

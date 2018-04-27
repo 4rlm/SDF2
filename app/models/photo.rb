@@ -11,7 +11,8 @@ class Photo < ApplicationRecord
   # content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] },
   # size: { in: 0..1000.kilobytes }
 
-  validates_attachment :attachment, content_type: ['text/csv', 'image/jpeg', 'image/png', 'image/gif', 'application/pdf']
 
+  has_attached_file :csv
+  validates_attachment :csv, content_type: { content_type: "text/csv" }
 
 end
