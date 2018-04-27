@@ -114,6 +114,7 @@ gem 'bootstrap-select-rails', '~> 1.12', '>= 1.12.4'
 gem "paperclip", "~> 6.0.0"
 gem 'aws-sdk', '~> 3'
 # gem 'aws-sdk', '~> 1.6'
+gem 'fakes3', '~> 1.0'
 
 # gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
 
