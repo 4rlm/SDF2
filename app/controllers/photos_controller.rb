@@ -17,28 +17,30 @@ class PhotosController < ApplicationController
   end
 
 
-  # def download_csv
-  #   photo = Photo.find(params[:id])
-  #   data = open(photo.csv.expiring_url)
-  #   send_data data.read, :type => data.content_type, :x_sendfile => true
-  #
-  #   data = photo.csv.expiring_url
-  #   redirect_to path
-  #   send_data data.read, filename: "#{photo.csv_file_name}", type: "text/csv", disposition: 'attachment'
-  # end
-
   def download_csv
     photo = Photo.find(params[:id])
-    style_name=:original
-    file_name = photo.csv_file_name
+    # data = open(photo.csv.expiring_url)
+    # send_data data.read, :type => data.content_type, :x_sendfile => true
 
-    photo.s3_bucket.objects[photo.s3_object(style_name).key].url_for(:read,
-      :secure => true,
-      :expires => 24*3600,  # 24 hours
-      :response_content_disposition => "attachment; filename='#{csv_file_name}'").to_s
+    path = photo.csv.expiring_url
+    redirect_to path
+    # send_data data.read, filename: "#{photo.csv_file_name}", type: "text/csv", disposition: 'attachment'
 
-    render :index  
+    # render :index
   end
+
+  # def download_csv
+  #   photo = Photo.find(params[:id])
+  #   style_name=:original
+  #   file_name = photo.csv_file_name
+  #
+  #   photo.s3_bucket.objects[photo.s3_object(style_name).key].url_for(:read,
+  #     :secure => true,
+  #     :expires => 24*3600,  # 24 hours
+  #     :response_content_disposition => "attachment; filename='#{csv_file_name}'").to_s
+  #
+  #   render :index
+  # end
 
 
 
