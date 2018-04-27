@@ -19,14 +19,14 @@ class PhotosController < ApplicationController
 
   def download_csv
     photo = Photo.find(params[:id])
-    # data = open(photo.csv.expiring_url)
-    # send_data data.read, :type => data.content_type, :x_sendfile => true
+    # path = photo.csv.expiring_url
+    # redirect_to path
 
-    path = photo.csv.expiring_url
-    redirect_to path
+    data = open(photo.csv.expiring_url)
+    send_data data.read, :type => data.content_type, :x_sendfile => true
     # send_data data.read, filename: "#{photo.csv_file_name}", type: "text/csv", disposition: 'attachment'
 
-    # render :index
+    render :index
   end
 
   # def download_csv
