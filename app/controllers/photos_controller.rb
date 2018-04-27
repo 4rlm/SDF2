@@ -23,8 +23,8 @@ class PhotosController < ApplicationController
     # redirect_to path
 
     data = open(photo.csv.expiring_url)
-    send_data data.read, :type => data.content_type, :x_sendfile => true
-    # send_data data.read, filename: "#{photo.csv_file_name}", type: "text/csv", disposition: 'attachment'
+    # send_data data.read, :type => data.content_type, :x_sendfile => true
+    send_data data.read, filename: "#{photo.csv_file_name}", type: "text/csv", disposition: 'attachment'
 
     render :index
   end
