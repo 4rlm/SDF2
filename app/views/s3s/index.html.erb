@@ -1,0 +1,13 @@
+<div class="container">
+
+  <!-- PARTIAL LINK TO PHOTOS/INDEX (VIEW ALL) -->
+  <%#= button_to('Upload Photo', new_s3_path, method: :get, :class => 'btn btn-sm btn-primary')  %>
+
+  <% if @s3s %>
+    <h3>CSVs: <%= @s3s.count %></h3>
+    <%= render 's3s/s3s', s3s: @s3s %>
+  <% else %>
+    <h3>No CSVs Posted Yet</h3>
+  <% end %>
+
+</div>

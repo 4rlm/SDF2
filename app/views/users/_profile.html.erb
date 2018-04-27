@@ -15,6 +15,8 @@
 
           <td><%= link_to icon('fas', 'edit', 'Edit Profile'),  edit_user_registration_path, class: "btn btn-primary btn-md" %></td>
           <td><%= link_to icon('fas', 'sign-out-alt', 'Log Out'),  destroy_user_session_path, method: :delete, class: "btn btn-danger btn-md" %></td>
+
+          <td><%= link_to(icon('fas', 'download', 'CSVs'), s3s_path, class: "nav-link")%></td>
         </tr>
       </tbody>
     </table>

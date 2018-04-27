@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180427010607) do
+ActiveRecord::Schema.define(version: 20180427184234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -222,6 +222,15 @@ ActiveRecord::Schema.define(version: 20180427010607) do
     t.datetime "updated_at", null: false
     t.index ["mod_name"], name: "index_ransack_options_on_mod_name"
     t.index ["option_hsh"], name: "index_ransack_options_on_option_hsh", using: :gin
+  end
+
+  create_table "s3s", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "csv_file_name"
+    t.string "csv_content_type"
+    t.integer "csv_file_size"
+    t.datetime "csv_updated_at"
   end
 
   create_table "tallies", force: :cascade do |t|

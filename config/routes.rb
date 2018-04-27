@@ -102,6 +102,15 @@ Rails.application.routes.draw do
   end
 
 
+  # resources :s3s, only: [:new, :create, :index, :destroy]
+  resources :s3s, only: [:index, :destroy] do
+    collection do
+      match 'perform' => 's3s#perform', via: [:get, :post], as: :perform
+      match 'download_csv' => 's3s#download_csv', via: [:get, :post], as: :download_csv
+    end
+  end
+
+
   get 'admin/index'
   get 'admin/change_user_level' => 'admin#change_user_level'
   get 'admin/delete_user' => 'admin#delete_user'
