@@ -53,39 +53,11 @@ class WebsController < ApplicationController
   end
 
 
-  # def followed
-  #   params[:bypass_web_ids] = helpers.get_followed_web_ids(nil)
-  #   redirect_to webs_path(params)
-  # end
-  #
-  # def hidden
-  #   params[:bypass_web_ids] = helpers.get_hidden_web_ids(nil)
-  #   redirect_to webs_path(params)
-  # end
-
-  # def followed_acts
-  #   # act_ids = helpers.get_followed_act_ids(nil)
-  #   # act_ids = Act.send(params[:tally_scope]).pluck(:id)
-  #   act_ids = current_user.act_activities.where(fav_sts: true).pluck(:act_id)
-  #
-  #   current_user.web_activities.unfollowed.where(web_id: [web_ids])
-  #
-  #   # params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
-  #
-  #   redirect_to webs_path(params)
-  # end
-
-  # def hidden_acts
-  #   act_ids = helpers.get_hidden_act_ids(nil)
-  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
-  #   redirect_to webs_path(params)
-  # end
-
-
   def generate_csv
+
     if params[:q].present?
-      WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
-      # WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
+      # WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
+      WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
 
       respond_to do |format|
         format.js { render :download_webs, status: :ok, location: @webs }

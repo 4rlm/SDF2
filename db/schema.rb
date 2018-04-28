@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180427184234) do
+ActiveRecord::Schema.define(version: 20180428134608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,6 +158,10 @@ ActiveRecord::Schema.define(version: 20180427184234) do
     t.bigint "user_id", null: false
     t.datetime "export_date", null: false
     t.string "file_name", null: false
+    t.string "csv_file_name"
+    t.string "csv_content_type"
+    t.integer "csv_file_size"
+    t.datetime "csv_updated_at"
     t.index ["user_id", "file_name"], name: "user_exports", unique: true
     t.index ["user_id"], name: "index_exports_on_user_id"
   end

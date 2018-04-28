@@ -18,7 +18,7 @@ class WebCsvTool
 
   def start_web_acts_csv_and_log
     web_acts_to_csv
-    log_web_acts_export
+    # log_web_acts_export
   end
 
   def save_web_queries(q_name)
@@ -34,8 +34,9 @@ class WebCsvTool
     web_cols = %w(id url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
     brand_cols = %w(brand_name)
     act_cols = %w(act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)
+    export = Export.new
 
-    CSV.open(@path_and_file, "wb") do |csv|
+    CSV.generate(options = {}) do |csv|
       csv.add_row(web_cols + brand_cols + act_cols)
       @webs.each do |web|
         values = web.attributes.slice(*web_cols).values
@@ -49,7 +50,18 @@ class WebCsvTool
           csv.add_row(values)
         end
       end
+
+      file = StringIO.new(csv.string)
+      export.csv = file
+      export.csv.instance_write(:content_type, 'text/csv')
+      export.csv.instance_write(:file_name, @file_name)
+      export.user = @user
+      export.export_date = @export_date
+      export.file_name = @file_name
+      export.save!
     end
+
+
   end
 
 

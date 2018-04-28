@@ -2,6 +2,7 @@ class S3 < ApplicationRecord
   # belongs_to :user
 
   # has_attached_file :csv
+
   has_attached_file :csv,
                     storage: :s3,
                     s3_credentials: {
@@ -39,14 +40,11 @@ class S3 < ApplicationRecord
       s3.save!
     end
 
-    # path = s3.csv.url
-    # FileUtils.mkdir_p(path) unless File.exist?(path)
-    # File.open(File.join(s3.csv.url), 'wb') do |file|
-    #   file.puts f.read
-    # end
   end
 
   def csv_name
     Time.now.strftime("%Y%m%d%I%M%S")
   end
+
+
 end
