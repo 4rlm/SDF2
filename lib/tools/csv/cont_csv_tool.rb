@@ -11,14 +11,14 @@ class ContCsvTool
     end
 
     @export_date = Time.now
-    @file_name = "cont_web_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
-    @path_and_file = "./public/downloads/#{@file_name}"
+    @file_name = "Cont_#{@export_date.strftime("%m_%d_%I_%M_%S")}.csv"
+    # @path_and_file = "./public/downloads/#{@file_name}"
   end
 
 
   def start_cont_web_csv_and_log
     cont_web_to_csv
-    log_cont_web_export
+    # log_cont_web_export
   end
 
   def save_cont_queries(q_name)
@@ -34,11 +34,9 @@ class ContCsvTool
     cont_cols = %w(id web_id first_name last_name job_title job_desc email phone cs_date email_changed cont_changed job_changed created_at cx_date)
     web_cols = %w(url url_sts cop temp_name cs_sts web_changed wx_date)
     brand_cols = %w(brand_name)
+    export = Export.new
 
-    ### IMPORTANT!!! REMOVE 'TESTING-CONTS'.
-    # @conts = @conts[0..10]  ## for testing, reduce csv size.
-
-    CSV.open(@path_and_file, "wb") do |csv|
+    CSV.generate(options = {}) do |csv|
       csv.add_row(cont_cols + web_cols + brand_cols)
       @conts.each do |cont|
         values = cont.attributes.slice(*cont_cols).values
@@ -46,7 +44,17 @@ class ContCsvTool
         values << cont.web.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
         csv.add_row(values)
       end
+
+      file = StringIO.new(csv.string)
+      export.csv = file
+      export.csv.instance_write(:content_type, 'text/csv')
+      export.csv.instance_write(:file_name, @file_name)
+      export.user = @user
+      export.export_date = @export_date
+      export.file_name = @file_name
+      export.save!
     end
+
   end
 
 

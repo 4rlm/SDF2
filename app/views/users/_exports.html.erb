@@ -10,33 +10,22 @@
     <tr>
       <th class="text-center">File Name</th>
       <th class="text-center">Size</th>
-      <th class="text-center">Generated</th>
+      <th class="text-center">Created</th>
     </tr>
   </thead>
   <tbody>
     <% exports = @user.exports.order("export_date DESC") %>
     <% exports.each do |export| %>
-    <% filename = export.file_name %>
-
-    <% if filename.include?('web_acts') %>
-      <% category = 'Websites' %>
-    <% elsif filename.include?('act_webs') %>
-      <% category = 'Accounts' %>
-    <% elsif filename.include?('cont_web') %>
-      <% category = 'Contacts' %>
-    <% end %>
 
     <tr>
-
       <td>
         <%= link_to download_csv_exports_path(id: export.id), class: 'btn btn-default btn-md-lg' do %>
-          <%= icon('fas', 'download', filename) %>
+          <%= icon('fas', 'download', export.file_name) %>
         <% end %>
       </td>
 
       <td><%= number_to_human_size(export.csv_file_size, precision: 3) %></td>
-      <td><%= time_ago_in_words(export.export_date).capitalize %></td>
-
+      <td><%= time_ago_in_words(export.export_date).capitalize %> ago</td>
     </tr>
     <% end %>
   </tbody>

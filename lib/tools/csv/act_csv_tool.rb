@@ -11,14 +11,14 @@ class ActCsvTool
     end
 
     @export_date = Time.now
-    @file_name = "act_webs_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
-    @path_and_file = "./public/downloads/#{@file_name}"
+    @file_name = "Act_#{@export_date.strftime("%m_%d_%I_%M_%S")}.csv"
+    # @path_and_file = "./public/downloads/#{@file_name}"
   end
 
 
   def start_act_webs_csv_and_log
     act_webs_to_csv
-    log_act_webs_export
+    # log_act_webs_export
   end
 
   def save_act_queries(q_name)
@@ -34,19 +34,9 @@ class ActCsvTool
     act_cols = %w(id act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)
     brand_cols = %w(brand_name)
     web_cols = %w(url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
+    export = Export.new
 
-    # TESTING ONLY.  COMMENT OUT AFTER TESTING.  LIMITIS ACT SIZE FOR TESTING.
-    # @acts = @acts[0..10]
-
-    ## Try to exclude acts marked as hidden true.
-    # @exclude_hidden = true
-    # if @exclude_hidden == true
-    #   unhidden_act_ids = ActActivity.where(user_id: current_user, act_id: [@acts.map(&:id)], hide_sts: false).pluck(:act_id)
-    #   @acts = Act.where(id: [unhidden_act_ids])
-    # end
-
-
-    CSV.open(@path_and_file, "wb") do |csv|
+    CSV.generate(options = {}) do |csv|
       csv.add_row(act_cols + brand_cols + web_cols)
       @acts.each do |act|
         values = act.attributes.slice(*act_cols).values
@@ -60,7 +50,17 @@ class ActCsvTool
           csv.add_row(values)
         end
       end
+
+      file = StringIO.new(csv.string)
+      export.csv = file
+      export.csv.instance_write(:content_type, 'text/csv')
+      export.csv.instance_write(:file_name, @file_name)
+      export.user = @user
+      export.export_date = @export_date
+      export.file_name = @file_name
+      export.save!
     end
+
   end
 
 
