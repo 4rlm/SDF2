@@ -43,30 +43,6 @@ class ActsController < ApplicationController
   end
 
 
-
-  # def followed
-  #   params[:bypass_act_ids] = helpers.get_followed_act_ids(nil)
-  #   redirect_to acts_path(params)
-  # end
-  #
-  # def hidden
-  #   params[:bypass_act_ids] = helpers.get_hidden_act_ids(nil)
-  #   redirect_to acts_path(params)
-  # end
-
-  # def followed_acts
-  #   act_ids = helpers.get_followed_act_ids(nil)
-  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
-  #   redirect_to webs_path(params)
-  # end
-  #
-  # def hidden_acts
-  #   act_ids = helpers.get_hidden_act_ids(nil)
-  #   params[:bypass_web_ids] = Act.where(id: [act_ids]).map {|act| act.webs.map(&:id) }&.flatten&.compact&.uniq
-  #   redirect_to webs_path(params)
-  # end
-
-
   def generate_csv
     if params[:q].present?
       ActCsvTool.new(params, current_user).delay.start_act_webs_csv_and_log
