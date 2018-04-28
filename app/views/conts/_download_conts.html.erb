@@ -1,7 +1,7 @@
 <div id="download_conts">
   <% if params[:q].present? %>
     <%= link_to generate_csv_conts_path(params), remote: true, class: 'btn btn-primary btn-md' do %>
-      <i class="fa fa-download" aria-hidden="true"></i> Download CSV
+      <i class="fa fa-download" aria-hidden="true"></i> Generate CSV
     <% end %>
   <% end %>
 </div>
