@@ -1,6 +1,6 @@
 <tr>
   <td><%= tally_hsh[:th] %></td>
-  <td>
+  <td class="text-center">
     <%= link_to conts_path(tally_scope: tally_hsh[:tally_scope]), class: 'btn btn-default btn-sm' do %>
       <%= number_with_delimiter(Cont.send(tally_hsh[:tally_scope]).count, :delimiter => ',') %>
     <% end %>
