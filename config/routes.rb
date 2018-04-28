@@ -111,6 +111,15 @@ Rails.application.routes.draw do
   end
 
 
+  # resources :exports, only: [:new, :create, :index, :destroy]
+  resources :exports, only: [:index, :destroy] do
+    collection do
+      # match 'perform' => 'exports#perform', via: [:get, :post], as: :perform
+      match 'download_csv' => 'exports#download_csv', via: [:get, :post], as: :download_csv
+    end
+  end
+
+
   get 'admin/index'
   get 'admin/change_user_level' => 'admin#change_user_level'
   get 'admin/delete_user' => 'admin#delete_user'

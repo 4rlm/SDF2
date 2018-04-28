@@ -8,8 +8,8 @@
 <table class="table">
   <thead>
     <tr>
-      <th class="text-center">Category</th>
       <th class="text-center">File Name</th>
+      <th class="text-center">Size</th>
       <th class="text-center">Generated</th>
     </tr>
   </thead>
@@ -27,9 +27,16 @@
     <% end %>
 
     <tr>
-      <td><%= category %></td>
-      <td><%= filename %></td>
-      <td><%= export.export_date.strftime('%x') %></td>
+
+      <td>
+        <%= link_to download_csv_exports_path(id: export.id), class: 'btn btn-default btn-md-lg' do %>
+          <%= icon('fas', 'download', filename) %>
+        <% end %>
+      </td>
+
+      <td><%= number_to_human_size(export.csv_file_size, precision: 3) %></td>
+      <td><%= time_ago_in_words(export.export_date).capitalize %></td>
+
     </tr>
     <% end %>
   </tbody>

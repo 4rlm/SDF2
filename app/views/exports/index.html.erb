@@ -1,0 +1,13 @@
+<div class="container">
+
+  <!-- PARTIAL LINK TO PHOTOS/INDEX (VIEW ALL) -->
+  <%#= button_to('Upload Photo', new_export_path, method: :get, :class => 'btn btn-sm btn-primary')  %>
+
+  <% if @exports %>
+    <h3>CSVs: <%= @exports.count %></h3>
+    <%= render 'exports/exports', exports: @exports %>
+  <% else %>
+    <h3>No CSVs Posted Yet</h3>
+  <% end %>
+
+</div>

@@ -11,7 +11,7 @@ class WebCsvTool
     end
 
     @export_date = Time.now
-    @file_name = "web_acts_#{@export_date.strftime("%Y%m%d%I%M%S")}.csv"
+    @file_name = "web_#{@export_date.strftime("%m%d%I%M%S")}.csv"
     @path_and_file = "./public/downloads/#{@file_name}"
   end
 

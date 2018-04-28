@@ -1,0 +1,47 @@
+
+<div class="row">
+
+  <div class="media">
+    <div class="media-left">
+      <%#= link_to image_tag(export.image.url(:thumb), class: 'media-object'), export.image.url, target: '_blank' %>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <% if @exports %>
+            <% @exports.each do |export| %>
+              <div class="col-md-2">
+
+                <tr>
+                  <td><%= export.csv_file_name %></td>
+                  <td><%= export.csv_content_type %></td>
+                  <td><%= export.csv_file_size %></td>
+                  <td><%= export.csv_updated_at %></td>
+
+                  <td>
+                    <%= link_to download_csv_exports_path(id: export.id), class: 'btn btn-primary btn-md' do %>
+                      <i class="fa fa-download"></i> Download CSV
+                    <% end %>
+                  </td>
+
+                </tr>
+
+              </div>
+            <% end %>
+          <% end %>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
