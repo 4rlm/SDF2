@@ -5,7 +5,7 @@ class FindBrand
   def initialize
     @brand_terms = BrandTerm.all
     @brands = Brand.all
-    @cut_off = 30.days.ago
+    @cut_off = 7.days.ago
   end
 
 
