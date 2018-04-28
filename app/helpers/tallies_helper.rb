@@ -2,11 +2,11 @@ module TalliesHelper
 
   def generate_csv_tally_helper(params)
     if params[:mod_name] == 'Act'
-      ActCsvTool.new(params, current_user).start_act_webs_csv_and_log
+      ActCsvTool.new.start_act_webs_csv_and_log(params, current_user)
     elsif params[:mod_name] == 'Cont'
-      ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
+      ContCsvTool.new.start_cont_web_csv_and_log(params, current_user)
     elsif params[:mod_name] == 'Web'
-      WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
+      WebCsvTool.new.start_web_acts_csv_and_log(params, current_user)
     end
   end
 

@@ -1,13 +1,8 @@
 class WebsController < ApplicationController
   before_action :set_web, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
-
-  # respond_to :html, :json
   helper_method :sort_column, :sort_direction
 
-
-  # GET /webs
-  # GET /webs.json
   def index
     if params[:tally_scope].present?
       @webs = Web.send(params[:tally_scope]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
@@ -32,21 +27,14 @@ class WebsController < ApplicationController
 
       @wq = Web.ransack(params[:q])
       @webs = @wq.result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
-
     end
 
     @wq = Web.ransack(params[:q]) if !@wq.present?
-
-    # respond_to do |format|
-    #   format.html # show.html.erb
-    #   format.json # show.js.erb
-    # end
   end
 
 
   def show_conts
     @web = Web.find(params[:web_id])
-
     respond_to do |format|
       format.js { render :show_conts, status: :ok, location: @web }
     end
@@ -54,17 +42,13 @@ class WebsController < ApplicationController
 
 
   def generate_csv
-
     if params[:q].present?
-      WebCsvTool.new(params, current_user).delay.start_web_acts_csv_and_log
-      # WebCsvTool.new(params, current_user).start_web_acts_csv_and_log
+      WebCsvTool.new.delay.start_web_acts_csv_and_log(params, current_user)
+      # WebCsvTool.new.start_web_acts_csv_and_log(params, current_user)
 
       respond_to do |format|
         format.js { render :download_webs, status: :ok, location: @webs }
       end
-
-      # params['action'] = 'index'
-      # redirect_to webs_path(params)
     end
   end
 
@@ -72,35 +56,27 @@ class WebsController < ApplicationController
   def search
     if params[:q]['q_name_cont_any'].present?
       q_name = params[:q].delete('q_name_cont_any')
-      WebCsvTool.new(params, current_user).save_web_queries(q_name)
+      WebCsvTool.new.save_web_queries(q_name, params, current_user)
     end
-
-    # index
-    # render :index
     redirect_to webs_path(params.permit!)
   end
 
 
-  # GET /webs/1
-  # GET /webs/1.json
   def show
   end
 
-  # GET /webs/new
+
   def new
     @web = Web.new
   end
 
-  # GET /webs/1/edit
+
   def edit
   end
 
 
-  # POST /webs
-  # POST /webs.json
   def create
     @web = Web.new(web_params)
-
     respond_to do |format|
       if @web.save
         format.html { redirect_to @web, notice: 'Web was successfully created.' }
@@ -112,8 +88,7 @@ class WebsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /webs/1
-  # PATCH/PUT /webs/1.json
+
   def update
     respond_to do |format|
       if @web.update(web_params)
@@ -126,8 +101,7 @@ class WebsController < ApplicationController
     end
   end
 
-  # DELETE /webs/1
-  # DELETE /webs/1.json
+
   def destroy
     @web.destroy
     respond_to do |format|

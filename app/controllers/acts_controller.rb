@@ -1,14 +1,10 @@
 class ActsController < ApplicationController
   before_action :set_act, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
-
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
 
-  # GET /acts
-  # GET /acts.json
   def index
-
     if params[:tally_scope].present?
       @acts = Act.send(params[:tally_scope]).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     elsif params[:bypass_web_ids]&.any?
@@ -33,27 +29,17 @@ class ActsController < ApplicationController
     end
 
     @aq = Act.ransack(params[:q]) if !@aq.present?
-
-    # respond_to do |format|
-    #   format.json # show.js.erb
-    #   format.html # show.html.erb
-    # end
-    #
-    # respond_with(@acts)
   end
 
 
   def generate_csv
     if params[:q].present?
-      ActCsvTool.new(params, current_user).delay.start_act_webs_csv_and_log
-      # ActCsvTool.new(params, current_user).start_act_webs_csv_and_log
+      ActCsvTool.new.delay.start_act_webs_csv_and_log(params, current_user)
+      # ActCsvTool.new.start_act_webs_csv_and_log(params, current_user)
 
       respond_to do |format|
         format.js { render :download_acts, status: :ok, location: @acts }
       end
-
-      # params['action'] = 'index'
-      # redirect_to acts_path(params)
     end
   end
 
@@ -61,9 +47,8 @@ class ActsController < ApplicationController
   def search
     if params[:q]['q_name_cont_any'].present?
       q_name = params[:q].delete('q_name_cont_any')
-      ActCsvTool.new(params, current_user).save_act_queries(q_name)
+      ActCsvTool.new.save_act_queries(q_name, params, current_user)
     end
-
     redirect_to acts_path(params)
   end
 

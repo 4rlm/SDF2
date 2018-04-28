@@ -1,13 +1,9 @@
 class ContsController < ApplicationController
   before_action :set_cont, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
-
-  # respond_to :html, :json
   helper_method :sort_column, :sort_direction
   require 'will_paginate/array'
 
-  # GET /conts
-  # GET /conts.json
   def index
 
     if params[:bypass_cont_ids]&.any?
@@ -31,18 +27,12 @@ class ContsController < ApplicationController
       @conts = @cq.result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).order("updated_at DESC").paginate(page: params[:page], per_page: 20)
     end
 
-      @cq = Cont.ransack(params[:q]) if !@cq.present?
-
-    # respond_to do |format|
-    #   format.json # show.js.erb
-    #   format.html # show.html.erb
-    # end
+    @cq = Cont.ransack(params[:q]) if !@cq.present?
   end
 
 
   def show_web
     @cont = Cont.find(params[:cont_id])
-
     respond_to do |format|
       format.js { render :show_web, status: :ok, location: @cont }
     end
@@ -62,15 +52,11 @@ class ContsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      ContCsvTool.new(params, current_user).delay.start_cont_web_csv_and_log
-      # ContCsvTool.new(params, current_user).start_cont_web_csv_and_log
-
+      ContCsvTool.new.delay.start_cont_web_csv_and_log(params, current_user)
+      # ContCsvTool.new.start_cont_web_csv_and_log(params, current_user)
       respond_to do |format|
         format.js { render :download_conts, status: :ok, location: @conts }
       end
-
-      # params['action'] = 'index'
-      # redirect_to conts_path(params)
     end
   end
 
@@ -78,7 +64,7 @@ class ContsController < ApplicationController
   def search
     if params[:q]['q_name_cont_any'].present?
       q_name = params[:q].delete('q_name_cont_any')
-      ContCsvTool.new(params, current_user).save_cont_queries(q_name)
+      ContCsvTool.new.save_cont_queries(q_name, params, current_user)
     end
 
     index
@@ -86,25 +72,18 @@ class ContsController < ApplicationController
   end
 
 
-  # GET /conts/1
-  # GET /conts/1.json
   def show
   end
 
-  # GET /conts/new
   def new
     @cont = Cont.new
   end
 
-  # GET /conts/1/edit
   def edit
   end
 
-  # POST /conts
-  # POST /conts.json
   def create
     @cont = Cont.new(cont_params)
-
     respond_to do |format|
       if @cont.save
         format.html { redirect_to @cont, notice: 'Cont was successfully created.' }
@@ -116,8 +95,6 @@ class ContsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /conts/1
-  # PATCH/PUT /conts/1.json
   def update
     respond_to do |format|
       if @cont.update(cont_params)
@@ -130,8 +107,6 @@ class ContsController < ApplicationController
     end
   end
 
-  # DELETE /conts/1
-  # DELETE /conts/1.json
   def destroy
     @cont.destroy
     respond_to do |format|

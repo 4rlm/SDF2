@@ -1,43 +1,40 @@
 class ActCsvTool
 
-  def initialize(params, current_user)
-    @params = params
-    @user = current_user
-
+  def generate_query(params)
     if params[:q].present?
-      @acts = Act.ransack(params[:q]).result(distinct: true).includes(:webs, :brands)
+      acts = Act.ransack(params[:q]).result(distinct: true).includes(:webs, :brands)
     elsif params[:tally_scope].present?
-      @acts = Act.send(params[:tally_scope])
+      acts = Act.send(params[:tally_scope])
     end
-
-    @export_date = Time.now
-    @file_name = "Act_#{@export_date.strftime("%m_%d_%I_%M_%S")}.csv"
-    @export = Export.new
   end
 
-
-  def start_act_webs_csv_and_log
-    act_webs_to_csv
-    log_act_webs_export
+  def start_act_webs_csv_and_log(params, current_user)
+    export = Export.new
+    acts = generate_query(params)
+    act_webs_to_csv(current_user, export, acts)
+    log_act_webs_export(current_user, export, acts)
   end
 
-  def save_act_queries(q_name)
-    query = @user.queries.find_or_initialize_by(mod_name: 'Act', q_name: q_name)
-    query.params = @params
-    query.row_count = @acts.count
+  def save_act_queries(q_name, params, current_user)
+    acts = generate_query(params)
+    query = current_user.queries.find_or_initialize_by(mod_name: 'Act', q_name: q_name)
+    query.params = params
+    query.row_count = acts.count
     query.save
   end
 
-
   ############  WEB_ACTS EXPORT  ############
-  def act_webs_to_csv
+  def act_webs_to_csv(current_user, export, acts)
     act_cols = %w(id act_name gp_id gp_sts lat lon street city state zip phone act_changed adr_changed ax_date)
     brand_cols = %w(brand_name)
     web_cols = %w(url fwd_url url_sts cop temp_name cs_sts created_at web_changed wx_date)
 
+    export_date = Time.now
+    file_name = "Act_#{export_date.strftime("%m_%d_%I_%M_%S")}.csv"
+
     CSV.generate(options = {}) do |csv|
       csv.add_row(act_cols + brand_cols + web_cols)
-      @acts.each do |act|
+      acts.each do |act|
         values = act.attributes.slice(*act_cols).values
         values << act.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
 
@@ -51,29 +48,25 @@ class ActCsvTool
       end
 
       file = StringIO.new(csv.string)
-      @export.csv = file
-      @export.csv.instance_write(:content_type, 'text/csv')
-      @export.csv.instance_write(:file_name, @file_name)
-      @export.user = @user
-      @export.export_date = @export_date
-      @export.file_name = @file_name
-      @export.save!
+      export.csv = file
+      export.csv.instance_write(:content_type, 'text/csv')
+      export.csv.instance_write(:file_name, file_name)
+      export.user = current_user
+      export.export_date = export_date
+      export.file_name = file_name
+      export.save!
     end
-
   end
-
 
   ###########  LOG WEB_ACT EXPORT  ###########
   #Call: ActCsvTool.new.log_act_webs_export
-  def log_act_webs_export
-    # export = @user.exports.create(export_date: @export_date, file_name: @file_name)
-    act_activities = @user.act_activities.where(act_id: [@acts.pluck(:id)])
-    act_activities.update_all(export_id: @export.id)
+  def log_act_webs_export(current_user, export, acts)
+    act_activities = current_user.act_activities.where(act_id: [acts.pluck(:id)])
+    act_activities.update_all(export_id: export.id)
 
-    webs = @acts.map {|act| act.webs }&.flatten&.uniq
-    web_activities = @user.web_activities.where(web_id: [webs.pluck(:id)])
-    web_activities.update_all(export_id: @export.id)
+    webs = acts.map {|act| act.webs }&.flatten&.uniq
+    web_activities = current_user.web_activities.where(web_id: [webs.pluck(:id)])
+    web_activities.update_all(export_id: export.id)
   end
-
 
 end

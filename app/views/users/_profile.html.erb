@@ -5,7 +5,6 @@
       <tbody>
         <tr>
           <td style="font-size: 18px; font-weight: bolder;"><%= icon('fas', 'user-circle', "User Profile") %></td>
-
           <td><%= icon('fas', 'user', "#{@user.first_name.capitalize} #{@user.last_name.capitalize}") %></td>
           <td><%= icon('fas', 'at', @user.email) %></td>
           <td><%= icon('fas', 'phone', @user.phone) %></td>
@@ -15,10 +14,6 @@
 
           <td><%= link_to icon('fas', 'edit', 'Edit Profile'),  edit_user_registration_path, class: "btn btn-primary btn-md" %></td>
           <td><%= link_to icon('fas', 'sign-out-alt', 'Log Out'),  destroy_user_session_path, method: :delete, class: "btn btn-danger btn-md" %></td>
-
-          <td><%= link_to(icon('fas', 'download', 'old-CSVs'), s3s_path, class: "nav-link")%></td>
-
-            <td><%= link_to(icon('fas', 'download', 'Exports'), exports_path, class: "nav-link")%></td>
         </tr>
       </tbody>
     </table>
