@@ -153,9 +153,9 @@ p:last-of-type {
 	font-weight: 700;
 }
 
+
 .button-accent {
 	color: #00ff6c;
-	border-color: #00ff6c;
 }
 
 .button-accent:hover,
@@ -352,12 +352,11 @@ header {
 .port-desc {
 	position: absolute;
 	// z-index: 100;
-	bottom: 0em;
 	left: 0em;
 	right: 0em;
 	color: white;
 	background: rgba(0,0,0,.6);
-	padding-bottom: 2em;
+	top: 0em;
 }
 
 .port-desc p {
@@ -378,7 +377,7 @@ header {
 	}
 
 	.port-desc {
-		transform: translateY(150%);
+		transform: translateY(-150%);
 	}
 
 	.port-item:hover .port-desc {

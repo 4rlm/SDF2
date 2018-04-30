@@ -185,6 +185,15 @@ a, a:hover, a:focus {
   border: 1px solid white;
 }
 
+.demo-header {
+  // background: gray;
+  color: #1d3c4e;
+  font-weight: bolder;
+  // border-color: #00ff6c;
+  background: #00ff6c;
+  padding: 10px;
+}
+
 
 // CONTS-LIST VIEW CSS - STARTS
 .list-view td, .list-view th {
@@ -193,6 +202,12 @@ a, a:hover, a:focus {
   margin: 3px;
   padding:3px;
 }
+
+// iframe {
+//   width: 100%;
+// 	height: auto;
+//   display: block;
+// }
 
 // MODAL BODY STARTS
 // .modal {
