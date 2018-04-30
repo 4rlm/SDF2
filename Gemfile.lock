@@ -492,9 +492,6 @@ GEM
       autoprefixer-rails (>= 6.0.3)
       popper_js (>= 1.12.9, < 2)
       sass (>= 3.5.2)
-    bootstrap-glyphicons (0.0.1)
-      railties (>= 3.0)
-      sass (>= 3.2)
     bootstrap-select-rails (1.12.4)
     builder (3.2.3)
     byebug (10.0.2)
@@ -767,7 +764,6 @@ DEPENDENCIES
   autoprefixer-rails
   aws-sdk (~> 3)
   bootstrap (~> 4.0.0)
-  bootstrap-glyphicons
   bootstrap-select-rails (~> 1.12, >= 1.12.4)
   byebug
   capybara (~> 2.13)
