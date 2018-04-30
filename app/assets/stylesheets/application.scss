@@ -146,6 +146,46 @@ a, a:hover, a:focus {
   width: 5%;
 }
 
+.hamburger {
+  background: #1d3c4e;
+  color: white;
+  // padding: 2px;
+  // margin: 2px;
+  font-size:24px;
+  border: none;
+}
+
+
+@media screen and (min-width: 0px) and (max-width: 1300px) {
+  .view-in-mobile { display: inline-block; }  /* show it on small screens */
+}
+
+@media screen and (min-width: 1301px) and (max-width: 2000px) {
+  .view-in-mobile { display: none; }   /* hide it elsewhere */
+}
+
+
+
+@media screen and (min-width: 0px) and (max-width: 1300px) {
+  .collapse-in-mobile { display: none; }  /* show it on small screens */
+}
+
+// @media screen and (min-width: 401px) and (max-width: 2000px) {
+//   .collapse-in-mobile { display: inline-block; }   /* hide it elsewhere */
+// }
+
+
+.view-types {
+  background-color: red;
+  color: white;
+  z-index: 2000;
+  position: fixed;
+  margin-top: -20px;
+  padding: 10px;
+  border: 1px solid white;
+}
+
+
 // CONTS-LIST VIEW CSS - STARTS
 .list-view td, .list-view th {
   font-size: 12px;

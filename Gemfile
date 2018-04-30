@@ -115,6 +115,7 @@ gem "paperclip", "~> 6.0.0"
 gem 'aws-sdk', '~> 3'
 # gem 'aws-sdk', '~> 1.6'
 gem 'fakes3', '~> 1.0'
+# gem 'bootstrap-glyphicons'
 
 # gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
 
