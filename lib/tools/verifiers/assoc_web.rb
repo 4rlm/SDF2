@@ -38,9 +38,7 @@ module AssocWeb
     begin
       original_web_obj.update!(fwd_url: fwd_web_obj.url, fwd_url_id: fwd_web_obj.id, url_sts: 'FWD', wx_date: Time.now, web_changed: Time.now, url_date: Time.now, timeout: 0)
     rescue
-      duplicate_web_objs = Web.where(url: original_web_obj.url).order("id ASC")
-      duplicate_web_objs.last.destroy if duplicate_web_objs.count > 1
+      original_web_obj = VerUrl.new.delete_duplicates(original_web_obj.url)
     end
-
   end
 end

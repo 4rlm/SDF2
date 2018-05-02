@@ -117,6 +117,8 @@ gem 'aws-sdk', '~> 3'
 gem 'fakes3', '~> 1.0'
 # gem 'bootstrap-glyphicons'
 
+gem 'delayed_job_web', '~> 1.4'
+
 # gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
 
 # gem "roo", "~> 2.7.0"

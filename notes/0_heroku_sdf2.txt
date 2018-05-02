@@ -1,0 +1,27 @@
+====================================
+** ESSENTIAL RAILS....3) PG Dump-Restore
+====================================
+
+
+*) Heroku to Local
+  $ heroku pg:backups:capture
+  $ heroku pg:backups:download
+  (Then place dump file in sdf2 directory)
+  $ RAILS_ENV=development rake db:drop DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+  $ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U postgres -d sdf2_development latest.dump
+  $ pg_restore -c -C -F c -v -U postgres latest.dump
+
+  $ rails db:migrate RAILS_ENV=development
+
+
+
+# Call: ServCsvTool.new.restore_backup(Brand, 'Brands.csv')
+
+
+1) Backup PG
+  $ pg_dump -U postgres -F t sdf2_development > db/csv/pg_backups/sdf2_development.psql
+  $ pg_dump -F c -v -U postgres -h localhost sdf2_development -f db/csv/pg_backups/sdf2_development.tar
+
+2) Restore PG:
+  $ pg_restore -U postgres db/csv/pg_backups/sdf2_development.psql
+  $ pg_restore -c -C -F c -v -U postgres db/csv/pg_backups/sdf2_development.tar
