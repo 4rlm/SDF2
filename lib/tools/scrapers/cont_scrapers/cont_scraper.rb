@@ -16,7 +16,7 @@ class ContScraper
     @obj_in_grp = 10
     @dj_refresh_interval = 10
     @db_timeout_limit = 120
-    @cut_off = 7.days.ago
+    @cut_off = 10.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
     @cs_helper = CsHelper.new

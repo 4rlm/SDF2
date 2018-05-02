@@ -17,7 +17,7 @@ class GpStart
     @dj_refresh_interval = 5
     @db_timeout_limit = 200
     @count = 0
-    @cut_off = 7.days.ago
+    @cut_off = 10.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
     @multi_spots = true

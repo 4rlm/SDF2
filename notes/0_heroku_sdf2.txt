@@ -25,3 +25,37 @@
 2) Restore PG:
   $ pg_restore -U postgres db/csv/pg_backups/sdf2_development.psql
   $ pg_restore -c -C -F c -v -U postgres db/csv/pg_backups/sdf2_development.tar
+
+
+
+==============
+
+	$ heroku run rake jobs:clear --app sdf2
+
+
+====================
+
+
+############ Adam Heroku Express! ############
+	$ heroku logs -t --app bds-max
+	$ heroku run rails c --app bds-max
+	$ heroku ps --app bds-max
+	$ heroku run rake db:migrate --app bds-max
+	$ heroku ps:restart --app bds-max
+
+	$ heroku config:set DB_POOL=10
+
+
+############ Delayed Job ############
+	$ rake jobs:clear
+	$ heroku run rake jobs:clear --app sdf2
+
+
+==========================
+
+dw = Delayed::Worker.new
+dj = Delayed::Job.last
+dw.run dj
+
+object.delay(:queue => 'tracking').method
+object.delay(:queue => 'high_priority', priority: 0).method

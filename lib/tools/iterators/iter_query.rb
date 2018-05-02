@@ -37,7 +37,7 @@ module IterQuery
 
   def standard_iterator(ids)
     # ids.each { |id| template_starter(id) if id }
-    ids.each { |id| delay.template_starter(id) if id }
+    ids.each { |id| delay(priority: 10).template_starter(id) if id }
   end
 
 end

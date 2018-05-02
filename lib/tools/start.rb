@@ -13,32 +13,21 @@ class Start
     FindBrand.new.start_find_brand
     ContScraper.new.start_cont_scraper
   end
-    # handle_asynchronously :run_all_scrapers
-    # starter = Start.run_all_scrapers
-    # starter.run_all_scrapers
 
-
-
-  # class Device
-  #   def deliver
-  #     # long running method
-  #   end
-  #   handle_asynchronously :deliver
-  # end
-  #
-  # device = Device.new
-  # device.deliver
 
   #CALL: Start.url_equals_fwd_url
-  def self.url_equals_fwd_url
-    webs = Web.where(url_sts: 'FWD')
-    dirty_webs = webs.map { |web| web if web.url == web.fwd_url }
-    dirty_webs.compact!
-    dirty_web_ids = dirty_webs.map(&:id)
-    same_ids = dirty_webs.map { |web| web.id if web.id == web.fwd_url_id }
-    same_ids.compact!
-    webs = Web.where(id: [same_ids])
-  end
+  # def self.url_equals_fwd_url
+  #   webs = Web.where(url_sts: 'FWD')
+  #   dirty_webs = webs.map { |web| web if web.url == web.fwd_url }
+  #   dirty_webs.compact!
+  #   dirty_web_ids = dirty_webs.map(&:id)
+  #   same_ids = dirty_webs.map { |web| web.id if web.id == web.fwd_url_id }
+  #   same_ids.compact!
+  #
+  #   webs = Web.where(id: [same_ids])
+  #   webs.update_all(url_sts: 'Valid', fwd_url: nil, fwd_url_id: nil)
+  # end
+
 
 
   #Call: Start.get_process_sts

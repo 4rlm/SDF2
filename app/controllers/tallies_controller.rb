@@ -13,7 +13,8 @@ class TalliesController < ApplicationController
 
 
   def refresh_process
-    Start.get_process_sts
+    # Start.delay.get_process_sts
+    Start.delay(priority: 0).get_process_sts
     @process_sts = ProcessStatus.first
 
     respond_to do |format|

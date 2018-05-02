@@ -52,7 +52,7 @@ class ContsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      ContCsvTool.new.delay.start_cont_web_csv_and_log(params, current_user)
+      ContCsvTool.new.delay(priority: 0).start_cont_web_csv_and_log(params, current_user)
       # ContCsvTool.new.start_cont_web_csv_and_log(params, current_user)
       respond_to do |format|
         format.js { render :download_conts, status: :ok, location: @conts }

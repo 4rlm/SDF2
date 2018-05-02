@@ -43,7 +43,7 @@ class WebsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      WebCsvTool.new.delay.start_web_acts_csv_and_log(params, current_user)
+      WebCsvTool.new.delay(priority: 0).start_web_acts_csv_and_log(params, current_user)
       # WebCsvTool.new.start_web_acts_csv_and_log(params, current_user)
 
       respond_to do |format|

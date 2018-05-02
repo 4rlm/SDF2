@@ -2,13 +2,15 @@ desc "This task is called by the Heroku scheduler add-on"
 
 #CALL: heroku run rake run_all_scrapers
 task run_all_scrapers: :environment do
-  Start.delay.run_all_scrapers
+  # Start.delay.run_all_scrapers
+  Start.delay(priority: 10).run_all_scrapers
 end
 
 
 #CALL: heroku run rake get_process_sts
 task get_process_sts: :environment do
-  Start.delay.get_process_sts
+  # Start.delay.get_process_sts
+  Start.delay(priority: 10).get_process_sts
 end
 
 
