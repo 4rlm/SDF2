@@ -2,17 +2,44 @@
 
 <p id="notice"><%= notice %></p>
 
-<div class="row">
-  <div class="col-md-3">
-    <h5><%= icon('fas', 'users', 'Contacts') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(conts.count, :delimiter => ',') %> )</span></h5>
+
+
+<div class="panel section-panel">
+  <div class="row">
+    <div class="col-md-3">
+      <h5><%= icon('fas', 'users', 'Contacts') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(conts.count, :delimiter => ',') %> )</span></h5>
+    </div>
+
+    <div class="col-md-3">
+      <%= render 'conts/download_conts', conts: conts %>
+    </div>
+
+    <div class="col-md-4"></div>
+
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-tip" onclick="contsHeaderTipModal()"><%= icon('fas', 'exclamation-circle', 'Contacts Tip') %></button>
+    </div>
   </div>
 
-  <div class="col-md-3">
-    <%= render 'conts/download_conts', conts: conts %>
+  <div class="row header-tip-modals" id="contsHeaderTipModalWrap">
+    <div class="col-md-12">
+      <h6 class=""> <span class="font-weight-bold">TIP</span>: The Contacts Module primarily focuses on Employees scraped from an Account's Website's staff page, and their relationship to their associated data, such as their Accounts and Websites.  Contact data is listed on the left and its associated Accounts are listed on the right. Click blue 'Details' button in right Account Section to view Website Details and all its Scraped Contacts. Search Contacts via <span style="font-size: 10px;"><%= icon('fas', 'search') %></span>  icon in top right corner.  It's important to note that a contact can be associated with multiple Accounts or multiple website URLs, due to each Website URL often having multiple Accounts and each Account often having multiple Website URLs.  Using 'Follow' and 'Hide' is designed to help determine if you have already viewed that same data in another section.</h6>
+    </div>
   </div>
-
-  <div class="col-md-6"></div>
 </div>
+
+
+<div class="row">
+  <div class="col-md-6 text-center">
+    <h5 class="section-header">Contacts</h5>
+  </div>
+
+  <div class="col-md-6 text-center">
+    <h5 class="section-header">Associated Accounts</h5>
+  </div>
+</div>
+
+
 
 
 

@@ -24,27 +24,28 @@
   </tr>
 
   <tr>
-    <td class='w25'><%= link_to("F: #{web.fwd_url}", web.fwd_url, target: '_blank') if web.fwd_url.present? %></td>
-    <td class='w10'><%= "𝚫 #{web&.web_changed&.strftime('%x')}" if web.web_changed.present? %></td>
-    <td class='w15'><%= icon('fas', 'ban', web&.wx_date&.strftime('%x')) if web.wx_date.present? %></td>
+  <td class='w25'><%= link_to("F: #{web.fwd_url}", web.fwd_url, target: '_blank') if web.fwd_url.present? %></td>
+  <td class='w10'><%= "𝚫 #{web&.web_changed&.strftime('%x')}" if web.web_changed.present? %></td>
+  <td class='w15'><%= icon('fas', 'ban', web&.wx_date&.strftime('%x')) if web.wx_date.present? %></td>
 
-    <td class='w10'><%= icon('fas', 'link', "#{web&.page_date&.strftime('%x')} #{web.page_sts}" ) if web.page_date.present? %></td>
+  <td class='w10'><%= icon('fas', 'link', "#{web&.page_date&.strftime('%x')} #{web.page_sts}" ) if web.page_date.present? %></td>
 
-    <td class='w20'>
-      <% if web.cs_date.present? %>
-        <%= icon('fas', 'users', "#{web&.cs_date&.strftime('%x')} #{web.cs_sts}" )%>
-        <% cont_count = web.conts&.count %>
+  <td class='w20'>
+    <% if web.cs_date.present? %>
+      <%= icon('fas', 'users', "#{web&.cs_date&.strftime('%x')} #{web.cs_sts}" )%>
+      <% cont_count = web.conts&.count %>
 
-        <% if cont_count > 0 %>
-          <%= link_to "Staff (#{cont_count})", show_conts_webs_path(web_id: web.id), onclick: "toggleConts(#{web.id})", remote: true, class: 'btn btn-primary btn-sm' %>
-        <% end %>
+      <% if cont_count > 0 %>
+        <%= link_to "Staff (#{cont_count})", show_conts_webs_path(web_id: web.id), onclick: "toggleConts(#{web.id})", remote: true, class: 'btn btn-primary btn-sm' %>
       <% end %>
-    </td>
+    <% end %>
+  </td>
 
-    <td class='w20' colspan='2'><%= icon('fas', 'download', web_export&.file_name ) if web_export.present? %></td>
-  </tr>
+  <td class='w20' colspan='2'><%= icon('fas', 'download', web_export&.file_name ) if web_export.present? %></td>
+</tr>
 
 </table>
+
 
 <div class="row">
   <div class="col-md-12">

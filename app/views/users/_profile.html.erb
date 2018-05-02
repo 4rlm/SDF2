@@ -1,10 +1,37 @@
 <!-- User Profile -->
+<p id="notice"><%= notice %></p>
+
+<div class="panel section-panel">
+  <div class="row">
+    <div class="col-md-4">
+      <h5 style="font-size: 18px; font-weight: bolder;"><%= icon('fas', 'user-circle', "User Profile & Settings") %></h5>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-tip" onclick="profileHeaderTipModal()"><%= icon('fas', 'exclamation-circle', 'Dashboard Tip') %></button>
+    </div>
+  </div>
+
+  <div class="row header-tip-modals" id="profileHeaderTipModalWrap">
+    <div class="col-md-12">
+      <h6 class=""> <span class="font-weight-bold">TIP</span>: User Profile & Settings Module provides the ability to bulk add, remove, and track your followed and hidden Accounts, Contacts, and Websites.  It also stores each of your prior saved searches and generated CSVs to access at anytime.  To save new searches from the Accounts, Contacts, or Websites Modules, simply enter a name above the submit button when conducting your advanced searches.  To view the results, click the name of the saved search. CSV export files are based on saved searches.  To generate a new CSV file, simply click on a saved search, then click the blue button 'Generate CSV' at the top of the results.  Larger files can take a few minutes, but no need to wait still.  Simply return to your User Profile to check if it's ready to download from the Exports section.  It's important to note that Generated CSVs will remain archived for only TWO(2) DAYS; after which, you'll need to regenerate the CSV if you haven't downloaded it within the 2 DAY window.</h6>
+    </div>
+  </div>
+</div>
+
+
 <div class="panel">
   <div class="row">
+
+    <div class="col-md-12 text-center">
+      <h5 class="section-header">User Profile</h5>
+    </div>
+
     <table class="table">
       <tbody>
         <tr>
-          <td style="font-size: 18px; font-weight: bolder;"><%= icon('fas', 'user-circle', "User Profile") %></td>
           <td><%= icon('fas', 'user', "#{@user.first_name.capitalize} #{@user.last_name.capitalize}") %></td>
           <td><%= icon('fas', 'at', @user.email) %></td>
           <td><%= icon('fas', 'phone', @user.phone) %></td>

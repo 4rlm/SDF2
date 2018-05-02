@@ -77,7 +77,58 @@
 
 
 
+
+  // ========== TIP MODALS BEGIN ==========
+
   // Webs Header Tip
+  function actsHeaderTipModal() {
+    var el = $('#actsHeaderTipModalWrap');
+    console.log(el.is(':visible'));
+
+    if (el.is(':visible')) {
+      el.hide();
+    } else {
+      el.show();
+    }
+  }
+
+
+  function contsHeaderTipModal() {
+    var el = $('#contsHeaderTipModalWrap');
+    console.log(el.is(':visible'));
+
+    if (el.is(':visible')) {
+      el.hide();
+    } else {
+      el.show();
+    }
+  }
+
+
+  function dashHeaderTipModal() {
+    var el = $('#dashHeaderTipModalWrap');
+    console.log(el.is(':visible'));
+
+    if (el.is(':visible')) {
+      el.hide();
+    } else {
+      el.show();
+    }
+  }
+
+
+  function profileHeaderTipModal() {
+    var el = $('#profileHeaderTipModalWrap');
+    console.log(el.is(':visible'));
+
+    if (el.is(':visible')) {
+      el.hide();
+    } else {
+      el.show();
+    }
+  }
+
+
   function websHeaderTipModal() {
     var el = $('#websHeaderTipModalWrap');
     console.log(el.is(':visible'));
@@ -88,6 +139,8 @@
       el.show();
     }
   }
+
+  // ========== TIP MODALS END ==========
 
 
 

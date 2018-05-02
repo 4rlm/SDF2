@@ -1,26 +1,54 @@
-<br>
-<h5 class=""><%= icon('fas', 'tachometer-alt', 'Dashboard') %> </h5>
-<br>
+<p id="notice"><%= notice %></p>
+
+
+
+
+
+<div class="panel section-panel">
+  <div class="row">
+    <div class="col-md-3">
+      <h5 class=""><%= icon('fas', 'tachometer-alt', 'Dashboard') %> </h5>
+    </div>
+
+    <div class="col-md-7"></div>
+
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-tip" onclick="dashHeaderTipModal()"><%= icon('fas', 'exclamation-circle', 'Dashboard Tip') %></button>
+    </div>
+  </div>
+
+  <div class="row header-tip-modals" id="dashHeaderTipModalWrap">
+    <div class="col-md-12">
+      <h6 class=""> <span class="font-weight-bold">TIP</span>: The Dashboard Module provides real-time reporting of the entire software application's current processes and results.  The top section, Process Status indicates how many records per process have been completed or queued, which is on a loop to repeat every 7 days.  Thus, each week every Website URL, Account Location, and Employee Contact will be re-verified via a series of proprietary algorithms and leveraging various 3rd Party APIs; such as Google Places.  The bottom section, Activity Reports lists the results of the completed processes broken down by the week and month for Accounts, Contacts, and Websites.  To view the actual records, simply click on the numbered square button in the 'Size' column; if greater than '0'.  You can also generate a CSV to export or add the entire results to 'Follow' or 'Hide'; which is highly recommended!</h6>
+    </div>
+  </div>
+</div>
+
 
 
 <div class="panel">
+
   <div class="row">
     <div class="col-md-12">
       <%= render 'tallies/process_sts_wrap' %>
     </div>
   </div>
-<br>
+
 </div>
+
 
 <br>
 <br>
 
 <div class="panel">
   <div class="row">
-    <h6>Activity Reports <span style="font-size: 12px;" class="font-italic text-primary"> Realtime </span> </h6>
-
     <div class="col-md-12">
+      <h5 class="section-header text-center">Activity Reports <span style="font-size: 14px;" class="font-italic text-primary"> Realtime </span> </h5>
+    </div>
+  </div>
 
+  <div class="row">
+    <div class="col-md-12">
       <div class="panel-heading">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
 

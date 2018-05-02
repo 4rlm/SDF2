@@ -1,28 +1,26 @@
 <p id="notice"><%= notice %></p>
 
-
 <!-- User Profile -->
 <%= render 'users/profile', user: @user %>
-<br>
 
 <div class="row">
-
   <div class="col-md-4">
-    <!-- FAV HIDE TOTALS -->
-    <%= render 'users/fav_hide_totals', user: @user %>
+    <div class="row profile-spacing">
+      <!-- FAV HIDE TOTALS -->
+      <%= render 'users/fav_hide_totals', user: @user %>
+    </div>
 
-    <br>
-    <br>
-
-    <!-- Exports -->
-    <%= render 'users/exports', user: @user %>
+    <div class="row profile-spacing">
+      <!-- Exports -->
+      <%= render 'users/exports', user: @user %>
+    </div>
   </div>
 
   <div class="col-md-8">
-    <!-- SAVED QUERIES-->
-    <%= render 'users/fav_hide_queries', user: @user %>
+    <div class="row profile-spacing">
+      <!-- SAVED QUERIES-->
+      <%= render 'users/fav_hide_queries', user: @user %>
+    </div>
   </div>
 
 </div>
-
-<br>

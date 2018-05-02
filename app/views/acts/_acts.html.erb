@@ -2,16 +2,35 @@
 
 <p id="notice"><%= notice %></p>
 
-<div class="row">
-  <div class="col-md-3">
-    <h5><%= icon('fas', 'building', 'Accounts') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@acts.count, :delimiter => ',') %> )</span></h5>
+
+<div class="panel section-panel">
+  <div class="row">
+    <div class="col-md-3">
+      <h5><%= icon('fas', 'building', 'Accounts') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@acts.count, :delimiter => ',') %> )</span></h5>
+    </div>
+
+    <div class="col-md-3">
+      <%= render 'acts/download_acts', acts: @acts %>
+    </div>
+
+    <div class="col-md-4"></div>
+
+    <div class="col-md-2">
+      <button class="btn btn-danger btn-tip" onclick="actsHeaderTipModal()"><%= icon('fas', 'exclamation-circle', 'Accounts Tip') %></button>
+    </div>
   </div>
 
-  <div class="col-md-3">
-    <%= render 'acts/download_acts', acts: @acts %>
+  <div class="row header-tip-modals" id="actsHeaderTipModalWrap">
+    <div class="col-md-12">
+      <h6 class=""> <span class="font-weight-bold">TIP</span>: The Accounts Module primarily focuses on an organization's location data, such as its address, phone, business name, status, and its associated data, such as its Websites and Contacts.  The Account data is listed at the top of each record and its associated URLs and website data are listed below it. Click blue 'Staff' button in associated website data section to view Scraped Contacts; if they exist. Search Accounts via <span style="font-size: 10px;"><%= icon('fas', 'search') %></span>  icon in top right corner.  It's important to note that each Account can have multiple Website URLs and each Website URL can have multiple Accounts.  Using 'Follow' and 'Hide' is designed to help determine if you have already viewed that same data in another section.</h6>
+    </div>
   </div>
 
-  <div class="col-md-6"></div>
+</div>
+
+
+<div class="col-md-12 text-center">
+  <h5 class="section-header">Accounts on Top <span><h6>Associated Websites on Bottom</h6> </span> </h5>
 </div>
 
 

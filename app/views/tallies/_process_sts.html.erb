@@ -1,51 +1,67 @@
 <div id="refreshProcess">
 
-  <h6>Process Status
-    <span>
-      <%= link_to refresh_process_tallies_path, remote: true, class: 'btn btn-primary btn-sm' do %>
-      <%= icon('fas', 'sync', 'Refresh') %>
-      <% end %>
-    </span>
 
-    <span style="font-size: 12px;" class="font-italic text-primary"> From <%= time_ago_in_words(process_sts.updated_at) %> Ago </span>
-  </h6>
+  <div class="panel">
+    <div class="row">
+      <div class="col-md-12">
+        <h5 class="section-header text-center">Process Status
+
+          <span style="font-size: 14px;" class="font-italic text-primary"> From <%= time_ago_in_words(process_sts.updated_at) %> Ago </span>
+
+          <span>
+            <%= link_to refresh_process_tallies_path, remote: true, class: 'btn btn-default btn-refresh' do %>
+            <%= icon('fas', 'sync', 'Refresh') %>
+            <% end %>
+          </span>
+
+        </h5>
+
+      </div>
+    </div>
+  </div>
 
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th class="text-center">Category</th>
-        <th class="text-center">URL Mine</th>
-        <th class="text-center">Template Mine</th>
-        <th class="text-center">Staff Page Mine</th>
-        <th class="text-center">Google Mine</th>
-        <th class="text-center">Brand Mine</th>
-        <th class="text-center">Staff Mine</th>
-      </tr>
-    </thead>
 
-    <tbody>
-      <tr>
-        <td class="text-center">Total</td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.url_total, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.temp_total, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.page_total, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.gp_total, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.brand_total, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.cont_total, :delimiter => ',') %></td>
-      </tr>
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center">Category</th>
+          <th class="text-center">URL Mine</th>
+          <th class="text-center">Template Mine</th>
+          <th class="text-center">Staff Page Mine</th>
+          <th class="text-center">Google Mine</th>
+          <th class="text-center">Brand Mine</th>
+          <th class="text-center">Staff Mine</th>
+        </tr>
+      </thead>
 
-      <tr>
-        <td class="text-center">Queued</td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.ver_url, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.find_temp, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.find_page, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.gp, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.find_brand, :delimiter => ',') %></td>
-        <td class="text-center"><%= number_with_delimiter(process_sts.cont_scraper, :delimiter => ',') %></td>
-      </tr>
-    </tbody>
+      <tbody>
+        <tr>
+          <td class="text-center">Total</td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.url_total, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.temp_total, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.page_total, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.gp_total, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.brand_total, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.cont_total, :delimiter => ',') %></td>
+        </tr>
 
-  </table>
+        <tr>
+          <td class="text-center">Queued</td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.ver_url, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.find_temp, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.find_page, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.gp, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.find_brand, :delimiter => ',') %></td>
+          <td class="text-center"><%= number_with_delimiter(process_sts.cont_scraper, :delimiter => ',') %></td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+
+
 
 </div>

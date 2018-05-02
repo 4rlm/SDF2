@@ -2,14 +2,10 @@
 
 <p id="notice"><%= notice %></p>
 
-
-
 <div class="panel section-panel">
   <div class="row">
     <div class="col-md-3">
-
       <h5><%= icon('fas', 'external-link-alt', 'Websites') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@webs.count, :delimiter => ',') %> )</h5></span>
-
     </div>
 
     <div class="col-md-3">
@@ -19,14 +15,14 @@
     <div class="col-md-4"></div>
 
     <div class="col-md-2">
-      <button class="btn btn-danger tip-button" onclick="websHeaderTipModal()"><%= icon('fas', 'exclamation-circle', 'Websites Tip') %></button>
+      <button class="btn btn-danger btn-tip" onclick="websHeaderTipModal()"><%= icon('fas', 'exclamation-circle', 'Websites Tip') %></button>
     </div>
 
   </div>
 
   <div class="row header-tip-modals" id="websHeaderTipModalWrap">
     <div class="col-md-12">
-      <h6 class="text-center"> <em>Tip</em>: Websites Section's primary focus is on URLs, their status, and relation to their associated data, such as their Accounts and Contacts.  URL data is listed on left and associated Accounts listed on right. Click blue 'Staff' button in left URL Section to view Scraped Contacts; if they exist. Search Websites via <span style="font-size: 10px;"><%= icon('fas', 'search') %></span>  icon in top right corner.</h6>
+      <h6 class=""> <span class="font-weight-bold">TIP</span>: The Websites Module primarily focuses on URLs, their status, and relation to their associated data, such as their Accounts and Contacts.  URL data is listed on left and associated Accounts listed on right. Click blue 'Staff' button in left URL Section to view Scraped Contacts; if they exist. Search Websites via <span style="font-size: 10px;"><%= icon('fas', 'search') %></span>  icon in top right corner.  It's important to note that each Website URL can have multiple Accounts and each Account can have multiple Website URLs.  Using 'Follow' and 'Hide' is designed to help determine if you have already viewed that same data in another section.</h6>
     </div>
   </div>
 </div>
