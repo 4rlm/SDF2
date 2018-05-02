@@ -12,7 +12,7 @@ class Start
     run_247 == true ? run_scrapers = run_247 : run_scrapers = night?
 
     if run_scrapers
-      # Start.get_process_sts
+      Start.get_process_sts
       VerUrl.new.start_ver_url
       FindTemp.new.start_find_temp
       FindPage.new.start_find_page

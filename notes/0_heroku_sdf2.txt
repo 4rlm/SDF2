@@ -57,5 +57,14 @@ dw = Delayed::Worker.new
 dj = Delayed::Job.last
 dw.run dj
 
+dj = Delayed::Job.last
+dj.priority
+
+djs = Delayed::Job.where('priority > 1')
+
+priority
+
+dj.handler
+
 object.delay(:queue => 'tracking').method
 object.delay(:queue => 'high_priority', priority: 0).method
