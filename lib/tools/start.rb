@@ -3,15 +3,32 @@
 #Call: Start.method_name
 class Start
 
+  #CALL: heroku run rake run_all_scrapers
+  #CALL: heroku run rake get_process_sts
+
   #CALL: Start.run_all_scrapers
   def self.run_all_scrapers
-    # Start.get_process_sts
-    VerUrl.new.start_ver_url
-    FindTemp.new.start_find_temp
-    FindPage.new.start_find_page
-    GpStart.new.start_gp_act
-    FindBrand.new.start_find_brand
-    ContScraper.new.start_cont_scraper
+    run_247 = true
+    run_247 == true ? run_scrapers = run_247 : run_scrapers = night?
+
+    if run_scrapers
+      # Start.get_process_sts
+      VerUrl.new.start_ver_url
+      FindTemp.new.start_find_temp
+      FindPage.new.start_find_page
+      GpStart.new.start_gp_act
+      FindBrand.new.start_find_brand
+      ContScraper.new.start_cont_scraper
+    else
+      djs = Delayed::Job.where('priority > 1')
+      djs.destroy_all
+    end
+  end
+
+  def self.night?
+    now = Time.now.localtime.strftime("%H").to_i
+    (now.between?(19, 24) || now.between?(0, 7)) ? run_scrapers = true : run_scrapers = false
+    run_scrapers
   end
 
 
