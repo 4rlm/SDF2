@@ -77,6 +77,20 @@
 
 
 
+  // Webs Header Tip
+  function websHeaderTipModal() {
+    var el = $('#websHeaderTipModalWrap');
+    console.log(el.is(':visible'));
+
+    if (el.is(':visible')) {
+      el.hide();
+    } else {
+      el.show();
+    }
+  }
+
+
+
 
 
   // ========== Admin's user level changer buttons ==========

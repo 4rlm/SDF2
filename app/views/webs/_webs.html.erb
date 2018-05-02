@@ -2,19 +2,64 @@
 
 <p id="notice"><%= notice %></p>
 
-<div class="row">
-  <div class="col-md-3">
-    <h5><%= icon('fas', 'external-link-alt', 'Websites') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@webs.count, :delimiter => ',') %> )</span></h5>
+
+
+<div class="panel section-panel">
+  <div class="row">
+    <div class="col-md-3">
+
+      <h5><%= icon('fas', 'external-link-alt', 'Websites') %> <span style="font-size: 14px;">(Results: <%= number_with_delimiter(@webs.count, :delimiter => ',') %> )</h5></span>
+
+    </div>
+
+    <div class="col-md-3">
+      <%= render 'webs/download_webs', webs: @webs %>
+    </div>
+
+    <div class="col-md-4"></div>
+
+    <div class="col-md-2">
+      <button class="btn btn-danger tip-button" onclick="websHeaderTipModal()"><%= icon('fas', 'exclamation-circle', 'Websites Tip') %></button>
+    </div>
+
   </div>
 
-  <div class="col-md-3">
-    <%= render 'webs/download_webs', webs: @webs %>
+  <div class="row header-tip-modals" id="websHeaderTipModalWrap">
+    <div class="col-md-12">
+      <h6 class="text-center"> <em>Tip</em>: Websites Section's primary focus is on URLs, their status, and relation to their associated data, such as their Accounts and Contacts.  URL data is listed on left and associated Accounts listed on right. Click blue 'Staff' button in left URL Section to view Scraped Contacts; if they exist. Search Websites via <span style="font-size: 10px;"><%= icon('fas', 'search') %></span>  icon in top right corner.</h6>
+    </div>
   </div>
-  <div class="col-md-6"></div>
 </div>
 
 
+<div class="row">
+  <div class="col-md-3 text-center">
+    <h5 class="section-header">Websites</h5>
+  </div>
+
+  <div class="col-md-9 text-center">
+    <h5 class="section-header">Associated Accounts</h5>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="panel outer-panel">
+
   <% @webs.each do |web| %>
     <% @web = web %>
     <%= render 'webs/web_details', web: @web %>
