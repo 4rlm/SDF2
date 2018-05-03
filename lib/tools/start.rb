@@ -3,11 +3,13 @@
 class Start
 
   #CALL: heroku run rake run_all_scrapers
+
   #CALL: Start.run_all_scrapers
+
   def self.run_all_scrapers
     # run_247 = true
     # run_247 == true ? run_scrapers = run_247 : run_scrapers = night?
-    users_logged_in_now ? postpone_scrapers : queue_scrapers
+    users_logged_in_now ? kill_scrapers : queue_scrapers
   end
 
 
@@ -22,19 +24,36 @@ class Start
 
 
   def self.queue_scrapers
-    Start.get_process_sts
-    VerUrl.new.start_ver_url
-    FindTemp.new.start_find_temp
-    FindPage.new.start_find_page
-    GpStart.new.start_gp_act
-    FindBrand.new.start_find_brand
-    ContScraper.new.start_cont_scraper
+    if priority_jobs.count <= 0
+      Start.get_process_sts
+      VerUrl.new.start_ver_url
+      FindTemp.new.start_find_temp
+      FindPage.new.start_find_page
+      GpStart.new.start_gp_act
+      FindBrand.new.start_find_brand
+      ContScraper.new.start_cont_scraper
+    else
+      binding.pry
+    end
+
   end
 
-  def self.postpone_scrapers
+  def self.kill_scrapers
     low_pro_djs = Delayed::Job.where('priority > 1')
-    # low_pro_djs.update_all(run_at: 30.minutes.from_now) if low_pro_djs.any?
     low_pro_djs.destroy_all if low_pro_djs.any?
+  end
+
+  #CALL: Start.priority_jobs
+  def self.priority_jobs
+    priorities = Delayed::Job.where('priority <= 1')
+    binding.pry
+
+    priorities.each do |job|
+      binding.pry
+      job.invoke_job
+      Delayed::Job.find(10).invoke_job
+    end
+
   end
 
   def self.night?

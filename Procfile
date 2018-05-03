@@ -1,5 +1,4 @@
-web:     rake run_all_scrapers && bundle exec rails server -p $PORT
-#web:    bundle exec rails server -p $PORT
+web:    bundle exec rails server -p $PORT
 worker:  bundle exec foreman start -f Procfile.workers
 
 #web: bundle exec rails server -p 3000

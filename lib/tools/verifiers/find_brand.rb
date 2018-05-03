@@ -10,7 +10,7 @@ class FindBrand
   def initialize
     @brand_terms = BrandTerm.all
     @brands = Brand.all
-    @dj_on = true
+    @dj_on = false
     @dj_count_limit = 0
     @dj_workers = 3
     @obj_in_grp = 10

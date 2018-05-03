@@ -10,7 +10,7 @@ class FindPage
   include Noko
 
   def initialize
-    @dj_on = true
+    @dj_on = false
     @dj_count_limit = 0
     @dj_workers = 3
     @obj_in_grp = 10
