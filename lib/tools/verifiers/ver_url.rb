@@ -14,7 +14,7 @@ class VerUrl
   def initialize
     @dj_on = true
     @dj_count_limit = 0
-    @dj_workers = 2
+    @dj_workers = 3
     @obj_in_grp = 10
     @dj_refresh_interval = 10
     @db_timeout_limit = 120
