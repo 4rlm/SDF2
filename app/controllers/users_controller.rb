@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # before_action :set_user, only: [:show, :destroy]
-  before_action :create_user_activities
+  # before_action :create_user_activities
   respond_to :html, :json
 
 
