@@ -36,8 +36,8 @@ class Start
     # low_pro_djs.update_all(run_at: 30.minutes.from_now) if low_pro_djs.any?
     low_pro_djs.destroy_all if low_pro_djs.any?
 
-    hi_pro_djs = Delayed::Job.where('priority <= 1')
-    binding.pry if hi_pro_djs.any?
+    # hi_pro_djs = Delayed::Job.where('priority <= 1')
+    # binding.pry if hi_pro_djs.any?
   end
 
   def self.night?
