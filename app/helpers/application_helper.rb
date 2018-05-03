@@ -18,69 +18,6 @@ module ApplicationHelper
 
 
 
-  ## GET ACT IDS
-  # def get_followed_act_ids(act_ids)
-  #   act_ids = current_user.act_activities.where(fav_sts: true).map(&:act_id) if !act_ids.present?
-  #   act_ids
-  # end
-  #
-  # def get_hidden_act_ids(act_ids)
-  #   act_ids = current_user.act_activities.where(hide_sts: true).map(&:act_id) if !act_ids.present?
-  #   act_ids
-  # end
-  #
-  # ## GET CONT IDS
-  # def get_followed_cont_ids(cont_ids)
-  #   cont_ids = current_user.cont_activities.where(fav_sts: true).map(&:cont_id) if !cont_ids.present?
-  #   cont_ids
-  # end
-  #
-  # def get_hidden_cont_ids(cont_ids)
-  #   cont_ids = current_user.cont_activities.where(hide_sts: true).map(&:cont_id) if !cont_ids.present?
-  #   cont_ids
-  # end
-  #
-  # ## GET WEB IDS
-  # def get_followed_web_ids(web_ids)
-  #   web_ids = current_user.web_activities.where(fav_sts: true).map(&:web_id) if !web_ids.present?
-  #   web_ids
-  # end
-  #
-  # def get_hidden_web_ids(web_ids)
-  #   web_ids = current_user.web_activities.where(hide_sts: true).map(&:web_id) if !web_ids.present?
-  #   web_ids
-  # end
-
-
-
-
-  # def switch_act_fav_hide(act_ids, sts_type, sts)
-  #   ActActivity.where(user_id: current_user.id, act_id: [act_ids]).each do |activity|
-  #     activity.update("#{sts_type}": sts)
-  #   end
-  # end
-
-  # def switch_cont_fav_hide(cont_ids, sts_type, sts)
-  #   ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).each do |activity|
-  #     activity.update("#{sts_type}": sts)
-  #   end
-  # end
-
-  # def switch_web_fav_hide(web_ids, sts_type, sts)
-  #   WebActivity.where(user_id: current_user.id, web_id: [web_ids]).each do |activity|
-  #     activity.update("#{sts_type}": sts)
-  #   end
-  # end
-
-
-
-
-
-
-  # def current_url(new_params)
-  #   url_for :params => params.merge(new_params)
-  # end
-
 
   ## GET_BRANDS_FOR_SELECT - STARTS
   def get_brands(web)
@@ -88,12 +25,6 @@ module ApplicationHelper
       brands = web.brands.select {|brand| brand.brand_name}.pluck(:brand_name)
     end
   end
-
-  # def get_brands_for_select(webs)
-  #   if webs.present?
-  #     brands = webs.is_franchise&.map {|web| get_brands(web)}&.flatten&.uniq&.sort
-  #   end
-  # end
 
 
   ## GET_STATES_FOR_SELECT - STARTS
@@ -104,14 +35,6 @@ module ApplicationHelper
     end
   end
 
-  # def get_states_for_select(webs)
-  #   if webs.present?
-  #     # states = webs.map { |web| get_state(web.acts) }&.flatten&.uniq&.compact&.sort
-  #     states = webs.map { |web| web.acts&.map(&:state) }&.flatten&.uniq&.compact&.sort
-  #     return states
-  #   end
-  # end
-
 
   ## GET_GP_STS - STARTS
   def get_gp_stss(acts)
@@ -120,13 +43,6 @@ module ApplicationHelper
     end
   end
 
-  # def get_gp_stss_for_select(webs)
-  #   if webs.present?
-  #     gp_stss = webs.map { |web| get_gp_stss(web.acts) }&.flatten&.uniq&.compact&.sort
-  #     # gp_stss = webs.web_act_gp_sts&.map {|web| get_gp_stss(web&.acts)}&.flatten&.uniq&.sort
-  #   end
-  # end
-
 
   ## GET_GP_INDUSS - STARTS
   def get_gp_induss(acts)
@@ -134,14 +50,6 @@ module ApplicationHelper
       gp_induss = acts.select {|act| act&.gp_indus}.pluck(:gp_indus)&.flatten&.uniq
     end
   end
-
-  # def get_gp_induss_for_select(webs)
-  #   if webs.present?
-  #     gp_induss = webs.map { |web| get_gp_induss(web.acts) }&.flatten&.uniq&.compact&.sort
-  #     # gp_induss = webs.web_act_gp_indus&.map {|web| get_gp_induss(web&.acts)}&.join(' ')&.split(' ')&.uniq&.sort
-  #   end
-  # end
-
 
 
   def generate_ransack_web_options
@@ -158,12 +66,12 @@ module ApplicationHelper
     }
   end
 
+
   def get_ransack_web_opts
     ransack_web_options = RansackOption.find_by(mod_name: 'Web')
     ransack_web_options = RansackOption.create(mod_name: 'Web', option_hsh: generate_ransack_web_options) if !ransack_web_options.present?
     web_opts = ransack_web_options[:option_hsh]
   end
-
 
 
   def generate_ransack_act_options
@@ -193,40 +101,11 @@ module ApplicationHelper
     }
   end
 
+
   def get_ransack_cont_opts
     ransack_cont_options = RansackOption.find_by(mod_name: 'Cont')
     ransack_cont_options = RansackOption.create(mod_name: 'Cont', option_hsh: generate_ransack_cont_options) if !ransack_cont_options.present?
     cont_opts = ransack_cont_options[:option_hsh]
-  end
-
-
-
-  def create_all_activities(user_id)
-    create_web_activities(user_id)
-    create_act_activities(user_id)
-    create_cont_activities(user_id)
-  end
-
-
-  def create_web_activities(user_id)
-    web_ids = Web.all.order("created_at DESC").pluck(:id) - WebActivity.where(user_id: user_id).pluck(:web_id)
-    headers = [:user_id, :web_id]
-    rows = web_ids.map { |web_id| [user_id, web_id] }
-    WebActivity.import(headers, rows, validate: false)
-  end
-
-  def create_act_activities(user_id)
-    act_ids = Act.all.order("created_at DESC").pluck(:id) - ActActivity.where(user_id: user_id).pluck(:act_id)
-    headers = [:user_id, :act_id]
-    rows = act_ids.map { |act_id| [user_id, act_id] }
-    ActActivity.import(headers, rows, validate: false)
-  end
-
-  def create_cont_activities(user_id)
-    cont_ids = Cont.all.order("created_at DESC").pluck(:id) - ContActivity.where(user_id: user_id).pluck(:cont_id)
-    headers = [:user_id, :cont_id]
-    rows = cont_ids.map { |cont_id| [user_id, cont_id] }
-    ContActivity.import(headers, rows, validate: false)
   end
 
 

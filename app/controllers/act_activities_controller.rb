@@ -1,7 +1,7 @@
 class ActActivitiesController < ApplicationController
   before_action :set_act_activity, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
-  
+
 
   # GET /act_activities
   # GET /act_activities.json
@@ -11,13 +11,13 @@ class ActActivitiesController < ApplicationController
 
 
   def unfollow_all
-    current_user.act_activities.followed.update_all(fav_sts: false)
+    ActivitiesTool.new.delay(priority: 0).unfollow_all_acts(current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
-    current_user.act_activities.hidden.update_all(hide_sts: false)
+    ActivitiesTool.new.delay(priority: 0).unhide_all_acts(current_user)
     redirect_to current_user
   end
 

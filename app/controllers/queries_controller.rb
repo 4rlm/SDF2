@@ -12,23 +12,22 @@ class QueriesController < ApplicationController
 
 
   def follow_all
-    FollowHideTool.new.delay(priority: 0).follow_all_queries(current_user, params[:query_id])
+    QueriesTool.new.delay(priority: 0).follow_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 
-
   def unfollow_all
-    FollowHideTool.new.delay(priority: 0).unfollow_all_queries(current_user, params[:query_id])
+    QueriesTool.new.delay(priority: 0).unfollow_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 
   def hide_all
-    FollowHideTool.new.delay(priority: 0).hide_all_queries(current_user, params[:query_id])
+    QueriesTool.new.delay(priority: 0).hide_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 
   def unhide_all
-    FollowHideTool.new.delay(priority: 0).unhide_all_queries(current_user, params[:query_id])
+    QueriesTool.new.delay(priority: 0).unhide_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 

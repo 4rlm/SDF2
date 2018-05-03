@@ -12,7 +12,6 @@ module TalliesHelper
 #
 #
 #   def follow_all_tallies(params)
-#     binding.pry
 #     if params[:mod_name] == 'Act'
 #       act_ids = Act.send(params[:tally_scope]).pluck(:id)
 #       ActActivity.where(user_id: current_user.id, act_id: [act_ids]).update_all(fav_sts: true)

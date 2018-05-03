@@ -1,4 +1,4 @@
-class FollowHideTool
+class QueriesTool
 
   def follow_all_queries(current_user, query_id)
     query = Query.find(query_id)

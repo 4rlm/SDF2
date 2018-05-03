@@ -3,9 +3,7 @@
 class Start
 
   #CALL: heroku run rake run_all_scrapers
-
   #CALL: Start.run_all_scrapers
-
   def self.run_all_scrapers
     # run_247 = true
     # run_247 == true ? run_scrapers = run_247 : run_scrapers = night?

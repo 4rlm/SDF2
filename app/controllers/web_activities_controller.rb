@@ -11,13 +11,13 @@ class WebActivitiesController < ApplicationController
 
 
   def unfollow_all
-    current_user.web_activities.followed.update_all(fav_sts: false)
+    ActivitiesTool.new.delay(priority: 0).unfollow_all_webs(current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
-    current_user.web_activities.hidden.update_all(hide_sts: false)
+    ActivitiesTool.new.delay(priority: 0).unfollow_all_webs(current_user)
     redirect_to current_user
   end
 

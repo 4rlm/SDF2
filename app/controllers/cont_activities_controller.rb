@@ -11,13 +11,13 @@ class ContActivitiesController < ApplicationController
 
 
   def unfollow_all
-    current_user.cont_activities.followed.update_all(fav_sts: false)
+    ActivitiesTool.new.delay(priority: 0).unfollow_all_conts(current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
-    current_user.cont_activities.hidden.update_all(hide_sts: false)
+    ActivitiesTool.new.delay(priority: 0).unfollow_all_conts(current_user)
     redirect_to current_user
   end
 
