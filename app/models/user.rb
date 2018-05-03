@@ -27,8 +27,8 @@ class User < ApplicationRecord
   scope :hidden_web_ids, ->{ joins(:web_activities).merge(WebActivity.hidden).pluck(:web_id) }
   scope :unhidden_web_ids, ->{ joins(:web_activities).merge(WebActivity.unhidden).pluck(:web_id) }
 
-  scope :logged_in_now, -> {where("last_sign_in_at >= ? AND last_sign_in_at <= ?", 5.minutes.ago, Time.now )}
-  scope :recently_updated, -> {where("updated_at >= ? AND updated_at <= ?", 5.minutes.ago, Time.now )}
+  scope :logged_in_now, -> {where("last_sign_in_at >= ? AND last_sign_in_at <= ?", 3.minutes.ago, Time.now )}
+  scope :recently_updated, -> {where("updated_at >= ? AND updated_at <= ?", 3.minutes.ago, Time.now )}
 
 
   enum role: [:pending, :basic, :intermediate, :advanced, :admin]

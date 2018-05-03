@@ -3,7 +3,6 @@
 class Start
 
   #CALL: heroku run rake run_all_scrapers
-  #CALL: heroku run rake get_process_sts
   #CALL: Start.run_all_scrapers
   def self.run_all_scrapers
     # run_247 = true
@@ -18,6 +17,7 @@ class Start
     else
       logged_in_now = false
     end
+    logged_in_now
   end
 
 
@@ -35,9 +35,6 @@ class Start
     low_pro_djs = Delayed::Job.where('priority > 1')
     # low_pro_djs.update_all(run_at: 30.minutes.from_now) if low_pro_djs.any?
     low_pro_djs.destroy_all if low_pro_djs.any?
-
-    # hi_pro_djs = Delayed::Job.where('priority <= 1')
-    # binding.pry if hi_pro_djs.any?
   end
 
   def self.night?
