@@ -24,36 +24,26 @@ class Start
 
 
   def self.queue_scrapers
-    if priority_jobs.count <= 0
-      Start.get_process_sts
-      VerUrl.new.start_ver_url
-      FindTemp.new.start_find_temp
-      FindPage.new.start_find_page
-      GpStart.new.start_gp_act
-      FindBrand.new.start_find_brand
-      ContScraper.new.start_cont_scraper
-    else
-      binding.pry
-    end
-
+    priority_jobs
+    Start.get_process_sts
+    VerUrl.new.start_ver_url
+    FindTemp.new.start_find_temp
+    FindPage.new.start_find_page
+    GpStart.new.start_gp_act
+    FindBrand.new.start_find_brand
+    ContScraper.new.start_cont_scraper
   end
 
   def self.kill_scrapers
     low_pro_djs = Delayed::Job.where('priority > 1')
     low_pro_djs.destroy_all if low_pro_djs.any?
+    priority_jobs
   end
 
   #CALL: Start.priority_jobs
   def self.priority_jobs
     priorities = Delayed::Job.where('priority <= 1')
-    binding.pry
-
-    priorities.each do |job|
-      binding.pry
-      job.invoke_job
-      Delayed::Job.find(10).invoke_job
-    end
-
+    priorities.each { |job| job.invoke_job }
   end
 
   def self.night?
