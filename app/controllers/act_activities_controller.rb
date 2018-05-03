@@ -10,17 +10,22 @@ class ActActivitiesController < ApplicationController
   end
 
 
+  def create_user_activities
+    ActActivity.create_user_act_activities(current_user)
+    redirect_to current_user
+  end
+
+
   def unfollow_all
-    ActivitiesTool.new.delay(priority: 0).unfollow_all_acts(current_user)
+    ActActivity.unfollow_unhide_acts('unfollow', current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
-    ActivitiesTool.new.delay(priority: 0).unhide_all_acts(current_user)
+    ActActivity.unfollow_unhide_acts('unhide', current_user)
     redirect_to current_user
   end
-
 
 
   # GET /act_activities/1

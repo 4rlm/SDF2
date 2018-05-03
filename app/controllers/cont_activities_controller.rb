@@ -10,14 +10,20 @@ class ContActivitiesController < ApplicationController
   end
 
 
+  def create_user_activities
+    ContActivity.create_user_cont_activities(current_user)
+    redirect_to current_user
+  end
+
+
   def unfollow_all
-    ActivitiesTool.new.delay(priority: 0).unfollow_all_conts(current_user)
+    ContActivity.unfollow_unhide_conts('unfollow', current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
-    ActivitiesTool.new.delay(priority: 0).unfollow_all_conts(current_user)
+    ContActivity.unfollow_unhide_conts('unhide', current_user)
     redirect_to current_user
   end
 

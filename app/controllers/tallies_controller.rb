@@ -21,8 +21,7 @@ class TalliesController < ApplicationController
 
 
   def generate_csv
-    TalliesTool.new.delay(priority: 0).generate_csv_tallies(current_user, params[:tally_hsh])
-
+    Tally.generate_csv_tallies(current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
 
@@ -34,8 +33,7 @@ class TalliesController < ApplicationController
 
 
   def follow_all
-    TalliesTool.new.delay(priority: 0).follow_all_tallies(current_user, params[:tally_hsh])
-
+    Tally.follow_hide_tallies('follow', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
 
@@ -47,8 +45,7 @@ class TalliesController < ApplicationController
 
 
   def unfollow_all
-    TalliesTool.new.delay(priority: 0).unfollow_all_tallies(current_user, params[:tally_hsh])
-
+    Tally.follow_hide_tallies('unfollow', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
 
@@ -60,8 +57,7 @@ class TalliesController < ApplicationController
 
 
   def hide_all
-    TalliesTool.new.delay(priority: 0).hide_all_tallies(current_user, params[:tally_hsh])
-
+    Tally.follow_hide_tallies('hide', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
 
@@ -73,8 +69,7 @@ class TalliesController < ApplicationController
 
 
   def unhide_all
-    TalliesTool.new.delay(priority: 0).unhide_all_tallies(current_user, params[:tally_hsh])
-
+    Tally.follow_hide_tallies('unhide', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
 

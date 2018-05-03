@@ -5,24 +5,7 @@ class Start
   #CALL: heroku run rake run_all_scrapers
   #CALL: Start.run_all_scrapers
   def self.run_all_scrapers
-    # run_247 = true
-    # run_247 == true ? run_scrapers = run_247 : run_scrapers = night?
-    users_logged_in_now ? kill_scrapers : queue_scrapers
-  end
-
-
-  def self.users_logged_in_now
-    if User.logged_in_now.count > 0 || User.recently_updated.count > 0
-      logged_in_now = true
-    else
-      logged_in_now = false
-    end
-    logged_in_now
-  end
-
-
-  def self.queue_scrapers
-    priority_jobs
+    helpers.priority_jobs
     Start.get_process_sts
     VerUrl.new.start_ver_url
     FindTemp.new.start_find_temp
@@ -32,24 +15,13 @@ class Start
     ContScraper.new.start_cont_scraper
   end
 
-  def self.kill_scrapers
-    low_pro_djs = Delayed::Job.where('priority > 1')
-    low_pro_djs.destroy_all if low_pro_djs.any?
-    priority_jobs
-  end
 
-  #CALL: Start.priority_jobs
-  def self.priority_jobs
-    priorities = Delayed::Job.where('priority <= 1')
-    priorities.each { |job| job.invoke_job }
-  end
-
-  def self.night?
-    now = Time.now.localtime.strftime("%H").to_i
-    (now.between?(19, 24) || now.between?(0, 7)) ? run_scrapers = true : run_scrapers = false
-    run_scrapers
-  end
-
+  # Moved to Application Model
+  # #CALL: Start.priority_jobs
+  # def self.priority_jobs
+  #   priorities = Delayed::Job.where('priority <= 1')
+  #   priorities.each { |job| job.invoke_job }
+  # end
 
   #CALL: Start.url_equals_fwd_url
   # def self.url_equals_fwd_url

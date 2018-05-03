@@ -14,6 +14,11 @@ class Cont < ApplicationRecord
   has_many :cont_activities, dependent: :delete_all
   accepts_nested_attributes_for :cont_activities, :web_activities, :act_activities
 
+
+  def self.generate_csv_conts(params, current_user)
+    ContCsvTool.new.delay(priority: 0).start_cont_web_csv_and_log(params, current_user)
+  end
+
   # scope :is_email, ->{ where.not(email: nil) }
   scope :created_between, lambda {|start_date, end_date| where("created_at >= ? AND created_at <= ?", start_date, end_date )}
   scope :cx_date_between, lambda {|start_date, end_date| where("cx_date >= ? AND cx_date <= ?", start_date, end_date )}

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # before_action :set_user, only: [:show, :destroy]
-  # before_action :create_user_activities
+  before_action :run_create_user_activities
   respond_to :html, :json
 
 
@@ -19,11 +19,8 @@ class UsersController < ApplicationController
   end
 
 
-  def create_user_activities
-    activities_tool = ActivitiesTool.new
-    activities_tool.delay(priority: 0).create_web_activities(current_user.id)
-    activities_tool.delay(priority: 0).create_act_activities(current_user.id)
-    activities_tool.delay(priority: 0).create_cont_activities(current_user.id)
+  def run_create_user_activities
+    User.delay(priority: 0).create_user_activities(current_user) if time_since_user_updated > 120
   end
 
 

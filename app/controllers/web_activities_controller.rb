@@ -10,14 +10,20 @@ class WebActivitiesController < ApplicationController
   end
 
 
+  def create_user_activities
+    WebActivity.create_user_web_activities(current_user)
+    redirect_to current_user
+  end
+
+
   def unfollow_all
-    ActivitiesTool.new.delay(priority: 0).unfollow_all_webs(current_user)
+    WebActivity.unfollow_unhide_webs('unfollow', current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
-    ActivitiesTool.new.delay(priority: 0).unfollow_all_webs(current_user)
+    WebActivity.unfollow_unhide_webs('unhide', current_user)
     redirect_to current_user
   end
 

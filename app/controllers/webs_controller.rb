@@ -43,7 +43,8 @@ class WebsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      WebCsvTool.new.delay(priority: 0).start_web_acts_csv_and_log(params, current_user)
+      Web.generate_csv_webs(params, current_user)
+
       respond_to do |format|
         format.js { render :download_webs, status: :ok, location: @webs }
       end

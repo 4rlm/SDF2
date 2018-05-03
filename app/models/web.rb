@@ -28,6 +28,11 @@ class Web < ApplicationRecord
     self.wx_date = nil if url_sts == 'Valid'
   end
 
+
+  def self.generate_csv_webs(params, current_user)
+    WebCsvTool.new.delay(priority: 0).start_web_acts_csv_and_log(params, current_user)
+  end
+
   scope :is_franchise, ->{ joins(:brands).merge(Brand.is_franchise) }
   scope :act_is_valid_gp, ->{ joins(:acts).merge(Act.is_valid_gp) }
   scope :is_cop, ->{ where(cop: true) }

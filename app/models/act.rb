@@ -16,15 +16,6 @@ class Act < ApplicationRecord
 
   accepts_nested_attributes_for :act_webs, :webs, :conts, :links, :brands, :act_activities
 
-  def full_address
-    self.full_address = [street, city, state, zip].compact.join(', ')
-  end
-
-  def track_act_change
-    self.adr_changed = Time.now if full_address_changed?
-    self.act_changed = Time.now if act_name_changed?
-  end
-
   scope :web_is_cop_or_franchise, -> {joins(:webs).merge(Web.is_cop_or_franchise)}
   scope :is_valid_gp, ->{ where.not(gp_id: nil) }
 
@@ -67,5 +58,19 @@ class Act < ApplicationRecord
   scope :ax_date_between_wk_3_4, -> {where("ax_date >= ? AND ax_date <= ?", 4.weeks.ago, 3.weeks.ago )}
   scope :ax_date_between_mo_1_2, -> {where("ax_date >= ? AND ax_date <= ?", 2.months.ago, 1.month.ago )}
   scope :ax_date_between_mo_2_3, -> {where("ax_date >= ? AND ax_date <= ?", 3.months.ago, 2.month.ago )}
+
+
+  def full_address
+    self.full_address = [street, city, state, zip].compact.join(', ')
+  end
+
+  def track_act_change
+    self.adr_changed = Time.now if full_address_changed?
+    self.act_changed = Time.now if act_name_changed?
+  end
+
+  def self.generate_csv_acts(params, current_user)
+    ActCsvTool.new.delay(priority: 0).start_act_webs_csv_and_log(params, current_user)
+  end
 
 end

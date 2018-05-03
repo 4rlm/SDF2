@@ -34,7 +34,8 @@ class ActsController < ApplicationController
 
   def generate_csv
     if params[:q].present?
-      ActCsvTool.new.delay(priority: 0).start_act_webs_csv_and_log(params, current_user)
+      Act.generate_csv_acts(params, current_user)
+      
       respond_to do |format|
         format.js { render :download_acts, status: :ok, location: @acts }
       end

@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       match 'unfollow_all' => 'act_activities#unfollow_all', via: [:get, :post], as: :unfollow_all
       match 'hide_all' => 'act_activities#hide_all', via: [:get, :post], as: :hide_all
       match 'unhide_all' => 'act_activities#unhide_all', via: [:get, :post], as: :unhide_all
+      match 'create_user_activities' => 'act_activities#create_user_activities', via: [:get, :post], as: :create_user_activities
     end
   end
 
@@ -61,6 +62,7 @@ Rails.application.routes.draw do
       match 'unfollow_all' => 'cont_activities#unfollow_all', via: [:get, :post], as: :unfollow_all
       match 'hide_all' => 'cont_activities#hide_all', via: [:get, :post], as: :hide_all
       match 'unhide_all' => 'cont_activities#unhide_all', via: [:get, :post], as: :unhide_all
+      match 'create_user_activities' => 'cont_activities#create_user_activities', via: [:get, :post], as: :create_user_activities
     end
   end
 
@@ -70,6 +72,7 @@ Rails.application.routes.draw do
       match 'unfollow_all' => 'web_activities#unfollow_all', via: [:get, :post], as: :unfollow_all
       match 'hide_all' => 'web_activities#hide_all', via: [:get, :post], as: :hide_all
       match 'unhide_all' => 'web_activities#unhide_all', via: [:get, :post], as: :unhide_all
+      match 'create_user_activities' => 'web_activities#create_user_activities', via: [:get, :post], as: :create_user_activities
     end
   end
 
