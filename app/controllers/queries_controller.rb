@@ -1,7 +1,7 @@
 class QueriesController < ApplicationController
   before_action :set_query, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
-  
+
   include QueriesHelper
 
   # GET /queries
@@ -11,24 +11,24 @@ class QueriesController < ApplicationController
   end
 
 
-
   def follow_all
-    follow_all_query_helper(params[:query_id])
+    FollowHideTool.new.delay(priority: 0).follow_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 
+
   def unfollow_all
-    unfollow_all_query_helper(params[:query_id])
+    FollowHideTool.new.delay(priority: 0).unfollow_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 
   def hide_all
-    hide_all_query_helper(params[:query_id])
+    FollowHideTool.new.delay(priority: 0).hide_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 
   def unhide_all
-    unhide_all_query_helper(params[:query_id])
+    FollowHideTool.new.delay(priority: 0).unhide_all_queries(current_user, params[:query_id])
     redirect_to current_user
   end
 

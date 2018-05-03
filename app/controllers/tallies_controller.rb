@@ -2,8 +2,6 @@ class TalliesController < ApplicationController
   # before_action :set_tally, only: [:show, :edit, :update, :destroy]
   before_action :basic_and_up
 
-  include TalliesHelper
-
 
   # GET /tallies
   # GET /tallies.json
@@ -13,33 +11,30 @@ class TalliesController < ApplicationController
 
 
   def refresh_process
-    # Start.delay.get_process_sts
     Start.delay(priority: 0).get_process_sts
     @process_sts = ProcessStatus.first
 
     respond_to do |format|
       format.js { render :refresh_process, status: :ok, process_sts: @process_sts }
     end
-
   end
 
 
-
   def generate_csv
-    generate_csv_tally_helper(params[:tally_hsh])
+    TalliesTool.new.delay(priority: 0).generate_csv_tallies(current_user, params[:tally_hsh])
+
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
 
     respond_to do |format|
       format.js { render :update_download_tallies, status: :ok, tally_hsh: @tally_hsh }
     end
-
     # redirect_to tallies_path
   end
 
 
   def follow_all
-    follow_all_tally_helper(params[:tally_hsh])
+    TalliesTool.new.delay(priority: 0).follow_all_tallies(current_user, params[:tally_hsh])
 
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -47,12 +42,12 @@ class TalliesController < ApplicationController
     respond_to do |format|
       format.js { render :update_follow_all, status: :ok, tally_hsh: @tally_hsh }
     end
-
     # redirect_to tallies_path
   end
 
+
   def unfollow_all
-    unfollow_all_tally_helper(params[:tally_hsh])
+    TalliesTool.new.delay(priority: 0).unfollow_all_tallies(current_user, params[:tally_hsh])
 
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -60,12 +55,12 @@ class TalliesController < ApplicationController
     respond_to do |format|
       format.js { render :update_unfollow_all, status: :ok, tally_hsh: @tally_hsh }
     end
-
     # redirect_to tallies_path
   end
 
+
   def hide_all
-    hide_all_tally_helper(params[:tally_hsh])
+    TalliesTool.new.delay(priority: 0).hide_all_tallies(current_user, params[:tally_hsh])
 
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -73,12 +68,12 @@ class TalliesController < ApplicationController
     respond_to do |format|
       format.js { render :update_hide_all, status: :ok, tally_hsh: @tally_hsh }
     end
-
     # redirect_to tallies_path
   end
 
+
   def unhide_all
-    unhide_all_tally_helper(params[:tally_hsh])
+    TalliesTool.new.delay(priority: 0).unhide_all_tallies(current_user, params[:tally_hsh])
 
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -86,7 +81,6 @@ class TalliesController < ApplicationController
     respond_to do |format|
       format.js { render :update_unhide_all, status: :ok, tally_hsh: @tally_hsh }
     end
-
     # redirect_to tallies_path
   end
 
