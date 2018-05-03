@@ -70,11 +70,11 @@ end
 
 ####### ORIGINAL SETTINGS BELOW: #######
 # ORIG BELOW UNCOMMENTED
-Delayed::Worker.destroy_failed_jobs = false
+Delayed::Worker.destroy_failed_jobs = true
 # Delayed::Worker.sleep_delay = 15
-Delayed::Worker.max_attempts = 15
+Delayed::Worker.max_attempts = 1
 # Delayed::Worker.priority = 5
-Delayed::Worker.max_run_time = 60.minutes
+Delayed::Worker.max_run_time = 30.minutes
 Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
 
 # ORIG BELOW COMMENTED OUT
