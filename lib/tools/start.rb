@@ -1,28 +1,39 @@
 # Note: This is where to call high-level processes involving anything in the Tools Directory.
 
-#Call: Start.method_name
 class Start
 
   #CALL: heroku run rake run_all_scrapers
   #CALL: heroku run rake get_process_sts
-
   #CALL: Start.run_all_scrapers
   def self.run_all_scrapers
-    run_247 = true
-    run_247 == true ? run_scrapers = run_247 : run_scrapers = night?
+    # run_247 = true
+    # run_247 == true ? run_scrapers = run_247 : run_scrapers = night?
+    users_logged_in_now ? postpone_scrapers : queue_scrapers
+  end
 
-    if run_scrapers
-      Start.get_process_sts
-      VerUrl.new.start_ver_url
-      FindTemp.new.start_find_temp
-      FindPage.new.start_find_page
-      GpStart.new.start_gp_act
-      FindBrand.new.start_find_brand
-      ContScraper.new.start_cont_scraper
+
+  def self.users_logged_in_now
+    if User.logged_in_now.count > 0 || User.recently_updated.count > 0
+      logged_in_now = true
     else
-      djs = Delayed::Job.where('priority > 1')
-      djs.destroy_all
+      logged_in_now = false
     end
+  end
+
+
+  def self.queue_scrapers
+    Start.get_process_sts
+    VerUrl.new.start_ver_url
+    FindTemp.new.start_find_temp
+    FindPage.new.start_find_page
+    GpStart.new.start_gp_act
+    FindBrand.new.start_find_brand
+    ContScraper.new.start_cont_scraper
+  end
+
+  def self.postpone_scrapers
+    djs = Delayed::Job.where('priority > 1')
+    djs.update_all(run_at: 30.minutes.from_now) if djs.any?
   end
 
   def self.night?

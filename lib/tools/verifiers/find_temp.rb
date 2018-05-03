@@ -11,7 +11,7 @@ class FindTemp
   include Noko
 
   def initialize
-    @dj_on = false
+    @dj_on = true
     @dj_count_limit = 4
     @dj_workers = 2
     @obj_in_grp = 10

@@ -1,11 +1,23 @@
 #CALL: FindBrand.new.start_find_brand
 
+require 'iter_query'
+require 'noko'
+
 class FindBrand
+  include IterQuery
+  include Noko
 
   def initialize
     @brand_terms = BrandTerm.all
     @brands = Brand.all
-    @cut_off = 7.days.ago
+    @dj_on = true
+    @dj_count_limit = 0
+    @dj_workers = 2
+    @obj_in_grp = 10
+    @dj_refresh_interval = 10
+    @db_timeout_limit = 120
+    @cut_off = 10.days.ago
+    @current_process = "FindBrand"
   end
 
 
@@ -13,14 +25,28 @@ class FindBrand
     query = Web.select(:id)
       .where('brand_date < ? OR brand_date IS NULL', @cut_off)
       .order("updated_at ASC").pluck(:id)
-
-    puts "\n\nQuery Count: #{query.count}"
-    query
   end
 
 
+  # def start_find_brand
+  #   get_query.each { |id| template_starter(id) }
+  # end
+
+
   def start_find_brand
-    get_query.each { |id| template_starter(id) }
+    query = get_query[0..20]
+    while query.any?
+      setup_iterator(query)
+      query = get_query[0..20]
+      break if !query.any?
+    end
+  end
+
+
+  def setup_iterator(query)
+    @query_count = query.count
+    (@query_count & @query_count > @obj_in_grp) ? @group_count = (@query_count / @obj_in_grp) : @group_count = 2
+    @dj_on ? iterate_query(query) : query.each { |id| template_starter(id) }
   end
 
 
