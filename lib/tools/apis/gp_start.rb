@@ -17,7 +17,7 @@ class GpStart
     @dj_refresh_interval = 5
     @db_timeout_limit = 200
     @count = 0
-    @cut_off = 10.days.ago
+    @cut_off = 3.days.ago
     @formatter = Formatter.new
     @mig = Mig.new
     @multi_spots = true
@@ -40,7 +40,7 @@ class GpStart
         .where(webs: {cop: true})
         .where.not(acts: {lat: nil, lon: nil})
         .where(acts: {gp_id: nil, gp_sts: ['Valid', nil]})
-        .select(:id).order("gp_date ASC")[0..0].pluck(:id)
+        .select(:id).order("gp_date ASC").pluck(:id)
     end
 
     ## ## Skipped Sts Query ##
@@ -49,7 +49,7 @@ class GpStart
       query = Act.select(:id)
         .where(gp_sts: 'Skipped')
         .where('gp_date < ? OR gp_date IS NULL', @cut_off)
-        .order("id ASC").pluck(:id)
+        .order("gp_date ASC").pluck(:id)
     end
 
     query
