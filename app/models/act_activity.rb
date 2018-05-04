@@ -2,6 +2,7 @@ class ActActivity < ApplicationRecord
   belongs_to :user
   belongs_to :act
   # belongs_to :export
+  validates_uniqueness_of :act_id, scope: [:user_id]
 
   # Query below:
   # user.act_activities.followed_acts.count
@@ -10,7 +11,14 @@ class ActActivity < ApplicationRecord
   scope :hidden, ->{ where(hide_sts: true) }
   scope :unhidden, ->{ where(hide_sts: false) }
 
-  validates_uniqueness_of :act_id, scope: [:user_id]
+  scope :by_user, ->(user) { where(user_id: user.id) }
+
+  # c = ActActivity.by_user(User.first)
+
+  scope :by_act, ->(act) { where(act_id: act) }
+  # scope :unfollowed_by_act, ->(act) { where(act_id: act, fav_sts: false) }
+  # act_activities = current_user.act_activities.by_act(acts)
+
 
   def self.create_user_act_activities(current_user)
     ActivitiesTool.new.delay(priority: 0).create_act_activities(current_user.id)

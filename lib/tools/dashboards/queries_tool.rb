@@ -4,14 +4,14 @@ class QueriesTool
     query = Query.find(query_id)
 
     if query.mod_name == 'Act'
-      act_ids = Act.ransack(query.params['q']).result(distinct: true).includes(:webs, :conts, :brands, :act_activities).map(&:id)
-      current_user.act_activities.unfollowed.where(act_id: [act_ids]).update_all(fav_sts: true)
+      acts = get_ransack_acts(query.params['q'])
+      current_user.act_activities.unfollowed.by_act(acts).update_all(fav_sts: true)
     elsif query.mod_name == 'Cont'
-      cont_ids = Cont.ransack(query.params['q']).result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).map(&:id)
-      current_user.cont_activities.unfollowed.where(cont_id: [cont_ids]).update_all(fav_sts: true)
+      conts = get_ransack_conts(query.params['q'])
+      current_user.cont_activities.unfollowed.by_cont(conts).update_all(fav_sts: true)
     elsif query.mod_name == 'Web'
-      web_ids = Web.ransack(query.params['q']).result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).map(&:id)
-      current_user.web_activities.unfollowed.where(web_id: [web_ids]).update_all(fav_sts: true)
+      webs = get_ransack_webs(query.params['q'])
+      current_user.web_activities.unfollowed.by_web(webs).update_all(fav_sts: true)
     end
   end
 
@@ -20,14 +20,14 @@ class QueriesTool
     query = Query.find(query_id)
 
     if query.mod_name == 'Act'
-      act_ids = Act.ransack(query.params['q']).result(distinct: true).includes(:webs, :conts, :brands, :act_activities).map(&:id)
-      current_user.act_activities.followed.where(act_id: [act_ids]).update_all(fav_sts: false)
+      acts = get_ransack_acts(query.params['q'])
+      current_user.act_activities.followed.by_act(acts).update_all(fav_sts: false)
     elsif query.mod_name == 'Cont'
-      cont_ids = Cont.ransack(query.params['q']).result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).map(&:id)
-      current_user.cont_activities.followed.where(cont_id: [cont_ids]).update_all(fav_sts: false)
+      conts = get_ransack_conts(query.params['q'])
+      current_user.cont_activities.followed.by_cont(conts).update_all(fav_sts: false)
     elsif query.mod_name == 'Web'
-      web_ids = Web.ransack(query.params['q']).result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).map(&:id)
-      current_user.web_activities.followed.where(web_id: [web_ids]).update_all(fav_sts: false)
+      webs = get_ransack_webs(query.params['q'])
+      current_user.web_activities.followed.by_web(webs).update_all(fav_sts: false)
     end
   end
 
@@ -36,14 +36,14 @@ class QueriesTool
     query = Query.find(query_id)
 
     if query.mod_name == 'Act'
-      act_ids = Act.ransack(query.params['q']).result(distinct: true).includes(:webs, :conts, :brands, :act_activities).map(&:id)
-      current_user.act_activities.unhidden.where(act_id: [act_ids]).update_all(hide_sts: true)
+      acts = get_ransack_acts(query.params['q'])
+      current_user.act_activities.unhidden.by_act(acts).update_all(hide_sts: true)
     elsif query.mod_name == 'Cont'
-      cont_ids = Cont.ransack(query.params['q']).result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).map(&:id)
-      current_user.cont_activities.unhidden.where(cont_id: [cont_ids]).update_all(hide_sts: true)
+      conts = get_ransack_conts(query.params['q'])
+      current_user.cont_activities.unhidden.by_cont(conts).update_all(hide_sts: true)
     elsif query.mod_name == 'Web'
-      web_ids = Web.ransack(query.params['q']).result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).map(&:id)
-      current_user.web_activities.unhidden.where(web_id: [web_ids]).update_all(hide_sts: true)
+      webs = get_ransack_webs(query.params['q'])
+      current_user.web_activities.unhidden.by_web(webs).update_all(hide_sts: true)
     end
   end
 
@@ -52,15 +52,28 @@ class QueriesTool
     query = Query.find(query_id)
 
     if query.mod_name == 'Act'
-      act_ids = Act.ransack(query.params['q']).result(distinct: true).includes(:webs, :conts, :brands, :act_activities).map(&:id)
-      current_user.act_activities.hidden.where(act_id: [act_ids]).update_all(hide_sts: false)
+      acts = get_ransack_acts(query.params['q'])
+      current_user.act_activities.hidden.by_act(acts).update_all(hide_sts: false)
     elsif query.mod_name == 'Cont'
-      cont_ids = Cont.ransack(query.params['q']).result(distinct: true).includes(:acts, :web, :brands, :act_activities, :cont_activities, :web_activities).map(&:id)
-      current_user.cont_activities.hidden.where(cont_id: [cont_ids]).update_all(hide_sts: false)
+      conts = get_ransack_conts(query.params['q'])
+      current_user.cont_activities.hidden.by_cont(conts).update_all(hide_sts: false)
     elsif query.mod_name == 'Web'
-      web_ids = Web.ransack(query.params['q']).result(distinct: true).includes(:acts, :conts, :brands, :web_activities, :act_activities).map(&:id)
-      current_user.web_activities.hidden.where(web_id: [web_ids]).update_all(hide_sts: false)
+      webs = get_ransack_webs(query.params['q'])
+      current_user.web_activities.hidden.by_web(webs).update_all(hide_sts: false)
     end
+  end
+
+
+  def get_ransack_acts(params)
+    acts = Act.ransack(params).result(distinct: true)
+  end
+
+  def get_ransack_conts(params)
+    conts = Cont.ransack(params).result(distinct: true)
+  end
+
+  def get_ransack_webs(params)
+    webs = Web.ransack(params).result(distinct: true)
   end
 
 

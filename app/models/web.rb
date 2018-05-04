@@ -6,19 +6,38 @@ class Web < ApplicationRecord
   has_many :conts
 
   has_many :web_links, dependent: :delete_all
-  has_many :links, through: :web_links
+  # has_many :links, through: :web_links
+  has_many :links, -> { distinct }, through: :web_links
 
   has_many :web_brands, dependent: :delete_all
-  has_many :brands, through: :web_brands
+  # has_many :brands, through: :web_brands
+  has_many :brands, -> { distinct }, through: :web_brands
+
 
   has_many :act_webs, dependent: :delete_all
-  has_many :acts, through: :act_webs
-  has_many :act_activities, through: :acts
+  # has_many :acts, through: :act_webs
+  has_many :acts, -> { distinct }, through: :act_webs
+  # has_many :act_activities, through: :acts
+  has_many :act_activities, -> { distinct }, through: :acts
+
 
   has_many :web_activities, dependent: :delete_all
-  has_many :users, through: :web_activities
+  # has_many :users, through: :web_activities
+  has_many :users, -> { distinct }, through: :web_activities
+
 
   accepts_nested_attributes_for :act_webs, :acts, :conts, :web_links, :links, :web_brands, :brands, :web_activities
+
+
+  def brands_to_string
+    self[:brands_to_string]
+    brands = self.brands&.map(&:brand_name)&.sort&.join(', ')
+  end
+
+  def attribute_vals(web_cols)
+    self[:attribute_vals]
+    values = self.attributes.slice(*web_cols).values
+  end
 
   def track_web_change
     self.web_changed = Time.now if url_changed? || fwd_url_changed? || wx_date_changed?
@@ -27,7 +46,6 @@ class Web < ApplicationRecord
   def prevent_valid_wx
     self.wx_date = nil if url_sts == 'Valid'
   end
-
 
   def self.generate_csv_webs(params, current_user)
     WebCsvTool.new.delay(priority: 0).start_web_acts_csv_and_log(params, current_user)
@@ -41,6 +59,18 @@ class Web < ApplicationRecord
   scope :web_act_state, ->{ joins(:acts).merge(Act.where.not(state: nil)) }
   scope :web_act_gp_sts, ->{ joins(:acts).merge(Act.where.not(gp_sts: nil)) }
   scope :web_act_gp_indus, ->{ joins(:acts).merge(Act.where.not(gp_indus: nil)) }
+
+  scope :has_id, -> { where.not(id: nil) }
+  scope :with_acts, -> { joins(:acts).merge(Act.has_id) }
+
+  scope :by_user, ->(user) { where(user_id: user.id) }
+  scope :by_id, ->(id) { where(id: id) }
+  # webs = Web.by_id(web_objs)
+  scope :by_act, ->(act) { joins(:acts).merge(Act.by_id(act)) }
+  # webs = Web.by_act(acts)
+
+  scope :by_cont, ->(cont) { joins(:conts).merge(Cont.by_id(cont)) }
+  # webs = Web.by_cont(conts)
 
 
   scope :created_between, lambda {|start_date, end_date| where("created_at >= ? AND created_at <= ?", start_date, end_date )}

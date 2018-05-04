@@ -14,56 +14,56 @@ class TalliesTool
 
   def follow_all_tallies(current_user, params)
     if params[:mod_name] == 'Act'
-      act_ids = Act.send(params[:tally_scope]).pluck(:id)
-      ActActivity.where(user_id: current_user.id, act_id: [act_ids]).update_all(fav_sts: true)
+      acts = Act.send(params[:tally_scope])
+      current_user.act_activities.unfollowed.by_act(acts).update_all(fav_sts: true)
     elsif params[:mod_name] == 'Cont'
-      cont_ids = Cont.send(params[:tally_scope]).pluck(:id)
-      ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).update_all(fav_sts: true)
+      conts = Cont.send(params[:tally_scope])
+      current_user.cont_activities.unfollowed.by_cont(conts).update_all(fav_sts: true)
     elsif params[:mod_name] == 'Web'
-      web_ids = Web.send(params[:tally_scope]).pluck(:id)
-      WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(fav_sts: true)
+      webs = Web.send(params[:tally_scope])
+      current_user.web_activities.unfollowed.by_web(webs).update_all(fav_sts: true)
     end
   end
 
 
   def unfollow_all_tallies(current_user, params)
     if params[:mod_name] == 'Act'
-      act_ids = Act.send(params[:tally_scope]).pluck(:id)
-      ActActivity.where(user_id: current_user.id, act_id: [act_ids]).update_all(fav_sts: false)
+      acts = Act.send(params[:tally_scope])
+      current_user.act_activities.followed.by_act(acts).update_all(fav_sts: false)
     elsif params[:mod_name] == 'Cont'
-      cont_ids = Cont.send(params[:tally_scope]).pluck(:id)
-      ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).update_all(fav_sts: false)
+      conts = Cont.send(params[:tally_scope])
+      current_user.cont_activities.followed.by_cont(conts).update_all(fav_sts: false)
     elsif params[:mod_name] == 'Web'
-      web_ids = Web.send(params[:tally_scope]).pluck(:id)
-      WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(fav_sts: false)
+      webs = Web.send(params[:tally_scope])
+      current_user.web_activities.followed.by_web(webs).update_all(fav_sts: false)
     end
   end
 
 
   def hide_all_tallies(current_user, params)
     if params[:mod_name] == 'Act'
-      act_ids = Act.send(params[:tally_scope]).pluck(:id)
-      ActActivity.where(user_id: current_user.id, act_id: [act_ids]).update_all(hide_sts: true)
+      acts = Act.send(params[:tally_scope])
+      current_user.act_activities.unhidden.by_act(acts).update_all(hide_sts: true)
     elsif params[:mod_name] == 'Cont'
-      cont_ids = Cont.send(params[:tally_scope]).pluck(:id)
-      ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).update_all(hide_sts: true)
+      conts = Cont.send(params[:tally_scope])
+      current_user.cont_activities.unhidden.by_cont(conts).update_all(hide_sts: true)
     elsif params[:mod_name] == 'Web'
-      web_ids = Web.send(params[:tally_scope]).pluck(:id)
-      WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(hide_sts: true)
+      webs = Web.send(params[:tally_scope])
+      current_user.web_activities.unhidden.by_web(webs).update_all(hide_sts: true)
     end
   end
 
 
   def unhide_all_tallies(current_user, params)
     if params[:mod_name] == 'Act'
-      act_ids = Act.send(params[:tally_scope]).pluck(:id)
-      ActActivity.where(user_id: current_user.id, act_id: [act_ids]).update_all(hide_sts: false)
+      acts = Act.send(params[:tally_scope])
+      current_user.act_activities.hidden.by_act(acts).update_all(hide_sts: false)
     elsif params[:mod_name] == 'Cont'
-      cont_ids = Cont.send(params[:tally_scope]).pluck(:id)
-      ContActivity.where(user_id: current_user.id, cont_id: [cont_ids]).update_all(hide_sts: false)
+      conts = Cont.send(params[:tally_scope])
+      current_user.cont_activities.hidden.by_cont(conts).update_all(hide_sts: false)
     elsif params[:mod_name] == 'Web'
-      web_ids = Web.send(params[:tally_scope]).pluck(:id)
-      WebActivity.where(user_id: current_user.id, web_id: [web_ids]).update_all(hide_sts: false)
+      webs = Web.send(params[:tally_scope])
+      current_user.web_activities.hidden.by_web(webs).update_all(hide_sts: false)
     end
   end
 

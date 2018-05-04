@@ -4,20 +4,44 @@ class Act < ApplicationRecord
   # has_many :conts, inverse_of: :act, optional: true
   validates_uniqueness_of :gp_id, allow_blank: true, allow_nil: true
 
-  # has_one :act_web, dependent: :delete_all
-  # has_one :web, through: :act_web
   has_many :act_webs, dependent: :delete_all
-  has_many :webs, through: :act_webs
+  # has_many :webs, through: :act_webs
+  has_many :webs, -> { distinct }, through: :act_webs
+  # has_many :conts, through: :webs
+  has_many :conts, -> { distinct }, through: :webs
 
-  has_many :conts, through: :webs
-  has_many :links, through: :webs
-  has_many :brands, through: :webs
+  # has_many :links, through: :webs
+  has_many :links, -> { distinct }, through: :webs
+
+  # has_many :brands, through: :webs
+  has_many :brands, -> { distinct }, through: :webs
+
   has_many :act_activities, dependent: :delete_all
 
   accepts_nested_attributes_for :act_webs, :webs, :conts, :links, :brands, :act_activities
 
   scope :web_is_cop_or_franchise, -> {joins(:webs).merge(Web.is_cop_or_franchise)}
   scope :is_valid_gp, ->{ where.not(gp_id: nil) }
+
+  scope :has_id, -> { where.not(id: nil) }
+  scope :with_webs, -> { joins(:webs).merge(Web.has_id) }
+  scope :by_id, ->(id) { where(id: id) }
+  # acts = Act.by_id(act_objs)
+  scope :by_web, ->(web) { joins(:webs).merge(Web.by_id(web)) }
+  # acts = Act.by_web(webs)
+
+
+  def brands_to_string
+    self[:brands_to_string]
+    brands = self.brands&.map(&:brand_name)&.sort&.join(', ')
+  end
+
+
+  def attribute_vals(act_cols)
+    self[:attribute_vals]
+    values = self.attributes.slice(*act_cols).values
+  end
+
 
   # LAMBDA TALLY SCOPES
   scope :created_between, lambda {|start_date, end_date| where("created_at >= ? AND created_at <= ?", start_date, end_date )}
@@ -72,5 +96,6 @@ class Act < ApplicationRecord
   def self.generate_csv_acts(params, current_user)
     ActCsvTool.new.delay(priority: 0).start_act_webs_csv_and_log(params, current_user)
   end
+
 
 end

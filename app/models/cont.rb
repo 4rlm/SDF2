@@ -4,12 +4,20 @@ class Cont < ApplicationRecord
 
   validates_presence_of :web
   belongs_to :web, inverse_of: :conts, optional: true
-  has_many :links, through: :web
-  has_many :brands, through: :web
+  # has_many :links, through: :web
+  has_many :links, -> { distinct }, through: :web
 
-  has_many :acts, through: :web
-  has_many :web_activities, through: :web
-  has_many :act_activities, through: :acts
+  # has_many :brands, through: :web
+  has_many :brands, -> { distinct }, through: :web
+
+  # has_many :acts, through: :web
+  has_many :acts, -> { distinct }, through: :web
+
+  # has_many :web_activities, through: :web
+  has_many :web_activities, -> { distinct }, through: :web
+
+  # has_many :act_activities, through: :acts
+  has_many :act_activities, -> { distinct }, through: :acts
 
   has_many :cont_activities, dependent: :delete_all
   accepts_nested_attributes_for :cont_activities, :web_activities, :act_activities
@@ -25,6 +33,24 @@ class Cont < ApplicationRecord
   scope :job_changed_between, lambda {|start_date, end_date| where("job_changed >= ? AND job_changed <= ?", start_date, end_date )}
   scope :cont_changed_between, lambda {|start_date, end_date| where("cont_changed >= ? AND cont_changed <= ?", start_date, end_date )}
   scope :email_changed_between, lambda {|start_date, end_date| where("email_changed >= ? AND email_changed <= ?", start_date, end_date )}
+
+
+  scope :followed_conts, ->{ joins(:cont_activities).merge(ContActivity.followed) }
+  scope :by_id, ->(id) { where(id: id) }
+  # conts = Cont.by_id(cont_objs)
+
+
+  def brands_to_string
+    self[:brands_to_string]
+    brands = self.brands&.map(&:brand_name)&.sort&.join(', ')
+  end
+
+
+  def attribute_vals(cont_cols)
+    self[:attribute_vals]
+    values = self.attributes.slice(*cont_cols).values
+  end
+
 
 
   # created_at TALLY SCOPES

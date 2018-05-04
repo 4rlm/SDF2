@@ -2,6 +2,7 @@ class ContActivity < ApplicationRecord
   belongs_to :user
   belongs_to :cont
   # belongs_to :export
+  validates_uniqueness_of :cont_id, scope: [:user_id]
 
   # Query below:
   # user.cont_activities.followed.count
@@ -10,7 +11,11 @@ class ContActivity < ApplicationRecord
   scope :hidden, ->{ where(hide_sts: true) }
   scope :unhidden, ->{ where(hide_sts: false) }
 
-  validates_uniqueness_of :cont_id, scope: [:user_id]
+  scope :by_user, ->(user) { where(user_id: user.id) }
+  # c = ContActivity.by_user(User.first)
+
+  scope :by_cont, ->(cont) { where(cont_id: cont) }
+  # cont_activities = current_user.cont_activities.by_cont(conts)
 
 
   def self.create_user_cont_activities(current_user)

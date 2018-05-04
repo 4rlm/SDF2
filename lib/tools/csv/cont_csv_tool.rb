@@ -2,7 +2,7 @@ class ContCsvTool
 
   def generate_query(params)
     if params[:q].present?
-      conts = Cont.ransack(params[:q]).result(distinct: true).includes(:acts, :web, :brands)
+      conts = Cont.ransack(params[:q]).result(distinct: true)
     elsif params[:tally_scope].present?
       conts = Cont.send(params[:tally_scope])
     end
@@ -37,9 +37,9 @@ class ContCsvTool
     CSV.generate(options = {}) do |csv|
       csv.add_row(cont_cols + web_cols + brand_cols)
       conts.each do |cont|
-        values = cont.attributes.slice(*cont_cols).values
-        values += cont.web.attributes.slice(*web_cols).values
-        values << cont.web.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
+        values = cont.attribute_vals(cont_cols)
+        values += cont.web.attribute_vals(web_cols)
+        values << cont.web.brands_to_string
         csv.add_row(values)
       end
 
@@ -58,11 +58,12 @@ class ContCsvTool
 
   ###########  LOG CONT_WEB EXPORT  ###########
   def log_cont_web_export(current_user, export, conts)
-    cont_activities = current_user.cont_activities.where(cont_id: [conts.pluck(:id)])
-    cont_activities.update_all(export_id: export.id)
+    cont_activities = current_user.cont_activities.by_cont(conts)
+    cont_activities.update_all(export_id: export)
 
-    web_activities = current_user.web_activities.where(web_id: [conts.pluck(:web_id)])
-    web_activities.update_all(export_id: export.id)
+    webs = Web.by_cont(conts)
+    web_activities = current_user.web_activities.by_web(webs)
+    web_activities.update_all(export_id: export)
   end
 
 

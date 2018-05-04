@@ -1,6 +1,7 @@
 class WebActivity < ApplicationRecord
   belongs_to :user
   belongs_to :web
+  validates_uniqueness_of :web_id, scope: [:user_id]
   # belongs_to :export
 
   # Query below:
@@ -10,7 +11,8 @@ class WebActivity < ApplicationRecord
   scope :hidden, ->{ where(hide_sts: true) }
   scope :unhidden, ->{ where(hide_sts: false) }
 
-  validates_uniqueness_of :web_id, scope: [:user_id]
+  scope :by_web, ->(web) { where(web_id: web) }
+  # web_activities = current_user.web_activities.by_web(webs)
 
   def self.create_user_web_activities(current_user)
     ActivitiesTool.new.delay(priority: 0).create_web_activities(current_user.id)

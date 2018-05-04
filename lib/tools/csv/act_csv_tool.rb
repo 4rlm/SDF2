@@ -2,7 +2,7 @@ class ActCsvTool
 
   def generate_query(params)
     if params[:q].present?
-      acts = Act.ransack(params[:q]).result(distinct: true).includes(:webs, :brands)
+      acts = Act.ransack(params[:q]).result(distinct: true)
     elsif params[:tally_scope].present?
       acts = Act.send(params[:tally_scope])
     end
@@ -35,12 +35,12 @@ class ActCsvTool
     CSV.generate(options = {}) do |csv|
       csv.add_row(act_cols + brand_cols + web_cols)
       acts.each do |act|
-        values = act.attributes.slice(*act_cols).values
-        values << act.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
+        values = act.attribute_vals(act_cols)
+        values << act.brands_to_string
 
         if act.webs.any?
           act.webs.each do |web|
-            csv.add_row(values + web.attributes.slice(*web_cols).values)
+            csv.add_row(values + web.attribute_vals(web_cols))
           end
         else
           csv.add_row(values)
@@ -61,12 +61,12 @@ class ActCsvTool
   ###########  LOG WEB_ACT EXPORT  ###########
   #Call: ActCsvTool.new.log_act_webs_export
   def log_act_webs_export(current_user, export, acts)
-    act_activities = current_user.act_activities.where(act_id: [acts.pluck(:id)])
-    act_activities.update_all(export_id: export.id)
+    act_activities = current_user.act_activities.by_act(acts)
+    act_activities.update_all(export_id: export)
 
-    webs = acts.map {|act| act.webs }&.flatten&.uniq
-    web_activities = current_user.web_activities.where(web_id: [webs.pluck(:id)])
-    web_activities.update_all(export_id: export.id)
+    webs = Web.by_act(acts)
+    web_activities = current_user.web_activities.by_web(webs)
+    web_activities.update_all(export_id: export)
   end
 
 end

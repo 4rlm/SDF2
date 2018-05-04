@@ -37,12 +37,12 @@ class WebCsvTool
     CSV.generate(options = {}) do |csv|
       csv.add_row(web_cols + brand_cols + act_cols)
       webs.each do |web|
-        values = web.attributes.slice(*web_cols).values
-        values << web.brands&.map { |brand| brand&.brand_name }&.sort&.uniq&.join(', ')
+        values = web.attribute_vals(web_cols)
+        values << web.brands_to_string
 
         if web.acts.any?
           web.acts.each do |act|
-            csv.add_row(values + act.attributes.slice(*act_cols).values)
+            csv.add_row(values + act.attribute_vals(act_cols))
           end
         else
           csv.add_row(values)
@@ -64,12 +64,12 @@ class WebCsvTool
 
   ###########  LOG WEB_ACT EXPORT  ###########
   def log_web_acts_export(current_user, export, webs)
-    web_activities = current_user.web_activities.where(web_id: [webs.pluck(:id)])
-    web_activities.update_all(export_id: export.id)
+    web_activities = current_user.web_activities.by_web(webs)
+    web_activities.update_all(export_id: export)
 
-    acts = webs.map {|web| web.acts }&.flatten&.uniq
-    act_activities = current_user.act_activities.where(act_id: [acts.pluck(:id)])
-    act_activities.update_all(export_id: export.id)
+    acts = Act.by_web(webs)
+    act_activities = current_user.act_activities.by_act(acts)
+    act_activities.update_all(export_id: export)
   end
 
 
