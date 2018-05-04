@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_priority_jobs
-    helpers.priority_jobs if Delayed::Job.any?
+    Start.priority_jobs if Delayed::Job.any?
   end
 
 

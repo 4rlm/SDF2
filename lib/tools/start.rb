@@ -5,7 +5,7 @@ class Start
   #CALL: heroku run rake run_all_scrapers
   #CALL: Start.run_all_scrapers
   def self.run_all_scrapers
-    helpers.priority_jobs
+    priority_jobs
     Start.get_process_sts
     VerUrl.new.start_ver_url
     FindTemp.new.start_find_temp
@@ -13,6 +13,14 @@ class Start
     GpStart.new.start_gp_act
     FindBrand.new.start_find_brand
     ContScraper.new.start_cont_scraper
+  end
+
+  #CALL: Start.priority_jobs
+  def self.priority_jobs
+    top_priorities = Delayed::Job.where('priority <= 1')
+    low_priorities = Delayed::Job.where('priority = 0')
+    top_priorities&.each { |job| job.invoke_job }
+    low_priorities.destroy_all if top_priorities.any? && low_priorities.any?
   end
 
 
