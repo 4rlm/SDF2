@@ -28,7 +28,8 @@
                   <td><%= export.csv_updated_at %></td>
 
                   <td>
-                    <%= link_to download_csv_exports_path(id: export.id), class: 'btn btn-primary btn-md' do %>
+                    <% msg = 'Do you wish to download this CSV?' %>
+                    <%= link_to download_csv_exports_path(id: export.id), remote: false, data: { confirm: msg }, class: 'btn btn-primary btn-md' do %>
                       <i class="fa fa-download"></i> Generate CSV
                     <% end %>
                   </td>
