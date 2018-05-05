@@ -33,13 +33,9 @@ class ActsController < ApplicationController
 
 
   def generate_csv
-    if params[:q].present?
-      Act.generate_csv_acts(params, current_user)
-      
-      respond_to do |format|
-        format.js { render :download_acts, status: :ok, location: @acts }
-      end
-    end
+    flash[:notice] = "Generating CSV: Available in Exports Section when completed."
+    Act.generate_csv_acts(params, current_user) if params[:q].present?
+    redirect_to user_path(current_user)
   end
 
 

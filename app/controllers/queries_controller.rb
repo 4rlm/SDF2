@@ -12,23 +12,27 @@ class QueriesController < ApplicationController
 
 
   def follow_all
+    flash[:notice] = "Adding Search Results to Followed List"
     Query.follow_hide_queries('follow', params[:query_id], current_user)
-    redirect_to current_user
+    redirect_to user_path(current_user)
   end
 
   def unfollow_all
+    flash[:alert] = "Removing Search Results from Followed List"
     Query.follow_hide_queries('unfollow', params[:query_id], current_user)
-    redirect_to current_user
+    redirect_to user_path(current_user)
   end
 
   def hide_all
+    flash[:notice] = "Adding Search Results to Hidden List"
     Query.follow_hide_queries('hide', params[:query_id], current_user)
-    redirect_to current_user
+    redirect_to user_path(current_user)
   end
 
   def unhide_all
+    flash[:alert] = "Removing Search Results from Hidden List"
     Query.follow_hide_queries('unhide', params[:query_id], current_user)
-    redirect_to current_user
+    redirect_to user_path(current_user)
   end
 
 

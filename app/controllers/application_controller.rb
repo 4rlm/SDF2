@@ -3,8 +3,20 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :set_last_request_at, :check_priority_jobs
   before_action :configure_permitted_parameters, if: :devise_controller?
+  # before_action :test_flash
 
   protected
+
+  ## This is temporaty method for testing flash.  Remove later.
+  def test_flash
+    flash[:alert] = "alert-warning / Application Controller"
+
+    # redirect_to @user
+    # redirect_to login_path
+    # format.html { redirect_to Space.find(@address.space_id), notice: 'Address was successfully created.' }
+  end
+
+
 
 
   # ========== Detect User's Level(Role) ==========

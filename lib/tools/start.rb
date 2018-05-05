@@ -17,19 +17,13 @@ class Start
 
   #CALL: Start.priority_jobs
   def self.priority_jobs
-    top_priorities = Delayed::Job.where('priority <= 1')
-    low_priorities = Delayed::Job.where('priority = 0')
-    top_priorities&.each { |job| job.invoke_job }
+    top_priorities = Delayed::Job.where('priority = 0')
+    low_priorities = Delayed::Job.where('priority > 0')
+    # top_priorities&.each { |job| job.invoke_job }
     low_priorities.destroy_all if top_priorities.any? && low_priorities.any?
   end
 
 
-  # Moved to Application Model
-  # #CALL: Start.priority_jobs
-  # def self.priority_jobs
-  #   priorities = Delayed::Job.where('priority <= 1')
-  #   priorities.each { |job| job.invoke_job }
-  # end
 
   #CALL: Start.url_equals_fwd_url
   # def self.url_equals_fwd_url

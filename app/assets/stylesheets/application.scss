@@ -157,6 +157,34 @@ a, a:hover, a:focus {
 
 
 
+// flash[:notice] => alert-success
+// flash[:alert] => alert-warning
+// flash.now[:alert] => alert-danger
+
+
+
+.flash_wrap {
+  font-size: 18px;
+  // box-shadow: 1px 1px 1px #888888;
+  text-align: center;
+  padding: 3px;
+  border-radius: 0px;
+}
+
+
+.flash_notice {
+  background-color: #2395a9;
+  color: white;
+}
+
+.flash_alert {
+  background-color: #e60000;
+  color: white;
+}
+
+
+
+
 
 
 

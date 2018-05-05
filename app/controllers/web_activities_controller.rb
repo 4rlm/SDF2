@@ -17,12 +17,14 @@ class WebActivitiesController < ApplicationController
 
 
   def unfollow_all
+    flash[:alert] = "Resetting Followed Websites"
     WebActivity.unfollow_unhide_webs('unfollow', current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
+    flash[:alert] = "Resetting Hidden Websites"
     WebActivity.unfollow_unhide_webs('unhide', current_user)
     redirect_to current_user
   end

@@ -12,19 +12,21 @@ class ActActivitiesController < ApplicationController
 
   def create_user_activities
     ActActivity.create_user_act_activities(current_user)
-    redirect_to current_user
+    redirect_to user_path(current_user)
   end
 
 
   def unfollow_all
+    flash[:alert] = "Resetting Followed Accounts"
     ActActivity.unfollow_unhide_acts('unfollow', current_user)
-    redirect_to current_user
+    redirect_to user_path(current_user)
   end
 
 
   def unhide_all
+    flash[:alert] = "Resetting Hidden Accounts"
     ActActivity.unfollow_unhide_acts('unhide', current_user)
-    redirect_to current_user
+    redirect_to user_path(current_user)
   end
 
 

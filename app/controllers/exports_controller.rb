@@ -9,6 +9,7 @@ class ExportsController < ApplicationController
   def download_csv
     export = Export.find(params[:id])
     path = export.csv.expiring_url
+    flash[:notice] = "Exporting/Downloading Requested CSV"
     redirect_to path
   end
 

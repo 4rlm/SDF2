@@ -51,13 +51,9 @@ class ContsController < ApplicationController
 
 
   def generate_csv
-    if params[:q].present?
-      Cont.generate_csv_conts(params, current_user)
-
-      respond_to do |format|
-        format.js { render :download_conts, status: :ok, location: @conts }
-      end
-    end
+    flash[:notice] = "Generating CSV: Available in Exports Section when completed."
+    Cont.generate_csv_conts(params, current_user) if params[:q].present?
+    redirect_to user_path(current_user)
   end
 
 

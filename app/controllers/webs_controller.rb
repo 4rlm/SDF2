@@ -42,13 +42,9 @@ class WebsController < ApplicationController
 
 
   def generate_csv
-    if params[:q].present?
-      Web.generate_csv_webs(params, current_user)
-
-      respond_to do |format|
-        format.js { render :download_webs, status: :ok, location: @webs }
-      end
-    end
+    flash[:notice] = "Generating CSV: Available in Exports Section when completed."
+    Web.generate_csv_webs(params, current_user) if params[:q].present?
+    redirect_to user_path(current_user)
   end
 
 

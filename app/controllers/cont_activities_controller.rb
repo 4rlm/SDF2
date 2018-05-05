@@ -17,12 +17,14 @@ class ContActivitiesController < ApplicationController
 
 
   def unfollow_all
+    flash[:alert] = "Resetting Followed Contacts"
     ContActivity.unfollow_unhide_conts('unfollow', current_user)
     redirect_to current_user
   end
 
 
   def unhide_all
+    flash[:alert] = "Resetting Hidden Contacts"
     ContActivity.unfollow_unhide_conts('unhide', current_user)
     redirect_to current_user
   end

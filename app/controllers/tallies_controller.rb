@@ -33,6 +33,8 @@ class TalliesController < ApplicationController
 
 
   def follow_all
+    flash[:notice] = "Adding Activity Results to Followed List"
+
     Tally.follow_hide_tallies('follow', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -45,6 +47,8 @@ class TalliesController < ApplicationController
 
 
   def unfollow_all
+    flash[:alert] = "Removing Activity Results from Followed List"
+
     Tally.follow_hide_tallies('unfollow', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -57,6 +61,8 @@ class TalliesController < ApplicationController
 
 
   def hide_all
+    flash[:notice] = "Adding Activity Results to Hidden List"
+
     Tally.follow_hide_tallies('hide', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -69,6 +75,8 @@ class TalliesController < ApplicationController
 
 
   def unhide_all
+    flash[:alert] = "Removing Activity Results from Hidden List"
+
     Tally.follow_hide_tallies('unhide', current_user, params[:tally_hsh])
     @tally_hsh = params[:tally_hsh]
     @tally_hsh[:tally_id] = "#{@tally_hsh[:mod_name].downcase}_#{@tally_hsh[:tally_scope]}"
@@ -76,6 +84,7 @@ class TalliesController < ApplicationController
     respond_to do |format|
       format.js { render :update_unhide_all, status: :ok, tally_hsh: @tally_hsh }
     end
+
     # redirect_to tallies_path
   end
 
