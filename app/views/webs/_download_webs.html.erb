@@ -1,6 +1,7 @@
 <div id="download_webs">
   <% if params[:q].present? %>
-    <%= link_to generate_csv_webs_path(params), remote: false, class: 'btn btn-primary btn-md' do %>
+    <% msg = 'Do you wish to Generate a CSV of these records?' %>
+    <%= link_to generate_csv_webs_path(params), remote: false, data: { confirm: msg }, class: 'btn btn-primary btn-md' do %>
       <i class="fa fa-download" aria-hidden="true"></i> Generate CSV
     <% end %>
   <% end %>
