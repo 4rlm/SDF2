@@ -117,8 +117,6 @@ gem 'aws-sdk', '~> 3'
 gem 'fakes3', '~> 1.0'
 # gem 'bootstrap-glyphicons'
 
-gem 'delayed_job_web', '~> 1.4'
-
 # gem 'acts_as_favoritor', github: 'jonhue/acts_as_favoritor'
 
 # gem "roo", "~> 2.7.0"
@@ -141,3 +139,10 @@ gem 'delayed_job_web', '~> 1.4'
 # gem 'bcrypt'
 # gem 'faker'
 # gem 'rspec', '~>3.0'
+
+
+gem "rack-timeout", require:"rack/timeout/base"
+
+
+### KEEP RUBY VERSION AT BOTTOM.
+ruby "2.5.1"

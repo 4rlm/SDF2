@@ -12,7 +12,6 @@ class QueriesController < ApplicationController
 
 
   def follow_all
-    binding.pry
     flash[:notice] = "Adding Search Results to Followed List"
     Query.follow_hide_queries('follow', params[:query_id], current_user)
     redirect_to user_path(current_user)

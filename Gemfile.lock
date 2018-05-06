@@ -637,6 +637,7 @@ GEM
       rack
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
+    rack-timeout (0.4.2)
     rails (5.1.6)
       actioncable (= 5.1.6)
       actionmailer (= 5.1.6)
@@ -796,6 +797,7 @@ DEPENDENCIES
   pg (~> 0.18.4)
   pry (~> 0.11.3)
   puma (~> 3.7)
+  rack-timeout
   rails (~> 5.1, >= 5.1.4)
   ransack (~> 1.8, >= 1.8.4)
   redis (~> 3.3, >= 3.3.1)
@@ -814,6 +816,9 @@ DEPENDENCIES
   whois (~> 4.0, >= 4.0.5)
   will_paginate (~> 3.1, >= 3.1.6)
   will_paginate-bootstrap4
+
+RUBY VERSION
+   ruby 2.5.1p57
 
 BUNDLED WITH
    1.16.1
