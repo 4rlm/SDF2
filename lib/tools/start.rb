@@ -10,7 +10,7 @@ class Start
     VerUrl.new.start_ver_url
     FindTemp.new.start_find_temp
     FindPage.new.start_find_page
-    GpStart.new.start_gp_act
+    # GpStart.new.start_gp_act
     FindBrand.new.start_find_brand
     ContScraper.new.start_cont_scraper
   end

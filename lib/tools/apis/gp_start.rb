@@ -21,7 +21,8 @@ class GpStart
     @formatter = Formatter.new
     @mig = Mig.new
     @multi_spots = true
-    @client = GooglePlaces::Client.new(ENV['GOOGLE_PLACES_API'])
+    # @client = GooglePlaces::Client.new(ENV['GOOGLE_PLACES_API'])
+    @client = nil
     @spot_start_time = nil
     @gp_acts = []
     @current_process = "GpStart"

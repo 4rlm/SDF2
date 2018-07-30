@@ -213,6 +213,8 @@ JSON.parse( h.to_json, {:symbolize_names => true} )
   $ rails g migration add_row_count_to_queries row_count:integer
   $ rails g migration add_role_to_users role:integer
 
+  $ rails g migration add_col_to_algos
+
 
 
 --ADD INDEX
